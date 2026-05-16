@@ -743,7 +743,7 @@ pre {
       <span class="nav-check"></span>
     </button>
     <button class="nav-item" onclick="goTo('l7')" data-id="l7">
-      <span class="nav-icon">🚀</span> Firebase y publicación
+      <span class="nav-icon">🚀</span> GitHub Pages y publicación
       <span class="nav-check"></span>
     </button>
     <button class="nav-item" onclick="goTo('l8')" data-id="l8">
@@ -880,7 +880,7 @@ pre {
 
         <rect x="340" y="75" width="120" height="50" rx="8" fill="#18181f" stroke="#3d3d5c" stroke-width="1"/>
         <text x="400" y="97" text-anchor="middle" fill="#9d97ff" font-size="11" font-family="DM Mono, monospace">Servidor</text>
-        <text x="400" y="113" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Sans, sans-serif">Firebase Hosting</text>
+        <text x="400" y="113" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Sans, sans-serif">GitHub Pages</text>
 
         <rect x="505" y="75" width="120" height="50" rx="8" fill="#18181f" stroke="#3d3d5c" stroke-width="1"/>
         <text x="565" y="97" text-anchor="middle" fill="#9d97ff" font-size="11" font-family="DM Mono, monospace">Archivos</text>
@@ -922,7 +922,7 @@ pre {
         <div class="step-num">3</div>
         <div class="step-body">
           <strong>El servidor recibe la petición</strong>
-          <p>Un servidor es una computadora que está siempre encendida y conectada a internet. Firebase Hosting es el servidor donde guardamos nuestros sitios.</p>
+          <p>Un servidor es una computadora que está siempre encendida y conectada a internet. GitHub Pages actúa como el servidor donde viven nuestros sitios.</p>
         </div>
       </div>
       <div class="step">
@@ -945,12 +945,12 @@ pre {
       <div class="card">
         <div class="card-icon">🖥️</div>
         <h4>Servidor / Hosting</h4>
-        <p>La computadora siempre encendida que guarda y sirve el sitio. Usamos Firebase Hosting.</p>
+        <p>La computadora siempre encendida que guarda y sirve el sitio. Usamos GitHub Pages como hosting.</p>
       </div>
       <div class="card">
         <div class="card-icon">🗺️</div>
         <h4>DNS</h4>
-        <p>Conecta el dominio (GoDaddy) con el servidor (Firebase). Se configura una sola vez.</p>
+        <p>Conecta el dominio (GoDaddy) con el servidor (GitHub Pages). Se configura una sola vez.</p>
       </div>
       <div class="card">
         <div class="card-icon">🌍</div>
@@ -963,7 +963,7 @@ pre {
       <div class="callout-icon">✅</div>
       <div class="callout-content">
         <strong>Resumen de esta lección</strong>
-        <p>Web = archivos (HTML+CSS+JS) guardados en un servidor. El dominio (GoDaddy) apunta al servidor (Firebase). El navegador descarga los archivos y muestra la página.</p>
+        <p>Web = archivos (HTML+CSS+JS) guardados en un servidor. El dominio (GoDaddy) apunta al servidor (GitHub Pages). El navegador descarga los archivos y muestra la página.</p>
       </div>
     </div>
 
@@ -1383,7 +1383,7 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
     <div class="lesson-header">
       <div class="lesson-tag">Módulo 2 · Lección 5</div>
       <h1>GitHub y control de versiones</h1>
-      <p class="lesson-intro">GitHub es donde vive todo el código del equipo. Es la base que conecta Claude Code con Firebase para publicar los sitios automáticamente.</p>
+      <p class="lesson-intro">GitHub es donde vive todo el código. Con GitHub Pages el sitio se publica directamente desde el repositorio — cada push a main actualiza el sitio en minutos.</p>
     </div>
 
     <h2 class="section-title">¿Qué es Git y GitHub?</h2>
@@ -1396,7 +1396,7 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
       <div class="card">
         <div class="card-icon">🐙</div>
         <h4>GitHub</h4>
-        <p>El servicio en la nube que guarda tu repositorio de Git. Es como Google Drive, pero para código. Permite colaborar y conectar con Firebase.</p>
+        <p>El servicio en la nube que guarda tu repositorio de Git. Es como Google Drive, pero para código. Incluye GitHub Pages para publicar el sitio directamente desde el repositorio.</p>
       </div>
     </div>
 
@@ -1435,7 +1435,7 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
         <div class="tool-expand">+</div>
       </div>
       <div class="tool-body">
-        <p class="body-text">Una rama es una copia del proyecto donde puedes experimentar sin afectar el sitio publicado. La rama principal se llama <strong style="color:var(--accent2)">main</strong> y es la versión que está en producción (publicada en Firebase).</p>
+        <p class="body-text">Una rama es una copia del proyecto donde puedes experimentar sin afectar el sitio publicado. La rama principal se llama <strong style="color:var(--accent2)">main</strong> y es la versión que está en producción (publicada en GitHub Pages).</p>
         <div class="diagram-wrap"><div class="diagram-title">// Flujo de ramas</div>
         <svg width="100%" viewBox="0 0 640 160">
           <line x1="40" y1="60" x2="600" y2="60" stroke="#3d3d5c" stroke-width="2"/>
@@ -1471,9 +1471,9 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
           <div class="flow-arrow">→ push →</div>
           <div class="flow-node accent">GitHub</div>
           <div class="flow-arrow">→ auto →</div>
-          <div class="flow-node green">Firebase</div>
+          <div class="flow-node green">GitHub Pages</div>
         </div>
-        <p class="body-text">Cuando Claude Code hace un push a la rama main, Firebase detecta el cambio automáticamente y publica la nueva versión del sitio en ~1 minuto.</p>
+        <p class="body-text">Cuando Claude Code hace un push a la rama main, GitHub Pages detecta el cambio automáticamente y publica la nueva versión del sitio en ~1 minuto.</p>
       </div>
     </div>
 
@@ -1495,7 +1495,7 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
 <span class="c-gray"># Crear un commit con descripción:</span>
 <span class="c-blue">git</span> commit <span class="c-green">-m</span> <span class="c-orange">"Descripción del cambio"</span>
 
-<span class="c-gray"># Subir a GitHub (→ Firebase lo publica automáticamente):</span>
+<span class="c-gray"># Subir a GitHub (→ GitHub Pages lo publica automáticamente):</span>
 <span class="c-blue">git</span> push
 
 <span class="c-gray"># Descargar los últimos cambios:</span>
@@ -1621,7 +1621,7 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
         <div class="step-num">4</div>
         <div class="step-body">
           <strong>Claude Code hace los cambios y pushea</strong>
-          <span>Modifica los archivos necesarios, hace commit y push a GitHub. Firebase publica la nueva versión en minutos.</span>
+          <span>Modifica los archivos necesarios, hace commit y push a GitHub. GitHub Pages publica la nueva versión en minutos.</span>
         </div>
       </div>
     </div>
@@ -1637,43 +1637,55 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
   <div id="l7" class="lesson">
     <div class="lesson-header">
       <div class="lesson-tag">Módulo 2 · Lección 7</div>
-      <h1>Firebase y publicación web</h1>
-      <p class="lesson-intro">Firebase es la plataforma de Google donde viven los sitios. Firebase Hosting publica el sitio, el dominio de GoDaddy le da la dirección .com.</p>
+      <h1>GitHub Pages y publicación web</h1>
+      <p class="lesson-intro">El hosting que usamos es <strong>GitHub Pages</strong>: el alojamiento gratuito y abierto que ofrece GitHub. El dominio de GoDaddy le da la dirección .com, y el DNS se configura tanto en GoDaddy como en GitHub. Firebase lo reservamos para guardar datos y gestionar logins.</p>
     </div>
 
-    <h2 class="section-title">Firebase Hosting</h2>
-    <p class="body-text">Firebase Hosting es un servicio de alojamiento web de Google. Cuando los archivos de tu repositorio se publican en Firebase, cualquier persona en el mundo puede verlos al visitar la URL del sitio.</p>
+    <h2 class="section-title">GitHub Pages — Hosting gratuito y abierto</h2>
+    <p class="body-text">GitHub Pages es el servicio de alojamiento web integrado en GitHub. No necesitas instalar nada ni pagar: cuando subes tu código al repositorio, GitHub Pages publica el sitio automáticamente. Es la solución más simple y directa para sitios estáticos (HTML + CSS + JS).</p>
 
     <div class="card-grid">
-      <div class="card"><div class="card-icon">⚡</div><h4>Velocidad global</h4><p>Los archivos se distribuyen en servidores de Google en todo el mundo. El sitio carga rápido desde cualquier país.</p></div>
-      <div class="card"><div class="card-icon">🔒</div><h4>HTTPS automático</h4><p>El candado verde (seguridad SSL) se activa automáticamente. Sin costo extra, sin configuración.</p></div>
-      <div class="card"><div class="card-icon">🆓</div><h4>Plan gratuito</h4><p>El plan Spark (gratis) incluye 10 GB de almacenamiento y 360 MB/día de transferencia. Suficiente para sitios normales.</p></div>
-      <div class="card"><div class="card-icon">🔄</div><h4>Deploy automático</h4><p>Conectado con GitHub, cada push a la rama main publica la nueva versión automáticamente en ~1 minuto.</p></div>
+      <div class="card"><div class="card-icon">🆓</div><h4>100% gratuito y abierto</h4><p>Sin límites ocultos para sitios estáticos. Solo necesitas un repositorio público (o privado con plan gratuito de GitHub).</p></div>
+      <div class="card"><div class="card-icon">🔒</div><h4>HTTPS automático</h4><p>El candado verde (SSL) se activa solo, sin configuración extra. Funciona también con dominios personalizados.</p></div>
+      <div class="card"><div class="card-icon">🔄</div><h4>Deploy automático</h4><p>Cada push a la rama main publica la nueva versión automáticamente en ~1 minuto. Sin tocar nada más.</p></div>
+      <div class="card"><div class="card-icon">🌐</div><h4>URL propia de GitHub</h4><p>Sin dominio personalizado, el sitio queda en <code style="font-family:var(--font-mono);font-size:12px;">tuusuario.github.io/repo</code>. Con GoDaddy obtienes tu .com.</p></div>
     </div>
 
-    <h2 class="section-title">Cómo conectar Firebase con GitHub</h2>
+    <h2 class="section-title">Activar GitHub Pages en tu repositorio</h2>
 
     <div class="steps">
-      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Crear proyecto en Firebase Console</strong><span>Ve a console.firebase.google.com → "Crear un proyecto" → ponle nombre → listo.</span></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Activar Firebase Hosting</strong><span>En el menú lateral → "Hosting" → "Comenzar" → sigue los pasos del asistente.</span></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Instalar Firebase CLI y hacer deploy inicial</strong>
-      <div class="code-wrap" style="margin:8px 0;"><pre style="padding:12px;font-size:12px;"><span class="c-blue">npm</span> install <span class="c-green">-g</span> firebase-tools
-<span class="c-blue">firebase</span> login
-<span class="c-blue">firebase</span> init hosting
-<span class="c-blue">firebase</span> deploy</pre></div>
-      </div></div>
-      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Conectar con GitHub para deploys automáticos</strong><span>En Firebase Hosting → "Agregar canal" → "Conectar con GitHub" → autoriza → selecciona el repositorio → configura que el deploy ocurra en pushes a la rama main.</span></div></div>
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Ve a la configuración del repositorio</strong><span>En tu repo de GitHub → pestaña "Settings" → en el menú lateral busca "Pages".</span></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Selecciona la rama a publicar</strong><span>En "Branch" elige <code style="font-family:var(--font-mono);font-size:12px;color:var(--accent2);">main</code> y la carpeta <code style="font-family:var(--font-mono);font-size:12px;color:var(--accent2);">/ (root)</code> → clic en "Save".</span></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Espera ~1 minuto y visita la URL</strong><span>GitHub te muestra la URL del sitio (<code style="font-family:var(--font-mono);font-size:12px;color:var(--accent2);">tuusuario.github.io/repo</code>). Desde ahora, cada push actualiza el sitio automáticamente.</span></div></div>
+    </div>
+
+    <h2 class="section-title">Firebase — Base de datos y autenticación</h2>
+    <p class="body-text">Firebase no lo usamos para hospedar el sitio (eso lo hace GitHub Pages), sino para dos funcionalidades específicas que requieren un backend:</p>
+
+    <div class="card-grid">
+      <div class="card"><div class="card-icon">🗄️</div><h4>Guardar información</h4><p>Firestore (la base de datos de Firebase) almacena datos del sitio: reservas, formularios avanzados, catálogos dinámicos, preferencias de usuario, etc.</p></div>
+      <div class="card"><div class="card-icon">🔐</div><h4>Autenticación (login)</h4><p>Firebase Auth gestiona el sistema de login: registro, inicio de sesión, recuperación de contraseña. Se usa en sitios que tienen área privada o panel de usuario.</p></div>
+    </div>
+
+    <div class="callout callout-blue">
+      <div class="callout-icon">💡</div>
+      <div class="callout-content">
+        <strong>Regla simple</strong>
+        <p>Si el sitio es estático (solo muestra contenido), basta con GitHub Pages. Si el sitio necesita guardar datos o tiene login, se añade Firebase para esas funcionalidades — el hosting sigue siendo GitHub Pages.</p>
+      </div>
     </div>
 
     <h2 class="section-title">GoDaddy — Tu dominio .com</h2>
-    <p class="body-text">El dominio es la dirección que escriben los usuarios. Sin dominio propio, tu sitio solo tiene una URL como <code style="font-family:var(--font-mono);color:var(--text3);">miproyecto.web.app</code>. Con GoDaddy compras <code style="font-family:var(--font-mono);color:var(--accent2);">miempresa.com</code>.</p>
+    <p class="body-text">El dominio es la dirección que escriben los usuarios. Sin dominio propio, el sitio solo tiene la URL de GitHub (<code style="font-family:var(--font-mono);color:var(--text3);">tuusuario.github.io/repo</code>). Con GoDaddy compras <code style="font-family:var(--font-mono);color:var(--accent2);">miempresa.com</code>.</p>
 
-    <h3 class="sub-title">Conectar GoDaddy con Firebase</h3>
+    <h3 class="sub-title">Conectar GoDaddy con GitHub Pages</h3>
+    <p class="body-text" style="margin-bottom:16px;">El DNS se configura en dos lugares: en GoDaddy apuntas el dominio hacia los servidores de GitHub, y en GitHub le dices qué dominio personalizado usar. Ambos lados deben coincidir.</p>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Compra el dominio en godaddy.com</strong><span>Busca el nombre, verifica que esté disponible, paga (~$12-15/año para .com).</span></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>En Firebase → Hosting → Agregar dominio personalizado</strong><span>Escribe el dominio que compraste. Firebase te dará unos códigos de verificación.</span></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>En GoDaddy → Mis productos → DNS → Agregar registro</strong><span>Copia los registros TXT y A que te dio Firebase y pégalos en la configuración DNS de GoDaddy.</span></div></div>
-      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Esperar propagación DNS</strong><span>El DNS se propaga globalmente en 24-48 horas. Después, tu dominio apuntará directamente a Firebase.</span></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>En GoDaddy → DNS → Agregar registros A</strong><span>Crea 4 registros tipo A apuntando a las IPs de GitHub Pages: <code style="font-family:var(--font-mono);font-size:12px;color:var(--accent2);">185.199.108.153 · 185.199.109.153 · 185.199.110.153 · 185.199.111.153</code></span></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>En GoDaddy → DNS → Agregar registro CNAME</strong><span>Crea un registro CNAME para <code style="font-family:var(--font-mono);font-size:12px;color:var(--accent2);">www</code> apuntando a <code style="font-family:var(--font-mono);font-size:12px;color:var(--accent2);">tuusuario.github.io</code></span></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>En GitHub → Settings → Pages → Custom domain</strong><span>Escribe tu dominio (ej: <code style="font-family:var(--font-mono);font-size:12px;color:var(--accent2);">miempresa.com</code>) y haz clic en "Save". GitHub verificará los registros DNS.</span></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Esperar propagación DNS</strong><span>El DNS se propaga globalmente en 24-48 horas. Activa "Enforce HTTPS" en GitHub Pages una vez que el dominio esté verificado.</span></div></div>
     </div>
 
     <div class="callout callout-amber">
@@ -1715,7 +1727,7 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
 
 <span class="c-gray">&lt;!-- Calidad reducida al 70% (más ligero): --&gt;</span>
 <span class="c-gray">&lt;</span><span class="c-blue">img</span> <span class="c-green">src</span><span class="c-gray">=</span><span class="c-orange">".../<span style="color:#f59e0b">q_70</span>/foto.jpg"</span><span class="c-gray">&gt;</span></pre></div>
-        <div class="callout callout-blue"><div class="callout-icon">💡</div><div class="callout-content"><p>Sube fotos de Unsplash a Cloudinary. Así las tienes optimizadas y controladas en tu cuenta.</p></div></div>
+        <div class="callout callout-blue"><div class="callout-icon">💡</div><div class="callout-content"><p>Cloudinary es ideal para fotos propias o del cliente. Las fotos de stock las maneja Claude directamente desde Unsplash, sin necesidad de descargarlas.</p></div></div>
       </div>
     </div>
 
@@ -1788,8 +1800,8 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
       <div class="tool-card-header"><div class="tool-emoji">🎨</div><div><div class="tool-name">Canva y Unsplash</div><div class="tool-tagline">Diseño y fotografía de alta calidad</div></div><div class="tool-expand">+</div></div>
       <div class="tool-body">
         <p class="body-text"><strong style="color:var(--accent2)">Canva</strong> (canva.com): crea logos, banners, iconos y cualquier gráfico sin ser diseñador. Exporta en PNG para logos con transparencia, JPG para fotos y banners.</p>
-        <p class="body-text"><strong style="color:var(--teal)">Unsplash</strong> (unsplash.com): más de 3 millones de fotografías profesionales completamente gratuitas. Busca en inglés para mejores resultados. Descarga y sube a Cloudinary para optimizarlas.</p>
-        <div class="callout callout-green"><div class="callout-icon">✅</div><div class="callout-content"><p>Flujo recomendado: Buscar foto en Unsplash → Descargar → Subir a Cloudinary → Usar la URL de Cloudinary en el HTML.</p></div></div>
+        <p class="body-text"><strong style="color:var(--teal)">Unsplash</strong> (unsplash.com): más de 3 millones de fotografías profesionales completamente gratuitas. Claude ya usa Unsplash directamente al construir sitios — integra las imágenes sin que tengas que descargarlas ni buscarlas tú. Si necesitas una foto específica, simplemente pídesela a Claude en el prompt.</p>
+        <div class="callout callout-green"><div class="callout-icon">✅</div><div class="callout-content"><p>No es necesario descargar fotos de Unsplash manualmente. Claude las selecciona e integra solo. Si quieres subir imágenes propias o del cliente, ahí sí usa Cloudinary para optimizarlas.</p></div></div>
       </div>
     </div>
 
@@ -1946,7 +1958,7 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
     <div class="lesson-header">
       <div class="lesson-tag">Módulo 3 · Lección 10</div>
       <h1>Flujo completo de un proyecto</h1>
-      <p class="lesson-intro">Esta es la lección final. Aquí verás el proceso de principio a fin: desde que el cliente pide el sitio hasta que está publicado con dominio propio y funcionando.</p>
+      <p class="lesson-intro">Esta es la lección final. Aquí verás el proceso de principio a fin: ya sea para un cliente o para un proyecto propio — un portafolio personal, una tienda tuya, una herramienta interna — el flujo es el mismo desde la idea hasta el sitio publicado con dominio propio.</p>
     </div>
 
     <h2 class="section-title">Los 10 pasos del proceso</h2>
@@ -1955,8 +1967,8 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
       <div class="step">
         <div class="step-num" style="background:var(--amber-bg);border-color:rgba(245,158,11,0.3);color:var(--amber);">1</div>
         <div class="step-body">
-          <strong>Reunión con el cliente y planificación</strong>
-          <p>Define qué páginas tendrá el sitio, qué colores, qué contenido y qué funcionalidades necesita (formulario de contacto, galería, tienda). Guarda todo en Google Drive.</p>
+          <strong>Planificación del proyecto</strong>
+          <p>Define qué páginas tendrá el sitio, qué colores, qué contenido y qué funcionalidades necesita (formulario de contacto, galería, tienda). Tanto si es para un cliente como para uso propio, guarda todo en Google Drive antes de empezar.</p>
         </div>
       </div>
 
@@ -1971,8 +1983,8 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
       <div class="step">
         <div class="step-num" style="background:var(--amber-bg);border-color:rgba(245,158,11,0.3);color:var(--amber);">3</div>
         <div class="step-body">
-          <strong>Diseño en Canva + fotos de Unsplash</strong>
-          <p>Crea el logo en Canva. Busca fotos profesionales en Unsplash. Sube todo a Cloudinary para tener las URLs optimizadas listas.</p>
+          <strong>Diseño en Canva + fotos</strong>
+          <p>Crea el logo en Canva. Las fotos de stock Claude las obtiene de Unsplash automáticamente. Si tienes fotos propias o del cliente, súbelas a Cloudinary para optimizarlas.</p>
         </div>
       </div>
 
@@ -2003,8 +2015,8 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
       <div class="step">
         <div class="step-num" style="background:rgba(249,115,22,0.1);border-color:rgba(249,115,22,0.3);color:#fb923c;">7</div>
         <div class="step-body">
-          <strong>Configurar Firebase Hosting</strong>
-          <p>Crea el proyecto en console.firebase.google.com. Conecta con el repositorio de GitHub. A partir de aquí, cada push a "main" publica el sitio automáticamente.</p>
+          <strong>Activar GitHub Pages</strong>
+          <p>En el repositorio → Settings → Pages → selecciona la rama "main" → Save. El sitio queda publicado en <code style="font-family:var(--font-mono);font-size:12px;color:var(--accent2);">tuusuario.github.io/repo</code>. Si el sitio necesita login o base de datos, crea el proyecto en Firebase para esas funcionalidades.</p>
         </div>
       </div>
 
@@ -2028,7 +2040,7 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
         <div class="step-num" style="background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3);color:var(--amber);">10</div>
         <div class="step-body">
           <strong>Comprar dominio y conectar DNS</strong>
-          <p>Comprar el dominio en GoDaddy → en Firebase añadir dominio personalizado → copiar registros DNS → pegarlos en GoDaddy → esperar 24-48h. ¡El sitio está listo!</p>
+          <p>Comprar el dominio en GoDaddy → en GoDaddy añadir registros A apuntando a GitHub → en GitHub Pages añadir el dominio personalizado → esperar 24-48h de propagación DNS → activar HTTPS. ¡El sitio está listo!</p>
         </div>
       </div>
     </div>
@@ -2036,7 +2048,7 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
     <h2 class="section-title">Cómo actualizar el sitio en el futuro</h2>
 
     <div class="flow-inline" style="flex-wrap:wrap;gap:8px;">
-      <div class="flow-node">Cliente pide cambio</div>
+      <div class="flow-node">Se necesita un cambio</div>
       <div class="flow-arrow">→</div>
       <div class="flow-node accent">Claude Code</div>
       <div class="flow-arrow">→</div>
@@ -2044,31 +2056,31 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
       <div class="flow-arrow">→</div>
       <div class="flow-node amber">Push a GitHub</div>
       <div class="flow-arrow">→</div>
-      <div class="flow-node green">Firebase publica</div>
+      <div class="flow-node green">GitHub Pages publica</div>
     </div>
-    <p class="body-text" style="margin-top:8px;">Todo el proceso tarda menos de 5 minutos. El sitio se actualiza automáticamente sin tocar nada en Firebase ni en el servidor.</p>
+    <p class="body-text" style="margin-top:8px;">Todo el proceso tarda menos de 5 minutos. El sitio se actualiza automáticamente sin tocar nada en el servidor. Aplica igual para proyectos de clientes o proyectos propios.</p>
 
     <h2 class="section-title">Checklist de lanzamiento</h2>
     <ul class="checklist">
       <li>Repositorio creado en GitHub con nombre del proyecto</li>
-      <li>Logo y fotos subidos a Cloudinary</li>
+      <li>Logo y fotos propias subidas a Cloudinary (si aplica)</li>
       <li>Código HTML/CSS/JS en el repositorio</li>
-      <li>Sitio visible en la URL de Firebase (.web.app)</li>
+      <li>GitHub Pages activado — sitio visible en <code style="font-family:var(--font-mono);font-size:12px;">tuusuario.github.io/repo</code></li>
       <li>Formulario de contacto funcional (Formspree o EmailJS)</li>
       <li>Databuddy instalado en todas las páginas</li>
       <li>Sitio responsive probado en móvil</li>
       <li>Dominio comprado en GoDaddy</li>
-      <li>DNS configurado y propagado</li>
+      <li>DNS configurado en GoDaddy (registros A) y en GitHub Pages (dominio personalizado)</li>
       <li>HTTPS activo (candado verde en el navegador)</li>
       <li>Probar formulario de contacto en producción</li>
-      <li>Entregar credenciales al cliente en Google Drive</li>
+      <li>Guardar credenciales en Google Drive (para clientes o uso propio)</li>
     </ul>
 
     <div class="callout callout-green" style="margin-top:32px;">
       <div class="callout-icon">🎉</div>
       <div class="callout-content">
         <strong>¡Felicitaciones! Has completado el curso</strong>
-        <p>Ahora tienes los conocimientos fundamentales para crear y publicar sitios web profesionales usando todo el ecosistema de herramientas del equipo. El siguiente paso es la práctica: crea tu primer proyecto de prueba.</p>
+        <p>Ahora tienes los conocimientos para crear y publicar sitios web profesionales — tanto para clientes como para proyectos propios: tu portafolio, una tienda personal, una landing para tu negocio, o cualquier idea que quieras llevar a la web. El siguiente paso es la práctica: crea tu primer proyecto.</p>
       </div>
     </div>
 

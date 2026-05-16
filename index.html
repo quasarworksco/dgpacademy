@@ -1,0 +1,2174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curso de Desarrollo Web — Guía Completa</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --bg3: #18181f;
+  --bg4: #1e1e28;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #e8e8f0;
+  --text2: #9090a8;
+  --text3: #5a5a72;
+  --accent: #6c63ff;
+  --accent2: #9d97ff;
+  --accent-bg: rgba(108,99,255,0.12);
+  --accent-border: rgba(108,99,255,0.3);
+  --green: #22c55e;
+  --green-bg: rgba(34,197,94,0.1);
+  --amber: #f59e0b;
+  --amber-bg: rgba(245,158,11,0.1);
+  --coral: #f87171;
+  --coral-bg: rgba(248,113,113,0.1);
+  --teal: #2dd4bf;
+  --teal-bg: rgba(45,212,191,0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: 'DM Sans', sans-serif;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ──── LAYOUT ──── */
+.shell { display: flex; min-height: 100vh; }
+
+/* ──── SIDEBAR ──── */
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-logo {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo .logo-badge {
+  display: inline-block;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  color: var(--accent2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+.sidebar-logo h1 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+}
+.sidebar-logo p {
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+.progress-wrap {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text3);
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+}
+.progress-bar {
+  height: 3px;
+  background: var(--bg4);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+.nav-section {
+  padding: 20px 16px 8px;
+}
+.nav-section-title {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0 8px;
+  margin-bottom: 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  color: var(--text2);
+  font-family: var(--font);
+  font-size: 13px;
+  position: relative;
+}
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active {
+  background: var(--accent-bg);
+  color: var(--accent2);
+  border: 1px solid var(--accent-border);
+}
+.nav-item .nav-icon { font-size: 14px; min-width: 18px; text-align: center; }
+.nav-item .nav-check {
+  margin-left: auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid var(--text3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.nav-item.done .nav-check {
+  background: var(--green);
+  border-color: var(--green);
+  color: #000;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text3);
+}
+
+/* ──── MAIN CONTENT ──── */
+.main {
+  margin-left: 280px;
+  flex: 1;
+  min-height: 100vh;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  background: rgba(10,10,15,0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+}
+.topbar-breadcrumb {
+  font-size: 13px;
+  color: var(--text3);
+  font-family: var(--font-mono);
+}
+.topbar-breadcrumb span { color: var(--text2); }
+
+.topbar-actions { display: flex; gap: 10px; }
+.btn {
+  padding: 8px 18px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 13px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+}
+.btn-ghost {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+}
+.btn-ghost:hover { color: var(--text); border-color: var(--border2); background: var(--bg4); }
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 500;
+}
+.btn-primary:hover { background: #7c75ff; }
+
+/* ──── LESSON PAGES ──── */
+.lesson { display: none; padding: 48px 48px 80px; max-width: 860px; }
+.lesson.active { display: block; animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.lesson-header {
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+.lesson-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--accent2);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  letter-spacing: 0.06em;
+}
+.lesson h1 {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--text) 60%, var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.lesson-intro {
+  font-size: 16px;
+  color: var(--text2);
+  line-height: 1.75;
+  max-width: 680px;
+}
+
+/* ──── CONTENT ELEMENTS ──── */
+h2.section-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  margin: 40px 0 16px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+h2.section-title::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 22px;
+  background: linear-gradient(var(--accent), var(--teal));
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+h3.sub-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 28px 0 10px;
+  color: var(--text);
+}
+
+p.body-text {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+/* Cards */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: var(--border2); }
+
+.card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.card-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+@media (max-width: 700px) { .card-grid, .card-grid-3 { grid-template-columns: 1fr; } }
+
+.card-icon { font-size: 28px; margin-bottom: 10px; }
+.card h4 { font-family: var(--font-display); font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+.card p { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+/* Callouts */
+.callout {
+  display: flex;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  margin: 20px 0;
+  font-size: 14px;
+  line-height: 1.65;
+  border-left: 3px solid;
+}
+.callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.callout-content { flex: 1; }
+.callout-content strong { display: block; font-weight: 500; margin-bottom: 3px; }
+.callout-content p { margin: 0; }
+
+.callout-blue { background: rgba(108,99,255,0.08); border-color: var(--accent); color: var(--accent2); }
+.callout-blue .callout-content { color: #b8b3ff; }
+.callout-green { background: var(--green-bg); border-color: var(--green); }
+.callout-green .callout-content { color: #86efac; }
+.callout-amber { background: var(--amber-bg); border-color: var(--amber); }
+.callout-amber .callout-content { color: #fcd34d; }
+.callout-coral { background: var(--coral-bg); border-color: var(--coral); }
+.callout-coral .callout-content { color: #fca5a5; }
+
+/* Code blocks */
+.code-wrap { margin: 20px 0; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border2); }
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg4);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.code-label { font-family: var(--font-mono); font-size: 11px; color: var(--text3); }
+.code-dots { display: flex; gap: 5px; }
+.code-dot { width: 8px; height: 8px; border-radius: 50%; }
+.d1 { background: #ff5f57; }
+.d2 { background: #febc2e; }
+.d3 { background: #28c840; }
+pre {
+  background: var(--bg3);
+  padding: 20px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text2);
+  margin: 0;
+}
+.c-purple { color: #c792ea; }
+.c-green { color: #c3e88d; }
+.c-blue { color: #82aaff; }
+.c-orange { color: #ffcb6b; }
+.c-gray { color: #637777; }
+.c-teal { color: #2dd4bf; }
+.c-red { color: #f87171; }
+.c-white { color: #eeffff; }
+
+/* Steps */
+.steps { margin: 20px 0; }
+.step {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  align-items: flex-start;
+}
+.step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  color: var(--accent2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.step-body { flex: 1; }
+.step-body strong { display: block; font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.step-body span, .step-body p { font-size: 14px; color: var(--text2); line-height: 1.65; }
+
+/* Tags/badges */
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-weight: 500;
+  margin: 2px;
+}
+.badge-purple { background: var(--accent-bg); color: var(--accent2); border: 1px solid var(--accent-border); }
+.badge-green { background: var(--green-bg); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+.badge-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(245,158,11,0.25); }
+.badge-teal { background: var(--teal-bg); color: var(--teal); border: 1px solid rgba(45,212,191,0.25); }
+.badge-coral { background: var(--coral-bg); color: var(--coral); border: 1px solid rgba(248,113,113,0.25); }
+
+/* Tool cards */
+.tool-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tool-card:hover { border-color: var(--border2); background: var(--bg3); }
+.tool-card.expanded { border-color: var(--accent-border); background: var(--bg3); }
+
+.tool-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tool-emoji { font-size: 22px; }
+.tool-name { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--text); }
+.tool-tagline { font-size: 13px; color: var(--text3); margin-top: 2px; }
+.tool-expand { margin-left: auto; color: var(--text3); font-size: 18px; transition: transform 0.2s; }
+.tool-card.expanded .tool-expand { transform: rotate(45deg); }
+.tool-body { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+.tool-card.expanded .tool-body { display: block; }
+
+/* Diagram SVGs */
+.diagram-wrap {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin: 24px 0;
+  overflow: hidden;
+}
+.diagram-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+/* Concept comparison */
+.compare-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+.compare-cell {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  text-align: center;
+}
+.compare-cell .icon { font-size: 28px; margin-bottom: 8px; }
+.compare-cell h5 { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.compare-cell p { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.compare-cell .meta { font-family: var(--font-mono); font-size: 10px; color: var(--text3); margin-top: 8px; }
+
+/* Checklist */
+.checklist { list-style: none; margin: 16px 0; }
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+.checklist li:last-child { border-bottom: none; }
+.checklist li::before {
+  content: '◈';
+  color: var(--accent2);
+  font-size: 12px;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+/* Flow diagram inline */
+.flow-inline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+.flow-node {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+}
+.flow-arrow {
+  color: var(--text3);
+  font-size: 18px;
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+.flow-node.accent { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent2); }
+.flow-node.green { background: var(--green-bg); border-color: rgba(34,197,94,0.25); color: var(--green); }
+.flow-node.teal { background: var(--teal-bg); border-color: rgba(45,212,191,0.25); color: var(--teal); }
+.flow-node.amber { background: var(--amber-bg); border-color: rgba(245,158,11,0.25); color: var(--amber); }
+
+/* Quiz section */
+.quiz-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin: 28px 0;
+}
+.quiz-card h4 { font-family: var(--font-display); font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt {
+  padding: 12px 16px;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text2);
+  transition: all 0.15s;
+  background: var(--bg3);
+}
+.quiz-opt:hover { border-color: var(--accent-border); color: var(--accent2); }
+.quiz-opt.correct { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+.quiz-opt.wrong { border-color: var(--coral); color: var(--coral); background: var(--coral-bg); }
+.quiz-feedback { margin-top: 12px; font-size: 13px; color: var(--text3); display: none; }
+.quiz-feedback.show { display: block; }
+
+/* Lesson nav */
+.lesson-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 60px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+/* ──── HERO / HOME ──── */
+.hero-lesson {
+  padding: 80px 48px;
+  max-width: 860px;
+}
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent2);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.hero-lesson h1 {
+  font-family: var(--font-display);
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #fff 0%, var(--accent2) 60%, var(--teal) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-lesson .subtitle {
+  font-size: 18px;
+  color: var(--text2);
+  line-height: 1.7;
+  max-width: 600px;
+  margin-bottom: 40px;
+}
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  margin: 32px 0;
+}
+.tool-pill {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s;
+}
+.tool-pill:hover { border-color: var(--border2); color: var(--text); }
+
+.modules-overview { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
+.mod-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.mod-card:hover { border-color: var(--accent-border); background: var(--bg3); }
+.mod-num { font-family: var(--font-mono); font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+.mod-card h3 { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.mod-card p { font-size: 12px; color: var(--text3); }
+.mod-count { font-family: var(--font-mono); font-size: 10px; color: var(--accent2); margin-top: 10px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border2); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .lesson, .hero-lesson { padding: 32px 24px 60px; }
+  .topbar { padding: 12px 24px; }
+  .hero-lesson h1 { font-size: 36px; }
+  .modules-overview { grid-template-columns: 1fr; }
+  .card-grid { grid-template-columns: 1fr; }
+  .card-grid-3 { grid-template-columns: 1fr; }
+  .compare-row { grid-template-columns: 1fr; }
+}
+.menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text2);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+}
+@media (max-width: 900px) { .menu-btn { display: block; } }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+<!-- ──── SIDEBAR ──── -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge">v1.0 · 2025</div>
+    <h1>Curso Desarrollo Web</h1>
+    <p>Guía completa para tu asistente</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Progreso</span>
+      <span id="prog-text">0 / 10</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="prog-fill"></div>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Inicio</div>
+    <button class="nav-item active" onclick="goTo('home')" data-id="home">
+      <span class="nav-icon">🏠</span> Bienvenida al curso
+      <span class="nav-check">✓</span>
+    </button>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Módulo 1 · Fundamentos</div>
+    <button class="nav-item" onclick="goTo('l1')" data-id="l1">
+      <span class="nav-icon">🌐</span> ¿Cómo funciona la web?
+      <span class="nav-check"></span>
+    </button>
+    <button class="nav-item" onclick="goTo('l2')" data-id="l2">
+      <span class="nav-icon">🧱</span> HTML desde cero
+      <span class="nav-check"></span>
+    </button>
+    <button class="nav-item" onclick="goTo('l3')" data-id="l3">
+      <span class="nav-icon">🎨</span> CSS — Estilo y diseño
+      <span class="nav-check"></span>
+    </button>
+    <button class="nav-item" onclick="goTo('l4')" data-id="l4">
+      <span class="nav-icon">⚡</span> JavaScript — Interactividad
+      <span class="nav-check"></span>
+    </button>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Módulo 2 · Herramientas</div>
+    <button class="nav-item" onclick="goTo('l5')" data-id="l5">
+      <span class="nav-icon">🐙</span> GitHub y control de versiones
+      <span class="nav-check"></span>
+    </button>
+    <button class="nav-item" onclick="goTo('l6')" data-id="l6">
+      <span class="nav-icon">🤖</span> IA: Claude y Gemini Pro
+      <span class="nav-check"></span>
+    </button>
+    <button class="nav-item" onclick="goTo('l7')" data-id="l7">
+      <span class="nav-icon">🚀</span> Firebase y publicación
+      <span class="nav-check"></span>
+    </button>
+    <button class="nav-item" onclick="goTo('l8')" data-id="l8">
+      <span class="nav-icon">🔧</span> Servicios y herramientas extra
+      <span class="nav-check"></span>
+    </button>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Módulo 3 · Integraciones</div>
+    <button class="nav-item" onclick="goTo('l9')" data-id="l9">
+      <span class="nav-icon">🔌</span> APIs — Cómo todo se conecta
+      <span class="nav-check"></span>
+    </button>
+    <button class="nav-item" onclick="goTo('l10')" data-id="l10">
+      <span class="nav-icon">🗺️</span> Flujo completo de un proyecto
+      <span class="nav-check"></span>
+    </button>
+  </div>
+
+  <div class="sidebar-footer">
+    Guía de trabajo · Uso interno<br>Actualizada 2025
+  </div>
+</nav>
+
+<!-- ──── MAIN ──── -->
+<div class="main">
+
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      <div class="topbar-breadcrumb" id="breadcrumb">Inicio → <span>Bienvenida</span></div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost" onclick="markDone()">✓ Marcar completado</button>
+      <button class="btn btn-primary" onclick="nextLesson()">Siguiente →</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ HOME ══════════════════════════════════════ -->
+  <div id="home" class="lesson active">
+  <div class="hero-lesson" style="padding:80px 0 0;">
+    <div class="hero-eyebrow">Guía de Desarrollo Web · Desde cero</div>
+    <h1>Aprende a crear sitios web profesionales</h1>
+    <p class="subtitle">Este curso te enseña todo lo que necesitas saber para construir, publicar y mantener sitios web usando las mismas herramientas que usamos en el equipo.</p>
+
+    <div class="tools-grid">
+      <div class="tool-pill">🤖 Claude Code</div>
+      <div class="tool-pill">🐙 GitHub</div>
+      <div class="tool-pill">🔥 Firebase</div>
+      <div class="tool-pill">🌐 GoDaddy</div>
+      <div class="tool-pill">🖼️ Cloudinary</div>
+      <div class="tool-pill">📬 Formspree</div>
+      <div class="tool-pill">✉️ EmailJS</div>
+      <div class="tool-pill">📊 Databuddy</div>
+      <div class="tool-pill">🎨 Canva</div>
+      <div class="tool-pill">📷 Unsplash</div>
+      <div class="tool-pill">🤖 Gemini Pro</div>
+      <div class="tool-pill">⚛️ Reactbits</div>
+    </div>
+
+    <h2 class="section-title">Estructura del curso</h2>
+
+    <div class="modules-overview">
+      <div class="mod-card" onclick="goTo('l1')">
+        <div class="mod-num">Módulo 01</div>
+        <h3>Fundamentos Web</h3>
+        <p>HTML, CSS, JavaScript y cómo funciona internet.</p>
+        <div class="mod-count">4 lecciones</div>
+      </div>
+      <div class="mod-card" onclick="goTo('l5')">
+        <div class="mod-num">Módulo 02</div>
+        <h3>Herramientas del equipo</h3>
+        <p>GitHub, Firebase, Claude, Gemini y todos los servicios.</p>
+        <div class="mod-count">4 lecciones</div>
+      </div>
+      <div class="mod-card" onclick="goTo('l9')">
+        <div class="mod-num">Módulo 03</div>
+        <h3>Integraciones y flujo</h3>
+        <p>APIs, conexiones y el proceso completo de un proyecto.</p>
+        <div class="mod-count">2 lecciones</div>
+      </div>
+      <div class="mod-card" style="border-style:dashed;cursor:default;">
+        <div class="mod-num">Total</div>
+        <h3>10 lecciones</h3>
+        <p>Avanza a tu ritmo. Marca cada lección al terminarla.</p>
+        <div class="mod-count">Progreso guardado automáticamente</div>
+      </div>
+    </div>
+
+    <div class="callout callout-blue" style="margin-top:32px;">
+      <div class="callout-icon">💡</div>
+      <div class="callout-content">
+        <strong>Cómo usar este curso</strong>
+        <p>Sigue las lecciones en orden. Al terminar cada una, haz click en "Marcar completado". Si tienes dudas, anótalas y pregúntalas. No sigas adelante hasta entender bien cada lección.</p>
+      </div>
+    </div>
+  </div>
+
+    <div class="lesson-nav">
+      <div></div>
+      <button class="btn btn-primary" onclick="goTo('l1')">Empezar el curso →</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ L1 ══════════════════════════════════════ -->
+  <div id="l1" class="lesson">
+    <div class="lesson-header">
+      <div class="lesson-tag">Módulo 1 · Lección 1</div>
+      <h1>¿Cómo funciona la web?</h1>
+      <p class="lesson-intro">Antes de escribir una sola línea de código, necesitas entender qué pasa cuando alguien escribe una dirección web y presiona Enter.</p>
+    </div>
+
+    <h2 class="section-title">El viaje de una página web</h2>
+    <p class="body-text">Cuando escribes <strong style="color:var(--accent2)">www.miempresa.com</strong> en tu navegador, ocurre una cadena de eventos en milisegundos:</p>
+
+    <div class="diagram-wrap">
+      <div class="diagram-title">// Flujo de una petición web</div>
+      <svg width="100%" viewBox="0 0 760 200" style="max-width:760px;">
+        <defs>
+          <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#6c63ff" stroke-width="1.5" stroke-linecap="round"/>
+          </marker>
+        </defs>
+        <rect x="10" y="75" width="120" height="50" rx="8" fill="#18181f" stroke="#3d3d5c" stroke-width="1"/>
+        <text x="70" y="97" text-anchor="middle" fill="#9d97ff" font-size="11" font-family="DM Mono, monospace">Navegador</text>
+        <text x="70" y="113" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Sans, sans-serif">Chrome / Safari</text>
+
+        <rect x="175" y="75" width="120" height="50" rx="8" fill="#18181f" stroke="#3d3d5c" stroke-width="1"/>
+        <text x="235" y="97" text-anchor="middle" fill="#9d97ff" font-size="11" font-family="DM Mono, monospace">DNS</text>
+        <text x="235" y="113" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Sans, sans-serif">Directorio global</text>
+
+        <rect x="340" y="75" width="120" height="50" rx="8" fill="#18181f" stroke="#3d3d5c" stroke-width="1"/>
+        <text x="400" y="97" text-anchor="middle" fill="#9d97ff" font-size="11" font-family="DM Mono, monospace">Servidor</text>
+        <text x="400" y="113" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Sans, sans-serif">Firebase Hosting</text>
+
+        <rect x="505" y="75" width="120" height="50" rx="8" fill="#18181f" stroke="#3d3d5c" stroke-width="1"/>
+        <text x="565" y="97" text-anchor="middle" fill="#9d97ff" font-size="11" font-family="DM Mono, monospace">Archivos</text>
+        <text x="565" y="113" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Sans, sans-serif">HTML · CSS · JS</text>
+
+        <rect x="670" y="75" width="80" height="50" rx="8" fill="#0f2a1f" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
+        <text x="710" y="97" text-anchor="middle" fill="#22c55e" font-size="11" font-family="DM Mono, monospace">Página</text>
+        <text x="710" y="113" text-anchor="middle" fill="#16a34a" font-size="10" font-family="DM Sans, sans-serif">¡Visible!</text>
+
+        <line x1="132" y1="100" x2="173" y2="100" stroke="#6c63ff" stroke-width="1.5" marker-end="url(#a)"/>
+        <line x1="297" y1="100" x2="338" y2="100" stroke="#6c63ff" stroke-width="1.5" marker-end="url(#a)"/>
+        <line x1="462" y1="100" x2="503" y2="100" stroke="#6c63ff" stroke-width="1.5" marker-end="url(#a)"/>
+        <line x1="627" y1="100" x2="668" y2="100" stroke="#6c63ff" stroke-width="1.5" marker-end="url(#a)"/>
+
+        <text x="70" y="55" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Mono">1. Pide la página</text>
+        <text x="235" y="55" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Mono">2. Encuentra IP</text>
+        <text x="400" y="55" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Mono">3. Recibe petición</text>
+        <text x="565" y="55" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Mono">4. Envía archivos</text>
+        <text x="710" y="55" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Mono">5. Muestra</text>
+      </svg>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Escribes la URL en el navegador</strong>
+          <p>El navegador (Chrome, Safari, Firefox) es el programa que muestra páginas web. Cuando escribes una dirección, él se encarga de ir a buscarla.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>El DNS traduce el nombre a una dirección IP</strong>
+          <p>El DNS (Domain Name System) es como el directorio telefónico de internet. Convierte "miempresa.com" en una dirección numérica como "142.250.80.14" que los servidores entienden.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>El servidor recibe la petición</strong>
+          <p>Un servidor es una computadora que está siempre encendida y conectada a internet. Firebase Hosting es el servidor donde guardamos nuestros sitios.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>El servidor envía los archivos HTML, CSS y JS</strong>
+          <p>Esos tres archivos son toda la página web. El navegador los recibe y los convierte en la página visual que el usuario ve.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Conceptos clave</h2>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <h4>Dominio</h4>
+        <p>La dirección web: miempresa.com. La compramos en GoDaddy y se renueva anualmente.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🖥️</div>
+        <h4>Servidor / Hosting</h4>
+        <p>La computadora siempre encendida que guarda y sirve el sitio. Usamos Firebase Hosting.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🗺️</div>
+        <h4>DNS</h4>
+        <p>Conecta el dominio (GoDaddy) con el servidor (Firebase). Se configura una sola vez.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌍</div>
+        <h4>URL</h4>
+        <p>La dirección completa: https://www.miempresa.com/contacto. Incluye protocolo, dominio y ruta.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-green">
+      <div class="callout-icon">✅</div>
+      <div class="callout-content">
+        <strong>Resumen de esta lección</strong>
+        <p>Web = archivos (HTML+CSS+JS) guardados en un servidor. El dominio (GoDaddy) apunta al servidor (Firebase). El navegador descarga los archivos y muestra la página.</p>
+      </div>
+    </div>
+
+    <div class="lesson-nav">
+      <button class="btn btn-ghost" onclick="goTo('home')">← Inicio</button>
+      <button class="btn btn-primary" onclick="markDoneAndNext('l1','l2')">Completado → Siguiente</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ L2 ══════════════════════════════════════ -->
+  <div id="l2" class="lesson">
+    <div class="lesson-header">
+      <div class="lesson-tag">Módulo 1 · Lección 2</div>
+      <h1>HTML desde cero</h1>
+      <p class="lesson-intro">HTML es el lenguaje que define <em>qué existe</em> en una página web. Todo lo que ves — títulos, párrafos, imágenes, botones — se define con HTML.</p>
+    </div>
+
+    <h2 class="section-title">¿Qué es HTML?</h2>
+    <p class="body-text">HTML significa <strong style="color:var(--accent2)">HyperText Markup Language</strong>. No es un lenguaje de programación — es un lenguaje de marcado. Usas <strong style="color:var(--accent2)">etiquetas</strong> para decirle al navegador qué tipo de contenido es cada cosa.</p>
+
+    <div class="compare-row">
+      <div class="compare-cell">
+        <div class="icon">🏗️</div>
+        <h5>HTML</h5>
+        <p>La estructura</p>
+        <div class="meta">Como los ladrillos y paredes de una casa</div>
+      </div>
+      <div class="compare-cell">
+        <div class="icon">🎨</div>
+        <h5>CSS</h5>
+        <p>El estilo</p>
+        <div class="meta">Como la pintura y la decoración</div>
+      </div>
+      <div class="compare-cell">
+        <div class="icon">⚡</div>
+        <h5>JavaScript</h5>
+        <p>La interacción</p>
+        <div class="meta">Como las puertas, switches y electrodomésticos</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Anatomía de una etiqueta</h2>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div>
+        <div class="code-label">anatomia-etiqueta.html</div>
+      </div>
+      <pre><span class="c-gray">  &lt;</span><span class="c-blue">h1</span><span class="c-gray">&gt;</span><span class="c-white">  Hola Mundo  </span><span class="c-gray">&lt;/</span><span class="c-blue">h1</span><span class="c-gray">&gt;</span>
+  <span class="c-gray">↑</span>         <span class="c-gray">↑</span>            <span class="c-gray">↑</span>
+  <span class="c-purple">Apertura  Contenido   Cierre</span>
+
+<span class="c-gray">  &lt;</span><span class="c-blue">img</span> <span class="c-green">src</span><span class="c-gray">=</span><span class="c-orange">"foto.jpg"</span> <span class="c-green">alt</span><span class="c-gray">=</span><span class="c-orange">"Mi foto"</span><span class="c-gray">&gt;</span>
+  <span class="c-gray">↑         ↑</span>
+  <span class="c-purple">Etiqueta  Atributo (información extra)</span>
+<span class="c-gray">  (algunas etiquetas no necesitan cierre)</span></pre>
+    </div>
+
+    <h2 class="section-title">Estructura básica de un archivo HTML</h2>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div>
+        <div class="code-label">index.html — Plantilla base</div>
+      </div>
+      <pre><span class="c-gray">&lt;!DOCTYPE html&gt;</span>  <span class="c-gray">← Le dice al navegador: "esto es HTML5"</span>
+<span class="c-gray">&lt;</span><span class="c-blue">html</span> <span class="c-green">lang</span><span class="c-gray">=</span><span class="c-orange">"es"</span><span class="c-gray">&gt;</span>  <span class="c-gray">← Toda la página va aquí dentro</span>
+
+  <span class="c-gray">&lt;</span><span class="c-blue">head</span><span class="c-gray">&gt;</span>  <span class="c-gray">← Información invisible (para el navegador)</span>
+    <span class="c-gray">&lt;</span><span class="c-blue">meta</span> <span class="c-green">charset</span><span class="c-gray">=</span><span class="c-orange">"UTF-8"</span><span class="c-gray">&gt;</span>         <span class="c-gray">← Soporte de tildes y ñ</span>
+    <span class="c-gray">&lt;</span><span class="c-blue">meta</span> <span class="c-green">name</span><span class="c-gray">=</span><span class="c-orange">"viewport"</span> <span class="c-green">content</span><span class="c-gray">=</span><span class="c-orange">"width=device-width"</span><span class="c-gray">&gt;</span>  <span class="c-gray">← Responsive</span>
+    <span class="c-gray">&lt;</span><span class="c-blue">title</span><span class="c-gray">&gt;</span><span class="c-white">Mi Empresa</span><span class="c-gray">&lt;/</span><span class="c-blue">title</span><span class="c-gray">&gt;</span>        <span class="c-gray">← Título de la pestaña</span>
+    <span class="c-gray">&lt;</span><span class="c-blue">link</span> <span class="c-green">rel</span><span class="c-gray">=</span><span class="c-orange">"stylesheet"</span> <span class="c-green">href</span><span class="c-gray">=</span><span class="c-orange">"styles.css"</span><span class="c-gray">&gt;</span>  <span class="c-gray">← Conectar CSS</span>
+  <span class="c-gray">&lt;/</span><span class="c-blue">head</span><span class="c-gray">&gt;</span>
+
+  <span class="c-gray">&lt;</span><span class="c-blue">body</span><span class="c-gray">&gt;</span>  <span class="c-gray">← Todo lo que el usuario VE va aquí</span>
+
+    <span class="c-gray">&lt;</span><span class="c-blue">h1</span><span class="c-gray">&gt;</span><span class="c-white">Título principal</span><span class="c-gray">&lt;/</span><span class="c-blue">h1</span><span class="c-gray">&gt;</span>
+    <span class="c-gray">&lt;</span><span class="c-blue">p</span><span class="c-gray">&gt;</span><span class="c-white">Un párrafo de texto aquí.</span><span class="c-gray">&lt;/</span><span class="c-blue">p</span><span class="c-gray">&gt;</span>
+    <span class="c-gray">&lt;</span><span class="c-blue">img</span> <span class="c-green">src</span><span class="c-gray">=</span><span class="c-orange">"logo.png"</span> <span class="c-green">alt</span><span class="c-gray">=</span><span class="c-orange">"Logo"</span><span class="c-gray">&gt;</span>
+    <span class="c-gray">&lt;</span><span class="c-blue">button</span><span class="c-gray">&gt;</span><span class="c-white">Contactar</span><span class="c-gray">&lt;/</span><span class="c-blue">button</span><span class="c-gray">&gt;</span>
+
+  <span class="c-gray">&lt;/</span><span class="c-blue">body</span><span class="c-gray">&gt;</span>
+<span class="c-gray">&lt;/</span><span class="c-blue">html</span><span class="c-gray">&gt;</span></pre>
+    </div>
+
+    <h2 class="section-title">Etiquetas esenciales</h2>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>Títulos</h4>
+        <div class="code-wrap" style="margin:8px 0 0;"><pre style="padding:12px;font-size:12px;"><span class="c-gray">&lt;</span><span class="c-blue">h1</span><span class="c-gray">&gt;</span><span class="c-white">El más grande</span><span class="c-gray">&lt;/</span><span class="c-blue">h1</span><span class="c-gray">&gt;</span>
+<span class="c-gray">&lt;</span><span class="c-blue">h2</span><span class="c-gray">&gt;</span><span class="c-white">Segundo nivel</span><span class="c-gray">&lt;/</span><span class="c-blue">h2</span><span class="c-gray">&gt;</span>
+<span class="c-gray">&lt;</span><span class="c-blue">h3</span><span class="c-gray">&gt;</span><span class="c-white">Tercer nivel</span><span class="c-gray">&lt;/</span><span class="c-blue">h3</span><span class="c-gray">&gt;</span></pre></div>
+        <p style="font-size:12px;margin-top:8px;">Solo debe haber UN h1 por página. El h2 se usa para secciones.</p>
+      </div>
+      <div class="card">
+        <h4>Texto</h4>
+        <div class="code-wrap" style="margin:8px 0 0;"><pre style="padding:12px;font-size:12px;"><span class="c-gray">&lt;</span><span class="c-blue">p</span><span class="c-gray">&gt;</span><span class="c-white">Párrafo normal</span><span class="c-gray">&lt;/</span><span class="c-blue">p</span><span class="c-gray">&gt;</span>
+<span class="c-gray">&lt;</span><span class="c-blue">strong</span><span class="c-gray">&gt;</span><span class="c-white">Negrita</span><span class="c-gray">&lt;/</span><span class="c-blue">strong</span><span class="c-gray">&gt;</span>
+<span class="c-gray">&lt;</span><span class="c-blue">em</span><span class="c-gray">&gt;</span><span class="c-white">Cursiva</span><span class="c-gray">&lt;/</span><span class="c-blue">em</span><span class="c-gray">&gt;</span>
+<span class="c-gray">&lt;</span><span class="c-blue">span</span><span class="c-gray">&gt;</span><span class="c-white">Texto inline</span><span class="c-gray">&lt;/</span><span class="c-blue">span</span><span class="c-gray">&gt;</span></pre></div>
+      </div>
+      <div class="card">
+        <h4>Listas</h4>
+        <div class="code-wrap" style="margin:8px 0 0;"><pre style="padding:12px;font-size:12px;"><span class="c-gray">&lt;</span><span class="c-blue">ul</span><span class="c-gray">&gt;</span>  <span class="c-gray">← lista con puntos</span>
+  <span class="c-gray">&lt;</span><span class="c-blue">li</span><span class="c-gray">&gt;</span><span class="c-white">Elemento 1</span><span class="c-gray">&lt;/</span><span class="c-blue">li</span><span class="c-gray">&gt;</span>
+  <span class="c-gray">&lt;</span><span class="c-blue">li</span><span class="c-gray">&gt;</span><span class="c-white">Elemento 2</span><span class="c-gray">&lt;/</span><span class="c-blue">li</span><span class="c-gray">&gt;</span>
+<span class="c-gray">&lt;/</span><span class="c-blue">ul</span><span class="c-gray">&gt;</span>
+<span class="c-gray">&lt;</span><span class="c-blue">ol</span><span class="c-gray">&gt;</span>  <span class="c-gray">← lista numerada</span>
+<span class="c-gray">&lt;/</span><span class="c-blue">ol</span><span class="c-gray">&gt;</span></pre></div>
+      </div>
+      <div class="card">
+        <h4>Imágenes y enlaces</h4>
+        <div class="code-wrap" style="margin:8px 0 0;"><pre style="padding:12px;font-size:12px;"><span class="c-gray">&lt;</span><span class="c-blue">img</span> <span class="c-green">src</span><span class="c-gray">=</span><span class="c-orange">"foto.jpg"</span>
+     <span class="c-green">alt</span><span class="c-gray">=</span><span class="c-orange">"Descripción"</span><span class="c-gray">&gt;</span>
+
+<span class="c-gray">&lt;</span><span class="c-blue">a</span> <span class="c-green">href</span><span class="c-gray">=</span><span class="c-orange">"https://sitio.com"</span><span class="c-gray">&gt;</span>
+  <span class="c-white">Ir al sitio</span>
+<span class="c-gray">&lt;/</span><span class="c-blue">a</span><span class="c-gray">&gt;</span></pre></div>
+      </div>
+      <div class="card">
+        <h4>Contenedores (divs)</h4>
+        <div class="code-wrap" style="margin:8px 0 0;"><pre style="padding:12px;font-size:12px;"><span class="c-gray">&lt;</span><span class="c-blue">div</span> <span class="c-green">class</span><span class="c-gray">=</span><span class="c-orange">"mi-seccion"</span><span class="c-gray">&gt;</span>
+  <span class="c-gray">&lt;</span><span class="c-blue">h2</span><span class="c-gray">&gt;</span><span class="c-white">Servicios</span><span class="c-gray">&lt;/</span><span class="c-blue">h2</span><span class="c-gray">&gt;</span>
+  <span class="c-gray">&lt;</span><span class="c-blue">p</span><span class="c-gray">&gt;</span><span class="c-white">Texto...</span><span class="c-gray">&lt;/</span><span class="c-blue">p</span><span class="c-gray">&gt;</span>
+<span class="c-gray">&lt;/</span><span class="c-blue">div</span><span class="c-gray">&gt;</span></pre></div>
+        <p style="font-size:12px;margin-top:8px;">El div es una caja invisible para agrupar elementos y darles estilo.</p>
+      </div>
+      <div class="card">
+        <h4>Formulario</h4>
+        <div class="code-wrap" style="margin:8px 0 0;"><pre style="padding:12px;font-size:12px;"><span class="c-gray">&lt;</span><span class="c-blue">form</span><span class="c-gray">&gt;</span>
+  <span class="c-gray">&lt;</span><span class="c-blue">input</span> <span class="c-green">type</span><span class="c-gray">=</span><span class="c-orange">"text"</span>
+         <span class="c-green">name</span><span class="c-gray">=</span><span class="c-orange">"nombre"</span><span class="c-gray">&gt;</span>
+  <span class="c-gray">&lt;</span><span class="c-blue">textarea</span> <span class="c-green">name</span><span class="c-gray">=</span><span class="c-orange">"msg"</span><span class="c-gray">&gt;&lt;/</span><span class="c-blue">textarea</span><span class="c-gray">&gt;</span>
+  <span class="c-gray">&lt;</span><span class="c-blue">button</span><span class="c-gray">&gt;</span><span class="c-white">Enviar</span><span class="c-gray">&lt;/</span><span class="c-blue">button</span><span class="c-gray">&gt;</span>
+<span class="c-gray">&lt;/</span><span class="c-blue">form</span><span class="c-gray">&gt;</span></pre></div>
+      </div>
+    </div>
+
+    <div class="callout callout-amber">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-content">
+        <strong>Error común</strong>
+        <p>Olvidar cerrar las etiquetas. Cada <code style="font-family:var(--font-mono);font-size:12px;">&lt;div&gt;</code> necesita su <code style="font-family:var(--font-mono);font-size:12px;">&lt;/div&gt;</code>. Claude Code detecta y corrige estos errores automáticamente.</p>
+      </div>
+    </div>
+
+    <div class="lesson-nav">
+      <button class="btn btn-ghost" onclick="goTo('l1')">← Anterior</button>
+      <button class="btn btn-primary" onclick="markDoneAndNext('l2','l3')">Completado → Siguiente</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ L3 ══════════════════════════════════════ -->
+  <div id="l3" class="lesson">
+    <div class="lesson-header">
+      <div class="lesson-tag">Módulo 1 · Lección 3</div>
+      <h1>CSS — Estilo y diseño</h1>
+      <p class="lesson-intro">CSS da color, tamaño, posición y personalidad a todo lo que HTML define. Sin CSS, todos los sitios web se verían igual: texto negro en fondo blanco.</p>
+    </div>
+
+    <h2 class="section-title">Cómo funciona CSS</h2>
+    <p class="body-text">CSS funciona con <strong style="color:var(--accent2)">selectores</strong> y <strong style="color:var(--accent2)">propiedades</strong>. El selector elige qué elemento HTML quieres modificar, y las propiedades definen cómo se verá.</p>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div>
+        <div class="code-label">styles.css — Anatomía de una regla CSS</div>
+      </div>
+      <pre><span class="c-blue">h1</span> <span class="c-gray">{</span>             <span class="c-gray">← Selector: elige el elemento &lt;h1&gt;</span>
+  <span class="c-green">color</span><span class="c-gray">:</span> <span class="c-orange">blue</span><span class="c-gray">;</span>       <span class="c-gray">← Propiedad: color del texto</span>
+  <span class="c-green">font-size</span><span class="c-gray">:</span> <span class="c-orange">32px</span><span class="c-gray">;</span>   <span class="c-gray">← Propiedad: tamaño</span>
+  <span class="c-green">font-weight</span><span class="c-gray">:</span> <span class="c-orange">bold</span><span class="c-gray">;</span> <span class="c-gray">← Propiedad: grosor de letra</span>
+<span class="c-gray">}</span>
+
+<span class="c-blue">.mi-clase</span> <span class="c-gray">{</span>     <span class="c-gray">← Selector de clase (el punto es clave)</span>
+  <span class="c-green">background</span><span class="c-gray">:</span> <span class="c-orange">#f5f5f5</span><span class="c-gray">;</span>
+  <span class="c-green">padding</span><span class="c-gray">:</span> <span class="c-orange">20px</span><span class="c-gray">;</span>
+  <span class="c-green">border-radius</span><span class="c-gray">:</span> <span class="c-orange">8px</span><span class="c-gray">;</span>
+<span class="c-gray">}</span></pre>
+    </div>
+
+    <h2 class="section-title">Box Model — La lógica del espacio</h2>
+    <p class="body-text">Cada elemento HTML es una caja rectangular. El Box Model define cómo se calcula el espacio alrededor de esa caja:</p>
+
+    <div class="diagram-wrap">
+      <div class="diagram-title">// Box Model — Cómo se calcula el espacio</div>
+      <svg width="100%" viewBox="0 0 640 280" style="max-width:640px;">
+        <rect x="20" y="20" width="600" height="240" rx="10" fill="rgba(245,158,11,0.08)" stroke="rgba(245,158,11,0.3)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <text x="40" y="45" fill="#f59e0b" font-size="11" font-family="DM Mono, monospace">margin (espacio exterior)</text>
+
+        <rect x="60" y="60" width="520" height="160" rx="8" fill="rgba(108,99,255,0.08)" stroke="rgba(108,99,255,0.3)" stroke-width="1.5"/>
+        <text x="80" y="82" fill="#9d97ff" font-size="11" font-family="DM Mono, monospace">border (borde visible)</text>
+
+        <rect x="100" y="96" width="440" height="108" rx="6" fill="rgba(45,212,191,0.08)" stroke="rgba(45,212,191,0.3)" stroke-width="1.5"/>
+        <text x="120" y="116" fill="#2dd4bf" font-size="11" font-family="DM Mono, monospace">padding (relleno interior)</text>
+
+        <rect x="160" y="128" width="320" height="60" rx="4" fill="#18181f" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <text x="320" y="155" text-anchor="middle" fill="#e8e8f0" font-size="13" font-family="DM Sans, sans-serif" font-weight="500">CONTENIDO</text>
+        <text x="320" y="172" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Mono, monospace">width × height</text>
+      </svg>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>Margin</h4>
+        <p>Espacio <strong>fuera</strong> del elemento, entre él y otros elementos. <code style="font-family:var(--font-mono);font-size:11px;color:var(--accent2);">margin: 20px</code> añade 20px por todos lados.</p>
+      </div>
+      <div class="card">
+        <h4>Padding</h4>
+        <p>Espacio <strong>dentro</strong> del elemento, entre el borde y el contenido. Hace la caja más grande internamente.</p>
+      </div>
+      <div class="card">
+        <h4>Border</h4>
+        <p>El borde visible. <code style="font-family:var(--font-mono);font-size:11px;color:var(--accent2);">border: 1px solid black</code> = 1 píxel, línea sólida, color negro.</p>
+      </div>
+      <div class="card">
+        <h4>Width / Height</h4>
+        <p>Ancho y alto del contenido. Puede ser en píxeles (px), porcentaje (%) o relativo a la pantalla (vw, vh).</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">Propiedades más usadas</h2>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div>
+        <div class="code-label">styles.css — Propiedades frecuentes</div>
+      </div>
+      <pre><span class="c-blue">.tarjeta</span> <span class="c-gray">{</span>
+  <span class="c-gray">/* Colores */</span>
+  <span class="c-green">color</span><span class="c-gray">:</span> <span class="c-orange">#333333</span><span class="c-gray">;</span>            <span class="c-gray">← Color del texto</span>
+  <span class="c-green">background-color</span><span class="c-gray">:</span> <span class="c-orange">#ffffff</span><span class="c-gray">;</span>  <span class="c-gray">← Color de fondo</span>
+
+  <span class="c-gray">/* Tipografía */</span>
+  <span class="c-green">font-family</span><span class="c-gray">:</span> <span class="c-orange">'Roboto', sans-serif</span><span class="c-gray">;</span>
+  <span class="c-green">font-size</span><span class="c-gray">:</span> <span class="c-orange">16px</span><span class="c-gray">;</span>
+  <span class="c-green">font-weight</span><span class="c-gray">:</span> <span class="c-orange">600</span><span class="c-gray">;</span>           <span class="c-gray">← 400=normal, 700=negrita</span>
+  <span class="c-green">line-height</span><span class="c-gray">:</span> <span class="c-orange">1.6</span><span class="c-gray">;</span>           <span class="c-gray">← Interlineado</span>
+  <span class="c-green">text-align</span><span class="c-gray">:</span> <span class="c-orange">center</span><span class="c-gray">;</span>
+
+  <span class="c-gray">/* Espacio */</span>
+  <span class="c-green">padding</span><span class="c-gray">:</span> <span class="c-orange">24px 32px</span><span class="c-gray">;</span>        <span class="c-gray">← vertical horizontal</span>
+  <span class="c-green">margin</span><span class="c-gray">:</span> <span class="c-orange">0 auto</span><span class="c-gray">;</span>            <span class="c-gray">← centra el elemento</span>
+
+  <span class="c-gray">/* Borde y forma */</span>
+  <span class="c-green">border</span><span class="c-gray">:</span> <span class="c-orange">1px solid #e0e0e0</span><span class="c-gray">;</span>
+  <span class="c-green">border-radius</span><span class="c-gray">:</span> <span class="c-orange">12px</span><span class="c-gray">;</span>        <span class="c-gray">← Bordes redondeados</span>
+  <span class="c-green">box-shadow</span><span class="c-gray">:</span> <span class="c-orange">0 4px 20px rgba(0,0,0,0.1)</span><span class="c-gray">;</span>
+
+  <span class="c-gray">/* Tamaño */</span>
+  <span class="c-green">width</span><span class="c-gray">:</span> <span class="c-orange">100%</span><span class="c-gray">;</span>
+  <span class="c-green">max-width</span><span class="c-gray">:</span> <span class="c-orange">1200px</span><span class="c-gray">;</span>         <span class="c-gray">← No crece más de esto</span>
+<span class="c-gray">}</span></pre>
+    </div>
+
+    <h2 class="section-title">Flexbox — Para posicionar elementos</h2>
+    <p class="body-text">Flexbox es el sistema más usado para alinear y posicionar elementos. Con dos líneas de CSS puedes centrar contenido perfectamente.</p>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div>
+        <div class="code-label">flexbox-ejemplos.css</div>
+      </div>
+      <pre><span class="c-gray">/* Centrar contenido (horizontal y vertical): */</span>
+<span class="c-blue">.contenedor</span> <span class="c-gray">{</span>
+  <span class="c-green">display</span><span class="c-gray">:</span> <span class="c-orange">flex</span><span class="c-gray">;</span>
+  <span class="c-green">justify-content</span><span class="c-gray">:</span> <span class="c-orange">center</span><span class="c-gray">;</span>   <span class="c-gray">← Horizontal</span>
+  <span class="c-green">align-items</span><span class="c-gray">:</span> <span class="c-orange">center</span><span class="c-gray">;</span>       <span class="c-gray">← Vertical</span>
+<span class="c-gray">}</span>
+
+<span class="c-gray">/* Elementos en fila con espacio entre ellos: */</span>
+<span class="c-blue">.navbar</span> <span class="c-gray">{</span>
+  <span class="c-green">display</span><span class="c-gray">:</span> <span class="c-orange">flex</span><span class="c-gray">;</span>
+  <span class="c-green">justify-content</span><span class="c-gray">:</span> <span class="c-orange">space-between</span><span class="c-gray">;</span>  <span class="c-gray">← Espacio entre</span>
+  <span class="c-green">align-items</span><span class="c-gray">:</span> <span class="c-orange">center</span><span class="c-gray">;</span>
+  <span class="c-green">gap</span><span class="c-gray">:</span> <span class="c-orange">16px</span><span class="c-gray">;</span>                       <span class="c-gray">← Espacio entre hijos</span>
+<span class="c-gray">}</span>
+
+<span class="c-gray">/* Grid de 3 columnas: */</span>
+<span class="c-blue">.grid-servicios</span> <span class="c-gray">{</span>
+  <span class="c-green">display</span><span class="c-gray">:</span> <span class="c-orange">grid</span><span class="c-gray">;</span>
+  <span class="c-green">grid-template-columns</span><span class="c-gray">:</span> <span class="c-orange">1fr 1fr 1fr</span><span class="c-gray">;</span>  <span class="c-gray">← 3 columnas iguales</span>
+  <span class="c-green">gap</span><span class="c-gray">:</span> <span class="c-orange">24px</span><span class="c-gray">;</span>
+<span class="c-gray">}</span></pre>
+    </div>
+
+    <div class="lesson-nav">
+      <button class="btn btn-ghost" onclick="goTo('l2')">← Anterior</button>
+      <button class="btn btn-primary" onclick="markDoneAndNext('l3','l4')">Completado → Siguiente</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ L4 ══════════════════════════════════════ -->
+  <div id="l4" class="lesson">
+    <div class="lesson-header">
+      <div class="lesson-tag">Módulo 1 · Lección 4</div>
+      <h1>JavaScript — Interactividad</h1>
+      <p class="lesson-intro">JavaScript es el único lenguaje de programación que los navegadores entienden. Hace que el sitio responda a las acciones del usuario y se comunique con servicios externos.</p>
+    </div>
+
+    <h2 class="section-title">¿Qué puede hacer JavaScript?</h2>
+    <div class="card-grid-3">
+      <div class="card"><div class="card-icon">🖱️</div><h4>Responder eventos</h4><p>Click en botón, mover el ratón, escribir en un campo, hacer scroll.</p></div>
+      <div class="card"><div class="card-icon">🔄</div><h4>Modificar HTML</h4><p>Cambiar texto, mostrar/ocultar elementos, actualizar precios, agregar elementos.</p></div>
+      <div class="card"><div class="card-icon">🌐</div><h4>Llamar APIs</h4><p>Enviar formularios, cargar datos de otros servicios, enviar emails con EmailJS.</p></div>
+    </div>
+
+    <h2 class="section-title">Conceptos básicos</h2>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div>
+        <div class="code-label">script.js — Variables y funciones</div>
+      </div>
+      <pre><span class="c-gray">// Variables: guardar información temporalmente</span>
+<span class="c-purple">let</span> nombre <span class="c-gray">=</span> <span class="c-orange">"María García"</span><span class="c-gray">;</span>     <span class="c-gray">← Texto (string)</span>
+<span class="c-purple">let</span> edad <span class="c-gray">=</span> <span class="c-teal">28</span><span class="c-gray">;</span>                    <span class="c-gray">← Número</span>
+<span class="c-purple">let</span> activo <span class="c-gray">=</span> <span class="c-teal">true</span><span class="c-gray">;</span>              <span class="c-gray">← Verdadero/Falso (boolean)</span>
+
+<span class="c-gray">// Funciones: acciones reutilizables</span>
+<span class="c-purple">function</span> <span class="c-blue">saludar</span><span class="c-gray">(</span>persona<span class="c-gray">) {</span>
+  <span class="c-blue">alert</span><span class="c-gray">(</span><span class="c-orange">"Hola, "</span> <span class="c-gray">+</span> persona<span class="c-gray">);</span>
+<span class="c-gray">}</span>
+
+<span class="c-blue">saludar</span><span class="c-gray">(</span>nombre<span class="c-gray">);</span>  <span class="c-gray">← Llama la función → muestra "Hola, María García"</span>
+
+<span class="c-gray">// Condicionales: tomar decisiones</span>
+<span class="c-purple">if</span> <span class="c-gray">(</span>edad <span class="c-gray">&gt;=</span> <span class="c-teal">18</span><span class="c-gray">) {</span>
+  <span class="c-blue">console</span><span class="c-gray">.</span><span class="c-blue">log</span><span class="c-gray">(</span><span class="c-orange">"Mayor de edad"</span><span class="c-gray">);</span>
+<span class="c-gray">}</span> <span class="c-purple">else</span> <span class="c-gray">{</span>
+  <span class="c-blue">console</span><span class="c-gray">.</span><span class="c-blue">log</span><span class="c-gray">(</span><span class="c-orange">"Menor de edad"</span><span class="c-gray">);</span>
+<span class="c-gray">}</span></pre>
+    </div>
+
+    <h2 class="section-title">Interactuar con el HTML</h2>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div>
+        <div class="code-label">script.js — Manipular elementos del DOM</div>
+      </div>
+      <pre><span class="c-gray">// Seleccionar un elemento del HTML:</span>
+<span class="c-purple">const</span> titulo <span class="c-gray">=</span> <span class="c-blue">document</span><span class="c-gray">.</span><span class="c-blue">getElementById</span><span class="c-gray">(</span><span class="c-orange">"mi-titulo"</span><span class="c-gray">);</span>
+<span class="c-purple">const</span> botones <span class="c-gray">=</span> <span class="c-blue">document</span><span class="c-gray">.</span><span class="c-blue">querySelectorAll</span><span class="c-gray">(</span><span class="c-orange">".btn"</span><span class="c-gray">);</span>
+
+<span class="c-gray">// Cambiar el texto:</span>
+titulo<span class="c-gray">.</span>textContent <span class="c-gray">=</span> <span class="c-orange">"Nuevo título"</span><span class="c-gray">;</span>
+
+<span class="c-gray">// Cambiar estilos:</span>
+titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span class="c-gray">=</span> <span class="c-orange">"red"</span><span class="c-gray">;</span>
+
+<span class="c-gray">// Escuchar un click:</span>
+<span class="c-blue">document</span><span class="c-gray">.</span><span class="c-blue">getElementById</span><span class="c-gray">(</span><span class="c-orange">"btn-contacto"</span><span class="c-gray">).</span><span class="c-blue">addEventListener</span><span class="c-gray">(</span><span class="c-orange">"click"</span><span class="c-gray">,</span> <span class="c-purple">function</span><span class="c-gray">() {</span>
+  <span class="c-blue">alert</span><span class="c-gray">(</span><span class="c-orange">"¡Gracias por contactarnos!"</span><span class="c-gray">);</span>
+<span class="c-gray">});</span>
+
+<span class="c-gray">// Obtener valor de un input:</span>
+<span class="c-purple">const</span> emailUsuario <span class="c-gray">=</span> <span class="c-blue">document</span><span class="c-gray">.</span><span class="c-blue">getElementById</span><span class="c-gray">(</span><span class="c-orange">"email-input"</span><span class="c-gray">).</span>value<span class="c-gray">;</span></pre>
+    </div>
+
+    <h2 class="section-title">Fetch — Llamar a APIs externas</h2>
+    <p class="body-text">El método <code style="font-family:var(--font-mono);color:var(--accent2);font-size:13px;">fetch()</code> es cómo JavaScript se comunica con servicios externos (EmailJS, Formspree, Firebase, Cloudinary, etc.).</p>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div>
+        <div class="code-label">script.js — Llamada a una API con fetch</div>
+      </div>
+      <pre><span class="c-gray">// Ejemplo: enviar datos a Formspree cuando alguien llena el formulario</span>
+<span class="c-blue">document</span><span class="c-gray">.</span><span class="c-blue">getElementById</span><span class="c-gray">(</span><span class="c-orange">"mi-form"</span><span class="c-gray">).</span><span class="c-blue">addEventListener</span><span class="c-gray">(</span><span class="c-orange">"submit"</span><span class="c-gray">,</span> <span class="c-purple">async function</span><span class="c-gray">(e) {</span>
+  e<span class="c-gray">.</span><span class="c-blue">preventDefault</span><span class="c-gray">();</span>  <span class="c-gray">← Evita recargar la página</span>
+
+  <span class="c-purple">const</span> respuesta <span class="c-gray">=</span> <span class="c-purple">await</span> <span class="c-blue">fetch</span><span class="c-gray">(</span><span class="c-orange">"https://formspree.io/f/TU_ID"</span><span class="c-gray">, {</span>
+    method<span class="c-gray">:</span> <span class="c-orange">"POST"</span><span class="c-gray">,</span>
+    headers<span class="c-gray">: {</span> <span class="c-orange">"Content-Type"</span><span class="c-gray">:</span> <span class="c-orange">"application/json"</span> <span class="c-gray">},</span>
+    body<span class="c-gray">:</span> <span class="c-blue">JSON</span><span class="c-gray">.</span><span class="c-blue">stringify</span><span class="c-gray">({</span>
+      nombre<span class="c-gray">:</span> <span class="c-blue">document</span><span class="c-gray">.</span><span class="c-blue">getElementById</span><span class="c-gray">(</span><span class="c-orange">"nombre"</span><span class="c-gray">).</span>value<span class="c-gray">,</span>
+      email<span class="c-gray">:</span>  <span class="c-blue">document</span><span class="c-gray">.</span><span class="c-blue">getElementById</span><span class="c-gray">(</span><span class="c-orange">"email"</span><span class="c-gray">).</span>value<span class="c-gray">,</span>
+    <span class="c-gray">})</span>
+  <span class="c-gray">});</span>
+
+  <span class="c-purple">if</span> <span class="c-gray">(</span>respuesta<span class="c-gray">.</span>ok<span class="c-gray">) {</span>
+    <span class="c-blue">alert</span><span class="c-gray">(</span><span class="c-orange">"✅ Mensaje enviado correctamente"</span><span class="c-gray">);</span>
+  <span class="c-gray">}</span> <span class="c-purple">else</span> <span class="c-gray">{</span>
+    <span class="c-blue">alert</span><span class="c-gray">(</span><span class="c-orange">"❌ Error al enviar. Intenta de nuevo."</span><span class="c-gray">);</span>
+  <span class="c-gray">}</span>
+<span class="c-gray">});</span></pre>
+    </div>
+
+    <div class="quiz-card">
+      <h4>🧠 Pregunta rápida</h4>
+      <p style="font-size:14px;color:var(--text2);margin-bottom:16px;">¿Qué hace <code style="font-family:var(--font-mono);color:var(--accent2);">e.preventDefault()</code> en el código de arriba?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="quiz(this,'wrong')">Envía el formulario</div>
+        <div class="quiz-opt" onclick="quiz(this,'correct')">Evita que la página se recargue al enviar el formulario</div>
+        <div class="quiz-opt" onclick="quiz(this,'wrong')">Borra los datos del formulario</div>
+      </div>
+      <div class="quiz-feedback" id="qfb">
+        ✅ Correcto. Por defecto, al enviar un formulario HTML la página se recarga. <code style="font-family:var(--font-mono);">preventDefault()</code> cancela ese comportamiento para que JavaScript pueda manejar el envío sin recargar.
+      </div>
+    </div>
+
+    <div class="lesson-nav">
+      <button class="btn btn-ghost" onclick="goTo('l3')">← Anterior</button>
+      <button class="btn btn-primary" onclick="markDoneAndNext('l4','l5')">Completado → Siguiente</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ L5 ══════════════════════════════════════ -->
+  <div id="l5" class="lesson">
+    <div class="lesson-header">
+      <div class="lesson-tag">Módulo 2 · Lección 5</div>
+      <h1>GitHub y control de versiones</h1>
+      <p class="lesson-intro">GitHub es donde vive todo el código del equipo. Es la base que conecta Claude Code con Firebase para publicar los sitios automáticamente.</p>
+    </div>
+
+    <h2 class="section-title">¿Qué es Git y GitHub?</h2>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">📜</div>
+        <h4>Git</h4>
+        <p>Un sistema que registra todos los cambios de tu proyecto. Funciona en tu computadora. Es como el "historial de deshacer" de todo el código, para siempre.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🐙</div>
+        <h4>GitHub</h4>
+        <p>El servicio en la nube que guarda tu repositorio de Git. Es como Google Drive, pero para código. Permite colaborar y conectar con Firebase.</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">Conceptos clave</h2>
+
+    <div class="tool-card expanded">
+      <div class="tool-card-header">
+        <div class="tool-emoji">📁</div>
+        <div><div class="tool-name">Repositorio (repo)</div><div class="tool-tagline">La carpeta principal del proyecto</div></div>
+      </div>
+      <div class="tool-body" style="display:block;">
+        <p class="body-text">Un repositorio contiene todos los archivos de tu sitio web (HTML, CSS, JS, imágenes) más el historial completo de cada cambio que se ha hecho. Es la "fuente de verdad" del proyecto.</p>
+        <div class="callout callout-blue"><div class="callout-icon">💡</div><div class="callout-content"><p>Cada proyecto = un repositorio. Nunca mezcles dos proyectos en el mismo repositorio.</p></div></div>
+      </div>
+    </div>
+
+    <div class="tool-card" onclick="toggleCard(this)">
+      <div class="tool-card-header">
+        <div class="tool-emoji">💾</div>
+        <div><div class="tool-name">Commit</div><div class="tool-tagline">Un punto de guardado con descripción</div></div>
+        <div class="tool-expand">+</div>
+      </div>
+      <div class="tool-body">
+        <p class="body-text">Un commit es como hacer una foto del estado actual del código. Cada commit tiene un mensaje que describe qué se cambió. Claude Code crea commits automáticamente.</p>
+        <div class="code-wrap"><div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-label">terminal</div></div><pre><span class="c-gray">$ </span><span class="c-blue">git</span> add <span class="c-orange">.</span>
+<span class="c-gray">$ </span><span class="c-blue">git</span> commit <span class="c-green">-m</span> <span class="c-orange">"Añadí sección de testimonios"</span>
+<span class="c-gray">$ </span><span class="c-blue">git</span> commit <span class="c-green">-m</span> <span class="c-orange">"Corregí el formulario de contacto"</span>
+<span class="c-gray">$ </span><span class="c-blue">git</span> commit <span class="c-green">-m</span> <span class="c-orange">"Actualicé el logo y colores del header"</span></pre></div>
+      </div>
+    </div>
+
+    <div class="tool-card" onclick="toggleCard(this)">
+      <div class="tool-card-header">
+        <div class="tool-emoji">🌿</div>
+        <div><div class="tool-name">Branch (rama)</div><div class="tool-tagline">Una copia paralela del proyecto</div></div>
+        <div class="tool-expand">+</div>
+      </div>
+      <div class="tool-body">
+        <p class="body-text">Una rama es una copia del proyecto donde puedes experimentar sin afectar el sitio publicado. La rama principal se llama <strong style="color:var(--accent2)">main</strong> y es la versión que está en producción (publicada en Firebase).</p>
+        <div class="diagram-wrap"><div class="diagram-title">// Flujo de ramas</div>
+        <svg width="100%" viewBox="0 0 640 160">
+          <line x1="40" y1="60" x2="600" y2="60" stroke="#3d3d5c" stroke-width="2"/>
+          <circle cx="40" cy="60" r="8" fill="#6c63ff"/>
+          <circle cx="140" cy="60" r="8" fill="#6c63ff"/>
+          <circle cx="240" cy="60" r="8" fill="#6c63ff"/>
+          <circle cx="500" cy="60" r="8" fill="#6c63ff"/>
+          <circle cx="600" cy="60" r="8" fill="#22c55e"/>
+          <text x="40" y="45" text-anchor="middle" fill="#9d97ff" font-size="10" font-family="DM Mono">inicio</text>
+          <text x="320" y="45" text-anchor="middle" fill="#6c63ff" font-size="11" font-family="DM Sans" font-weight="600">rama: main (publicado)</text>
+          <text x="600" y="45" text-anchor="middle" fill="#22c55e" font-size="10" font-family="DM Mono">deploy</text>
+          <line x1="240" y1="60" x2="340" y2="120" stroke="#2dd4bf" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <line x1="340" y1="120" x2="500" y2="120" stroke="#2dd4bf" stroke-width="1.5"/>
+          <circle cx="340" cy="120" r="6" fill="#2dd4bf"/>
+          <circle cx="420" cy="120" r="6" fill="#2dd4bf"/>
+          <circle cx="500" cy="120" r="6" fill="#2dd4bf"/>
+          <line x1="500" y1="120" x2="500" y2="62" stroke="#2dd4bf" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="420" y="145" text-anchor="middle" fill="#2dd4bf" font-size="10" font-family="DM Mono">rama: nueva-feature</text>
+        </svg></div>
+      </div>
+    </div>
+
+    <div class="tool-card" onclick="toggleCard(this)">
+      <div class="tool-card-header">
+        <div class="tool-emoji">⬆️</div>
+        <div><div class="tool-name">Push y Pull</div><div class="tool-tagline">Sincronizar tu computadora con GitHub</div></div>
+        <div class="tool-expand">+</div>
+      </div>
+      <div class="tool-body">
+        <p class="body-text"><strong style="color:var(--accent2)">Push</strong> = subir tus cambios a GitHub. <strong style="color:var(--teal)">Pull</strong> = descargar los últimos cambios de GitHub a tu computadora.</p>
+        <div class="flow-inline">
+          <div class="flow-node">Tu computadora</div>
+          <div class="flow-arrow">→ push →</div>
+          <div class="flow-node accent">GitHub</div>
+          <div class="flow-arrow">→ auto →</div>
+          <div class="flow-node green">Firebase</div>
+        </div>
+        <p class="body-text">Cuando Claude Code hace un push a la rama main, Firebase detecta el cambio automáticamente y publica la nueva versión del sitio en ~1 minuto.</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">Comandos esenciales</h2>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div>
+        <div class="code-label">terminal — Comandos Git más usados</div>
+      </div>
+      <pre><span class="c-gray"># Descargar un repositorio a tu computadora:</span>
+<span class="c-blue">git</span> clone https://github.com/tu-usuario/proyecto.git
+
+<span class="c-gray"># Ver qué archivos han cambiado:</span>
+<span class="c-blue">git</span> status
+
+<span class="c-gray"># Preparar todos los cambios:</span>
+<span class="c-blue">git</span> add <span class="c-orange">.</span>
+
+<span class="c-gray"># Crear un commit con descripción:</span>
+<span class="c-blue">git</span> commit <span class="c-green">-m</span> <span class="c-orange">"Descripción del cambio"</span>
+
+<span class="c-gray"># Subir a GitHub (→ Firebase lo publica automáticamente):</span>
+<span class="c-blue">git</span> push
+
+<span class="c-gray"># Descargar los últimos cambios:</span>
+<span class="c-blue">git</span> pull
+
+<span class="c-gray"># Ver el historial de commits:</span>
+<span class="c-blue">git</span> log <span class="c-green">--oneline</span></pre>
+    </div>
+
+    <div class="callout callout-green">
+      <div class="callout-icon">🤖</div>
+      <div class="callout-content">
+        <strong>Con Claude Code no necesitas escribir estos comandos</strong>
+        <p>Claude Code ejecuta git add, commit y push automáticamente cuando le pides que haga un cambio. Pero es importante entender lo que hace por detrás.</p>
+      </div>
+    </div>
+
+    <div class="lesson-nav">
+      <button class="btn btn-ghost" onclick="goTo('l4')">← Anterior</button>
+      <button class="btn btn-primary" onclick="markDoneAndNext('l5','l6')">Completado → Siguiente</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ L6 ══════════════════════════════════════ -->
+  <div id="l6" class="lesson">
+    <div class="lesson-header">
+      <div class="lesson-tag">Módulo 2 · Lección 6</div>
+      <h1>IA: Claude Code y Gemini Pro</h1>
+      <p class="lesson-intro">La IA es el motor del flujo de trabajo. Gemini Pro genera la base del sitio sin costo. Claude y Claude Code refinan, mejoran y actualizan el proyecto.</p>
+    </div>
+
+    <div class="diagram-wrap">
+      <div class="diagram-title">// Flujo IA en el proceso de creación</div>
+      <svg width="100%" viewBox="0 0 720 120">
+        <defs><marker id="a6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#6c63ff" stroke-width="1.5" stroke-linecap="round"/></marker></defs>
+        <rect x="10" y="35" width="160" height="50" rx="8" fill="rgba(34,197,94,0.08)" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
+        <text x="90" y="57" text-anchor="middle" fill="#22c55e" font-size="12" font-family="DM Mono">Gemini Pro</text>
+        <text x="90" y="73" text-anchor="middle" fill="#4ade80" font-size="10" font-family="DM Sans">Genera la base</text>
+        <text x="90" y="87" text-anchor="middle" fill="#16a34a" font-size="9" font-family="DM Mono">GRATIS</text>
+        <line x1="172" y1="60" x2="208" y2="60" stroke="#6c63ff" stroke-width="1.5" marker-end="url(#a6)"/>
+        <rect x="210" y="35" width="160" height="50" rx="8" fill="rgba(108,99,255,0.08)" stroke="rgba(108,99,255,0.3)" stroke-width="1"/>
+        <text x="290" y="57" text-anchor="middle" fill="#9d97ff" font-size="12" font-family="DM Mono">Claude (chat)</text>
+        <text x="290" y="73" text-anchor="middle" fill="#a5b4fc" font-size="10" font-family="DM Sans">Refina y mejora</text>
+        <line x1="372" y1="60" x2="408" y2="60" stroke="#6c63ff" stroke-width="1.5" marker-end="url(#a6)"/>
+        <rect x="410" y="35" width="160" height="50" rx="8" fill="rgba(45,212,191,0.08)" stroke="rgba(45,212,191,0.3)" stroke-width="1"/>
+        <text x="490" y="57" text-anchor="middle" fill="#2dd4bf" font-size="12" font-family="DM Mono">Claude Code</text>
+        <text x="490" y="73" text-anchor="middle" fill="#5eead4" font-size="10" font-family="DM Sans">Actualiza el repo</text>
+        <line x1="572" y1="60" x2="608" y2="60" stroke="#6c63ff" stroke-width="1.5" marker-end="url(#a6)"/>
+        <rect x="610" y="35" width="100" height="50" rx="8" fill="rgba(249,115,22,0.08)" stroke="rgba(249,115,22,0.3)" stroke-width="1"/>
+        <text x="660" y="57" text-anchor="middle" fill="#fb923c" font-size="12" font-family="DM Mono">GitHub</text>
+        <text x="660" y="73" text-anchor="middle" fill="#fdba74" font-size="10" font-family="DM Sans">Publicado</text>
+      </svg>
+    </div>
+
+    <h2 class="section-title">Gemini Pro — El generador gratuito</h2>
+    <p class="body-text">Gemini Pro (gemini.google.com) es la IA de Google. Úsala para generar el 80% del código inicial del sitio web sin gastar dinero. La clave está en el <strong style="color:var(--accent2)">prompt</strong> que escribes.</p>
+
+    <h3 class="sub-title">Cómo escribir un buen prompt para Gemini</h3>
+    <div class="code-wrap">
+      <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-label">Prompt ideal para Gemini Pro</div></div>
+      <pre><span class="c-white">Crea un sitio web completo para una clínica dental llamada "Sonrisa Lima".</span>
+
+<span class="c-white">PÁGINAS:</span>
+<span class="c-white">- index.html: página principal</span>
+<span class="c-white">- servicios.html: lista de servicios</span>
+<span class="c-white">- contacto.html: formulario de contacto</span>
+
+<span class="c-white">SECCIONES EN index.html:</span>
+<span class="c-white">1. Header con navegación y logo</span>
+<span class="c-white">2. Hero con título grande, subtítulo y botón "Agendar cita"</span>
+<span class="c-white">3. Sección "Por qué elegirnos" con 3 tarjetas</span>
+<span class="c-white">4. Sección de servicios destacados</span>
+<span class="c-white">5. Testimonio de 3 pacientes</span>
+<span class="c-white">6. Footer con datos de contacto</span>
+
+<span class="c-white">DISEÑO:</span>
+<span class="c-white">- Colores: azul #1a73e8 y blanco</span>
+<span class="c-white">- Fuente: Google Fonts 'Poppins'</span>
+<span class="c-white">- Moderno, profesional, responsive (mobile-first)</span>
+<span class="c-white">- Incluye animaciones suaves al hacer scroll</span>
+
+<span class="c-white">TÉCNICO:</span>
+<span class="c-white">- HTML5, CSS3 y JavaScript puro (sin frameworks)</span>
+<span class="c-white">- Un archivo index.html, un styles.css, un script.js</span>
+<span class="c-white">- Comentarios en el código explicando cada sección</span></pre>
+    </div>
+
+    <div class="callout callout-amber">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-content">
+        <strong>Siempre revisa el código de Gemini antes de usarlo</strong>
+        <p>Gemini puede generar código con errores o que no funciona perfectamente. Pega el resultado en Claude para que lo revise y corrija antes de subirlo a GitHub.</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">Claude Code — El que actualiza el proyecto</h2>
+    <p class="body-text">Claude Code es una herramienta de línea de comandos (terminal) que conecta la IA directamente con tu repositorio de GitHub. Puedes pedirle cambios en lenguaje natural y él modifica los archivos y hace el push automáticamente.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Instalar Claude Code</strong>
+          <span>Requiere Node.js instalado. En la terminal: <code style="font-family:var(--font-mono);color:var(--accent2);font-size:12px;">npm install -g @anthropic-ai/claude-code</code></span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Abrir la carpeta del proyecto en la terminal</strong>
+          <span>Navega a la carpeta del repositorio clonado y ejecuta: <code style="font-family:var(--font-mono);color:var(--accent2);font-size:12px;">claude</code></span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>Dar instrucciones en español</strong>
+          <span>"Cambia el color del header a #2563eb", "Añade una sección de precios con 3 planes", "Corrige el formulario para que valide el email"</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>Claude Code hace los cambios y pushea</strong>
+          <span>Modifica los archivos necesarios, hace commit y push a GitHub. Firebase publica la nueva versión en minutos.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lesson-nav">
+      <button class="btn btn-ghost" onclick="goTo('l5')">← Anterior</button>
+      <button class="btn btn-primary" onclick="markDoneAndNext('l6','l7')">Completado → Siguiente</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ L7 ══════════════════════════════════════ -->
+  <div id="l7" class="lesson">
+    <div class="lesson-header">
+      <div class="lesson-tag">Módulo 2 · Lección 7</div>
+      <h1>Firebase y publicación web</h1>
+      <p class="lesson-intro">Firebase es la plataforma de Google donde viven los sitios. Firebase Hosting publica el sitio, el dominio de GoDaddy le da la dirección .com.</p>
+    </div>
+
+    <h2 class="section-title">Firebase Hosting</h2>
+    <p class="body-text">Firebase Hosting es un servicio de alojamiento web de Google. Cuando los archivos de tu repositorio se publican en Firebase, cualquier persona en el mundo puede verlos al visitar la URL del sitio.</p>
+
+    <div class="card-grid">
+      <div class="card"><div class="card-icon">⚡</div><h4>Velocidad global</h4><p>Los archivos se distribuyen en servidores de Google en todo el mundo. El sitio carga rápido desde cualquier país.</p></div>
+      <div class="card"><div class="card-icon">🔒</div><h4>HTTPS automático</h4><p>El candado verde (seguridad SSL) se activa automáticamente. Sin costo extra, sin configuración.</p></div>
+      <div class="card"><div class="card-icon">🆓</div><h4>Plan gratuito</h4><p>El plan Spark (gratis) incluye 10 GB de almacenamiento y 360 MB/día de transferencia. Suficiente para sitios normales.</p></div>
+      <div class="card"><div class="card-icon">🔄</div><h4>Deploy automático</h4><p>Conectado con GitHub, cada push a la rama main publica la nueva versión automáticamente en ~1 minuto.</p></div>
+    </div>
+
+    <h2 class="section-title">Cómo conectar Firebase con GitHub</h2>
+
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Crear proyecto en Firebase Console</strong><span>Ve a console.firebase.google.com → "Crear un proyecto" → ponle nombre → listo.</span></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Activar Firebase Hosting</strong><span>En el menú lateral → "Hosting" → "Comenzar" → sigue los pasos del asistente.</span></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Instalar Firebase CLI y hacer deploy inicial</strong>
+      <div class="code-wrap" style="margin:8px 0;"><pre style="padding:12px;font-size:12px;"><span class="c-blue">npm</span> install <span class="c-green">-g</span> firebase-tools
+<span class="c-blue">firebase</span> login
+<span class="c-blue">firebase</span> init hosting
+<span class="c-blue">firebase</span> deploy</pre></div>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Conectar con GitHub para deploys automáticos</strong><span>En Firebase Hosting → "Agregar canal" → "Conectar con GitHub" → autoriza → selecciona el repositorio → configura que el deploy ocurra en pushes a la rama main.</span></div></div>
+    </div>
+
+    <h2 class="section-title">GoDaddy — Tu dominio .com</h2>
+    <p class="body-text">El dominio es la dirección que escriben los usuarios. Sin dominio propio, tu sitio solo tiene una URL como <code style="font-family:var(--font-mono);color:var(--text3);">miproyecto.web.app</code>. Con GoDaddy compras <code style="font-family:var(--font-mono);color:var(--accent2);">miempresa.com</code>.</p>
+
+    <h3 class="sub-title">Conectar GoDaddy con Firebase</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Compra el dominio en godaddy.com</strong><span>Busca el nombre, verifica que esté disponible, paga (~$12-15/año para .com).</span></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>En Firebase → Hosting → Agregar dominio personalizado</strong><span>Escribe el dominio que compraste. Firebase te dará unos códigos de verificación.</span></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>En GoDaddy → Mis productos → DNS → Agregar registro</strong><span>Copia los registros TXT y A que te dio Firebase y pégalos en la configuración DNS de GoDaddy.</span></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Esperar propagación DNS</strong><span>El DNS se propaga globalmente en 24-48 horas. Después, tu dominio apuntará directamente a Firebase.</span></div></div>
+    </div>
+
+    <div class="callout callout-amber">
+      <div class="callout-icon">⏳</div>
+      <div class="callout-content">
+        <strong>La espera del DNS es normal</strong>
+        <p>48 horas puede sentirse largo, pero es el tiempo que tarda el sistema de DNS global en propagar el cambio. No hagas modificaciones al DNS durante ese tiempo — pueden reiniciar el contador.</p>
+      </div>
+    </div>
+
+    <div class="lesson-nav">
+      <button class="btn btn-ghost" onclick="goTo('l6')">← Anterior</button>
+      <button class="btn btn-primary" onclick="markDoneAndNext('l7','l8')">Completado → Siguiente</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ L8 ══════════════════════════════════════ -->
+  <div id="l8" class="lesson">
+    <div class="lesson-header">
+      <div class="lesson-tag">Módulo 2 · Lección 8</div>
+      <h1>Servicios y herramientas extra</h1>
+      <p class="lesson-intro">Estas herramientas se integran al sitio para añadir funcionalidades: imágenes optimizadas, formularios, emails, analítica y componentes de diseño.</p>
+    </div>
+
+    <div class="tool-card expanded">
+      <div class="tool-card-header"><div class="tool-emoji">🖼️</div><div><div class="tool-name">Cloudinary</div><div class="tool-tagline">Imágenes optimizadas en la nube</div></div></div>
+      <div class="tool-body" style="display:block;">
+        <p class="body-text">Cloudinary almacena imágenes y las optimiza automáticamente: reduce el peso sin perder calidad. Una foto de 5 MB queda en 200 KB. Además puedes transformar imágenes con solo cambiar la URL.</p>
+        <div class="code-wrap"><div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-label">Transformaciones con URL</div></div>
+        <pre><span class="c-gray">&lt;!-- Original: --&gt;</span>
+<span class="c-gray">&lt;</span><span class="c-blue">img</span> <span class="c-green">src</span><span class="c-gray">=</span><span class="c-orange">"https://res.cloudinary.com/TU-CUENTA/image/upload/foto.jpg"</span><span class="c-gray">&gt;</span>
+
+<span class="c-gray">&lt;!-- Redimensionar a 400px de ancho: --&gt;</span>
+<span class="c-gray">&lt;</span><span class="c-blue">img</span> <span class="c-green">src</span><span class="c-gray">=</span><span class="c-orange">"https://res.cloudinary.com/TU-CUENTA/image/upload/<span style="color:#f59e0b">w_400</span>/foto.jpg"</span><span class="c-gray">&gt;</span>
+
+<span class="c-gray">&lt;!-- Recorte cuadrado y circular: --&gt;</span>
+<span class="c-gray">&lt;</span><span class="c-blue">img</span> <span class="c-green">src</span><span class="c-gray">=</span><span class="c-orange">".../<span style="color:#f59e0b">w_200,h_200,c_fill,r_max</span>/foto.jpg"</span><span class="c-gray">&gt;</span>
+
+<span class="c-gray">&lt;!-- Calidad reducida al 70% (más ligero): --&gt;</span>
+<span class="c-gray">&lt;</span><span class="c-blue">img</span> <span class="c-green">src</span><span class="c-gray">=</span><span class="c-orange">".../<span style="color:#f59e0b">q_70</span>/foto.jpg"</span><span class="c-gray">&gt;</span></pre></div>
+        <div class="callout callout-blue"><div class="callout-icon">💡</div><div class="callout-content"><p>Sube fotos de Unsplash a Cloudinary. Así las tienes optimizadas y controladas en tu cuenta.</p></div></div>
+      </div>
+    </div>
+
+    <div class="tool-card" onclick="toggleCard(this)">
+      <div class="tool-card-header"><div class="tool-emoji">📬</div><div><div class="tool-name">Formspree</div><div class="tool-tagline">Formularios que envían emails sin servidor</div></div><div class="tool-expand">+</div></div>
+      <div class="tool-body">
+        <p class="body-text">Con Formspree, un formulario HTML puede enviar emails sin necesitar ningún servidor propio. Solo añades su URL al atributo <code style="font-family:var(--font-mono);color:var(--accent2);">action</code> del formulario.</p>
+        <div class="code-wrap"><div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-label">formulario-contacto.html</div></div>
+        <pre><span class="c-gray">&lt;</span><span class="c-blue">form</span> <span class="c-green">action</span><span class="c-gray">=</span><span class="c-orange">"https://formspree.io/f/TU_CODIGO"</span> <span class="c-green">method</span><span class="c-gray">=</span><span class="c-orange">"POST"</span><span class="c-gray">&gt;</span>
+  <span class="c-gray">&lt;</span><span class="c-blue">input</span> <span class="c-green">type</span><span class="c-gray">=</span><span class="c-orange">"text"</span>  <span class="c-green">name</span><span class="c-gray">=</span><span class="c-orange">"nombre"</span>  <span class="c-green">required</span><span class="c-gray">&gt;</span>
+  <span class="c-gray">&lt;</span><span class="c-blue">input</span> <span class="c-green">type</span><span class="c-gray">=</span><span class="c-orange">"email"</span> <span class="c-green">name</span><span class="c-gray">=</span><span class="c-orange">"email"</span>   <span class="c-green">required</span><span class="c-gray">&gt;</span>
+  <span class="c-gray">&lt;</span><span class="c-blue">textarea</span> <span class="c-green">name</span><span class="c-gray">=</span><span class="c-orange">"mensaje"</span><span class="c-gray">&gt;&lt;/</span><span class="c-blue">textarea</span><span class="c-gray">&gt;</span>
+  <span class="c-gray">&lt;</span><span class="c-blue">button</span> <span class="c-green">type</span><span class="c-gray">=</span><span class="c-orange">"submit"</span><span class="c-gray">&gt;</span><span class="c-white">Enviar</span><span class="c-gray">&lt;/</span><span class="c-blue">button</span><span class="c-gray">&gt;</span>
+<span class="c-gray">&lt;/</span><span class="c-blue">form</span><span class="c-gray">&gt;</span>
+
+<span class="c-gray">&lt;!-- Cada envío llega a tu email. Gratis hasta 50 envíos/mes --&gt;</span></pre></div>
+      </div>
+    </div>
+
+    <div class="tool-card" onclick="toggleCard(this)">
+      <div class="tool-card-header"><div class="tool-emoji">✉️</div><div><div class="tool-name">EmailJS</div><div class="tool-tagline">Envío de emails desde JavaScript con más control</div></div><div class="tool-expand">+</div></div>
+      <div class="tool-body">
+        <p class="body-text">EmailJS permite enviar emails desde JavaScript con más flexibilidad que Formspree. Útil para emails de confirmación automáticos o notificaciones personalizadas.</p>
+        <div class="code-wrap"><div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-label">script.js — EmailJS</div></div>
+        <pre><span class="c-gray">&lt;!-- 1. Incluir en el HTML --&gt;</span>
+<span class="c-gray">&lt;</span><span class="c-blue">script</span> <span class="c-green">src</span><span class="c-gray">=</span><span class="c-orange">"https://cdn.emailjs.com/dist/email.min.js"</span><span class="c-gray">&gt;&lt;/</span><span class="c-blue">script</span><span class="c-gray">&gt;</span>
+
+<span class="c-gray">// 2. Inicializar con tu clave pública:</span>
+<span class="c-blue">emailjs</span><span class="c-gray">.</span><span class="c-blue">init</span><span class="c-gray">(</span><span class="c-orange">"TU_PUBLIC_KEY"</span><span class="c-gray">);</span>
+
+<span class="c-gray">// 3. Enviar email:</span>
+<span class="c-blue">emailjs</span><span class="c-gray">.</span><span class="c-blue">send</span><span class="c-gray">(</span><span class="c-orange">"service_xxx"</span><span class="c-gray">,</span> <span class="c-orange">"template_xxx"</span><span class="c-gray">, {</span>
+  from_name<span class="c-gray">:</span> <span class="c-orange">"María García"</span><span class="c-gray">,</span>
+  from_email<span class="c-gray">:</span> <span class="c-orange">"maria@email.com"</span><span class="c-gray">,</span>
+  message<span class="c-gray">:</span> <span class="c-orange">"Quiero más información"</span>
+<span class="c-gray">}).</span><span class="c-blue">then</span><span class="c-gray">(() =&gt; </span><span class="c-blue">alert</span><span class="c-gray">(</span><span class="c-orange">"¡Email enviado!"</span><span class="c-gray">));</span></pre></div>
+      </div>
+    </div>
+
+    <div class="tool-card" onclick="toggleCard(this)">
+      <div class="tool-card-header"><div class="tool-emoji">📊</div><div><div class="tool-name">Databuddy</div><div class="tool-tagline">Analítica de visitas simple y privada</div></div><div class="tool-expand">+</div></div>
+      <div class="tool-body">
+        <p class="body-text">Databuddy te dice cuántas personas visitan el sitio, desde dónde, cuánto tiempo pasan y qué páginas ven. Es simple, rápido y respetuoso con la privacidad.</p>
+        <div class="code-wrap"><div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-label">index.html — Instalar Databuddy</div></div>
+        <pre><span class="c-gray">&lt;!-- Pega esto en el &lt;head&gt; de CADA página del sitio: --&gt;</span>
+<span class="c-gray">&lt;</span><span class="c-blue">script</span>
+  <span class="c-green">src</span><span class="c-gray">=</span><span class="c-orange">"https://cdn.databuddy.cc/databuddy.js"</span>
+  <span class="c-green">data-client-id</span><span class="c-gray">=</span><span class="c-orange">"TU_PROYECTO_ID"</span>
+  <span class="c-green">defer</span>
+<span class="c-gray">&gt;&lt;/</span><span class="c-blue">script</span><span class="c-gray">&gt;</span>
+
+<span class="c-gray">&lt;!-- Los datos aparecen en el dashboard de databuddy.cc --&gt;</span></pre></div>
+      </div>
+    </div>
+
+    <div class="tool-card" onclick="toggleCard(this)">
+      <div class="tool-card-header"><div class="tool-emoji">⚛️</div><div><div class="tool-name">Reactbits</div><div class="tool-tagline">Componentes UI animados listos para usar</div></div><div class="tool-expand">+</div></div>
+      <div class="tool-body">
+        <p class="body-text">Reactbits (reactbits.dev) es una colección de componentes de interfaz listos: textos animados, fondos en movimiento, botones con efectos, tarjetas. Solo copias el código y lo pegas en tu proyecto.</p>
+        <ul class="checklist">
+          <li>Fondos animados (partículas, gradientes, ondas)</li>
+          <li>Efectos de texto (máquina de escribir, fade, scramble)</li>
+          <li>Componentes de UI (cards, modales, tooltips)</li>
+          <li>Disponible en versión HTML/Vanilla y React</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tool-card" onclick="toggleCard(this)">
+      <div class="tool-card-header"><div class="tool-emoji">🎨</div><div><div class="tool-name">Canva y Unsplash</div><div class="tool-tagline">Diseño y fotografía de alta calidad</div></div><div class="tool-expand">+</div></div>
+      <div class="tool-body">
+        <p class="body-text"><strong style="color:var(--accent2)">Canva</strong> (canva.com): crea logos, banners, iconos y cualquier gráfico sin ser diseñador. Exporta en PNG para logos con transparencia, JPG para fotos y banners.</p>
+        <p class="body-text"><strong style="color:var(--teal)">Unsplash</strong> (unsplash.com): más de 3 millones de fotografías profesionales completamente gratuitas. Busca en inglés para mejores resultados. Descarga y sube a Cloudinary para optimizarlas.</p>
+        <div class="callout callout-green"><div class="callout-icon">✅</div><div class="callout-content"><p>Flujo recomendado: Buscar foto en Unsplash → Descargar → Subir a Cloudinary → Usar la URL de Cloudinary en el HTML.</p></div></div>
+      </div>
+    </div>
+
+    <div class="lesson-nav">
+      <button class="btn btn-ghost" onclick="goTo('l7')">← Anterior</button>
+      <button class="btn btn-primary" onclick="markDoneAndNext('l8','l9')">Completado → Siguiente</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ L9 ══════════════════════════════════════ -->
+  <div id="l9" class="lesson">
+    <div class="lesson-header">
+      <div class="lesson-tag">Módulo 3 · Lección 9</div>
+      <h1>APIs — Cómo todo se conecta</h1>
+      <p class="lesson-intro">Una API es el lenguaje que usan las aplicaciones para hablar entre sí. Cada vez que el sitio interactúa con Cloudinary, EmailJS, Firebase o Databuddy, lo hace a través de una API.</p>
+    </div>
+
+    <h2 class="section-title">¿Qué es una API?</h2>
+    <p class="body-text">API significa <strong style="color:var(--accent2)">Application Programming Interface</strong>. Es un contrato entre dos programas que define cómo pueden comunicarse. Piénsalo como un menú de restaurante:</p>
+
+    <div class="card-grid-3">
+      <div class="card" style="text-align:center;">
+        <div class="card-icon">👤</div>
+        <h4>Tú (cliente)</h4>
+        <p>Tu sitio web que necesita algo: enviar un email, cargar una imagen, registrar una visita.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="card-icon">🍽️</div>
+        <h4>API (mesero)</h4>
+        <p>El intermediario. Recibe tu petición, la lleva al servidor correcto y trae la respuesta.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="card-icon">🍳</div>
+        <h4>Servidor (cocina)</h4>
+        <p>El servicio externo que procesa: EmailJS envía el mail, Cloudinary entrega la imagen.</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">Anatomía de una llamada API</h2>
+    <div class="code-wrap">
+      <div class="code-header"><div class="code-dots"><div class="code-dot d1"></div><div class="code-dot d2"></div><div class="code-dot d3"></div></div><div class="code-label">script.js — Petición API completa y explicada</div></div>
+      <pre><span class="c-purple">const</span> resultado <span class="c-gray">=</span> <span class="c-purple">await</span> <span class="c-blue">fetch</span><span class="c-gray">(</span>
+  <span class="c-orange">"https://api.servicio.com/endpoint"</span><span class="c-gray">,</span>  <span class="c-gray">← URL del API</span>
+  <span class="c-gray">{</span>
+    method<span class="c-gray">:</span> <span class="c-orange">"POST"</span><span class="c-gray">,</span>    <span class="c-gray">← Tipo: GET (leer), POST (enviar), PUT (actualizar)</span>
+
+    headers<span class="c-gray">: {</span>          <span class="c-gray">← Metadatos de la petición</span>
+      <span class="c-orange">"Content-Type"</span><span class="c-gray">:</span> <span class="c-orange">"application/json"</span><span class="c-gray">,</span>  <span class="c-gray">← "Envío JSON"</span>
+      <span class="c-orange">"Authorization"</span><span class="c-gray">:</span> <span class="c-orange">"Bearer TU_API_KEY"</span>   <span class="c-gray">← Tu clave secreta</span>
+    <span class="c-gray">},</span>
+
+    body<span class="c-gray">:</span> <span class="c-blue">JSON</span><span class="c-gray">.</span><span class="c-blue">stringify</span><span class="c-gray">({</span>  <span class="c-gray">← Los datos que envías</span>
+      nombre<span class="c-gray">:</span> <span class="c-orange">"Ana López"</span><span class="c-gray">,</span>
+      mensaje<span class="c-gray">:</span> <span class="c-orange">"Hola, quiero información"</span>
+    <span class="c-gray">})</span>
+  <span class="c-gray">}</span>
+<span class="c-gray">);</span>
+
+<span class="c-gray">// La respuesta llega como JSON:</span>
+<span class="c-purple">const</span> datos <span class="c-gray">=</span> <span class="c-purple">await</span> resultado<span class="c-gray">.</span><span class="c-blue">json</span><span class="c-gray">();</span>
+<span class="c-blue">console</span><span class="c-gray">.</span><span class="c-blue">log</span><span class="c-gray">(</span>datos<span class="c-gray">);</span>  <span class="c-gray">← { success: true, id: "msg_123" }</span></pre>
+    </div>
+
+    <h2 class="section-title">Las APIs de tu ecosistema</h2>
+
+    <div class="diagram-wrap">
+      <div class="diagram-title">// Mapa de integraciones del sitio web</div>
+      <svg width="100%" viewBox="0 0 720 400">
+        <defs>
+          <marker id="a9" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#6c63ff" stroke-width="1.5" stroke-linecap="round"/>
+          </marker>
+          <marker id="a9b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#2dd4bf" stroke-width="1.5" stroke-linecap="round"/>
+          </marker>
+        </defs>
+        <!-- Central -->
+        <rect x="280" y="155" width="160" height="60" rx="10" fill="#18181f" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+        <text x="360" y="180" text-anchor="middle" fill="#e8e8f0" font-size="13" font-family="DM Sans" font-weight="600">Tu sitio web</text>
+        <text x="360" y="198" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Mono">HTML + CSS + JS</text>
+
+        <!-- Cloudinary -->
+        <rect x="30" y="20" width="140" height="48" rx="8" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.3)" stroke-width="1"/>
+        <text x="100" y="40" text-anchor="middle" fill="#f59e0b" font-size="11" font-family="DM Mono">Cloudinary</text>
+        <text x="100" y="56" text-anchor="middle" fill="#92400e" font-size="10" font-family="DM Sans">URL de imagen</text>
+        <line x1="172" y1="44" x2="278" y2="168" stroke="#6c63ff" stroke-width="1" marker-end="url(#a9)" stroke-dasharray="3 3"/>
+
+        <!-- EmailJS -->
+        <rect x="30" y="100" width="140" height="48" rx="8" fill="rgba(108,99,255,0.1)" stroke="rgba(108,99,255,0.3)" stroke-width="1"/>
+        <text x="100" y="120" text-anchor="middle" fill="#9d97ff" font-size="11" font-family="DM Mono">EmailJS</text>
+        <text x="100" y="136" text-anchor="middle" fill="#4c1d95" font-size="10" font-family="DM Sans">Envía emails</text>
+        <path d="M172 124 L278 185" fill="none" stroke="#6c63ff" stroke-width="1" marker-end="url(#a9)"/>
+        <path d="M278 195 L172 132" fill="none" stroke="#2dd4bf" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a9b)"/>
+
+        <!-- Formspree -->
+        <rect x="30" y="190" width="140" height="48" rx="8" fill="rgba(248,113,113,0.1)" stroke="rgba(248,113,113,0.3)" stroke-width="1"/>
+        <text x="100" y="210" text-anchor="middle" fill="#f87171" font-size="11" font-family="DM Mono">Formspree</text>
+        <text x="100" y="226" text-anchor="middle" fill="#991b1b" font-size="10" font-family="DM Sans">Formularios</text>
+        <line x1="172" y1="214" x2="278" y2="200" stroke="#6c63ff" stroke-width="1" marker-end="url(#a9)"/>
+
+        <!-- Databuddy -->
+        <rect x="30" y="290" width="140" height="48" rx="8" fill="rgba(34,197,94,0.1)" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
+        <text x="100" y="310" text-anchor="middle" fill="#22c55e" font-size="11" font-family="DM Mono">Databuddy</text>
+        <text x="100" y="326" text-anchor="middle" fill="#14532d" font-size="10" font-family="DM Sans">Analítica</text>
+        <line x1="172" y1="314" x2="278" y2="214" stroke="#6c63ff" stroke-width="1" marker-end="url(#a9)" stroke-dasharray="3 3"/>
+
+        <!-- Firebase -->
+        <rect x="550" y="100" width="140" height="48" rx="8" fill="rgba(249,115,22,0.1)" stroke="rgba(249,115,22,0.3)" stroke-width="1"/>
+        <text x="620" y="120" text-anchor="middle" fill="#fb923c" font-size="11" font-family="DM Mono">Firebase DB</text>
+        <text x="620" y="136" text-anchor="middle" fill="#7c2d12" font-size="10" font-family="DM Sans">Guarda datos</text>
+        <path d="M442 185 L548 124" fill="none" stroke="#6c63ff" stroke-width="1" marker-end="url(#a9)"/>
+        <path d="M548 132 L442 193" fill="none" stroke="#2dd4bf" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a9b)"/>
+
+        <!-- Drive -->
+        <rect x="550" y="190" width="140" height="48" rx="8" fill="rgba(45,212,191,0.1)" stroke="rgba(45,212,191,0.3)" stroke-width="1"/>
+        <text x="620" y="210" text-anchor="middle" fill="#2dd4bf" font-size="11" font-family="DM Mono">Google Drive</text>
+        <text x="620" y="226" text-anchor="middle" fill="#134e4a" font-size="10" font-family="DM Sans">Documentos</text>
+        <line x1="442" y1="195" x2="548" y2="214" stroke="#6c63ff" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a9)"/>
+
+        <!-- Cloudinary right -->
+        <rect x="550" y="290" width="140" height="48" rx="8" fill="rgba(157,97,255,0.1)" stroke="rgba(157,97,255,0.3)" stroke-width="1"/>
+        <text x="620" y="310" text-anchor="middle" fill="#c4b5fd" font-size="11" font-family="DM Mono">GitHub</text>
+        <text x="620" y="326" text-anchor="middle" fill="#4c1d95" font-size="10" font-family="DM Sans">Repositorio</text>
+
+        <!-- Leyenda -->
+        <line x1="30" y1="370" x2="70" y2="370" stroke="#6c63ff" stroke-width="1.5"/>
+        <text x="78" y="374" fill="#5a5a72" font-size="10" font-family="DM Mono">Petición enviada</text>
+        <line x1="160" y1="370" x2="200" y2="370" stroke="#2dd4bf" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <text x="208" y="374" fill="#5a5a72" font-size="10" font-family="DM Mono">Respuesta recibida</text>
+      </svg>
+    </div>
+
+    <h2 class="section-title">API Keys — Las llaves de acceso</h2>
+    <p class="body-text">Cada servicio externo te da una <strong style="color:var(--accent2)">API Key</strong> (clave de API): un código único que identifica a tu cuenta cuando haces peticiones. Es como tu contraseña de acceso al servicio.</p>
+
+    <div class="callout callout-coral">
+      <div class="callout-icon">🔒</div>
+      <div class="callout-content">
+        <strong>Nunca subas API Keys a GitHub</strong>
+        <p>Las API Keys son privadas. Si las subes al repositorio, cualquiera puede verlas y usar tu cuenta. Guárdalas en un archivo .env que NO se sube a GitHub, o úsalas directamente en el panel de configuración de Firebase.</p>
+      </div>
+    </div>
+
+    <div class="lesson-nav">
+      <button class="btn btn-ghost" onclick="goTo('l8')">← Anterior</button>
+      <button class="btn btn-primary" onclick="markDoneAndNext('l9','l10')">Completado → Siguiente</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════ L10 ══════════════════════════════════════ -->
+  <div id="l10" class="lesson">
+    <div class="lesson-header">
+      <div class="lesson-tag">Módulo 3 · Lección 10</div>
+      <h1>Flujo completo de un proyecto</h1>
+      <p class="lesson-intro">Esta es la lección final. Aquí verás el proceso de principio a fin: desde que el cliente pide el sitio hasta que está publicado con dominio propio y funcionando.</p>
+    </div>
+
+    <h2 class="section-title">Los 10 pasos del proceso</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num" style="background:var(--amber-bg);border-color:rgba(245,158,11,0.3);color:var(--amber);">1</div>
+        <div class="step-body">
+          <strong>Reunión con el cliente y planificación</strong>
+          <p>Define qué páginas tendrá el sitio, qué colores, qué contenido y qué funcionalidades necesita (formulario de contacto, galería, tienda). Guarda todo en Google Drive.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num" style="background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent2);">2</div>
+        <div class="step-body">
+          <strong>Crear repositorio en GitHub</strong>
+          <p>github.com → "New repository" → Nombre del proyecto (ej: <code style="font-family:var(--font-mono);font-size:12px;color:var(--accent2);">clinica-dental-lima</code>) → "Create repository". Esta es la base del proyecto.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num" style="background:var(--amber-bg);border-color:rgba(245,158,11,0.3);color:var(--amber);">3</div>
+        <div class="step-body">
+          <strong>Diseño en Canva + fotos de Unsplash</strong>
+          <p>Crea el logo en Canva. Busca fotos profesionales en Unsplash. Sube todo a Cloudinary para tener las URLs optimizadas listas.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num" style="background:var(--green-bg);border-color:rgba(34,197,94,0.3);color:var(--green);">4</div>
+        <div class="step-body">
+          <strong>Generar la base con Gemini Pro (gratis)</strong>
+          <p>Escribe un prompt detallado en gemini.google.com describiendo el sitio. Copia el HTML, CSS y JS generado. Revisa que no tenga errores obvios.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num" style="background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent2);">5</div>
+        <div class="step-body">
+          <strong>Subir el código a GitHub</strong>
+          <p>Crea los archivos en la carpeta del repositorio clonado. Luego: <code style="font-family:var(--font-mono);font-size:12px;color:var(--accent2);">git add . → git commit -m "Estructura inicial" → git push</code></p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num" style="background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent2);">6</div>
+        <div class="step-body">
+          <strong>Refinar con Claude Code</strong>
+          <p>Abre la terminal en la carpeta del proyecto, ejecuta <code style="font-family:var(--font-mono);font-size:12px;color:var(--accent2);">claude</code> y empieza a pedir mejoras en español. Claude Code hace los cambios y pushea automáticamente.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num" style="background:rgba(249,115,22,0.1);border-color:rgba(249,115,22,0.3);color:#fb923c;">7</div>
+        <div class="step-body">
+          <strong>Configurar Firebase Hosting</strong>
+          <p>Crea el proyecto en console.firebase.google.com. Conecta con el repositorio de GitHub. A partir de aquí, cada push a "main" publica el sitio automáticamente.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num" style="background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent2);">8</div>
+        <div class="step-body">
+          <strong>Integrar formulario y emails</strong>
+          <p>Crear cuenta en formspree.io → obtener endpoint → decirle a Claude Code que integre Formspree en el formulario de contacto del sitio.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num" style="background:var(--green-bg);border-color:rgba(34,197,94,0.3);color:var(--green);">9</div>
+        <div class="step-body">
+          <strong>Instalar Databuddy para analítica</strong>
+          <p>Crear cuenta en databuddy.cc → obtener el script → decirle a Claude Code que lo añada al <code style="font-family:var(--font-mono);font-size:12px;color:var(--accent2)">&lt;head&gt;</code> de todas las páginas.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num" style="background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3);color:var(--amber);">10</div>
+        <div class="step-body">
+          <strong>Comprar dominio y conectar DNS</strong>
+          <p>Comprar el dominio en GoDaddy → en Firebase añadir dominio personalizado → copiar registros DNS → pegarlos en GoDaddy → esperar 24-48h. ¡El sitio está listo!</p>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Cómo actualizar el sitio en el futuro</h2>
+
+    <div class="flow-inline" style="flex-wrap:wrap;gap:8px;">
+      <div class="flow-node">Cliente pide cambio</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node accent">Claude Code</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">Cambios en archivos</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node amber">Push a GitHub</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node green">Firebase publica</div>
+    </div>
+    <p class="body-text" style="margin-top:8px;">Todo el proceso tarda menos de 5 minutos. El sitio se actualiza automáticamente sin tocar nada en Firebase ni en el servidor.</p>
+
+    <h2 class="section-title">Checklist de lanzamiento</h2>
+    <ul class="checklist">
+      <li>Repositorio creado en GitHub con nombre del proyecto</li>
+      <li>Logo y fotos subidos a Cloudinary</li>
+      <li>Código HTML/CSS/JS en el repositorio</li>
+      <li>Sitio visible en la URL de Firebase (.web.app)</li>
+      <li>Formulario de contacto funcional (Formspree o EmailJS)</li>
+      <li>Databuddy instalado en todas las páginas</li>
+      <li>Sitio responsive probado en móvil</li>
+      <li>Dominio comprado en GoDaddy</li>
+      <li>DNS configurado y propagado</li>
+      <li>HTTPS activo (candado verde en el navegador)</li>
+      <li>Probar formulario de contacto en producción</li>
+      <li>Entregar credenciales al cliente en Google Drive</li>
+    </ul>
+
+    <div class="callout callout-green" style="margin-top:32px;">
+      <div class="callout-icon">🎉</div>
+      <div class="callout-content">
+        <strong>¡Felicitaciones! Has completado el curso</strong>
+        <p>Ahora tienes los conocimientos fundamentales para crear y publicar sitios web profesionales usando todo el ecosistema de herramientas del equipo. El siguiente paso es la práctica: crea tu primer proyecto de prueba.</p>
+      </div>
+    </div>
+
+    <div class="lesson-nav">
+      <button class="btn btn-ghost" onclick="goTo('l9')">← Anterior</button>
+      <button class="btn btn-primary" onclick="markDoneAndFinish()">Finalizar curso ✓</button>
+    </div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+const lessons = ['home','l1','l2','l3','l4','l5','l6','l7','l8','l9','l10'];
+const TOTAL = 10;
+let current = 'home';
+let completed = JSON.parse(localStorage.getItem('curso_done') || '[]');
+
+function save() { localStorage.setItem('curso_done', JSON.stringify(completed)); }
+
+function updateProgress() {
+  const n = completed.length;
+  document.getElementById('prog-text').textContent = n + ' / ' + TOTAL;
+  document.getElementById('prog-fill').style.width = (n / TOTAL * 100) + '%';
+  lessons.forEach(id => {
+    const btn = document.querySelector('[data-id="' + id + '"]');
+    if (!btn) return;
+    if (completed.includes(id)) btn.classList.add('done');
+    else btn.classList.remove('done');
+  });
+}
+
+function goTo(id) {
+  document.querySelectorAll('.lesson').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const btn = document.querySelector('[data-id="' + id + '"]');
+  if (btn) btn.classList.add('active');
+  current = id;
+  window.scrollTo(0,0);
+  document.querySelector('.main').scrollTo(0,0);
+
+  const labels = {
+    home:'Inicio',l1:'Cómo funciona la web',l2:'HTML desde cero',
+    l3:'CSS',l4:'JavaScript',l5:'GitHub',l6:'Claude y Gemini',
+    l7:'Firebase',l8:'Herramientas extra',l9:'APIs',l10:'Flujo completo'
+  };
+  const mods = {l1:'Módulo 1',l2:'Módulo 1',l3:'Módulo 1',l4:'Módulo 1',
+    l5:'Módulo 2',l6:'Módulo 2',l7:'Módulo 2',l8:'Módulo 2',
+    l9:'Módulo 3',l10:'Módulo 3'};
+  const bc = document.getElementById('breadcrumb');
+  if (id === 'home') bc.innerHTML = 'Inicio → <span>Bienvenida</span>';
+  else bc.innerHTML = (mods[id]||'Inicio') + ' → <span>' + (labels[id]||id) + '</span>';
+
+  // close sidebar on mobile
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function markDone() {
+  if (current !== 'home' && !completed.includes(current)) {
+    completed.push(current);
+    save();
+    updateProgress();
+  }
+}
+
+function markDoneAndNext(curr, next) {
+  if (!completed.includes(curr)) { completed.push(curr); save(); }
+  updateProgress();
+  goTo(next);
+}
+
+function markDoneAndFinish() {
+  if (!completed.includes('l10')) { completed.push('l10'); save(); }
+  updateProgress();
+  alert('🎉 ¡Felicitaciones! Completaste el curso de Desarrollo Web. Ya tienes todo el conocimiento para crear sitios web profesionales con el equipo.');
+}
+
+function nextLesson() {
+  const idx = lessons.indexOf(current);
+  if (idx < lessons.length - 1) goTo(lessons[idx + 1]);
+}
+
+function toggleCard(card) {
+  card.classList.toggle('expanded');
+}
+
+function toggleMenu() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+function quiz(el, result) {
+  const parent = el.closest('.quiz-card');
+  parent.querySelectorAll('.quiz-opt').forEach(o => { o.classList.remove('correct','wrong'); o.style.pointerEvents='none'; });
+  el.classList.add(result);
+  const fb = document.getElementById('qfb');
+  if (fb) fb.classList.add('show');
+}
+
+updateProgress();
+</script>
+</body>
+</html>

@@ -4,34 +4,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Curso de Desarrollo Web — Guía Completa</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0a0a0f;
-  --bg2: #111118;
-  --bg3: #18181f;
-  --bg4: #1e1e28;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --text: #e8e8f0;
-  --text2: #9090a8;
-  --text3: #5a5a72;
-  --accent: #6c63ff;
-  --accent2: #9d97ff;
-  --accent-bg: rgba(108,99,255,0.12);
-  --accent-border: rgba(108,99,255,0.3);
+  --bg: #04091e;
+  --bg2: #07102a;
+  --bg3: #0c1a3d;
+  --bg4: #112050;
+  --border: rgba(168,192,255,0.08);
+  --border2: rgba(168,192,255,0.16);
+  --text: #f0f6ff;
+  --text2: #7eaad4;
+  --text3: #4a6d96;
+  --accent: #1a56e8;
+  --accent2: #a8c0ff;
+  --accent-bg: rgba(26,86,232,0.14);
+  --accent-border: rgba(26,86,232,0.35);
   --green: #22c55e;
   --green-bg: rgba(34,197,94,0.1);
   --amber: #f59e0b;
   --amber-bg: rgba(245,158,11,0.1);
   --coral: #f87171;
   --coral-bg: rgba(248,113,113,0.1);
-  --teal: #2dd4bf;
-  --teal-bg: rgba(45,212,191,0.1);
+  --teal: #60b4ff;
+  --teal-bg: rgba(96,180,255,0.1);
   --radius: 12px;
   --radius-sm: 8px;
   --font: 'DM Sans', sans-serif;
-  --font-display: 'Syne', sans-serif;
+  --font-display: 'Bebas Neue', sans-serif;
   --font-mono: 'DM Mono', monospace;
 }
 
@@ -80,10 +80,11 @@ body {
 }
 .sidebar-logo h1 {
   font-family: var(--font-display);
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
   color: var(--text);
-  line-height: 1.3;
+  line-height: 1.1;
 }
 .sidebar-logo p {
   font-size: 12px;
@@ -260,14 +261,22 @@ body {
 }
 .lesson h1 {
   font-family: var(--font-display);
-  font-size: 36px;
-  font-weight: 800;
-  line-height: 1.15;
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.03em;
   margin-bottom: 12px;
-  background: linear-gradient(135deg, var(--text) 60%, var(--accent2));
+  background: linear-gradient(105deg, var(--text) 0%, var(--text) 40%, #a8c0ff 52%, #fff 58%, #a8c0ff 64%, var(--accent2) 100%);
+  background-size: 250% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: shine 4s ease-in-out infinite;
+}
+@keyframes shine {
+  0%   { background-position: 100% 50%; }
+  50%  { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }
 .lesson-intro {
   font-size: 16px;
@@ -279,8 +288,9 @@ body {
 /* ──── CONTENT ELEMENTS ──── */
 h2.section-title {
   font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
   margin: 40px 0 16px;
   color: var(--text);
   display: flex;
@@ -299,8 +309,9 @@ h2.section-title::before {
 
 h3.sub-title {
   font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
   margin: 28px 0 10px;
   color: var(--text);
 }
@@ -328,7 +339,7 @@ p.body-text {
 @media (max-width: 700px) { .card-grid, .card-grid-3 { grid-template-columns: 1fr; } }
 
 .card-icon { font-size: 28px; margin-bottom: 10px; }
-.card h4 { font-family: var(--font-display); font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+.card h4 { font-family: var(--font-display); font-size: 18px; font-weight: 400; letter-spacing: 0.05em; margin-bottom: 6px; color: var(--text); }
 .card p { font-size: 13px; color: var(--text2); line-height: 1.6; }
 
 /* Callouts */
@@ -347,8 +358,8 @@ p.body-text {
 .callout-content strong { display: block; font-weight: 500; margin-bottom: 3px; }
 .callout-content p { margin: 0; }
 
-.callout-blue { background: rgba(108,99,255,0.08); border-color: var(--accent); color: var(--accent2); }
-.callout-blue .callout-content { color: #b8b3ff; }
+.callout-blue { background: rgba(26,86,232,0.1); border-color: var(--accent); color: var(--accent2); }
+.callout-blue .callout-content { color: #c8d8ff; }
 .callout-green { background: var(--green-bg); border-color: var(--green); }
 .callout-green .callout-content { color: #86efac; }
 .callout-amber { background: var(--amber-bg); border-color: var(--amber); }
@@ -454,7 +465,7 @@ pre {
   gap: 12px;
 }
 .tool-emoji { font-size: 22px; }
-.tool-name { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--text); }
+.tool-name { font-family: var(--font-display); font-size: 20px; font-weight: 400; letter-spacing: 0.05em; color: var(--text); }
 .tool-tagline { font-size: 13px; color: var(--text3); margin-top: 2px; }
 .tool-expand { margin-left: auto; color: var(--text3); font-size: 18px; transition: transform 0.2s; }
 .tool-card.expanded .tool-expand { transform: rotate(45deg); }
@@ -494,7 +505,7 @@ pre {
   text-align: center;
 }
 .compare-cell .icon { font-size: 28px; margin-bottom: 8px; }
-.compare-cell h5 { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.compare-cell h5 { font-family: var(--font-display); font-size: 17px; font-weight: 400; letter-spacing: 0.05em; color: var(--text); margin-bottom: 4px; }
 .compare-cell p { font-size: 12px; color: var(--text2); line-height: 1.5; }
 .compare-cell .meta { font-family: var(--font-mono); font-size: 10px; color: var(--text3); margin-top: 8px; }
 
@@ -556,7 +567,7 @@ pre {
   padding: 24px;
   margin: 28px 0;
 }
-.quiz-card h4 { font-family: var(--font-display); font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+.quiz-card h4 { font-family: var(--font-display); font-size: 20px; font-weight: 400; letter-spacing: 0.05em; margin-bottom: 16px; }
 .quiz-options { display: flex; flex-direction: column; gap: 8px; }
 .quiz-opt {
   padding: 12px 16px;
@@ -599,14 +610,17 @@ pre {
 }
 .hero-lesson h1 {
   font-family: var(--font-display);
-  font-size: 52px;
-  font-weight: 800;
-  line-height: 1.1;
+  font-size: 72px;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0.03em;
   margin-bottom: 20px;
-  background: linear-gradient(135deg, #fff 0%, var(--accent2) 60%, var(--teal) 100%);
+  background: linear-gradient(105deg, #fff 0%, #fff 35%, #a8c0ff 48%, #fff 54%, #a8c0ff 60%, var(--accent2) 100%);
+  background-size: 250% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: shine 4s ease-in-out infinite;
 }
 .hero-lesson .subtitle {
   font-size: 18px;
@@ -647,7 +661,7 @@ pre {
 }
 .mod-card:hover { border-color: var(--accent-border); background: var(--bg3); }
 .mod-num { font-family: var(--font-mono); font-size: 11px; color: var(--text3); margin-bottom: 6px; }
-.mod-card h3 { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.mod-card h3 { font-family: var(--font-display); font-size: 18px; font-weight: 400; letter-spacing: 0.05em; color: var(--text); margin-bottom: 4px; }
 .mod-card p { font-size: 12px; color: var(--text3); }
 .mod-count { font-family: var(--font-mono); font-size: 10px; color: var(--accent2); margin-top: 10px; }
 
@@ -867,33 +881,33 @@ pre {
       <svg width="100%" viewBox="0 0 760 200" style="max-width:760px;">
         <defs>
           <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M2 1L8 5L2 9" fill="none" stroke="#6c63ff" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#1a56e8" stroke-width="1.5" stroke-linecap="round"/>
           </marker>
         </defs>
-        <rect x="10" y="75" width="120" height="50" rx="8" fill="#18181f" stroke="#3d3d5c" stroke-width="1"/>
-        <text x="70" y="97" text-anchor="middle" fill="#9d97ff" font-size="11" font-family="DM Mono, monospace">Navegador</text>
+        <rect x="10" y="75" width="120" height="50" rx="8" fill="#0c1a3d" stroke="#1e3a6e" stroke-width="1"/>
+        <text x="70" y="97" text-anchor="middle" fill="#a8c0ff" font-size="11" font-family="DM Mono, monospace">Navegador</text>
         <text x="70" y="113" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Sans, sans-serif">Chrome / Safari</text>
 
-        <rect x="175" y="75" width="120" height="50" rx="8" fill="#18181f" stroke="#3d3d5c" stroke-width="1"/>
-        <text x="235" y="97" text-anchor="middle" fill="#9d97ff" font-size="11" font-family="DM Mono, monospace">DNS</text>
+        <rect x="175" y="75" width="120" height="50" rx="8" fill="#0c1a3d" stroke="#1e3a6e" stroke-width="1"/>
+        <text x="235" y="97" text-anchor="middle" fill="#a8c0ff" font-size="11" font-family="DM Mono, monospace">DNS</text>
         <text x="235" y="113" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Sans, sans-serif">Directorio global</text>
 
-        <rect x="340" y="75" width="120" height="50" rx="8" fill="#18181f" stroke="#3d3d5c" stroke-width="1"/>
-        <text x="400" y="97" text-anchor="middle" fill="#9d97ff" font-size="11" font-family="DM Mono, monospace">Servidor</text>
+        <rect x="340" y="75" width="120" height="50" rx="8" fill="#0c1a3d" stroke="#1e3a6e" stroke-width="1"/>
+        <text x="400" y="97" text-anchor="middle" fill="#a8c0ff" font-size="11" font-family="DM Mono, monospace">Servidor</text>
         <text x="400" y="113" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Sans, sans-serif">GitHub Pages</text>
 
-        <rect x="505" y="75" width="120" height="50" rx="8" fill="#18181f" stroke="#3d3d5c" stroke-width="1"/>
-        <text x="565" y="97" text-anchor="middle" fill="#9d97ff" font-size="11" font-family="DM Mono, monospace">Archivos</text>
+        <rect x="505" y="75" width="120" height="50" rx="8" fill="#0c1a3d" stroke="#1e3a6e" stroke-width="1"/>
+        <text x="565" y="97" text-anchor="middle" fill="#a8c0ff" font-size="11" font-family="DM Mono, monospace">Archivos</text>
         <text x="565" y="113" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Sans, sans-serif">HTML · CSS · JS</text>
 
         <rect x="670" y="75" width="80" height="50" rx="8" fill="#0f2a1f" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
         <text x="710" y="97" text-anchor="middle" fill="#22c55e" font-size="11" font-family="DM Mono, monospace">Página</text>
         <text x="710" y="113" text-anchor="middle" fill="#16a34a" font-size="10" font-family="DM Sans, sans-serif">¡Visible!</text>
 
-        <line x1="132" y1="100" x2="173" y2="100" stroke="#6c63ff" stroke-width="1.5" marker-end="url(#a)"/>
-        <line x1="297" y1="100" x2="338" y2="100" stroke="#6c63ff" stroke-width="1.5" marker-end="url(#a)"/>
-        <line x1="462" y1="100" x2="503" y2="100" stroke="#6c63ff" stroke-width="1.5" marker-end="url(#a)"/>
-        <line x1="627" y1="100" x2="668" y2="100" stroke="#6c63ff" stroke-width="1.5" marker-end="url(#a)"/>
+        <line x1="132" y1="100" x2="173" y2="100" stroke="#1a56e8" stroke-width="1.5" marker-end="url(#a)"/>
+        <line x1="297" y1="100" x2="338" y2="100" stroke="#1a56e8" stroke-width="1.5" marker-end="url(#a)"/>
+        <line x1="462" y1="100" x2="503" y2="100" stroke="#1a56e8" stroke-width="1.5" marker-end="url(#a)"/>
+        <line x1="627" y1="100" x2="668" y2="100" stroke="#1a56e8" stroke-width="1.5" marker-end="url(#a)"/>
 
         <text x="70" y="55" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Mono">1. Pide la página</text>
         <text x="235" y="55" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Mono">2. Encuentra IP</text>
@@ -1159,12 +1173,12 @@ pre {
         <text x="40" y="45" fill="#f59e0b" font-size="11" font-family="DM Mono, monospace">margin (espacio exterior)</text>
 
         <rect x="60" y="60" width="520" height="160" rx="8" fill="rgba(108,99,255,0.08)" stroke="rgba(108,99,255,0.3)" stroke-width="1.5"/>
-        <text x="80" y="82" fill="#9d97ff" font-size="11" font-family="DM Mono, monospace">border (borde visible)</text>
+        <text x="80" y="82" fill="#a8c0ff" font-size="11" font-family="DM Mono, monospace">border (borde visible)</text>
 
         <rect x="100" y="96" width="440" height="108" rx="6" fill="rgba(45,212,191,0.08)" stroke="rgba(45,212,191,0.3)" stroke-width="1.5"/>
         <text x="120" y="116" fill="#2dd4bf" font-size="11" font-family="DM Mono, monospace">padding (relleno interior)</text>
 
-        <rect x="160" y="128" width="320" height="60" rx="4" fill="#18181f" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <rect x="160" y="128" width="320" height="60" rx="4" fill="#0c1a3d" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
         <text x="320" y="155" text-anchor="middle" fill="#e8e8f0" font-size="13" font-family="DM Sans, sans-serif" font-weight="500">CONTENIDO</text>
         <text x="320" y="172" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Mono, monospace">width × height</text>
       </svg>
@@ -1438,14 +1452,14 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
         <p class="body-text">Una rama es una copia del proyecto donde puedes experimentar sin afectar el sitio publicado. La rama principal se llama <strong style="color:var(--accent2)">main</strong> y es la versión que está en producción (publicada en GitHub Pages).</p>
         <div class="diagram-wrap"><div class="diagram-title">// Flujo de ramas</div>
         <svg width="100%" viewBox="0 0 640 160">
-          <line x1="40" y1="60" x2="600" y2="60" stroke="#3d3d5c" stroke-width="2"/>
-          <circle cx="40" cy="60" r="8" fill="#6c63ff"/>
-          <circle cx="140" cy="60" r="8" fill="#6c63ff"/>
-          <circle cx="240" cy="60" r="8" fill="#6c63ff"/>
-          <circle cx="500" cy="60" r="8" fill="#6c63ff"/>
+          <line x1="40" y1="60" x2="600" y2="60" stroke="#1e3a6e" stroke-width="2"/>
+          <circle cx="40" cy="60" r="8" fill="#1a56e8"/>
+          <circle cx="140" cy="60" r="8" fill="#1a56e8"/>
+          <circle cx="240" cy="60" r="8" fill="#1a56e8"/>
+          <circle cx="500" cy="60" r="8" fill="#1a56e8"/>
           <circle cx="600" cy="60" r="8" fill="#22c55e"/>
-          <text x="40" y="45" text-anchor="middle" fill="#9d97ff" font-size="10" font-family="DM Mono">inicio</text>
-          <text x="320" y="45" text-anchor="middle" fill="#6c63ff" font-size="11" font-family="DM Sans" font-weight="600">rama: main (publicado)</text>
+          <text x="40" y="45" text-anchor="middle" fill="#a8c0ff" font-size="10" font-family="DM Mono">inicio</text>
+          <text x="320" y="45" text-anchor="middle" fill="#1a56e8" font-size="11" font-family="DM Sans" font-weight="600">rama: main (publicado)</text>
           <text x="600" y="45" text-anchor="middle" fill="#22c55e" font-size="10" font-family="DM Mono">deploy</text>
           <line x1="240" y1="60" x2="340" y2="120" stroke="#2dd4bf" stroke-width="1.5" stroke-dasharray="4 4"/>
           <line x1="340" y1="120" x2="500" y2="120" stroke="#2dd4bf" stroke-width="1.5"/>
@@ -1531,20 +1545,20 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
     <div class="diagram-wrap">
       <div class="diagram-title">// Flujo IA en el proceso de creación</div>
       <svg width="100%" viewBox="0 0 720 120">
-        <defs><marker id="a6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#6c63ff" stroke-width="1.5" stroke-linecap="round"/></marker></defs>
+        <defs><marker id="a6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#1a56e8" stroke-width="1.5" stroke-linecap="round"/></marker></defs>
         <rect x="10" y="35" width="160" height="50" rx="8" fill="rgba(34,197,94,0.08)" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
         <text x="90" y="57" text-anchor="middle" fill="#22c55e" font-size="12" font-family="DM Mono">Gemini Pro</text>
         <text x="90" y="73" text-anchor="middle" fill="#4ade80" font-size="10" font-family="DM Sans">Genera la base</text>
         <text x="90" y="87" text-anchor="middle" fill="#16a34a" font-size="9" font-family="DM Mono">GRATIS</text>
-        <line x1="172" y1="60" x2="208" y2="60" stroke="#6c63ff" stroke-width="1.5" marker-end="url(#a6)"/>
+        <line x1="172" y1="60" x2="208" y2="60" stroke="#1a56e8" stroke-width="1.5" marker-end="url(#a6)"/>
         <rect x="210" y="35" width="160" height="50" rx="8" fill="rgba(108,99,255,0.08)" stroke="rgba(108,99,255,0.3)" stroke-width="1"/>
-        <text x="290" y="57" text-anchor="middle" fill="#9d97ff" font-size="12" font-family="DM Mono">Claude (chat)</text>
+        <text x="290" y="57" text-anchor="middle" fill="#a8c0ff" font-size="12" font-family="DM Mono">Claude (chat)</text>
         <text x="290" y="73" text-anchor="middle" fill="#a5b4fc" font-size="10" font-family="DM Sans">Refina y mejora</text>
-        <line x1="372" y1="60" x2="408" y2="60" stroke="#6c63ff" stroke-width="1.5" marker-end="url(#a6)"/>
+        <line x1="372" y1="60" x2="408" y2="60" stroke="#1a56e8" stroke-width="1.5" marker-end="url(#a6)"/>
         <rect x="410" y="35" width="160" height="50" rx="8" fill="rgba(45,212,191,0.08)" stroke="rgba(45,212,191,0.3)" stroke-width="1"/>
         <text x="490" y="57" text-anchor="middle" fill="#2dd4bf" font-size="12" font-family="DM Mono">Claude Code</text>
         <text x="490" y="73" text-anchor="middle" fill="#5eead4" font-size="10" font-family="DM Sans">Actualiza el repo</text>
-        <line x1="572" y1="60" x2="608" y2="60" stroke="#6c63ff" stroke-width="1.5" marker-end="url(#a6)"/>
+        <line x1="572" y1="60" x2="608" y2="60" stroke="#1a56e8" stroke-width="1.5" marker-end="url(#a6)"/>
         <rect x="610" y="35" width="100" height="50" rx="8" fill="rgba(249,115,22,0.08)" stroke="rgba(249,115,22,0.3)" stroke-width="1"/>
         <text x="660" y="57" text-anchor="middle" fill="#fb923c" font-size="12" font-family="DM Mono">GitHub</text>
         <text x="660" y="73" text-anchor="middle" fill="#fdba74" font-size="10" font-family="DM Sans">Publicado</text>
@@ -1873,14 +1887,14 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
       <svg width="100%" viewBox="0 0 720 400">
         <defs>
           <marker id="a9" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-            <path d="M2 1L8 5L2 9" fill="none" stroke="#6c63ff" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#1a56e8" stroke-width="1.5" stroke-linecap="round"/>
           </marker>
           <marker id="a9b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
             <path d="M2 1L8 5L2 9" fill="none" stroke="#2dd4bf" stroke-width="1.5" stroke-linecap="round"/>
           </marker>
         </defs>
         <!-- Central -->
-        <rect x="280" y="155" width="160" height="60" rx="10" fill="#18181f" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+        <rect x="280" y="155" width="160" height="60" rx="10" fill="#0c1a3d" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
         <text x="360" y="180" text-anchor="middle" fill="#e8e8f0" font-size="13" font-family="DM Sans" font-weight="600">Tu sitio web</text>
         <text x="360" y="198" text-anchor="middle" fill="#5a5a72" font-size="10" font-family="DM Mono">HTML + CSS + JS</text>
 
@@ -1888,39 +1902,39 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
         <rect x="30" y="20" width="140" height="48" rx="8" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.3)" stroke-width="1"/>
         <text x="100" y="40" text-anchor="middle" fill="#f59e0b" font-size="11" font-family="DM Mono">Cloudinary</text>
         <text x="100" y="56" text-anchor="middle" fill="#92400e" font-size="10" font-family="DM Sans">URL de imagen</text>
-        <line x1="172" y1="44" x2="278" y2="168" stroke="#6c63ff" stroke-width="1" marker-end="url(#a9)" stroke-dasharray="3 3"/>
+        <line x1="172" y1="44" x2="278" y2="168" stroke="#1a56e8" stroke-width="1" marker-end="url(#a9)" stroke-dasharray="3 3"/>
 
         <!-- EmailJS -->
         <rect x="30" y="100" width="140" height="48" rx="8" fill="rgba(108,99,255,0.1)" stroke="rgba(108,99,255,0.3)" stroke-width="1"/>
-        <text x="100" y="120" text-anchor="middle" fill="#9d97ff" font-size="11" font-family="DM Mono">EmailJS</text>
+        <text x="100" y="120" text-anchor="middle" fill="#a8c0ff" font-size="11" font-family="DM Mono">EmailJS</text>
         <text x="100" y="136" text-anchor="middle" fill="#4c1d95" font-size="10" font-family="DM Sans">Envía emails</text>
-        <path d="M172 124 L278 185" fill="none" stroke="#6c63ff" stroke-width="1" marker-end="url(#a9)"/>
+        <path d="M172 124 L278 185" fill="none" stroke="#1a56e8" stroke-width="1" marker-end="url(#a9)"/>
         <path d="M278 195 L172 132" fill="none" stroke="#2dd4bf" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a9b)"/>
 
         <!-- Formspree -->
         <rect x="30" y="190" width="140" height="48" rx="8" fill="rgba(248,113,113,0.1)" stroke="rgba(248,113,113,0.3)" stroke-width="1"/>
         <text x="100" y="210" text-anchor="middle" fill="#f87171" font-size="11" font-family="DM Mono">Formspree</text>
         <text x="100" y="226" text-anchor="middle" fill="#991b1b" font-size="10" font-family="DM Sans">Formularios</text>
-        <line x1="172" y1="214" x2="278" y2="200" stroke="#6c63ff" stroke-width="1" marker-end="url(#a9)"/>
+        <line x1="172" y1="214" x2="278" y2="200" stroke="#1a56e8" stroke-width="1" marker-end="url(#a9)"/>
 
         <!-- Databuddy -->
         <rect x="30" y="290" width="140" height="48" rx="8" fill="rgba(34,197,94,0.1)" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
         <text x="100" y="310" text-anchor="middle" fill="#22c55e" font-size="11" font-family="DM Mono">Databuddy</text>
         <text x="100" y="326" text-anchor="middle" fill="#14532d" font-size="10" font-family="DM Sans">Analítica</text>
-        <line x1="172" y1="314" x2="278" y2="214" stroke="#6c63ff" stroke-width="1" marker-end="url(#a9)" stroke-dasharray="3 3"/>
+        <line x1="172" y1="314" x2="278" y2="214" stroke="#1a56e8" stroke-width="1" marker-end="url(#a9)" stroke-dasharray="3 3"/>
 
         <!-- Firebase -->
         <rect x="550" y="100" width="140" height="48" rx="8" fill="rgba(249,115,22,0.1)" stroke="rgba(249,115,22,0.3)" stroke-width="1"/>
         <text x="620" y="120" text-anchor="middle" fill="#fb923c" font-size="11" font-family="DM Mono">Firebase DB</text>
         <text x="620" y="136" text-anchor="middle" fill="#7c2d12" font-size="10" font-family="DM Sans">Guarda datos</text>
-        <path d="M442 185 L548 124" fill="none" stroke="#6c63ff" stroke-width="1" marker-end="url(#a9)"/>
+        <path d="M442 185 L548 124" fill="none" stroke="#1a56e8" stroke-width="1" marker-end="url(#a9)"/>
         <path d="M548 132 L442 193" fill="none" stroke="#2dd4bf" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a9b)"/>
 
         <!-- Drive -->
         <rect x="550" y="190" width="140" height="48" rx="8" fill="rgba(45,212,191,0.1)" stroke="rgba(45,212,191,0.3)" stroke-width="1"/>
         <text x="620" y="210" text-anchor="middle" fill="#2dd4bf" font-size="11" font-family="DM Mono">Google Drive</text>
         <text x="620" y="226" text-anchor="middle" fill="#134e4a" font-size="10" font-family="DM Sans">Documentos</text>
-        <line x1="442" y1="195" x2="548" y2="214" stroke="#6c63ff" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a9)"/>
+        <line x1="442" y1="195" x2="548" y2="214" stroke="#1a56e8" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a9)"/>
 
         <!-- Cloudinary right -->
         <rect x="550" y="290" width="140" height="48" rx="8" fill="rgba(157,97,255,0.1)" stroke="rgba(157,97,255,0.3)" stroke-width="1"/>
@@ -1928,7 +1942,7 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
         <text x="620" y="326" text-anchor="middle" fill="#4c1d95" font-size="10" font-family="DM Sans">Repositorio</text>
 
         <!-- Leyenda -->
-        <line x1="30" y1="370" x2="70" y2="370" stroke="#6c63ff" stroke-width="1.5"/>
+        <line x1="30" y1="370" x2="70" y2="370" stroke="#1a56e8" stroke-width="1.5"/>
         <text x="78" y="374" fill="#5a5a72" font-size="10" font-family="DM Mono">Petición enviada</text>
         <line x1="160" y1="370" x2="200" y2="370" stroke="#2dd4bf" stroke-width="1.5" stroke-dasharray="3 3"/>
         <text x="208" y="374" fill="#5a5a72" font-size="10" font-family="DM Mono">Respuesta recibida</text>

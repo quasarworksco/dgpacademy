@@ -7,27 +7,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #04091e;
-  --bg2: #07102a;
-  --bg3: #0c1a3d;
-  --bg4: #112050;
-  --border: rgba(168,192,255,0.08);
-  --border2: rgba(168,192,255,0.16);
-  --text: #f0f6ff;
-  --text2: #7eaad4;
-  --text3: #4a6d96;
+  --bg: #ffffff;
+  --bg2: #f4f8ff;
+  --bg3: #eaf0ff;
+  --bg4: #dce8ff;
+  --border: rgba(26,86,232,0.1);
+  --border2: rgba(26,86,232,0.2);
+  --text: #0d1b3e;
+  --text2: #3a5880;
+  --text3: #7090b8;
   --accent: #1a56e8;
-  --accent2: #a8c0ff;
-  --accent-bg: rgba(26,86,232,0.14);
-  --accent-border: rgba(26,86,232,0.35);
-  --green: #22c55e;
-  --green-bg: rgba(34,197,94,0.1);
-  --amber: #f59e0b;
-  --amber-bg: rgba(245,158,11,0.1);
-  --coral: #f87171;
-  --coral-bg: rgba(248,113,113,0.1);
-  --teal: #60b4ff;
-  --teal-bg: rgba(96,180,255,0.1);
+  --accent2: #1a56e8;
+  --accent-bg: rgba(26,86,232,0.07);
+  --accent-border: rgba(26,86,232,0.2);
+  --green: #16a34a;
+  --green-bg: rgba(22,163,74,0.08);
+  --amber: #d97706;
+  --amber-bg: rgba(217,119,6,0.08);
+  --coral: #dc2626;
+  --coral-bg: rgba(220,38,38,0.08);
+  --teal: #0284c7;
+  --teal-bg: rgba(2,132,199,0.08);
   --radius: 12px;
   --radius-sm: 8px;
   --font: 'DM Sans', sans-serif;
@@ -192,9 +192,10 @@ body {
 .topbar {
   position: sticky;
   top: 0;
-  background: rgba(10,10,15,0.9);
-  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 0 rgba(26,86,232,0.06), 0 4px 20px rgba(26,86,232,0.04);
   padding: 14px 48px;
   display: flex;
   align-items: center;
@@ -266,7 +267,7 @@ body {
   line-height: 1;
   letter-spacing: 0.03em;
   margin-bottom: 12px;
-  background: linear-gradient(105deg, var(--text) 0%, var(--text) 40%, #a8c0ff 52%, #fff 58%, #a8c0ff 64%, var(--accent2) 100%);
+  background: linear-gradient(105deg, #0d1b3e 0%, #0d1b3e 28%, #1a56e8 44%, #a8c0ff 52%, #1a56e8 60%, #0d1b3e 100%);
   background-size: 250% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -373,24 +374,24 @@ p.body-text {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--bg4);
+  background: #091228;
   padding: 10px 16px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(168,192,255,0.1);
 }
-.code-label { font-family: var(--font-mono); font-size: 11px; color: var(--text3); }
+.code-label { font-family: var(--font-mono); font-size: 11px; color: #7090b8; }
 .code-dots { display: flex; gap: 5px; }
 .code-dot { width: 8px; height: 8px; border-radius: 50%; }
 .d1 { background: #ff5f57; }
 .d2 { background: #febc2e; }
 .d3 { background: #28c840; }
 pre {
-  background: var(--bg3);
+  background: #0d1b3e;
   padding: 20px;
   overflow-x: auto;
   font-family: var(--font-mono);
   font-size: 13px;
   line-height: 1.7;
-  color: var(--text2);
+  color: #c8d8ff;
   margin: 0;
 }
 .c-purple { color: #c792ea; }
@@ -615,7 +616,7 @@ pre {
   line-height: 0.95;
   letter-spacing: 0.03em;
   margin-bottom: 20px;
-  background: linear-gradient(105deg, #fff 0%, #fff 35%, #a8c0ff 48%, #fff 54%, #a8c0ff 60%, var(--accent2) 100%);
+  background: linear-gradient(105deg, #0d1b3e 0%, #0d1b3e 25%, #1a56e8 42%, #a8c0ff 52%, #1a56e8 62%, #0d1b3e 100%);
   background-size: 250% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -665,11 +666,198 @@ pre {
 .mod-card p { font-size: 12px; color: var(--text3); }
 .mod-count { font-family: var(--font-mono); font-size: 10px; color: var(--accent2); margin-top: 10px; }
 
+/* ──── ANIMACIONES EXTRA ──── */
+
+/* Progress bar shimmer */
+.progress-fill {
+  background: linear-gradient(90deg, var(--accent) 0%, #a8c0ff 50%, var(--accent) 100%);
+  background-size: 200% 100%;
+  animation: progressShimmer 2.5s linear infinite;
+}
+@keyframes progressShimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* Card hover lift */
+.card {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 48px rgba(26,86,232,0.13);
+  border-color: var(--accent-border);
+}
+
+/* Mod card hover */
+.mod-card {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.mod-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(26,86,232,0.14);
+  border-color: var(--accent-border);
+  background: var(--bg3);
+}
+
+/* Tool pill hover float */
+.tool-pill {
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tool-pill:hover {
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 8px 24px rgba(26,86,232,0.18);
+  border-color: var(--accent-border);
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+/* Step number pulse on hover */
+.step { transition: all 0.2s; }
+.step:hover .step-num {
+  animation: stepPulse 0.5s ease;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+@keyframes stepPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.18); box-shadow: 0 0 0 6px rgba(26,86,232,0.12); }
+}
+
+/* Lesson fade + rise */
+.lesson.active { animation: lessonIn 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+@keyframes lessonIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Section title bar grow */
+@keyframes barGrow {
+  from { height: 0; opacity: 0; }
+  to   { height: 22px; opacity: 1; }
+}
+h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+/* Stagger entrance via JS class */
+.anim-enter {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.anim-enter.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Tool card expand animation */
+.tool-body { animation: none; }
+.tool-card.expanded .tool-body {
+  display: block;
+  animation: bodyOpen 0.3s ease;
+}
+@keyframes bodyOpen {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Callout slide-in */
+.callout { animation: calloutIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+@keyframes calloutIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Button interactions */
+.btn { transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: scale(0.95); }
+.btn-primary:hover { background: #1248cc; box-shadow: 0 8px 24px rgba(26,86,232,0.3); }
+.btn-ghost:hover { color: var(--text); border-color: var(--accent-border); background: var(--accent-bg); }
+
+/* Nav item active indicator */
+.nav-item { transition: all 0.2s; }
+.nav-item.active {
+  background: var(--accent-bg);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+  position: relative;
+}
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 6px; bottom: 6px;
+  width: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+  animation: navBar 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes navBar {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+/* Checklist hover */
+.checklist li { transition: all 0.2s; cursor: default; }
+.checklist li:hover { color: var(--text); padding-left: 8px; }
+.checklist li:hover::before { color: var(--accent); }
+
+/* Flow node hover */
+.flow-node { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.flow-node:hover { transform: scale(1.06); }
+
+/* Hero eyebrow blink cursor */
+.hero-eyebrow::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  margin-left: 2px;
+  color: var(--accent);
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; } 50% { opacity: 0; }
+}
+
+/* Quiz option hover */
+.quiz-opt { transition: all 0.2s; }
+.quiz-opt:hover { transform: translateX(4px); border-color: var(--accent-border); color: var(--accent); background: var(--accent-bg); }
+
+/* Reset button */
+.reset-btn {
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--text3);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  letter-spacing: 0.05em;
+}
+.reset-btn:hover {
+  border-color: var(--coral);
+  color: var(--coral);
+  background: var(--coral-bg);
+  transform: none;
+}
+
+/* SVG icon in nav */
+.nav-icon { display: flex; align-items: center; width: 16px; flex-shrink: 0; }
+.nav-icon svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Tool pill SVG logo */
+.pill-logo { width: 18px; height: 18px; flex-shrink: 0; }
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--border2); }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-border); }
 
 /* Responsive */
 @media (max-width: 900px) {
@@ -721,7 +909,7 @@ pre {
   <div class="nav-section">
     <div class="nav-section-title">Inicio</div>
     <button class="nav-item active" onclick="goTo('home')" data-id="home">
-      <span class="nav-icon">🏠</span> Bienvenida al curso
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/></svg></span> Bienvenida al curso
       <span class="nav-check">✓</span>
     </button>
   </div>
@@ -729,19 +917,19 @@ pre {
   <div class="nav-section">
     <div class="nav-section-title">Módulo 1 · Fundamentos</div>
     <button class="nav-item" onclick="goTo('l1')" data-id="l1">
-      <span class="nav-icon">🌐</span> ¿Cómo funciona la web?
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg></span> ¿Cómo funciona la web?
       <span class="nav-check"></span>
     </button>
     <button class="nav-item" onclick="goTo('l2')" data-id="l2">
-      <span class="nav-icon">🧱</span> HTML desde cero
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg></span> HTML desde cero
       <span class="nav-check"></span>
     </button>
     <button class="nav-item" onclick="goTo('l3')" data-id="l3">
-      <span class="nav-icon">🎨</span> CSS — Estilo y diseño
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 17.25h.008v.008H6.75v-.008z M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88"/></svg></span> CSS — Estilo y diseño
       <span class="nav-check"></span>
     </button>
     <button class="nav-item" onclick="goTo('l4')" data-id="l4">
-      <span class="nav-icon">⚡</span> JavaScript — Interactividad
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg></span> JavaScript — Interactividad
       <span class="nav-check"></span>
     </button>
   </div>
@@ -749,19 +937,19 @@ pre {
   <div class="nav-section">
     <div class="nav-section-title">Módulo 2 · Herramientas</div>
     <button class="nav-item" onclick="goTo('l5')" data-id="l5">
-      <span class="nav-icon">🐙</span> GitHub y control de versiones
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg></span> GitHub y control de versiones
       <span class="nav-check"></span>
     </button>
     <button class="nav-item" onclick="goTo('l6')" data-id="l6">
-      <span class="nav-icon">🤖</span> IA: Claude y Gemini Pro
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/></svg></span> IA: Claude y Gemini Pro
       <span class="nav-check"></span>
     </button>
     <button class="nav-item" onclick="goTo('l7')" data-id="l7">
-      <span class="nav-icon">🚀</span> GitHub Pages y publicación
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/></svg></span> GitHub Pages y publicación
       <span class="nav-check"></span>
     </button>
     <button class="nav-item" onclick="goTo('l8')" data-id="l8">
-      <span class="nav-icon">🔧</span> Servicios y herramientas extra
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"/></svg></span> Servicios y herramientas extra
       <span class="nav-check"></span>
     </button>
   </div>
@@ -769,17 +957,21 @@ pre {
   <div class="nav-section">
     <div class="nav-section-title">Módulo 3 · Integraciones</div>
     <button class="nav-item" onclick="goTo('l9')" data-id="l9">
-      <span class="nav-icon">🔌</span> APIs — Cómo todo se conecta
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg></span> APIs — Cómo todo se conecta
       <span class="nav-check"></span>
     </button>
     <button class="nav-item" onclick="goTo('l10')" data-id="l10">
-      <span class="nav-icon">🗺️</span> Flujo completo de un proyecto
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"/></svg></span> Flujo completo de un proyecto
       <span class="nav-check"></span>
     </button>
   </div>
 
   <div class="sidebar-footer">
     Guía de trabajo · Uso interno<br>Actualizada 2025
+    <button class="reset-btn" onclick="resetProgress()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      Reiniciar progreso
+    </button>
   </div>
 </nav>
 
@@ -806,18 +998,54 @@ pre {
     <p class="subtitle">Este curso te enseña todo lo que necesitas saber para construir, publicar y mantener sitios web usando las mismas herramientas que usamos en el equipo.</p>
 
     <div class="tools-grid">
-      <div class="tool-pill">🤖 Claude Code</div>
-      <div class="tool-pill">🐙 GitHub</div>
-      <div class="tool-pill">🔥 Firebase</div>
-      <div class="tool-pill">🌐 GoDaddy</div>
-      <div class="tool-pill">🖼️ Cloudinary</div>
-      <div class="tool-pill">📬 Formspree</div>
-      <div class="tool-pill">✉️ EmailJS</div>
-      <div class="tool-pill">📊 Databuddy</div>
-      <div class="tool-pill">🎨 Canva</div>
-      <div class="tool-pill">📷 Unsplash</div>
-      <div class="tool-pill">🤖 Gemini Pro</div>
-      <div class="tool-pill">⚛️ Reactbits</div>
+      <div class="tool-pill">
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#d97757"/><path d="M8 16l2-8 2 4 2-4 2 8" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Claude Code
+      </div>
+      <div class="tool-pill">
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="#1b1f24" stroke="none"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </div>
+      <div class="tool-pill">
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><path d="M5.08 15.5c0 2.77 3.54 6.5 7 6.5s7-3.73 7-6.5c0-2.77-2.08-5.67-5.09-7.57.67 1.5.69 3.12.09 4.5a.47.47 0 01-.78.16l-1.44-1.46a.88.88 0 00-1.25 0C8.7 12.54 5.08 13.73 5.08 15.5zm9.87-12.77c.44 2.41-.38 4.95-2.15 6.7L11.22 8.2a.49.49 0 00-.83.16c-.3.72-.28 1.53.03 2.25L7.2 7.36c-.36-.36-.93-.24-1.12.24C5.37 9.09 5 10.41 5 11.5c0-3.26 3.16-6.52 5.87-8.51.71-.51 1.47-.97 2.19-1.36.34.37.65.77.89 1.1z" fill="#FFCA28"/></svg>
+        Firebase
+      </div>
+      <div class="tool-pill">
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1BDBDB"/><text x="12" y="17" font-family="Arial Black,sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">GD</text></svg>
+        GoDaddy
+      </div>
+      <div class="tool-pill">
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#3448c5"/><path d="M5 14.5a7 7 0 0114 0H5z" fill="#fff"/><path d="M12 5.5v4m-3-1.5l3 1.5 3-1.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Cloudinary
+      </div>
+      <div class="tool-pill">
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#e34f26"/><path d="M6 4h12l-1.5 14L12 20l-4.5-2L6 4z" fill="#fff"/><path d="M12 17.5l3.2-1.5 1-10H12v11.5z" fill="#e34f26"/><path d="M9 10h3v2.5H9.5L9.7 15l2.3.7V18l-3.8-1.5-.5-6.5z" fill="#333"/><path d="M15 10h-3v2.5h2.5L14.3 15l-2.3.7V18l3.8-1.5.5-6.5z" fill="#333" opacity=".6"/></svg>
+        Formspree
+      </div>
+      <div class="tool-pill">
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1a56e8"/><path d="M4 8l8 5 8-5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><rect x="4" y="7" width="16" height="10" rx="2" stroke="#fff" stroke-width="1.5"/></svg>
+        EmailJS
+      </div>
+      <div class="tool-pill">
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#0f172a"/><rect x="4" y="14" width="3" height="6" rx="1" fill="#38bdf8"/><rect x="9" y="10" width="3" height="10" rx="1" fill="#60a5fa"/><rect x="14" y="6" width="3" height="14" rx="1" fill="#a78bfa"/><rect x="19" y="3" width="1" height="3" rx=".5" fill="#f472b6"/></svg>
+        Databuddy
+      </div>
+      <div class="tool-pill">
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#00c4cc"/><path d="M7 17L17 7M7 7h10v10" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Canva
+      </div>
+      <div class="tool-pill">
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#111"/><circle cx="12" cy="11" r="3.5" stroke="#fff" stroke-width="1.5"/><path d="M5 19c1.5-3 3.5-5 7-5s5.5 2 7 5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Unsplash
+      </div>
+      <div class="tool-pill">
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="12" fill="url(#gg)"/><defs><linearGradient id="gg" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#4285f4"/><stop offset=".33" stop-color="#9c27b0"/><stop offset=".67" stop-color="#e91e63"/><stop offset="1" stop-color="#ff5722"/></linearGradient></defs><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" fill="#fff"/></svg>
+        Gemini Pro
+      </div>
+      <div class="tool-pill">
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#0d1b3e"/><path d="M8 12a4 4 0 108 0 4 4 0 00-8 0z" stroke="#61dafb" stroke-width="1.5"/><ellipse cx="12" cy="12" rx="10" ry="4" stroke="#61dafb" stroke-width="1.2" transform="rotate(30 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" stroke="#61dafb" stroke-width="1.2" transform="rotate(-30 12 12)"/></svg>
+        Reactbits
+      </div>
     </div>
 
     <h2 class="section-title">Estructura del curso</h2>
@@ -2151,6 +2379,8 @@ function goTo(id) {
 
   // close sidebar on mobile
   document.getElementById('sidebar').classList.remove('open');
+  // re-init animations for new lesson
+  setTimeout(initAnimations, 50);
 }
 
 function markDone() {
@@ -2186,6 +2416,33 @@ function toggleMenu() {
   document.getElementById('sidebar').classList.toggle('open');
 }
 
+function resetProgress() {
+  if (!confirm('¿Reiniciar todo el progreso? Esto borrará las lecciones completadas.')) return;
+  completed = [];
+  save();
+  updateProgress();
+  const btn = document.querySelector('.reset-btn');
+  btn.textContent = '✓ Reiniciado';
+  setTimeout(() => { btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg> Reiniciar progreso'; }, 2000);
+}
+
+// Scroll-triggered entrance animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 60);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+function initAnimations() {
+  document.querySelectorAll('.card, .step, .tool-card, .mod-card, .callout, .quiz-card, .compare-cell, .flow-node, .checklist li').forEach(el => {
+    el.classList.add('anim-enter');
+    observer.observe(el);
+  });
+}
+
 function quiz(el, result) {
   const parent = el.closest('.quiz-card');
   parent.querySelectorAll('.quiz-opt').forEach(o => { o.classList.remove('correct','wrong'); o.style.pointerEvents='none'; });
@@ -2195,6 +2452,7 @@ function quiz(el, result) {
 }
 
 updateProgress();
+initAnimations();
 </script>
 </body>
 </html>

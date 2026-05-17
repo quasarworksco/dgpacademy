@@ -966,14 +966,22 @@ p.body-text {
 .callout-content strong { display: block; font-weight: 500; margin-bottom: 3px; }
 .callout-content p { margin: 0; }
 
-.callout-blue { background: rgba(26,86,232,0.1); border-color: var(--accent); color: var(--accent2); }
-.callout-blue .callout-content { color: #c8d8ff; }
-.callout-green { background: var(--green-bg); border-color: var(--green); }
-.callout-green .callout-content { color: #86efac; }
-.callout-amber { background: var(--amber-bg); border-color: var(--amber); }
-.callout-amber .callout-content { color: #fcd34d; }
-.callout-coral { background: var(--coral-bg); border-color: var(--coral); }
-.callout-coral .callout-content { color: #fca5a5; }
+.callout-blue { background: rgba(26,86,232,0.07); border-color: var(--accent); }
+.callout-blue .callout-icon { color: var(--accent); }
+.callout-blue .callout-content { color: #1e3a8a; }
+.callout-blue .callout-content strong { color: var(--accent); }
+.callout-green { background: rgba(22,163,74,0.07); border-color: var(--green); }
+.callout-green .callout-icon { color: #15803d; }
+.callout-green .callout-content { color: #14532d; }
+.callout-green .callout-content strong { color: #16a34a; }
+.callout-amber { background: rgba(217,119,6,0.07); border-color: var(--amber); }
+.callout-amber .callout-icon { color: #b45309; }
+.callout-amber .callout-content { color: #78350f; }
+.callout-amber .callout-content strong { color: #d97706; }
+.callout-coral { background: rgba(220,38,38,0.07); border-color: var(--coral); }
+.callout-coral .callout-icon { color: #dc2626; }
+.callout-coral .callout-content { color: #7f1d1d; }
+.callout-coral .callout-content strong { color: #dc2626; }
 
 /* Code blocks */
 .code-wrap { margin: 20px 0; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border2); }
@@ -1489,12 +1497,492 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   padding: 4px;
 }
 @media (max-width: 900px) { .menu-btn { display: block; } }
+
+/* ════════════════════════════════════════
+   LANDING PAGE
+   ════════════════════════════════════════ */
+@keyframes lp-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+@keyframes lp-fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.lp-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 70px; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 rgba(26,86,232,0.08);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px;
+}
+.lp-nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer; }
+.lp-nav-logo-text { display: flex; flex-direction: column; line-height: 1; }
+.lp-nav-logo-text .lp-brand-main { font-family: var(--font-display); font-size: 22px; color: #0d1b3e; letter-spacing: 0.06em; }
+.lp-nav-logo-text .lp-brand-sub  { font-size: 9px; color: var(--text3); letter-spacing: 0.08em; margin-top: 1px; text-transform: uppercase; font-family: var(--font-mono); }
+.lp-nav-links { display: flex; align-items: center; gap: 32px; }
+.lp-nav-links a { font-family: var(--font); font-size: 14px; color: var(--text2); text-decoration: none; transition: color .2s; }
+.lp-nav-links a:hover { color: var(--accent); }
+.lp-btn-nav {
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  color: #fff; background: var(--accent); border: none;
+  padding: 9px 22px; border-radius: 999px; cursor: pointer;
+  transition: all .2s cubic-bezier(0.34,1.56,0.64,1);
+}
+.lp-btn-nav:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,86,232,0.3); }
+
+.lp-hero {
+  min-height: 100vh; display: flex; align-items: center;
+  padding: 110px 40px 60px; max-width: 1200px; margin: 0 auto; gap: 48px;
+}
+.lp-hero-left { flex: 0 0 55%; animation: lp-fadeUp .7s ease both; }
+.lp-hero-right { flex: 0 0 45%; display: flex; justify-content: center; }
+.lp-hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 11px; color: var(--accent);
+  background: var(--accent-bg); border: 1px solid var(--accent-border);
+  border-radius: 999px; padding: 5px 14px; letter-spacing: 0.06em; margin-bottom: 24px;
+}
+.lp-hero-badge::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--accent); flex-shrink:0; }
+.lp-hero-headline {
+  font-family: var(--font-display); font-size: clamp(52px,8vw,96px);
+  color: var(--text); line-height: .95; letter-spacing: 0.02em; margin: 0 0 24px;
+}
+.lp-hero-headline span { color: var(--accent); }
+.lp-hero-sub {
+  font-size: 17px; line-height: 1.65; color: var(--text2);
+  max-width: 440px; margin: 0 0 36px;
+}
+.lp-hero-ctas { display: flex; align-items: center; gap: 14px; margin-bottom: 36px; flex-wrap: wrap; }
+.lp-btn-primary {
+  font-family: var(--font); font-weight: 600; font-size: 15px;
+  color: #fff; background: var(--accent); border: none;
+  padding: 14px 28px; border-radius: 12px; cursor: pointer;
+  transition: all .25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.lp-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,86,232,0.3); }
+.lp-btn-ghost {
+  font-family: var(--font); font-weight: 600; font-size: 15px;
+  color: var(--accent); background: transparent;
+  border: 2px solid var(--accent-border); padding: 13px 26px;
+  border-radius: 12px; cursor: pointer; text-decoration: none;
+  display: inline-block; transition: all .2s;
+}
+.lp-btn-ghost:hover { background: var(--accent-bg); border-color: var(--accent); }
+.lp-hero-social { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text3); }
+.lp-hero-avatars { display: flex; }
+.lp-hero-avatars span {
+  width: 32px; height: 32px; border-radius: 50%; border: 2px solid #fff;
+  margin-left: -8px; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: #fff; font-family: var(--font-display);
+}
+.lp-hero-avatars span:first-child { margin-left: 0; background: #6366f1; }
+.lp-hero-avatars span:nth-child(2) { background: #0ea5e9; }
+.lp-hero-avatars span:nth-child(3) { background: var(--green); }
+
+.lp-hero-card {
+  width: 380px; background: #fff; border: 1px solid var(--border2);
+  border-radius: 20px; overflow: hidden;
+  box-shadow: 0 24px 64px rgba(26,86,232,.15);
+  animation: lp-float 3s ease-in-out infinite; flex-shrink: 0;
+}
+.lp-card-bar { background: var(--bg3); padding: 12px 16px; display: flex; align-items: center; gap: 8px; }
+.lp-card-dot { width: 10px; height: 10px; border-radius: 50%; }
+.lp-card-dot:nth-child(1) { background: #f87171; }
+.lp-card-dot:nth-child(2) { background: #fbbf24; }
+.lp-card-dot:nth-child(3) { background: #34d399; }
+.lp-card-url { flex: 1; background: #fff; border-radius: 6px; height: 20px; margin-left: 8px; }
+.lp-card-body { display: flex; }
+.lp-card-sidebar { width: 110px; background: var(--bg2); padding: 16px 12px; border-right: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+.lp-card-nav-item { height: 8px; border-radius: 4px; background: var(--bg4); }
+.lp-card-nav-item.active { background: var(--accent); width: 70%; }
+.lp-card-nav-item:nth-child(2) { width: 85%; }
+.lp-card-nav-item:nth-child(3) { width: 60%; }
+.lp-card-nav-item:nth-child(4) { width: 80%; }
+.lp-card-content { flex: 1; padding: 20px 18px; display: flex; flex-direction: column; gap: 10px; }
+.lp-card-tag { height: 6px; width: 50px; border-radius: 3px; background: var(--accent-bg); }
+.lp-card-h { height: 12px; width: 80%; border-radius: 4px; background: var(--bg4); }
+.lp-card-line { height: 7px; border-radius: 3px; background: var(--bg3); }
+.lp-card-line.short { width: 65%; }
+.lp-card-progress { height: 6px; border-radius: 3px; background: var(--bg4); margin-top: 4px; overflow: hidden; }
+.lp-card-progress-fill { height: 100%; width: 40%; background: var(--accent); border-radius: 3px; }
+.lp-card-btn { height: 26px; width: 90px; background: var(--accent); border-radius: 6px; margin-top: 4px; }
+
+.lp-stats { background: linear-gradient(135deg,#0d1b3e 0%,#1a56e8 100%); padding: 48px 40px; }
+.lp-stats-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); }
+.lp-stat { text-align: center; padding: 12px 24px; border-right: 1px solid rgba(255,255,255,.15); }
+.lp-stat:last-child { border-right: none; }
+.lp-stat-num { font-family: var(--font-display); font-size: 56px; color: #fff; line-height: 1; letter-spacing: 0.02em; }
+.lp-stat-label { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 4px; letter-spacing: 0.06em; text-transform: uppercase; font-family: var(--font-mono); }
+
+.lp-section { max-width: 1100px; margin: 0 auto; padding: 88px 40px; }
+.lp-section-header { text-align: center; margin-bottom: 56px; }
+.lp-section-eyebrow {
+  display: inline-block; font-family: var(--font-mono); font-size: 11px;
+  color: var(--accent); background: var(--accent-bg); border: 1px solid var(--accent-border);
+  padding: 4px 14px; border-radius: 999px; margin-bottom: 16px; letter-spacing: 0.1em;
+}
+.lp-section-title { font-family: var(--font-display); font-size: clamp(36px,5vw,52px); color: var(--text); letter-spacing: 0.03em; line-height: 1; margin: 0; }
+
+.lp-courses-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+.lp-course-card {
+  background: #fff; border: 1px solid var(--border); border-radius: 16px;
+  overflow: hidden; transition: all .3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.lp-course-card:not(.lp-locked):hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(26,86,232,.13); border-color: var(--accent-border); }
+.lp-course-thumb { height: 140px; display: flex; align-items: center; justify-content: center; }
+.lp-course-thumb svg { opacity: .9; }
+.lp-thumb-blue  { background: linear-gradient(135deg,#0d1b3e,#1a56e8); }
+.lp-thumb-purple { background: linear-gradient(135deg,#312e81,#6366f1); }
+.lp-thumb-green  { background: linear-gradient(135deg,#14532d,#16a34a); }
+.lp-course-body { padding: 20px; }
+.lp-course-tag { display: inline-block; font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 999px; margin-bottom: 10px; }
+.lp-tag-available { color: var(--green); background: rgba(22,163,74,.1); }
+.lp-tag-soon      { color: var(--text3); background: var(--bg3); }
+.lp-tag-new       { color: #7c3aed; background: rgba(124,58,237,.08); border: 1px solid rgba(124,58,237,.15); }
+.lp-course-title { font-family: var(--font-display); font-size: 22px; color: var(--text); letter-spacing: 0.03em; margin: 0 0 8px; line-height: 1.1; }
+.lp-course-desc  { font-size: 13px; color: var(--text2); line-height: 1.55; margin: 0 0 16px; }
+.lp-course-meta  { font-family: var(--font-mono); font-size: 11px; color: var(--text3); margin-bottom: 16px; }
+.lp-btn-course {
+  width: 100%; font-family: var(--font); font-weight: 600; font-size: 13px;
+  padding: 10px; border-radius: 8px; border: none; cursor: pointer; transition: all .2s;
+}
+.lp-btn-course.active { background: var(--accent); color: #fff; }
+.lp-btn-course.active:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(26,86,232,.3); }
+.lp-btn-course.locked { background: var(--bg3); color: var(--text3); cursor: default; }
+
+.lp-features-bg { background: var(--bg2); }
+.lp-features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+.lp-feature {
+  background: #fff; border: 1px solid var(--border); border-radius: 16px;
+  padding: 28px 24px; transition: box-shadow .25s;
+}
+.lp-feature:hover { box-shadow: 0 8px 32px rgba(26,86,232,.1); }
+.lp-feature-icon {
+  width: 48px; height: 48px; border-radius: 12px; background: var(--accent);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+  transition: transform .2s cubic-bezier(0.34,1.56,0.64,1);
+}
+.lp-feature:hover .lp-feature-icon { transform: scale(1.12) rotate(-3deg); }
+.lp-feature-icon svg { stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.lp-feature-title { font-family: var(--font-display); font-size: 20px; color: var(--text); letter-spacing: 0.03em; margin: 0 0 8px; }
+.lp-feature-desc  { font-size: 13px; color: var(--text2); line-height: 1.6; margin: 0; }
+
+.lp-audience-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+.lp-audience-card {
+  background: #fff; border: 1px solid var(--border); border-radius: 16px;
+  padding: 32px 24px; text-align: center; transition: all .25s;
+}
+.lp-audience-card:hover { border-color: var(--accent); box-shadow: 0 8px 32px rgba(26,86,232,.1); transform: translateY(-4px); }
+.lp-audience-icon {
+  width: 56px; height: 56px; border-radius: 16px; background: var(--accent-bg);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+  transition: all .25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.lp-audience-card:hover .lp-audience-icon { background: var(--accent); transform: scale(1.1); }
+.lp-audience-card:hover .lp-audience-icon svg { stroke: #fff; }
+.lp-audience-icon svg { stroke: var(--accent); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.lp-audience-title { font-family: var(--font-display); font-size: 22px; color: var(--text); letter-spacing: 0.03em; margin: 0 0 10px; }
+.lp-audience-desc  { font-size: 13px; color: var(--text2); line-height: 1.6; margin: 0; }
+
+.lp-access-bg { background: var(--bg2); }
+.lp-access-card {
+  background: #fff; border: 2px solid var(--accent-border); border-radius: 24px;
+  padding: 48px; max-width: 560px; margin: 0 auto; text-align: center;
+  box-shadow: 0 12px 48px rgba(26,86,232,.1);
+}
+.lp-access-list { list-style: none; padding: 0; margin: 0 0 32px; text-align: left; display: inline-flex; flex-direction: column; gap: 12px; }
+.lp-access-list li { display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--text); }
+.lp-access-list li::before {
+  content: ''; width: 20px; height: 20px; flex-shrink: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2316a34a' stroke-width='2.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M5 13l4 4L19 7'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.lp-btn-access {
+  width: 100%; font-family: var(--font); font-weight: 700; font-size: 16px;
+  color: #fff; background: var(--accent); border: none;
+  padding: 16px; border-radius: 12px; cursor: pointer; margin-bottom: 14px;
+  transition: all .25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.lp-btn-access:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,86,232,.3); }
+.lp-access-note { font-family: var(--font-mono); font-size: 11px; color: var(--text3); letter-spacing: 0.06em; }
+
+.lp-footer {
+  background: #0d1b3e; padding: 48px 40px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px;
+}
+.lp-footer-brand { display: flex; align-items: center; gap: 12px; }
+.lp-footer-brand-name { font-family: var(--font-display); font-size: 20px; letter-spacing: 0.06em; color: #fff; }
+.lp-footer-copy { font-size: 12px; color: rgba(255,255,255,.35); margin-top: 4px; }
+.lp-footer-links { display: flex; gap: 28px; }
+.lp-footer-links a { font-size: 13px; color: rgba(255,255,255,.4); text-decoration: none; transition: color .2s; }
+.lp-footer-links a:hover { color: rgba(255,255,255,.85); }
+
+/* ── Splash Screen ── */
+.splash-screen {
+  position: fixed; inset: 0; z-index: 9999;
+  background: linear-gradient(135deg, #0d1b3e 0%, #1a56e8 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.splash-screen.active { opacity: 1; pointer-events: all; }
+.splash-logo-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.splash-brand { font-family: var(--font-display); font-size: 52px; letter-spacing: 0.08em; color: #fff; line-height: 1; }
+.splash-sub { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; color: rgba(255,255,255,.55); }
+.splash-loader { display: flex; gap: 6px; margin-top: 8px; }
+.splash-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4);
+  animation: splashDot 1.2s ease-in-out infinite;
+}
+.splash-dot:nth-child(2) { animation-delay: .2s; }
+.splash-dot:nth-child(3) { animation-delay: .4s; }
+@keyframes splashDot {
+  0%,80%,100% { transform: scale(0.6); background: rgba(255,255,255,.3); }
+  40%         { transform: scale(1); background: rgba(255,255,255,.9); }
+}
+
+@media (max-width: 900px) {
+  .lp-nav { padding: 0 20px; }
+  .lp-nav-links { display: none; }
+  .lp-hero { flex-direction: column; padding: 100px 20px 48px; min-height: auto; }
+  .lp-hero-left, .lp-hero-right { flex: none; width: 100%; }
+  .lp-hero-right { display: none; }
+  .lp-stats { padding: 40px 20px; }
+  .lp-stats-inner { grid-template-columns: repeat(2,1fr); }
+  .lp-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,.15); }
+  .lp-section { padding: 60px 20px; }
+  .lp-courses-grid, .lp-features-grid, .lp-audience-grid { grid-template-columns: 1fr; }
+  .lp-access-card { padding: 32px 20px; }
+  .lp-footer { flex-direction: column; padding: 40px 20px; }
+}
 </style>
 </head>
 <body>
 
+<!-- ══════════════════ SPLASH ══════════════════ -->
+<div id="splash-screen" class="splash-screen active">
+  <div class="splash-logo-wrap">
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+      <circle cx="32" cy="32" r="30" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+      <ellipse cx="32" cy="32" rx="12" ry="30" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+      <path d="M4 22h56M4 42h56" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="32" cy="32" r="8" fill="rgba(255,255,255,0.15)"/>
+    </svg>
+    <div class="splash-brand">DGP ACADEMY</div>
+    <div class="splash-sub">DGP GLOBAL GROUP</div>
+  </div>
+  <div class="splash-loader">
+    <div class="splash-dot"></div>
+    <div class="splash-dot"></div>
+    <div class="splash-dot"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ PANTALLA: LANDING ══════════════════ -->
+<div id="landing-screen" style="display:none">
+
+  <nav class="lp-nav">
+    <div class="lp-nav-logo" onclick="document.getElementById('landing-screen').scrollTo(0,0)">
+      <svg width="34" height="34" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="30" stroke="#1a56e8" stroke-width="2"/>
+        <ellipse cx="32" cy="32" rx="12" ry="30" stroke="#1a56e8" stroke-width="1.5"/>
+        <path d="M4 22h56M4 42h56" stroke="#1a56e8" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="32" cy="32" r="7" fill="rgba(26,86,232,0.2)"/>
+      </svg>
+      <div class="lp-nav-logo-text">
+        <span class="lp-brand-main">DGP <span style="font-weight:300;opacity:.6">ACADEMY</span></span>
+        <span class="lp-brand-sub">· DGP Global Group</span>
+      </div>
+    </div>
+    <div class="lp-nav-links">
+      <a href="#lp-cursos">Cursos</a>
+      <a href="#lp-aprende">¿Qué aprenderás?</a>
+      <a href="#lp-acceso">Acceso</a>
+    </div>
+    <button onclick="goToAuth()" class="lp-btn-nav">Iniciar sesión</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="lp-hero">
+    <div class="lp-hero-left">
+      <div class="lp-hero-badge">PLATAFORMA EDUCATIVA · DGP GLOBAL GROUP</div>
+      <h1 class="lp-hero-headline">APRENDE.<br>CREA.<br><span>PUBLICA.</span></h1>
+      <p class="lp-hero-sub">Domina el desarrollo web profesional con las mismas herramientas que usamos en DGP Global Group. Desde cero hasta tu primer sitio publicado.</p>
+      <div class="lp-hero-ctas">
+        <button onclick="goToAuth()" class="lp-btn-primary">Comenzar ahora →</button>
+        <a href="#lp-cursos" class="lp-btn-ghost">Ver cursos ↓</a>
+      </div>
+      <div class="lp-hero-social">
+        <div class="lp-hero-avatars">
+          <span>A</span><span>M</span><span>R</span>
+        </div>
+        +50 estudiantes ya están aprendiendo
+      </div>
+    </div>
+    <div class="lp-hero-right">
+      <div class="lp-hero-card">
+        <div class="lp-card-bar">
+          <div class="lp-card-dot"></div><div class="lp-card-dot"></div><div class="lp-card-dot"></div>
+          <div class="lp-card-url"></div>
+        </div>
+        <div class="lp-card-body">
+          <div class="lp-card-sidebar">
+            <div class="lp-card-nav-item active"></div>
+            <div class="lp-card-nav-item"></div>
+            <div class="lp-card-nav-item"></div>
+            <div class="lp-card-nav-item"></div>
+            <div class="lp-card-nav-item" style="width:50%"></div>
+          </div>
+          <div class="lp-card-content">
+            <div class="lp-card-tag"></div>
+            <div class="lp-card-h"></div>
+            <div class="lp-card-line"></div>
+            <div class="lp-card-line short"></div>
+            <div class="lp-card-line"></div>
+            <div class="lp-card-progress"><div class="lp-card-progress-fill"></div></div>
+            <div class="lp-card-btn"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="lp-stats">
+    <div class="lp-stats-inner">
+      <div class="lp-stat"><div class="lp-stat-num">10</div><div class="lp-stat-label">Lecciones</div></div>
+      <div class="lp-stat"><div class="lp-stat-num">3</div><div class="lp-stat-label">Módulos</div></div>
+      <div class="lp-stat"><div class="lp-stat-num">∞</div><div class="lp-stat-label">Acceso ilimitado</div></div>
+      <div class="lp-stat"><div class="lp-stat-num">2025</div><div class="lp-stat-label">Actualizado</div></div>
+    </div>
+  </div>
+
+  <!-- CURSOS -->
+  <section id="lp-cursos">
+    <div class="lp-section">
+      <div class="lp-section-header">
+        <div class="lp-section-eyebrow">CURSOS DISPONIBLES</div>
+        <h2 class="lp-section-title">Todo lo que puedes aprender</h2>
+      </div>
+      <div class="lp-courses-grid">
+        <div class="lp-course-card">
+          <div class="lp-course-thumb lp-thumb-blue">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div class="lp-course-body">
+            <span class="lp-course-tag lp-tag-available">DISPONIBLE</span>
+            <div class="lp-course-title">DISEÑO Y DESARROLLO WEB POTENCIADO CON IA</div>
+            <p class="lp-course-desc">Construye sitios web completos usando IA como copiloto. HTML, CSS, JS, GitHub Pages y Firebase desde cero.</p>
+            <div class="lp-course-meta">10 lecciones · 3 módulos</div>
+            <button onclick="goToAuth()" class="lp-btn-course active">Acceder al curso →</button>
+          </div>
+        </div>
+        <div class="lp-course-card lp-locked">
+          <div class="lp-course-thumb lp-thumb-purple">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+          </div>
+          <div class="lp-course-body">
+            <span class="lp-course-tag lp-tag-new">PRÓXIMO</span>
+            <div class="lp-course-title">IA APLICADA A LOS NEGOCIOS</div>
+            <p class="lp-course-desc">Cómo la inteligencia artificial puede impulsar tu empresa: automatización, análisis, herramientas y estrategia.</p>
+            <div class="lp-course-meta">Disponible próximamente</div>
+            <button class="lp-btn-course locked" disabled>Próximamente</button>
+          </div>
+        </div>
+        <div class="lp-course-card lp-locked">
+          <div class="lp-course-thumb lp-thumb-green">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="lp-course-body">
+            <span class="lp-course-tag lp-tag-soon">PRÓXIMO</span>
+            <div class="lp-course-title">MARKETING DIGITAL</div>
+            <p class="lp-course-desc">SEO, redes sociales, campañas pagadas y estrategias de conversión para hacer crecer tu negocio online.</p>
+            <div class="lp-course-meta">Disponible próximamente</div>
+            <button class="lp-btn-course locked" disabled>Próximamente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUÉ APRENDERÁS -->
+  <div class="lp-features-bg" id="lp-aprende">
+    <div class="lp-section">
+      <div class="lp-section-header">
+        <div class="lp-section-eyebrow">¿QUÉ APRENDERÁS?</div>
+        <h2 class="lp-section-title">Del código al sitio publicado</h2>
+      </div>
+      <div class="lp-features-grid">
+        <div class="lp-feature"><div class="lp-feature-icon"><svg width="22" height="22" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><div class="lp-feature-title">HTML &amp; CSS DESDE CERO</div><p class="lp-feature-desc">Estructura y estilo: construye páginas semánticas y diseños modernos con Flexbox y Grid.</p></div>
+        <div class="lp-feature"><div class="lp-feature-icon"><svg width="22" height="22" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="lp-feature-title">JAVASCRIPT &amp; INTERACTIVIDAD</div><p class="lp-feature-desc">Lógica, eventos y DOM. Haz que tus páginas cobren vida con JavaScript moderno.</p></div>
+        <div class="lp-feature"><div class="lp-feature-icon"><svg width="22" height="22" viewBox="0 0 24 24"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></div><div class="lp-feature-title">GITHUB &amp; CONTROL DE VERSIONES</div><p class="lp-feature-desc">Flujo profesional: branches, commits y despliegue automático con GitHub Pages.</p></div>
+        <div class="lp-feature"><div class="lp-feature-icon"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/></svg></div><div class="lp-feature-title">GITHUB PAGES &amp; HOSTING</div><p class="lp-feature-desc">Publica gratis con GitHub Pages. Dominio .com personalizado y HTTPS automático.</p></div>
+        <div class="lp-feature"><div class="lp-feature-icon"><svg width="22" height="22" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div><div class="lp-feature-title">FIREBASE AUTH &amp; BASE DE DATOS</div><p class="lp-feature-desc">Login de usuarios, Firestore y almacenamiento en la nube. Backend sin servidor.</p></div>
+        <div class="lp-feature"><div class="lp-feature-icon"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg></div><div class="lp-feature-title">IA COMO COPILOTO</div><p class="lp-feature-desc">Claude, Gemini y GitHub Copilot: aprende a usar IA para multiplicar tu productividad.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARA QUIÉN -->
+  <section>
+    <div class="lp-section">
+      <div class="lp-section-header">
+        <div class="lp-section-eyebrow">¿PARA QUIÉN ES?</div>
+        <h2 class="lp-section-title">Hecho para ti</h2>
+      </div>
+      <div class="lp-audience-grid">
+        <div class="lp-audience-card"><div class="lp-audience-icon"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div class="lp-audience-title">EMPRENDEDORES</div><p class="lp-audience-desc">Quieres presencia online sin depender de terceros. Aprende a construir y mantener tu propio sitio.</p></div>
+        <div class="lp-audience-card"><div class="lp-audience-icon"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="lp-audience-title">EQUIPOS</div><p class="lp-audience-desc">Necesitan publicar landing pages y micrositios rápido, sin agencias ni demoras.</p></div>
+        <div class="lp-audience-card"><div class="lp-audience-icon"><svg width="26" height="26" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div class="lp-audience-title">FREELANCERS</div><p class="lp-audience-desc">Agrega desarrollo web a tu portafolio. Cobra más, entrega más rápido y diferénciate.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACCESO -->
+  <div class="lp-access-bg" id="lp-acceso">
+    <div class="lp-section">
+      <div class="lp-section-header">
+        <div class="lp-section-eyebrow">ACCESO</div>
+        <h2 class="lp-section-title">Un solo pago, acceso de por vida</h2>
+      </div>
+      <div class="lp-access-card">
+        <ul class="lp-access-list">
+          <li>10 lecciones completas en texto interactivo</li>
+          <li>3 módulos estructurados por nivel</li>
+          <li>Actualizaciones incluidas sin costo extra</li>
+          <li>Soporte directo del equipo DGP</li>
+          <li>Certificado de finalización del curso</li>
+        </ul>
+        <button onclick="goToAuth()" class="lp-btn-access">Comenzar ahora — Acceso inmediato →</button>
+        <div class="lp-access-note">ACCESO INMEDIATO · SIN SUSCRIPCIÓN · DE POR VIDA</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="lp-footer">
+    <div class="lp-footer-brand">
+      <svg width="32" height="32" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="30" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+        <ellipse cx="32" cy="32" rx="12" ry="30" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"/>
+        <path d="M4 22h56M4 42h56" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <div class="lp-footer-brand-name">DGP <span style="font-weight:300;opacity:.5">ACADEMY</span></div>
+        <div class="lp-footer-copy">© 2025 DGP Global Group. Todos los derechos reservados.</div>
+      </div>
+    </div>
+    <div class="lp-footer-links">
+      <a href="#">Política de privacidad</a>
+      <a href="#">Términos de uso</a>
+    </div>
+  </footer>
+
+</div><!-- /landing-screen -->
+
 <!-- ══════════════════ PANTALLA: AUTH ══════════════════ -->
-<div id="auth-screen" class="auth-screen">
+<div id="auth-screen" class="auth-screen" style="display:none">
 
   <!-- Izquierda: branding -->
   <div class="auth-left">
@@ -1513,14 +2001,14 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
         <div class="auth-course-chip-icon" style="background:rgba(26,86,232,0.2);">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a8c0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
         </div>
-        <span class="auth-course-chip-title">Desarrollo Web con Claude</span>
+        <span class="auth-course-chip-title">Diseño y Desarrollo WEB con IA</span>
         <span class="auth-course-chip-badge chip-active">DISPONIBLE</span>
       </div>
       <div class="auth-course-chip">
         <div class="auth-course-chip-icon" style="background:rgba(255,255,255,0.06);">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072"/></svg>
         </div>
-        <span class="auth-course-chip-title" style="color:rgba(255,255,255,0.4);">Diseño UI/UX Profesional</span>
+        <span class="auth-course-chip-title" style="color:rgba(255,255,255,0.4);">IA Aplicada a los Negocios</span>
         <span class="auth-course-chip-badge chip-soon">PRÓXIMO</span>
       </div>
       <div class="auth-course-chip">
@@ -1642,9 +2130,9 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
           </div>
         </div>
         <div class="course-body">
-          <span class="course-tag tag-web">DESARROLLO WEB</span>
-          <div class="course-title">Desarrollo Web con Claude</div>
-          <p class="course-desc">HTML, CSS, JavaScript, GitHub Pages, Firebase Auth y todo el ecosistema de herramientas del equipo.</p>
+          <span class="course-tag tag-web">DESARROLLO WEB · IA</span>
+          <div class="course-title">Diseño y Desarrollo WEB potenciado con IA</div>
+          <p class="course-desc">HTML, CSS, JavaScript, GitHub Pages, Firebase, Claude Code y todo el ecosistema de herramientas potenciadas con Inteligencia Artificial.</p>
           <div class="course-meta">
             <div class="course-meta-item">
               <svg viewBox="0 0 24 24"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg>
@@ -1680,8 +2168,8 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
         </div>
         <div class="course-body">
           <span class="course-tag tag-soon">PRÓXIMAMENTE</span>
-          <div class="course-title">Diseño UI/UX Profesional</div>
-          <p class="course-desc">Figma, sistemas de diseño, componentes reutilizables y principios de experiencia de usuario.</p>
+          <div class="course-title">IA Aplicada a los Negocios</div>
+          <p class="course-desc">Automatización, herramientas de IA para empresas, productividad, análisis de datos y estrategias para potenciar tu negocio con inteligencia artificial.</p>
           <div class="course-meta">
             <div class="course-meta-item">
               <svg viewBox="0 0 24 24"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg>
@@ -1732,7 +2220,7 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-badge">v1.0 · 2025</div>
-    <h1>Curso Desarrollo Web</h1>
+    <h1>Diseño y Desarrollo WEB con IA</h1>
     <p>Guía completa para tu asistente</p>
   </div>
 
@@ -1833,7 +2321,7 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   <!-- ══════════════════════════════════════ HOME ══════════════════════════════════════ -->
   <div id="home" class="lesson active">
   <div class="hero-lesson" style="padding:80px 0 0;">
-    <div class="hero-eyebrow">Guía de Desarrollo Web · Desde cero</div>
+    <div class="hero-eyebrow">Diseño y Desarrollo WEB con IA · Desde cero</div>
     <h1>Aprende a crear sitios web profesionales</h1>
     <p class="subtitle">Este curso te enseña todo lo que necesitas saber para construir, publicar y mantener sitios web usando las mismas herramientas que usamos en el equipo.</p>
 
@@ -3204,9 +3692,52 @@ try {
 }
 
 // ── Pantallas ────────────────────────────────────────────────────────────────
-function showAuth()      { document.getElementById('auth-screen').style.display='flex'; document.getElementById('dash-screen').style.display='none'; document.getElementById('course-screen').style.display='none'; }
-function showDashboard() { document.getElementById('auth-screen').style.display='none'; document.getElementById('dash-screen').style.display='block'; document.getElementById('course-screen').style.display='none'; updateDashStats(); }
-function showCourse()    { document.getElementById('auth-screen').style.display='none'; document.getElementById('dash-screen').style.display='none'; document.getElementById('course-screen').style.display='block'; }
+function hideSplash() {
+  const splash = document.getElementById('splash-screen');
+  if (splash) { splash.classList.remove('active'); setTimeout(() => { splash.style.display = 'none'; }, 400); }
+}
+function showLanding()   {
+  document.getElementById('landing-screen').style.display='block';
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('dash-screen').style.display='none';
+  document.getElementById('course-screen').style.display='none';
+  hideSplash();
+}
+function goToAuth() {
+  const splash = document.getElementById('splash-screen');
+  if (splash) {
+    splash.style.display = 'flex';
+    requestAnimationFrame(() => { splash.classList.add('active'); });
+    setTimeout(() => { showAuth(); }, 900);
+  } else { showAuth(); }
+}
+function showAuth()      {
+  document.getElementById('landing-screen').style.display='none';
+  document.getElementById('auth-screen').style.display='flex';
+  document.getElementById('dash-screen').style.display='none';
+  document.getElementById('course-screen').style.display='none';
+  hideSplash();
+}
+function showDashboard() {
+  document.getElementById('landing-screen').style.display='none';
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('dash-screen').style.display='block';
+  document.getElementById('course-screen').style.display='none';
+  updateDashStats();
+  hideSplash();
+}
+function showCourse()    {
+  document.getElementById('landing-screen').style.display='none';
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('dash-screen').style.display='none';
+  document.getElementById('course-screen').style.display='block';
+}
+
+// ── Sticky nav shadow on scroll ───────────────────────────────────────────────
+window.addEventListener('scroll', function() {
+  const nav = document.querySelector('.lp-nav');
+  if (nav) nav.classList.toggle('scrolled', window.scrollY > 10);
+});
 
 // ── Auth State ───────────────────────────────────────────────────────────────
 if (firebaseReady) {
@@ -3215,12 +3746,12 @@ if (firebaseReady) {
       fillUserUI(user);
       showDashboard();
     } else {
-      showAuth();
+      showLanding();
     }
   });
 } else {
-  // Modo demo: muestra auth directamente
-  showAuth();
+  // Modo demo: muestra landing directamente
+  showLanding();
 }
 
 // ── UI de usuario ─────────────────────────────────────────────────────────────
@@ -3418,7 +3949,7 @@ function markDoneAndNext(curr, next) {
 function markDoneAndFinish() {
   if (!completed.includes('l10')) { completed.push('l10'); save(); }
   updateProgress();
-  alert('🎉 ¡Felicitaciones! Completaste el curso de Desarrollo Web. Ya tienes todo el conocimiento para crear sitios web profesionales con el equipo.');
+  alert('🎉 ¡Felicitaciones! Completaste el curso de Diseño y Desarrollo WEB con IA. Ya tienes todo el conocimiento para crear sitios web profesionales potenciados con Inteligencia Artificial.');
 }
 
 function nextLesson() {

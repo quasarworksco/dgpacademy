@@ -5698,8 +5698,8 @@ function loadAdminData() {
 function renderAdminStats() {
   const total    = allAdminUsers.length;
   const active   = allAdminUsers.filter(u => u.courses && u.courses.length > 0).length;
-  const webDone  = allAdminUsers.filter(u => u.courses && u.courses.includes('web-dev')).length;
-  const paid     = allAdminUsers.filter(u => u.paid).length;
+  const webDone  = allAdminUsers.filter(u => u.completedCourses && u.completedCourses.includes('web-dev')).length;
+  const paid     = allAdminUsers.filter(u => u.payments && u.payments['web-dev']).length;
   const now      = Date.now();
   const inactive = allAdminUsers.filter(u => {
     if (!u.lastActivity) return false;
@@ -5725,7 +5725,9 @@ function renderAdminUsers(users) {
     const initial  = (u.name || u.email || '?').charAt(0).toUpperCase();
     const date     = u.lastLogin ? new Date(u.lastLogin.seconds * 1000).toLocaleDateString('es', { day:'2-digit', month:'short', year:'numeric' }) : '—';
     const webActive = courses.includes('web-dev');
-    const paid = !!u.paid;
+    const webPaid = !!(u.payments && u.payments['web-dev']);
+    const webProgress = (u.progress && u.progress['web-dev']) || 0;
+    const webCompleted = !!(u.completedCourses && u.completedCourses.includes('web-dev'));
     return '<div class="admin-user-card" id="auc-' + u.uid + '">' +
       '<div class="admin-user-avatar">' + initial + '</div>' +
       '<div class="admin-user-info">' +
@@ -5738,10 +5740,11 @@ function renderAdminUsers(users) {
         '<div class="admin-user-date">Último acceso: ' + date + '</div>' +
         '<div style="margin-top:6px;">' +
           '<div style="display:flex;justify-content:space-between;font-size:10px;font-family:\'DM Mono\',monospace;color:#7090b8;margin-bottom:3px;">' +
-            '<span>Progreso curso</span><span>' + (u.lessonsCompleted || 0) + ' / 16</span>' +
+            '<span>Progreso Web Dev</span>' +
+            '<span>' + webProgress + ' / 16' + (webCompleted ? ' ✓' : '') + '</span>' +
           '</div>' +
           '<div style="height:4px;background:rgba(26,86,232,0.1);border-radius:2px;overflow:hidden;">' +
-            '<div style="height:100%;width:' + Math.round((u.lessonsCompleted || 0) / 16 * 100) + '%;background:#1a56e8;border-radius:2px;transition:width .4s;"></div>' +
+            '<div style="height:100%;width:' + Math.round(webProgress / 16 * 100) + '%;background:' + (webCompleted ? '#16a34a' : '#1a56e8') + ';border-radius:2px;transition:width .4s;"></div>' +
           '</div>' +
         '</div>' +
       '</div>' +
@@ -5760,13 +5763,13 @@ function renderAdminUsers(users) {
           '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>' +
           ' Marketing' +
         '</button>' +
-        '<button class="admin-toggle admin-paid-toggle ' + (paid ? 'paid' : '') + '" ' +
-          'onclick="togglePaid(\'' + u.uid + '\', ' + paid + ')" ' +
-          'title="' + (paid ? 'Marcar como pendiente' : 'Marcar como pagado') + '" ' +
-          'style="' + (paid ? 'background:rgba(22,163,74,0.15);border-color:rgba(22,163,74,0.4);color:#16a34a;' : 'border-color:rgba(220,38,38,0.3);color:#dc2626;') + '">' +
+        '<button class="admin-toggle admin-paid-toggle ' + (webPaid ? 'paid' : '') + '" ' +
+          'onclick="togglePaid(\'' + u.uid + '\', \'web-dev\', ' + webPaid + ')" ' +
+          'title="' + (webPaid ? 'Marcar como pendiente' : 'Marcar Web Dev como pagado') + '" ' +
+          'style="' + (webPaid ? 'background:rgba(22,163,74,0.15);border-color:rgba(22,163,74,0.4);color:#16a34a;' : 'border-color:rgba(220,38,38,0.3);color:#dc2626;') + '">' +
           '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">' +
-          (paid ? '<polyline points="20 6 9 17 4 12"/>' : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>') +
-          '</svg> ' + (paid ? 'Pagó' : 'Pendiente') +
+          (webPaid ? '<polyline points="20 6 9 17 4 12"/>' : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>') +
+          '</svg> ' + (webPaid ? 'Pagó Web Dev' : 'Pendiente Web Dev') +
         '</button>' +
       '</div>' +
     '</div>';
@@ -5807,24 +5810,25 @@ function filterAdminUsers(q) {
   renderAdminUsers(filtered);
 }
 
-function togglePaid(uid, isPaid) {
+function togglePaid(uid, courseId, isPaid) {
   if (!db) return;
   const newVal = !isPaid;
-  db.collection('users').doc(uid).update({ paid: newVal }).then(() => {
+  const field = 'payments.' + courseId;
+  db.collection('users').doc(uid).update({ [field]: newVal }).then(() => {
     const u = allAdminUsers.find(x => x.uid === uid);
-    if (u) u.paid = newVal;
+    if (u) { if (!u.payments) u.payments = {}; u.payments[courseId] = newVal; }
     renderAdminStats();
     const card = document.getElementById('auc-' + uid);
     if (card) {
       const btn = card.querySelector('.admin-paid-toggle');
       if (btn) {
         btn.className = 'admin-toggle admin-paid-toggle' + (newVal ? ' paid' : '');
-        btn.title = newVal ? 'Marcar como pendiente' : 'Marcar como pagado';
+        btn.title = newVal ? 'Marcar como pendiente' : 'Marcar ' + courseId + ' como pagado';
         btn.style.cssText = newVal ? 'background:rgba(22,163,74,0.15);border-color:rgba(22,163,74,0.4);color:#16a34a;' : 'border-color:rgba(220,38,38,0.3);color:#dc2626;';
-        btn.setAttribute('onclick', 'togglePaid(\'' + uid + '\', ' + newVal + ')');
+        btn.setAttribute('onclick', 'togglePaid(\'' + uid + '\', \'' + courseId + '\', ' + newVal + ')');
         btn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">' +
           (newVal ? '<polyline points="20 6 9 17 4 12"/>' : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>') +
-          '</svg> ' + (newVal ? 'Pagó' : 'Pendiente');
+          '</svg> ' + (newVal ? 'Pagó ' + courseId.replace('-',' ') : 'Pendiente ' + courseId.replace('-',' '));
       }
     }
   }).catch(err => alert('Error: ' + err.message));
@@ -5838,7 +5842,7 @@ function exportCSV() {
     '"' + (u.email || '') + '"',
     '"' + (u.phone || '') + '"',
     '"' + (u.courses || []).join(', ') + '"',
-    '"' + (u.paid ? 'Sí' : 'No') + '"',
+    '"' + ((u.payments && u.payments['web-dev']) ? 'Sí' : 'No') + '"',
     '"' + (u.createdAt ? new Date(u.createdAt.seconds * 1000).toLocaleDateString('es') : '—') + '"'
   ]);
   const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
@@ -6094,7 +6098,7 @@ function save() {
   localStorage.setItem('curso_done', JSON.stringify(completed));
   if (db && auth && auth.currentUser) {
     db.collection('users').doc(auth.currentUser.uid).update({
-      lessonsCompleted: completed.length,
+      'progress.web-dev': completed.length,
       lastActivity: firebase.firestore.FieldValue.serverTimestamp()
     }).catch(() => {});
   }
@@ -6161,6 +6165,11 @@ function markDoneAndNext(curr, next) {
 function markDoneAndFinish() {
   if (!completed.includes('l16')) { completed.push('l16'); save(); }
   updateProgress();
+  if (db && auth && auth.currentUser) {
+    db.collection('users').doc(auth.currentUser.uid).update({
+      completedCourses: firebase.firestore.FieldValue.arrayUnion('web-dev')
+    }).catch(() => {});
+  }
   showCertificate();
 }
 

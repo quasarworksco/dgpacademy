@@ -607,10 +607,22 @@
 
 @media (max-width: 900px) {
   .auth-left { display: none; }
-  .auth-right { width: 100%; }
-  .dash-welcome { flex-direction: column; gap: 24px; align-items: flex-start; padding: 28px; }
+  .auth-right { width: 100%; padding: 0; }
+  .auth-form-wrap { padding: 40px 28px; }
+  .dash-welcome { flex-direction: column; gap: 24px; align-items: flex-start; padding: 28px 24px; }
   .dash-main { padding: 24px 20px 60px; }
   .dash-nav { padding: 0 20px; }
+  .courses-grid { grid-template-columns: repeat(2,1fr); gap: 16px; }
+}
+@media (max-width: 600px) {
+  .auth-form-wrap { padding: 32px 20px; max-width: 100%; }
+  .courses-grid { grid-template-columns: 1fr; }
+  .dash-main { padding: 20px 16px 60px; }
+  .dash-nav { padding: 0 16px; }
+  .dash-welcome { padding: 24px 16px; }
+  .lesson, .hero-lesson { padding: 28px 16px 60px; }
+  .topbar { padding: 10px 16px; }
+  .hero-lesson h1 { font-size: 30px; }
 }
 
 :root {
@@ -1501,6 +1513,12 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
 /* ════════════════════════════════════════
    LANDING PAGE
    ════════════════════════════════════════ */
+#landing-screen {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100vh;
+  scroll-behavior: smooth;
+}
 @keyframes lp-float {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-12px); }
@@ -1509,6 +1527,49 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+@keyframes lp-orb-drift {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%     { transform: translate(30px,-20px) scale(1.05); }
+  66%     { transform: translate(-20px,15px) scale(0.97); }
+}
+
+/* ── Hero background & orbs ── */
+.lp-hero-wrap {
+  position: relative;
+  overflow: hidden;
+}
+.lp-hero-wrap::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 0;
+  background-image:
+    radial-gradient(circle, rgba(26,86,232,0.10) 1px, transparent 1px);
+  background-size: 36px 36px;
+  background-position: -18px -18px;
+}
+.lp-orb {
+  position: absolute; border-radius: 50%; z-index: 0;
+  pointer-events: none;
+  animation: lp-orb-drift 10s ease-in-out infinite;
+}
+.lp-orb-1 {
+  width: 700px; height: 700px;
+  top: -200px; right: -150px;
+  background: radial-gradient(circle, rgba(26,86,232,0.14) 0%, transparent 65%);
+  animation-delay: 0s;
+}
+.lp-orb-2 {
+  width: 500px; height: 500px;
+  bottom: 0; left: -120px;
+  background: radial-gradient(circle, rgba(168,192,255,0.12) 0%, transparent 65%);
+  animation-delay: -4s;
+}
+.lp-orb-3 {
+  width: 300px; height: 300px;
+  top: 40%; left: 45%;
+  background: radial-gradient(circle, rgba(26,86,232,0.07) 0%, transparent 65%);
+  animation-delay: -7s;
+}
+.lp-hero { position: relative; z-index: 1; }
 
 .lp-nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 200;
@@ -1584,8 +1645,9 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
 .lp-hero-card {
   width: 380px; background: #fff; border: 1px solid var(--border2);
   border-radius: 20px; overflow: hidden;
-  box-shadow: 0 24px 64px rgba(26,86,232,.15);
-  animation: lp-float 3s ease-in-out infinite; flex-shrink: 0;
+  box-shadow: 0 32px 80px rgba(26,86,232,.18), 0 0 0 1px rgba(26,86,232,0.06);
+  animation: lp-float 4s ease-in-out infinite; flex-shrink: 0;
+  position: relative;
 }
 .lp-card-bar { background: var(--bg3); padding: 12px 16px; display: flex; align-items: center; gap: 8px; }
 .lp-card-dot { width: 10px; height: 10px; border-radius: 50%; }
@@ -1609,7 +1671,17 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
 .lp-card-progress-fill { height: 100%; width: 40%; background: var(--accent); border-radius: 3px; }
 .lp-card-btn { height: 26px; width: 90px; background: var(--accent); border-radius: 6px; margin-top: 4px; }
 
-.lp-stats { background: linear-gradient(135deg,#0d1b3e 0%,#1a56e8 100%); padding: 48px 40px; }
+.lp-stats {
+  background: linear-gradient(135deg,#0d1b3e 0%,#1a56e8 100%);
+  padding: 48px 40px;
+  position: relative; overflow: hidden;
+}
+.lp-stats::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
 .lp-stats-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); }
 .lp-stat { text-align: center; padding: 12px 24px; border-right: 1px solid rgba(255,255,255,.15); }
 .lp-stat:last-child { border-right: none; }
@@ -1742,19 +1814,48 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   40%         { transform: scale(1); background: rgba(255,255,255,.9); }
 }
 
+/* ── Tablet (900px) ── */
 @media (max-width: 900px) {
-  .lp-nav { padding: 0 20px; }
+  .lp-nav { padding: 0 24px; }
   .lp-nav-links { display: none; }
-  .lp-hero { flex-direction: column; padding: 100px 20px 48px; min-height: auto; }
+  .lp-hero { flex-direction: column; padding: 96px 24px 56px; min-height: auto; gap: 40px; }
   .lp-hero-left, .lp-hero-right { flex: none; width: 100%; }
-  .lp-hero-right { display: none; }
-  .lp-stats { padding: 40px 20px; }
-  .lp-stats-inner { grid-template-columns: repeat(2,1fr); }
-  .lp-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,.15); }
-  .lp-section { padding: 60px 20px; }
-  .lp-courses-grid, .lp-features-grid, .lp-audience-grid { grid-template-columns: 1fr; }
-  .lp-access-card { padding: 32px 20px; }
-  .lp-footer { flex-direction: column; padding: 40px 20px; }
+  .lp-hero-right { justify-content: center; }
+  .lp-hero-card { width: 100%; max-width: 420px; }
+  .lp-stats { padding: 40px 24px; }
+  .lp-stats-inner { grid-template-columns: repeat(2,1fr); gap: 0; }
+  .lp-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,.12); padding: 16px 12px; }
+  .lp-stat:nth-child(odd) { border-right: 1px solid rgba(255,255,255,.12); }
+  .lp-stat:last-child, .lp-stat:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .lp-section { padding: 64px 24px; }
+  .lp-courses-grid { grid-template-columns: repeat(2,1fr); gap: 16px; }
+  .lp-features-grid { grid-template-columns: repeat(2,1fr); gap: 16px; }
+  .lp-audience-grid { grid-template-columns: repeat(2,1fr); gap: 16px; }
+  .lp-access-card { padding: 36px 24px; }
+  .lp-footer { flex-direction: column; padding: 40px 24px; gap: 20px; }
+  .lp-footer-links { flex-wrap: wrap; gap: 16px; }
+}
+
+/* ── Mobile (600px) ── */
+@media (max-width: 600px) {
+  .lp-nav { padding: 0 16px; height: 60px; }
+  .lp-hero { padding: 80px 16px 48px; gap: 32px; }
+  .lp-hero-headline { font-size: clamp(44px,13vw,72px); }
+  .lp-hero-sub { font-size: 15px; }
+  .lp-hero-ctas { flex-direction: column; align-items: stretch; }
+  .lp-btn-primary, .lp-btn-ghost { width: 100%; text-align: center; padding: 15px 20px; }
+  .lp-hero-card { max-width: 100%; }
+  .lp-stat-num { font-size: 44px; }
+  .lp-section { padding: 48px 16px; }
+  .lp-section-title { font-size: clamp(28px,8vw,40px); }
+  .lp-courses-grid { grid-template-columns: 1fr; }
+  .lp-features-grid { grid-template-columns: 1fr; }
+  .lp-audience-grid { grid-template-columns: 1fr; }
+  .lp-access-card { padding: 28px 16px; max-width: 100%; }
+  .lp-btn-access { font-size: 15px; padding: 14px; }
+  .lp-footer { padding: 32px 16px; }
+  .lp-footer-links { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+  .splash-brand { font-size: 40px; }
 }
 </style>
 </head>
@@ -1806,6 +1907,10 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   </nav>
 
   <!-- HERO -->
+  <div class="lp-hero-wrap">
+    <div class="lp-orb lp-orb-1"></div>
+    <div class="lp-orb lp-orb-2"></div>
+    <div class="lp-orb lp-orb-3"></div>
   <section class="lp-hero">
     <div class="lp-hero-left">
       <div class="lp-hero-badge">PLATAFORMA EDUCATIVA · DGP GLOBAL GROUP</div>
@@ -1824,31 +1929,71 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
     </div>
     <div class="lp-hero-right">
       <div class="lp-hero-card">
+        <!-- Browser bar -->
         <div class="lp-card-bar">
           <div class="lp-card-dot"></div><div class="lp-card-dot"></div><div class="lp-card-dot"></div>
-          <div class="lp-card-url"></div>
+          <div class="lp-card-url" style="display:flex;align-items:center;padding:0 10px;font-size:9px;color:#94a3b8;font-family:monospace;">dgpacademy.com</div>
         </div>
-        <div class="lp-card-body">
-          <div class="lp-card-sidebar">
-            <div class="lp-card-nav-item active"></div>
-            <div class="lp-card-nav-item"></div>
-            <div class="lp-card-nav-item"></div>
-            <div class="lp-card-nav-item"></div>
-            <div class="lp-card-nav-item" style="width:50%"></div>
+        <!-- Platform mockup body -->
+        <div style="display:flex;height:260px;">
+          <!-- Sidebar mockup -->
+          <div class="lp-card-sidebar" style="width:90px;gap:6px;padding:14px 10px;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+              <div style="width:20px;height:20px;border-radius:5px;background:var(--accent);flex-shrink:0;"></div>
+              <div style="height:7px;width:40px;border-radius:4px;background:var(--bg4);"></div>
+            </div>
+            <div class="lp-card-nav-item active" style="height:7px;border-radius:4px;"></div>
+            <div class="lp-card-nav-item" style="height:7px;border-radius:4px;width:80%;"></div>
+            <div class="lp-card-nav-item" style="height:7px;border-radius:4px;width:65%;"></div>
+            <div class="lp-card-nav-item" style="height:7px;border-radius:4px;width:75%;"></div>
+            <div class="lp-card-nav-item" style="height:7px;border-radius:4px;width:55%;"></div>
+            <div class="lp-card-nav-item" style="height:7px;border-radius:4px;width:70%;"></div>
+            <div style="margin-top:auto;">
+              <div style="height:6px;width:70%;border-radius:3px;background:rgba(26,86,232,0.15);"></div>
+              <div style="height:4px;width:60%;border-radius:3px;background:var(--bg4);margin-top:4px;"></div>
+            </div>
           </div>
-          <div class="lp-card-content">
-            <div class="lp-card-tag"></div>
-            <div class="lp-card-h"></div>
-            <div class="lp-card-line"></div>
-            <div class="lp-card-line short"></div>
-            <div class="lp-card-line"></div>
-            <div class="lp-card-progress"><div class="lp-card-progress-fill"></div></div>
-            <div class="lp-card-btn"></div>
+          <!-- Main content mockup -->
+          <div class="lp-card-content" style="flex:1;padding:16px;display:flex;flex-direction:column;gap:8px;overflow:hidden;">
+            <!-- Progress bar -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
+              <div style="height:6px;width:55%;border-radius:3px;background:var(--bg4);overflow:hidden;">
+                <div style="height:100%;width:40%;background:var(--accent);border-radius:3px;"></div>
+              </div>
+              <div style="height:6px;width:18%;border-radius:3px;background:var(--bg3);"></div>
+            </div>
+            <!-- Lesson title area -->
+            <div style="height:10px;width:70%;border-radius:4px;background:var(--bg4);"></div>
+            <!-- Code block mockup -->
+            <div style="background:#0d1b3e;border-radius:8px;padding:10px;flex:1;display:flex;flex-direction:column;gap:5px;">
+              <div style="display:flex;gap:4px;margin-bottom:4px;">
+                <div style="height:4px;width:30px;border-radius:2px;background:rgba(168,192,255,0.4);"></div>
+                <div style="height:4px;width:50px;border-radius:2px;background:rgba(168,192,255,0.2);"></div>
+              </div>
+              <div style="height:5px;width:80%;border-radius:2px;background:rgba(100,160,255,0.35);"></div>
+              <div style="height:5px;width:60%;border-radius:2px;background:rgba(168,192,255,0.2);margin-left:12px;"></div>
+              <div style="height:5px;width:75%;border-radius:2px;background:rgba(100,160,255,0.25);margin-left:12px;"></div>
+              <div style="height:5px;width:45%;border-radius:2px;background:rgba(168,192,255,0.15);"></div>
+              <div style="height:5px;width:65%;border-radius:2px;background:rgba(100,160,255,0.3);margin-left:12px;"></div>
+            </div>
+            <!-- Action btn -->
+            <div style="display:flex;gap:6px;margin-top:2px;">
+              <div style="height:22px;flex:1;background:var(--accent);border-radius:6px;opacity:0.9;"></div>
+              <div style="height:22px;width:50px;background:var(--bg3);border-radius:6px;"></div>
+            </div>
           </div>
+        </div>
+        <!-- Bottom progress indicator -->
+        <div style="background:var(--bg2);padding:10px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+          <div style="flex:1;height:4px;border-radius:2px;background:var(--bg4);overflow:hidden;">
+            <div style="height:100%;width:35%;background:var(--accent);border-radius:2px;"></div>
+          </div>
+          <div style="font-size:9px;color:var(--text3);font-family:monospace;white-space:nowrap;">4 / 10 lecciones</div>
         </div>
       </div>
     </div>
   </section>
+  </div><!-- /lp-hero-wrap -->
 
   <!-- STATS -->
   <div class="lp-stats">

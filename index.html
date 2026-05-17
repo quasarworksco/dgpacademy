@@ -2340,6 +2340,11 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   .cert-actions { display: none; }
 }
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    // EmailJS: reemplaza con tu Public Key desde emailjs.com → Account → API Keys
+    (function(){ if(window.emailjs) emailjs.init({ publicKey: 'TU_PUBLIC_KEY_EMAILJS' }); })();
+  </script>
 </head>
 <body>
 
@@ -5695,11 +5700,18 @@ function renderAdminStats() {
   const active   = allAdminUsers.filter(u => u.courses && u.courses.length > 0).length;
   const webDone  = allAdminUsers.filter(u => u.courses && u.courses.includes('web-dev')).length;
   const paid     = allAdminUsers.filter(u => u.paid).length;
+  const now      = Date.now();
+  const inactive = allAdminUsers.filter(u => {
+    if (!u.lastActivity) return false;
+    return (now - u.lastActivity.seconds * 1000) / 86400000 >= 7;
+  }).length;
   document.getElementById('admin-stat-total').textContent     = total;
   document.getElementById('admin-stat-active').textContent    = active;
   document.getElementById('admin-stat-completed').textContent = webDone;
-  const elPaid = document.getElementById('admin-stat-paid');
-  if (elPaid) elPaid.textContent = paid;
+  const elPaid     = document.getElementById('admin-stat-paid');
+  const elInactive = document.getElementById('admin-stat-inactive');
+  if (elPaid)     elPaid.textContent     = paid;
+  if (elInactive) elInactive.textContent = inactive;
 }
 
 function renderAdminUsers(users) {
@@ -5724,6 +5736,14 @@ function renderAdminUsers(users) {
           (u.phone || 'Sin teléfono') +
         '</div>' +
         '<div class="admin-user-date">Último acceso: ' + date + '</div>' +
+        '<div style="margin-top:6px;">' +
+          '<div style="display:flex;justify-content:space-between;font-size:10px;font-family:\'DM Mono\',monospace;color:#7090b8;margin-bottom:3px;">' +
+            '<span>Progreso curso</span><span>' + (u.lessonsCompleted || 0) + ' / 16</span>' +
+          '</div>' +
+          '<div style="height:4px;background:rgba(26,86,232,0.1);border-radius:2px;overflow:hidden;">' +
+            '<div style="height:100%;width:' + Math.round((u.lessonsCompleted || 0) / 16 * 100) + '%;background:#1a56e8;border-radius:2px;transition:width .4s;"></div>' +
+          '</div>' +
+        '</div>' +
       '</div>' +
       '<div class="admin-course-toggles">' +
         '<button class="admin-toggle ' + (webActive ? 'active' : '') + '" ' +
@@ -5932,7 +5952,10 @@ function handleAuth(e) {
 
   if (authMode === 'login') {
     auth.signInWithEmailAndPassword(email, password)
-      .then(cred => { fillUserUI(cred.user); showDashboard(); })
+      .then(cred => {
+        if (db) db.collection('users').doc(cred.user.uid).update({ lastActivity: firebase.firestore.FieldValue.serverTimestamp() }).catch(() => {});
+        fillUserUI(cred.user); showDashboard();
+      })
       .catch(err => { setAuthLoading(false); showAuthError(mapAuthError(err.code)); });
   } else {
     auth.createUserWithEmailAndPassword(email, password)
@@ -5947,6 +5970,7 @@ function handleAuth(e) {
               createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
           }
+          // Notificación al admin via Formspree
           fetch('https://formspree.io/f/xpqnajzo', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -5959,6 +5983,15 @@ function handleAuth(e) {
               UID: user.uid
             })
           }).catch(() => {});
+          // Email de bienvenida al nuevo estudiante via EmailJS
+          // Requiere: crear cuenta en emailjs.com, configurar template y reemplazar IDs abajo
+          if (window.emailjs && typeof emailjs.send === 'function') {
+            emailjs.send('TU_SERVICE_ID', 'TU_TEMPLATE_ID', {
+              to_name:  fullName,
+              to_email: user.email,
+              reply_to: 'hola@dgpglobalgroup.com'
+            }).catch(() => {});
+          }
           fillUserUI({ ...user, displayName: fullName });
           showDashboard();
         });
@@ -6057,7 +6090,15 @@ const TOTAL = 16;
 let current = 'home';
 let completed = JSON.parse(localStorage.getItem('curso_done') || '[]');
 
-function save() { localStorage.setItem('curso_done', JSON.stringify(completed)); }
+function save() {
+  localStorage.setItem('curso_done', JSON.stringify(completed));
+  if (db && auth && auth.currentUser) {
+    db.collection('users').doc(auth.currentUser.uid).update({
+      lessonsCompleted: completed.length,
+      lastActivity: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(() => {});
+  }
+}
 
 function updateProgress() {
   const n = completed.length;
@@ -6300,6 +6341,10 @@ initAnimations();
       <div class="admin-stat-card">
         <div class="admin-stat-label">PAGARON</div>
         <div class="admin-stat-num" id="admin-stat-paid">0</div>
+      </div>
+      <div class="admin-stat-card" style="border-color:rgba(220,38,38,0.2);">
+        <div class="admin-stat-label" style="color:#dc2626;">+7 DÍAS SIN ENTRAR</div>
+        <div class="admin-stat-num" id="admin-stat-inactive" style="color:#dc2626;">0</div>
       </div>
     </div>
 

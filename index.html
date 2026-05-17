@@ -44,6 +44,7 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   display: flex;
   min-height: 100vh;
   font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
 }
 .auth-left {
   flex: 1;
@@ -344,6 +345,7 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   min-height: 100vh;
   background: #f4f8ff;
   font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
 }
 .dash-nav {
   background: #fff;
@@ -423,10 +425,18 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   transition: all 0.2s;
 }
 .btn-signout:hover { border-color: #dc2626; color: #dc2626; background: rgba(220,38,38,0.05); }
+.btn-settings {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: var(--bg3); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text2); transition: all 0.2s;
+}
+.btn-settings:hover { border-color: var(--accent-border); color: var(--accent); background: var(--accent-bg); }
 .dash-main {
   max-width: 1100px;
   margin: 0 auto;
   padding: 48px 40px 80px;
+  min-width: 0;
 }
 .dash-welcome {
   background: linear-gradient(135deg, #0d1b3e 0%, #1a56e8 100%);
@@ -884,7 +894,7 @@ body {
 .btn-primary:hover { background: #7c75ff; }
 
 /* ──── LESSON PAGES ──── */
-.lesson { display: none; padding: 48px 48px 80px; max-width: 860px; }
+.lesson { display: none; padding: 48px 48px 80px; max-width: 860px; min-width: 0; word-break: break-word; }
 .lesson.active { display: block; animation: fadeIn 0.3s ease; }
 
 @keyframes fadeIn {
@@ -1541,6 +1551,48 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   padding: 4px;
 }
 @media (max-width: 900px) { .menu-btn { display: block; } }
+
+/* ── Course screen mobile (768px) ── */
+@media (max-width: 768px) {
+  .shell { flex-direction: column; }
+  .sidebar {
+    position: fixed; top: 0; left: -280px; bottom: 0; z-index: 200;
+    transition: left 0.3s ease; width: 280px;
+  }
+  .sidebar.open { left: 0; box-shadow: 4px 0 24px rgba(0,0,0,0.2); }
+  .main { margin-left: 0; width: 100%; min-width: 0; }
+  .topbar { padding: 12px 16px; }
+  .lesson { padding: 24px 16px 60px; }
+  .modules-overview { grid-template-columns: 1fr; }
+  .tools-grid { grid-template-columns: repeat(2, 1fr); }
+  .diagram-wrap { overflow-x: auto; }
+  .diagram-wrap svg { min-width: 400px; }
+  pre.code-block { font-size: 12px; overflow-x: auto; }
+  .code-wrap { overflow-x: auto; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .cards-grid, .flow-grid { grid-template-columns: 1fr; }
+  h1 { font-size: clamp(24px, 6vw, 40px); }
+  .hero-lesson { padding: 32px 0 0; }
+  .hero-lesson h1 { font-size: clamp(22px, 7vw, 38px); }
+  .quiz-card { padding: 16px; }
+  .step { flex-direction: column; gap: 8px; }
+  .step-num { align-self: flex-start; }
+  .dash-main { padding: 16px; }
+  .dash-welcome { flex-direction: column; gap: 16px; padding: 24px 16px; }
+  .courses-grid { grid-template-columns: 1fr; }
+  .course-card { min-width: 0; }
+  .dash-nav { padding: 0 12px; gap: 8px; }
+  .dash-nav-brand { font-size: 15px; }
+  .btn-signout span { display: none; }
+  .admin-screen { padding: 0; }
+  .admin-topbar { padding: 12px 16px; }
+  .admin-body { padding: 16px; }
+  .admin-user-card { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .admin-toggles { flex-wrap: wrap; }
+  .auth-right { width: 100%; padding: 32px 20px; }
+}
+
+#course-screen { overflow-x: hidden; }
 
 /* ════════════════════════════════════════
    LANDING PAGE
@@ -2221,6 +2273,63 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   .admin-courses-wrap { width: 100%; margin-top: 8px; }
   .admin-user-date { display: none; }
 }
+
+/* ── Certificate modal ── */
+.cert-overlay {
+  position: fixed; inset: 0; z-index: 9000;
+  background: rgba(13,27,62,0.85); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.cert-overlay.show { opacity: 1; pointer-events: all; }
+.cert-modal {
+  background: #fff; border-radius: 24px;
+  max-width: 680px; width: 100%;
+  box-shadow: 0 40px 100px rgba(13,27,62,0.4);
+  overflow: hidden;
+}
+.cert-header {
+  background: linear-gradient(135deg, #0d1b3e 0%, #1a56e8 100%);
+  padding: 40px 48px 32px;
+  text-align: center; position: relative;
+}
+.cert-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.cert-logo { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.1em; color: rgba(255,255,255,0.6); margin-bottom: 24px; position: relative; z-index: 1; }
+.cert-title { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.15em; color: rgba(255,255,255,0.55); text-transform: uppercase; margin-bottom: 8px; position: relative; z-index: 1; }
+.cert-name { font-family: 'Bebas Neue', sans-serif; font-size: clamp(32px,5vw,52px); color: #fff; letter-spacing: 0.04em; line-height: 1; position: relative; z-index: 1; margin-bottom: 4px; }
+.cert-course { font-size: 15px; color: rgba(255,255,255,0.7); position: relative; z-index: 1; margin-top: 16px; }
+.cert-course strong { color: #fff; display: block; font-size: 18px; margin-top: 4px; }
+.cert-body { padding: 32px 48px 40px; text-align: center; }
+.cert-date { font-family: 'DM Mono', monospace; font-size: 12px; color: #7090b8; letter-spacing: 0.06em; margin-bottom: 24px; }
+.cert-modules { display: flex; justify-content: center; gap: 24px; margin-bottom: 32px; flex-wrap: wrap; }
+.cert-mod { text-align: center; }
+.cert-mod-num { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: #1a56e8; line-height: 1; }
+.cert-mod-label { font-size: 11px; color: #7090b8; letter-spacing: 0.06em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
+.cert-actions { display: flex; gap: 12px; justify-content: center; }
+.btn-cert-print {
+  padding: 12px 28px; background: #1a56e8; color: #fff; border: none;
+  border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.btn-cert-print:hover { background: #1248cc; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,86,232,0.3); }
+.btn-cert-close {
+  padding: 12px 24px; background: transparent; color: #7090b8;
+  border: 1.5px solid rgba(26,86,232,0.2); border-radius: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; transition: all 0.2s;
+}
+.btn-cert-close:hover { border-color: var(--accent); color: var(--accent); }
+@media print {
+  body > *:not(.cert-overlay) { display: none !important; }
+  .cert-overlay { position: static; background: none; backdrop-filter: none; padding: 0; }
+  .cert-modal { box-shadow: none; border-radius: 0; max-width: 100%; }
+  .cert-actions { display: none; }
+}
 </style>
 </head>
 <body>
@@ -2744,6 +2853,9 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
       <button id="btn-admin-panel" class="btn-admin" style="display:none" onclick="showAdmin()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         Admin
+      </button>
+      <button class="btn-settings" onclick="showSettings()" title="Configuración">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
       </button>
       <div class="dash-user-info">
         <div class="dash-avatar" id="dash-avatar">?</div>
@@ -5557,6 +5669,7 @@ function renderAdminUsers(users) {
       '<div class="admin-user-info">' +
         '<div class="admin-user-name">' + (u.name || '—') + '</div>' +
         '<div class="admin-user-email">' + (u.email || '—') + '</div>' +
+        '<div style="font-size:11px;color:#aec4e0;margin-top:2px;">' + (u.phone ? '📱 ' + u.phone : 'Sin teléfono') + '</div>' +
         '<div class="admin-user-date">Último acceso: ' + date + '</div>' +
       '</div>' +
       '<div class="admin-course-toggles">' +
@@ -5830,7 +5943,62 @@ function markDoneAndNext(curr, next) {
 function markDoneAndFinish() {
   if (!completed.includes('l16')) { completed.push('l16'); save(); }
   updateProgress();
-  alert('🎉 ¡Felicitaciones! Completaste el curso completo de Diseño y Desarrollo WEB con IA — las 16 lecciones y 5 módulos. Ya tienes todo el conocimiento para crear sitios web profesionales, posicionarlos en Google y conseguir tus primeros clientes.');
+  showCertificate();
+}
+
+function showCertificate() {
+  const user = auth ? auth.currentUser : null;
+  const name = user ? (user.displayName || user.email.split('@')[0]) : '—';
+  document.getElementById('cert-student-name').textContent = name.toUpperCase();
+  const now = new Date();
+  const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  document.getElementById('cert-date').textContent = `${now.getDate()} de ${months[now.getMonth()]} de ${now.getFullYear()}`;
+  document.getElementById('cert-overlay').classList.add('show');
+}
+
+function closeCert() {
+  document.getElementById('cert-overlay').classList.remove('show');
+}
+
+function showSettings() {
+  const overlay = document.getElementById('settings-overlay');
+  overlay.style.display = 'flex';
+  const user = auth ? auth.currentUser : null;
+  if (user && user.displayName) {
+    const parts = user.displayName.split(' ');
+    document.getElementById('settings-name').value = parts[0] || '';
+    document.getElementById('settings-apellido').value = parts.slice(1).join(' ') || '';
+  }
+}
+
+function closeSettings() {
+  document.getElementById('settings-overlay').style.display = 'none';
+}
+
+function saveSettingsName() {
+  const name     = document.getElementById('settings-name').value.trim();
+  const apellido = document.getElementById('settings-apellido').value.trim();
+  if (!name) return;
+  const fullName = `${name} ${apellido}`.trim();
+  const user = auth ? auth.currentUser : null;
+  if (!user) return;
+  user.updateProfile({ displayName: fullName }).then(() => {
+    if (db) db.collection('users').doc(user.uid).update({ name: fullName });
+    fillUserUI(user);
+    const msg = document.getElementById('settings-name-msg');
+    msg.style.display = 'block';
+    setTimeout(() => { msg.style.display = 'none'; }, 3000);
+  });
+}
+
+function sendPasswordReset() {
+  const user = auth ? auth.currentUser : null;
+  if (!user) return;
+  auth.sendPasswordResetEmail(user.email).then(() => {
+    const msg = document.getElementById('settings-pass-msg');
+    msg.style.display = 'block';
+    setTimeout(() => { msg.style.display = 'none'; }, 4000);
+  });
 }
 
 function nextLesson() {
@@ -5971,6 +6139,61 @@ initAnimations();
 
   </div>
 </div><!-- /admin-screen -->
+
+<!-- ══════════════════ CERTIFICATE MODAL ══════════════════ -->
+<div id="cert-overlay" class="cert-overlay" onclick="if(event.target===this)closeCert()">
+  <div class="cert-modal">
+    <div class="cert-header">
+      <div class="cert-logo">DGP ACADEMY · DGP GLOBAL GROUP</div>
+      <div class="cert-title">Certifica que</div>
+      <div class="cert-name" id="cert-student-name">—</div>
+      <div class="cert-course">ha completado exitosamente el curso<strong id="cert-course-name">Diseño y Desarrollo WEB con IA</strong></div>
+    </div>
+    <div class="cert-body">
+      <div class="cert-date" id="cert-date">—</div>
+      <div class="cert-modules">
+        <div class="cert-mod"><div class="cert-mod-num">5</div><div class="cert-mod-label">Módulos</div></div>
+        <div class="cert-mod"><div class="cert-mod-num">16</div><div class="cert-mod-label">Lecciones</div></div>
+        <div class="cert-mod"><div class="cert-mod-num">100%</div><div class="cert-mod-label">Completado</div></div>
+      </div>
+      <div class="cert-actions">
+        <button class="btn-cert-print" onclick="window.print()">Imprimir / Guardar PDF</button>
+        <button class="btn-cert-close" onclick="closeCert()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ SETTINGS MODAL ══════════════════ -->
+<div id="settings-overlay" style="display:none;position:fixed;inset:0;z-index:5000;background:rgba(13,27,62,0.6);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#fff;border-radius:20px;max-width:440px;width:100%;padding:40px;box-shadow:0 24px 80px rgba(13,27,62,0.3);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#0d1b3e;letter-spacing:0.04em;margin:0;">CONFIGURACIÓN</h2>
+      <button onclick="closeSettings()" style="background:none;border:none;cursor:pointer;color:#7090b8;font-size:20px;padding:4px;">✕</button>
+    </div>
+
+    <!-- Change name -->
+    <div style="margin-bottom:24px;">
+      <div style="font-size:12px;font-weight:500;color:#3a5880;margin-bottom:12px;letter-spacing:.02em;">CAMBIAR NOMBRE</div>
+      <div style="display:flex;gap:10px;margin-bottom:10px;">
+        <input id="settings-name" type="text" placeholder="Nombre" class="form-input" style="margin:0;">
+        <input id="settings-apellido" type="text" placeholder="Apellido" class="form-input" style="margin:0;">
+      </div>
+      <button onclick="saveSettingsName()" class="btn-auth" style="margin:0;">Guardar nombre</button>
+      <div id="settings-name-msg" style="font-size:12px;color:#16a34a;margin-top:8px;display:none;">✓ Nombre actualizado</div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid rgba(26,86,232,0.1);margin:24px 0;">
+
+    <!-- Change password -->
+    <div>
+      <div style="font-size:12px;font-weight:500;color:#3a5880;margin-bottom:12px;letter-spacing:.02em;">RESTABLECER CONTRASEÑA</div>
+      <p style="font-size:13px;color:#7090b8;margin:0 0 12px;">Te enviaremos un correo para restablecer tu contraseña.</p>
+      <button onclick="sendPasswordReset()" class="btn-auth" style="margin:0;background:#f4f8ff;color:#1a56e8;border:1.5px solid rgba(26,86,232,0.2);">Enviar correo de restablecimiento</button>
+      <div id="settings-pass-msg" style="font-size:12px;color:#16a34a;margin-top:8px;display:none;">✓ Correo enviado — revisa tu bandeja</div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

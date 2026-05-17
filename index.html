@@ -29,6 +29,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore-compat.js"></script>
 <style>
 /* ════════════════════════════════════════
    PLATAFORMA — AUTH + DASHBOARD
@@ -1961,6 +1962,256 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   .auth-left { display: none; }
   .auth-right { width: 100%; min-height: 100vh; }
 }
+
+/* ════════════════════════════════════════
+   ADMIN SCREEN
+   ════════════════════════════════════════ */
+.admin-screen {
+  min-height: 100vh;
+  background: #f4f8ff;
+  font-family: 'DM Sans', sans-serif;
+}
+.admin-topbar {
+  background: #fff;
+  border-bottom: 1px solid rgba(26,86,232,0.1);
+  box-shadow: 0 2px 16px rgba(26,86,232,0.06);
+  padding: 0 40px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.admin-topbar-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  color: #0d1b3e;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.admin-topbar-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 2px 8px;
+  background: rgba(220,38,38,0.1);
+  color: #dc2626;
+  border: 1px solid rgba(220,38,38,0.2);
+  border-radius: 4px;
+  letter-spacing: 0.08em;
+}
+.btn-admin-back {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1.5px solid rgba(26,86,232,0.15);
+  border-radius: 8px;
+  background: none;
+  color: #3a5880;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-admin-back:hover { border-color: #1a56e8; color: #1a56e8; background: rgba(26,86,232,0.05); }
+.admin-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 40px 80px;
+}
+.admin-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+.admin-stat-card {
+  background: #fff;
+  border: 1px solid rgba(26,86,232,0.1);
+  border-radius: 14px;
+  padding: 20px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.admin-stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: #7090b8;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.admin-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  letter-spacing: 0.04em;
+  color: #0d1b3e;
+  line-height: 1;
+}
+.admin-search {
+  width: 100%;
+  max-width: 420px;
+  padding: 10px 16px;
+  border: 1.5px solid rgba(26,86,232,0.15);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: #0d1b3e;
+  background: #fff;
+  outline: none;
+  margin-bottom: 20px;
+  transition: all 0.2s;
+}
+.admin-search:focus { border-color: #1a56e8; box-shadow: 0 0 0 3px rgba(26,86,232,0.1); }
+.admin-search::placeholder { color: #aec4e0; }
+.admin-user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.admin-user-card {
+  background: #fff;
+  border: 1px solid rgba(26,86,232,0.1);
+  border-radius: 14px;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: border-color 0.2s;
+}
+.admin-user-card:hover { border-color: rgba(26,86,232,0.25); }
+.admin-user-avatar {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a56e8, #a8c0ff);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  color: #fff;
+  flex-shrink: 0;
+}
+.admin-user-info { flex: 1; min-width: 0; }
+.admin-user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #0d1b3e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.admin-user-email {
+  font-size: 12px;
+  color: #7090b8;
+  font-family: 'DM Mono', monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.admin-user-date {
+  font-size: 11px;
+  color: #aec4e0;
+  font-family: 'DM Mono', monospace;
+  flex-shrink: 0;
+}
+.admin-courses-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.admin-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1.5px solid;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.04em;
+}
+.admin-toggle.active {
+  background: rgba(22,163,74,0.1);
+  color: #16a34a;
+  border-color: rgba(22,163,74,0.3);
+}
+.admin-toggle.active:hover {
+  background: rgba(220,38,38,0.1);
+  color: #dc2626;
+  border-color: rgba(220,38,38,0.3);
+}
+.admin-toggle.inactive {
+  background: rgba(112,144,184,0.1);
+  color: #7090b8;
+  border-color: rgba(112,144,184,0.2);
+}
+.admin-toggle.inactive:hover {
+  background: rgba(22,163,74,0.1);
+  color: #16a34a;
+  border-color: rgba(22,163,74,0.3);
+}
+.admin-toggle.soon {
+  background: rgba(112,144,184,0.06);
+  color: #aec4e0;
+  border-color: rgba(112,144,184,0.1);
+  cursor: default;
+  opacity: 0.7;
+}
+.admin-section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  color: #0d1b3e;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.admin-section-title::before {
+  content: '';
+  display: block;
+  width: 4px; height: 18px;
+  background: linear-gradient(#1a56e8, #a8c0ff);
+  border-radius: 2px;
+}
+.btn-admin {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: rgba(220,38,38,0.08);
+  border: 1.5px solid rgba(220,38,38,0.2);
+  border-radius: 8px;
+  color: #dc2626;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-admin:hover { background: rgba(220,38,38,0.14); border-color: rgba(220,38,38,0.35); }
+.admin-empty { color: #7090b8; font-size: 14px; padding: 32px 0; text-align: center; }
+.admin-toggle:disabled { opacity: 0.35; cursor: not-allowed; }
+@media (max-width: 900px) {
+  .admin-topbar { padding: 0 20px; }
+  .admin-main { padding: 24px 20px 60px; }
+  .admin-stats { flex-wrap: wrap; }
+}
+@media (max-width: 600px) {
+  .admin-topbar { padding: 0 16px; }
+  .admin-main { padding: 20px 16px 60px; }
+  .admin-stats { flex-direction: column; }
+  .admin-user-card { flex-wrap: wrap; }
+  .admin-courses-wrap { width: 100%; margin-top: 8px; }
+  .admin-user-date { display: none; }
+}
 </style>
 </head>
 <body>
@@ -2470,6 +2721,11 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
       DGP Academy
     </div>
     <div class="dash-nav-right">
+      <!-- Admin button: only shown if current user is ADMIN_UID -->
+      <button id="btn-admin-panel" class="btn-admin" style="display:none" onclick="showAdmin()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Admin
+      </button>
       <div class="dash-user-info">
         <div class="dash-avatar" id="dash-avatar">?</div>
         <div>
@@ -2509,8 +2765,8 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
     <div class="dash-section-title">Mis cursos</div>
     <div class="courses-grid">
 
-      <!-- Curso 1: Desarrollo Web (activo) -->
-      <div class="course-card" onclick="enterCourse()" style="animation-delay:0s">
+      <!-- Curso 1: Desarrollo Web (activo si usuario tiene acceso) -->
+      <div class="course-card" id="card-web-dev" style="animation-delay:0s">
         <div class="course-thumb" style="background:linear-gradient(135deg,#0d1b3e,#1a56e8)">
           <div class="course-thumb-icon">
             <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
@@ -2539,9 +2795,9 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
               <div class="course-progress-fill" id="dash-prog-fill" style="width:0%"></div>
             </div>
           </div>
-          <button class="btn-course btn-course-active">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Continuar curso
+          <button id="btn-web-dev" class="btn-course btn-course-locked" disabled>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            Sin acceso — contacta a DGP
           </button>
         </div>
       </div>
@@ -4077,15 +4333,32 @@ const firebaseConfig = {
 };
 // ─────────────────────────────────────────────────────────────────────────────
 
+// ── Admin UID ─────────────────────────────────────────────────────────────────
+// Reemplaza este string con tu UID de Firebase (Firebase Console → Auth → Users → tu correo → User UID)
+const ADMIN_UID = 'xbrwtQPEmdPXUOqYabkZQPWG32C3';
+
+// ── Firestore Rules (ya configuradas) ────────────────────────────────────────
+// rules_version = '2';
+// service cloud.firestore {
+//   match /databases/{database}/documents {
+//     match /users/{uid} {
+//       allow read, write: if request.auth.uid == uid
+//                          || request.auth.uid == 'xbrwtQPEmdPXUOqYabkZQPWG32C3';
+//     }
+//   }
+// }
+// ─────────────────────────────────────────────────────────────────────────────
+
 let firebaseReady = false;
 let auth = null;
+let db   = null;
 
 try {
   firebase.initializeApp(firebaseConfig);
   auth = firebase.auth();
+  db   = firebase.firestore();
   firebaseReady = true;
 } catch(e) {
-  // Firebase no configurado aún — modo demo
   console.warn('Firebase no configurado. Modo demo activo.');
 }
 
@@ -4099,6 +4372,7 @@ function showLanding()   {
   document.getElementById('auth-screen').style.display='none';
   document.getElementById('dash-screen').style.display='none';
   document.getElementById('course-screen').style.display='none';
+  document.getElementById('admin-screen').style.display='none';
   hideSplash();
 }
 function goToAuth() {
@@ -4114,6 +4388,7 @@ function showAuth()      {
   document.getElementById('auth-screen').style.display='flex';
   document.getElementById('dash-screen').style.display='none';
   document.getElementById('course-screen').style.display='none';
+  document.getElementById('admin-screen').style.display='none';
   hideSplash();
 }
 function showDashboard() {
@@ -4121,6 +4396,7 @@ function showDashboard() {
   document.getElementById('auth-screen').style.display='none';
   document.getElementById('dash-screen').style.display='block';
   document.getElementById('course-screen').style.display='none';
+  document.getElementById('admin-screen').style.display='none';
   updateDashStats();
   hideSplash();
 }
@@ -4129,6 +4405,15 @@ function showCourse()    {
   document.getElementById('auth-screen').style.display='none';
   document.getElementById('dash-screen').style.display='none';
   document.getElementById('course-screen').style.display='block';
+  document.getElementById('admin-screen').style.display='none';
+}
+function showAdmin() {
+  document.getElementById('landing-screen').style.display='none';
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('dash-screen').style.display='none';
+  document.getElementById('course-screen').style.display='none';
+  document.getElementById('admin-screen').style.display='block';
+  loadAdminData();
 }
 
 // ── Sticky nav shadow on scroll (landing-screen scrolls, not window) ─────────
@@ -4157,14 +4442,156 @@ if (firebaseReady) {
   auth.onAuthStateChanged(user => {
     if (user) {
       fillUserUI(user);
+      // Show admin button if this is the admin account
+      const adminBtn = document.getElementById('btn-admin-panel');
+      if (adminBtn) adminBtn.style.display = (user.uid === ADMIN_UID) ? 'flex' : 'none';
+      // Save/update user doc and load their course access
+      if (db) {
+        db.collection('users').doc(user.uid).set({
+          email: user.email,
+          name: user.displayName || user.email.split('@')[0],
+          lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true })
+        .then(() => db.collection('users').doc(user.uid).get())
+        .then(doc => {
+          const courses = (doc.exists && doc.data().courses) ? doc.data().courses : [];
+          updateCourseAccess(courses);
+        })
+        .catch(() => updateCourseAccess([]));
+      }
       showDashboard();
     } else {
       showLanding();
     }
   });
 } else {
-  // Modo demo: muestra landing directamente
+  // Modo demo: muestra landing con acceso completo
   showLanding();
+}
+
+// ── Course access control ─────────────────────────────────────────────────────
+function updateCourseAccess(courses) {
+  // courses = array of course IDs the user has paid for, e.g. ['web-dev']
+  const btn = document.getElementById('btn-web-dev');
+  if (!btn) return;
+  if (courses.includes('web-dev')) {
+    btn.textContent = '';
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Continuar curso';
+    btn.className = 'btn-course btn-course-active';
+    btn.disabled = false;
+    btn.onclick = function() { enterCourse(); };
+  } else {
+    btn.textContent = 'Sin acceso — contacta a DGP';
+    btn.className = 'btn-course btn-course-locked';
+    btn.disabled = true;
+    btn.onclick = null;
+  }
+}
+
+// ── Admin panel ───────────────────────────────────────────────────────────────
+let allAdminUsers = [];
+
+function loadAdminData() {
+  if (!db) {
+    document.getElementById('admin-user-list').innerHTML =
+      '<div style="color:#dc2626;padding:20px 0;font-size:14px;">Firestore no disponible en modo demo.</div>';
+    return;
+  }
+  document.getElementById('admin-user-list').innerHTML =
+    '<div style="color:#7090b8;font-size:14px;padding:20px 0;">Cargando usuarios…</div>';
+
+  db.collection('users').orderBy('lastLogin', 'desc').get()
+    .then(snapshot => {
+      allAdminUsers = [];
+      snapshot.forEach(doc => allAdminUsers.push({ uid: doc.id, ...doc.data() }));
+      renderAdminStats();
+      renderAdminUsers(allAdminUsers);
+    })
+    .catch(err => {
+      document.getElementById('admin-user-list').innerHTML =
+        '<div style="color:#dc2626;padding:20px 0;font-size:14px;">Error cargando usuarios: ' + err.message + '</div>';
+    });
+}
+
+function renderAdminStats() {
+  const total    = allAdminUsers.length;
+  const active   = allAdminUsers.filter(u => u.courses && u.courses.length > 0).length;
+  const webDone  = allAdminUsers.filter(u => u.courses && u.courses.includes('web-dev')).length;
+  document.getElementById('admin-stat-total').textContent     = total;
+  document.getElementById('admin-stat-active').textContent    = active;
+  document.getElementById('admin-stat-completed').textContent = webDone;
+}
+
+function renderAdminUsers(users) {
+  const list = document.getElementById('admin-user-list');
+  if (!users.length) {
+    list.innerHTML = '<div class="admin-empty">No se encontraron usuarios.</div>';
+    return;
+  }
+  list.innerHTML = users.map(u => {
+    const courses  = u.courses || [];
+    const initial  = (u.name || u.email || '?').charAt(0).toUpperCase();
+    const date     = u.lastLogin ? new Date(u.lastLogin.seconds * 1000).toLocaleDateString('es', { day:'2-digit', month:'short', year:'numeric' }) : '—';
+    const webActive = courses.includes('web-dev');
+    return '<div class="admin-user-card" id="auc-' + u.uid + '">' +
+      '<div class="admin-user-avatar">' + initial + '</div>' +
+      '<div class="admin-user-info">' +
+        '<div class="admin-user-name">' + (u.name || '—') + '</div>' +
+        '<div class="admin-user-email">' + (u.email || '—') + '</div>' +
+        '<div class="admin-user-date">Último acceso: ' + date + '</div>' +
+      '</div>' +
+      '<div class="admin-course-toggles">' +
+        '<button class="admin-toggle ' + (webActive ? 'active' : '') + '" ' +
+          'onclick="toggleCourse(\'' + u.uid + '\', \'web-dev\', ' + webActive + ')" ' +
+          'title="' + (webActive ? 'Quitar acceso a Desarrollo Web' : 'Dar acceso a Desarrollo Web') + '">' +
+          '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>' +
+          ' Web Dev' +
+        '</button>' +
+        '<button class="admin-toggle" disabled title="Próximamente">' +
+          '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>' +
+          ' IA' +
+        '</button>' +
+        '<button class="admin-toggle" disabled title="Próximamente">' +
+          '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>' +
+          ' Marketing' +
+        '</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function toggleCourse(uid, courseId, hasAccess) {
+  if (!db) return;
+  const update = hasAccess
+    ? { courses: firebase.firestore.FieldValue.arrayRemove(courseId) }
+    : { courses: firebase.firestore.FieldValue.arrayUnion(courseId) };
+
+  // Optimistic UI update
+  const btn = document.querySelector('#auc-' + uid + ' .admin-toggle:first-child');
+  if (btn) {
+    btn.classList.toggle('active', !hasAccess);
+    btn.title = !hasAccess ? 'Quitar acceso a Desarrollo Web' : 'Dar acceso a Desarrollo Web';
+    btn.setAttribute('onclick', 'toggleCourse(\'' + uid + '\', \'' + courseId + '\', ' + !hasAccess + ')');
+  }
+  // Update local cache
+  const u = allAdminUsers.find(x => x.uid === uid);
+  if (u) {
+    if (!u.courses) u.courses = [];
+    if (hasAccess) u.courses = u.courses.filter(c => c !== courseId);
+    else u.courses.push(courseId);
+  }
+  renderAdminStats();
+
+  db.collection('users').doc(uid).update(update)
+    .catch(err => { alert('Error: ' + err.message); loadAdminData(); });
+}
+
+function filterAdminUsers(q) {
+  const lq = q.toLowerCase().trim();
+  const filtered = lq
+    ? allAdminUsers.filter(u => (u.email||'').toLowerCase().includes(lq) || (u.name||'').toLowerCase().includes(lq))
+    : allAdminUsers;
+  renderAdminUsers(filtered);
 }
 
 // ── UI de usuario ─────────────────────────────────────────────────────────────
@@ -4453,6 +4880,56 @@ initAnimations();
 </script>
 
 </div><!-- /course-screen -->
+
+<!-- ══════════════════ PANTALLA: ADMIN ══════════════════ -->
+<div id="admin-screen" class="admin-screen" style="display:none">
+
+  <nav class="admin-topbar">
+    <div class="admin-topbar-title">
+      DGP Academy — Admin
+      <span class="admin-topbar-badge">ADMIN</span>
+    </div>
+    <button class="btn-admin-back" onclick="showDashboard()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      Volver al Dashboard
+    </button>
+  </nav>
+
+  <div class="admin-main">
+
+    <!-- Stats row -->
+    <div class="admin-stats" id="admin-stats-row">
+      <div class="admin-stat-card">
+        <div class="admin-stat-label">Total usuarios</div>
+        <div class="admin-stat-num" id="admin-stat-total">—</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-label">Cursos activos</div>
+        <div class="admin-stat-num" id="admin-stat-active">—</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-label">Completaron web-dev</div>
+        <div class="admin-stat-num" id="admin-stat-completed">—</div>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="admin-section-title">Usuarios</div>
+    <input
+      class="admin-search"
+      id="admin-search"
+      type="text"
+      placeholder="Buscar por nombre o correo…"
+      oninput="filterAdminUsers(this.value)"
+    >
+
+    <!-- User list -->
+    <div class="admin-user-list" id="admin-user-list">
+      <div style="color:#7090b8;font-size:14px;padding:20px 0;">Cargando usuarios…</div>
+    </div>
+
+  </div>
+</div><!-- /admin-screen -->
 
 </body>
 </html>

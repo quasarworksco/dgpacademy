@@ -2726,7 +2726,7 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
           <li>Actualizaciones incluidas sin costo extra</li>
           <li>Certificado digital de finalización</li>
         </ul>
-        <button onclick="goToAuth()" class="lp-btn-access">Quiero mi lugar — $97 USD →</button>
+        <button onclick="goToRegister()" class="lp-btn-access">Quiero mi lugar — $97 USD →</button>
         <div class="lp-access-note">ACCESO INMEDIATO · SIN SUSCRIPCIÓN · DE POR VIDA</div>
       </div>
     </div>
@@ -5521,6 +5521,14 @@ function goToAuth() {
     setTimeout(() => { showAuth(); }, 900);
   } else { showAuth(); }
 }
+function goToRegister() {
+  const splash = document.getElementById('splash-screen');
+  if (splash) {
+    splash.style.display = 'flex';
+    requestAnimationFrame(() => { splash.classList.add('active'); });
+    setTimeout(() => { showAuth(); switchTab('register'); }, 900);
+  } else { showAuth(); switchTab('register'); }
+}
 function showAuth()      {
   document.getElementById('landing-screen').style.display='none';
   document.getElementById('auth-screen').style.display='flex';
@@ -5796,6 +5804,18 @@ function handleAuth(e) {
               createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
           }
+          fetch('https://formspree.io/f/xpqnajzo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+              _subject: 'Nuevo registro — DGP Academy',
+              Nombre: fullName,
+              Email: user.email,
+              Telefono: phone || 'No proporcionado',
+              Fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }),
+              UID: user.uid
+            })
+          }).catch(() => {});
           fillUserUI({ ...user, displayName: fullName });
           showDashboard();
         });

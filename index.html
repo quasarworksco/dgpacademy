@@ -3,9 +3,616 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Curso de Desarrollo Web — Guía Completa</title>
+<title>DGP Academy — Plataforma de Cursos</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-auth-compat.js"></script>
 <style>
+/* ════════════════════════════════════════
+   PLATAFORMA — AUTH + DASHBOARD
+   ════════════════════════════════════════ */
+
+/* ── Auth Screen ── */
+.auth-screen {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+}
+.auth-left {
+  flex: 1;
+  background: linear-gradient(135deg, #0d1b3e 0%, #1a56e8 60%, #3b7fff 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 56px;
+  position: relative;
+  overflow: hidden;
+}
+.auth-left::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  top: -200px; right: -200px;
+}
+.auth-left::after {
+  content: '';
+  position: absolute;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  bottom: -150px; left: -100px;
+}
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 64px;
+  position: relative;
+  z-index: 1;
+}
+.auth-brand-logo {
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+.auth-brand-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 0.08em;
+  color: #fff;
+}
+.auth-headline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 5vw, 72px);
+  line-height: 0.95;
+  letter-spacing: 0.03em;
+  color: #fff;
+  margin-bottom: 20px;
+  position: relative; z-index: 1;
+}
+.auth-headline span {
+  background: linear-gradient(105deg, #fff 30%, #a8c0ff 50%, #fff 70%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shine 4s ease-in-out infinite;
+}
+.auth-sub {
+  font-size: 16px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.7;
+  max-width: 380px;
+  margin-bottom: 48px;
+  position: relative; z-index: 1;
+}
+.auth-stats {
+  display: flex;
+  gap: 32px;
+  position: relative; z-index: 1;
+}
+.auth-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 0.04em;
+  color: #fff;
+  line-height: 1;
+}
+.auth-stat-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 2px;
+}
+.auth-courses-preview {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative; z-index: 1;
+}
+.auth-course-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  padding: 12px 16px;
+  transition: all 0.2s;
+}
+.auth-course-chip:hover {
+  background: rgba(255,255,255,0.14);
+  transform: translateX(4px);
+}
+.auth-course-chip-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.auth-course-chip-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  flex: 1;
+}
+.auth-course-chip-badge {
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+}
+.chip-active { background: rgba(34,197,94,0.2); color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
+.chip-soon { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.12); }
+
+/* ── Auth Right (Form) ── */
+.auth-right {
+  width: 480px;
+  flex-shrink: 0;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 40px;
+}
+.auth-form-wrap {
+  width: 100%;
+  max-width: 360px;
+}
+.auth-form-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  color: #0d1b3e;
+  margin-bottom: 8px;
+}
+.auth-form-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 0.03em;
+  color: #0d1b3e;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.auth-form-sub {
+  font-size: 14px;
+  color: #7090b8;
+  margin-bottom: 32px;
+}
+.auth-tabs {
+  display: flex;
+  gap: 4px;
+  background: #f4f8ff;
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 28px;
+}
+.auth-tab {
+  flex: 1;
+  padding: 9px;
+  border: none;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  color: #7090b8;
+}
+.auth-tab.active {
+  background: #fff;
+  color: #0d1b3e;
+  box-shadow: 0 2px 8px rgba(26,86,232,0.12);
+}
+.form-group {
+  margin-bottom: 16px;
+}
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #3a5880;
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid rgba(26,86,232,0.15);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: #0d1b3e;
+  background: #fff;
+  transition: all 0.2s;
+  outline: none;
+}
+.form-input:focus {
+  border-color: #1a56e8;
+  box-shadow: 0 0 0 3px rgba(26,86,232,0.1);
+}
+.form-input::placeholder { color: #aec4e0; }
+.form-input.error { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.08); }
+.btn-auth {
+  width: 100%;
+  padding: 13px;
+  background: #1a56e8;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-top: 8px;
+  position: relative;
+  overflow: hidden;
+}
+.btn-auth:hover { background: #1248cc; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,86,232,0.3); }
+.btn-auth:active { transform: scale(0.97); }
+.btn-auth:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.btn-auth-loader {
+  display: none;
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 0 auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.auth-error {
+  background: rgba(220,38,38,0.08);
+  border: 1px solid rgba(220,38,38,0.2);
+  color: #dc2626;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  display: none;
+}
+.auth-error.show { display: block; animation: calloutIn 0.3s ease; }
+.auth-divider {
+  text-align: center;
+  font-size: 12px;
+  color: #aec4e0;
+  margin: 20px 0;
+  position: relative;
+}
+.auth-divider::before, .auth-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 38%;
+  height: 1px;
+  background: rgba(26,86,232,0.1);
+}
+.auth-divider::before { left: 0; }
+.auth-divider::after { right: 0; }
+.auth-forgot {
+  text-align: right;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+.auth-forgot a {
+  color: #1a56e8;
+  text-decoration: none;
+  cursor: pointer;
+}
+.auth-forgot a:hover { text-decoration: underline; }
+
+/* ── Dashboard ── */
+.dash-screen {
+  min-height: 100vh;
+  background: #f4f8ff;
+  font-family: 'DM Sans', sans-serif;
+}
+.dash-nav {
+  background: #fff;
+  border-bottom: 1px solid rgba(26,86,232,0.1);
+  box-shadow: 0 2px 16px rgba(26,86,232,0.06);
+  padding: 0 40px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.dash-nav-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  color: #0d1b3e;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dash-nav-brand-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #1a56e8;
+  animation: pulseDot 2s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+}
+.dash-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.dash-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dash-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a56e8, #a8c0ff);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  color: #fff;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+.dash-user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #0d1b3e;
+}
+.dash-user-email {
+  font-size: 11px;
+  color: #7090b8;
+  font-family: 'DM Mono', monospace;
+}
+.btn-signout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1.5px solid rgba(26,86,232,0.15);
+  border-radius: 8px;
+  background: none;
+  color: #3a5880;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-signout:hover { border-color: #dc2626; color: #dc2626; background: rgba(220,38,38,0.05); }
+.dash-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+.dash-welcome {
+  background: linear-gradient(135deg, #0d1b3e 0%, #1a56e8 100%);
+  border-radius: 20px;
+  padding: 40px 48px;
+  margin-bottom: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
+  animation: lessonIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dash-welcome::before {
+  content: '';
+  position: absolute;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  right: -100px; top: -150px;
+}
+.dash-welcome-greeting {
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 6px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.06em;
+}
+.dash-welcome-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px;
+  letter-spacing: 0.03em;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.dash-welcome-sub {
+  font-size: 15px;
+  color: rgba(255,255,255,0.65);
+  max-width: 420px;
+  line-height: 1.6;
+}
+.dash-welcome-stats {
+  display: flex;
+  gap: 32px;
+  position: relative; z-index: 1;
+  flex-shrink: 0;
+}
+.dash-stat {
+  text-align: center;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 16px 20px;
+  min-width: 80px;
+}
+.dash-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 0.04em;
+  color: #fff;
+  line-height: 1;
+  display: block;
+}
+.dash-stat-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 4px;
+  font-family: 'DM Mono', monospace;
+}
+.dash-section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.04em;
+  color: #0d1b3e;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.dash-section-title::before {
+  content: '';
+  display: block;
+  width: 4px; height: 22px;
+  background: linear-gradient(#1a56e8, #a8c0ff);
+  border-radius: 2px;
+}
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 48px;
+}
+.course-card {
+  background: #fff;
+  border: 1px solid rgba(26,86,232,0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  animation: lessonIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.course-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(26,86,232,0.14); border-color: rgba(26,86,232,0.25); }
+.course-card.locked { cursor: default; opacity: 0.65; }
+.course-card.locked:hover { transform: none; box-shadow: none; }
+.course-thumb {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.course-thumb-icon {
+  position: relative; z-index: 1;
+}
+.course-thumb-icon svg { width: 56px; height: 56px; }
+.course-thumb::after {
+  content: '';
+  position: absolute;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  bottom: -80px; right: -60px;
+}
+.course-body { padding: 20px 22px 22px; }
+.course-tag {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+.tag-web { background: rgba(26,86,232,0.08); color: #1a56e8; border: 1px solid rgba(26,86,232,0.2); }
+.tag-soon { background: rgba(112,144,184,0.1); color: #7090b8; border: 1px solid rgba(112,144,184,0.2); }
+.tag-new { background: rgba(22,163,74,0.08); color: #16a34a; border: 1px solid rgba(22,163,74,0.2); }
+.course-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.03em;
+  color: #0d1b3e;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.course-desc {
+  font-size: 13px;
+  color: #7090b8;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.course-meta {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.course-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #7090b8;
+  font-family: 'DM Mono', monospace;
+}
+.course-meta-item svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.course-progress-wrap { margin-bottom: 14px; }
+.course-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #7090b8;
+  font-family: 'DM Mono', monospace;
+  margin-bottom: 6px;
+}
+.course-progress-bar {
+  height: 4px;
+  background: rgba(26,86,232,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.course-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #1a56e8, #a8c0ff);
+  background-size: 200% 100%;
+  animation: progressShimmer 2.5s linear infinite;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.btn-course {
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-course-active { background: #1a56e8; color: #fff; }
+.btn-course-active:hover { background: #1248cc; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,86,232,0.3); }
+.btn-course-locked { background: rgba(112,144,184,0.1); color: #7090b8; cursor: default; border: 1.5px solid rgba(112,144,184,0.2); }
+
+@media (max-width: 900px) {
+  .auth-left { display: none; }
+  .auth-right { width: 100%; }
+  .dash-welcome { flex-direction: column; gap: 24px; align-items: flex-start; padding: 28px; }
+  .dash-main { padding: 24px 20px 60px; }
+  .dash-nav { padding: 0 20px; }
+}
+
 :root {
   --bg: #ffffff;
   --bg2: #f4f8ff;
@@ -885,6 +1492,239 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
 </style>
 </head>
 <body>
+
+<!-- ══════════════════ PANTALLA: AUTH ══════════════════ -->
+<div id="auth-screen" class="auth-screen">
+
+  <!-- Izquierda: branding -->
+  <div class="auth-left">
+    <div class="auth-brand">
+      <div class="auth-brand-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="auth-brand-name">DGP Academy</div>
+    </div>
+
+    <h1 class="auth-headline">Aprende a crear<br><span>sitios web</span><br>profesionales</h1>
+    <p class="auth-sub">Accede a todos tus cursos, sigue tu progreso y domina el desarrollo web moderno con las herramientas del equipo DGP.</p>
+
+    <div class="auth-courses-preview">
+      <div class="auth-course-chip">
+        <div class="auth-course-chip-icon" style="background:rgba(26,86,232,0.2);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a8c0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
+        </div>
+        <span class="auth-course-chip-title">Desarrollo Web con Claude</span>
+        <span class="auth-course-chip-badge chip-active">DISPONIBLE</span>
+      </div>
+      <div class="auth-course-chip">
+        <div class="auth-course-chip-icon" style="background:rgba(255,255,255,0.06);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072"/></svg>
+        </div>
+        <span class="auth-course-chip-title" style="color:rgba(255,255,255,0.4);">Diseño UI/UX Profesional</span>
+        <span class="auth-course-chip-badge chip-soon">PRÓXIMO</span>
+      </div>
+      <div class="auth-course-chip">
+        <div class="auth-course-chip-icon" style="background:rgba(255,255,255,0.06);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v4H3zm0 7h18v4H3zm0 7h18v4H3z"/></svg>
+        </div>
+        <span class="auth-course-chip-title" style="color:rgba(255,255,255,0.4);">Marketing Digital</span>
+        <span class="auth-course-chip-badge chip-soon">PRÓXIMO</span>
+      </div>
+    </div>
+
+    <div class="auth-stats" style="margin-top:40px;">
+      <div>
+        <div class="auth-stat-num">10</div>
+        <div class="auth-stat-label">Lecciones</div>
+      </div>
+      <div>
+        <div class="auth-stat-num">3</div>
+        <div class="auth-stat-label">Módulos</div>
+      </div>
+      <div>
+        <div class="auth-stat-num">∞</div>
+        <div class="auth-stat-label">Acceso</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Derecha: formulario -->
+  <div class="auth-right">
+    <div class="auth-form-wrap">
+      <div class="auth-form-logo">DGP Academy</div>
+      <h2 class="auth-form-title" id="auth-title">Bienvenido</h2>
+      <p class="auth-form-sub" id="auth-sub">Ingresa con tu cuenta para acceder a tus cursos</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Iniciar sesión</button>
+        <button class="auth-tab" onclick="switchTab('register')">Crear cuenta</button>
+      </div>
+
+      <div id="auth-error" class="auth-error"></div>
+
+      <form id="auth-form" onsubmit="handleAuth(event)">
+        <div class="form-group" id="field-name" style="display:none">
+          <label class="form-label">Nombre completo</label>
+          <input type="text" class="form-input" id="input-name" placeholder="Tu nombre" autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Correo electrónico</label>
+          <input type="email" class="form-input" id="input-email" placeholder="correo@ejemplo.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contraseña</label>
+          <input type="password" class="form-input" id="input-password" placeholder="••••••••" required autocomplete="current-password">
+          <div class="auth-forgot" id="forgot-link"><a onclick="forgotPassword()">¿Olvidaste tu contraseña?</a></div>
+        </div>
+        <button type="submit" class="btn-auth" id="btn-auth">
+          <span id="btn-auth-text">Iniciar sesión</span>
+          <div class="btn-auth-loader" id="btn-loader"></div>
+        </button>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════ PANTALLA: DASHBOARD ══════════════════ -->
+<div id="dash-screen" class="dash-screen" style="display:none">
+
+  <nav class="dash-nav">
+    <div class="dash-nav-brand">
+      <div class="dash-nav-brand-dot"></div>
+      DGP Academy
+    </div>
+    <div class="dash-nav-right">
+      <div class="dash-user-info">
+        <div class="dash-avatar" id="dash-avatar">?</div>
+        <div>
+          <div class="dash-user-name" id="dash-username">—</div>
+          <div class="dash-user-email" id="dash-useremail">—</div>
+        </div>
+      </div>
+      <button class="btn-signout" onclick="signOut()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4m7 14l5-5-5-5m5 5H9"/></svg>
+        Salir
+      </button>
+    </div>
+  </nav>
+
+  <main class="dash-main">
+
+    <!-- Bienvenida -->
+    <div class="dash-welcome">
+      <div>
+        <div class="dash-welcome-greeting">BIENVENIDO DE VUELTA</div>
+        <div class="dash-welcome-name" id="dash-welcome-name">—</div>
+        <p class="dash-welcome-sub">Continúa aprendiendo donde lo dejaste. Tu progreso está guardado.</p>
+      </div>
+      <div class="dash-welcome-stats">
+        <div class="dash-stat">
+          <span class="dash-stat-num" id="dash-completed">0</span>
+          <div class="dash-stat-label">COMPLETADAS</div>
+        </div>
+        <div class="dash-stat">
+          <span class="dash-stat-num" id="dash-remaining">10</span>
+          <div class="dash-stat-label">RESTANTES</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mis cursos -->
+    <div class="dash-section-title">Mis cursos</div>
+    <div class="courses-grid">
+
+      <!-- Curso 1: Desarrollo Web (activo) -->
+      <div class="course-card" onclick="enterCourse()" style="animation-delay:0s">
+        <div class="course-thumb" style="background:linear-gradient(135deg,#0d1b3e,#1a56e8)">
+          <div class="course-thumb-icon">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
+          </div>
+        </div>
+        <div class="course-body">
+          <span class="course-tag tag-web">DESARROLLO WEB</span>
+          <div class="course-title">Desarrollo Web con Claude</div>
+          <p class="course-desc">HTML, CSS, JavaScript, GitHub Pages, Firebase Auth y todo el ecosistema de herramientas del equipo.</p>
+          <div class="course-meta">
+            <div class="course-meta-item">
+              <svg viewBox="0 0 24 24"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg>
+              10 lecciones
+            </div>
+            <div class="course-meta-item">
+              <svg viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h10"/></svg>
+              3 módulos
+            </div>
+          </div>
+          <div class="course-progress-wrap">
+            <div class="course-progress-label">
+              <span>Progreso</span>
+              <span id="dash-prog-text">0 / 10</span>
+            </div>
+            <div class="course-progress-bar">
+              <div class="course-progress-fill" id="dash-prog-fill" style="width:0%"></div>
+            </div>
+          </div>
+          <button class="btn-course btn-course-active">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Continuar curso
+          </button>
+        </div>
+      </div>
+
+      <!-- Curso 2: Próximamente -->
+      <div class="course-card locked" style="animation-delay:0.1s">
+        <div class="course-thumb" style="background:linear-gradient(135deg,#1e293b,#334155)">
+          <div class="course-thumb-icon">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 17.25h.008v.008H6.75v-.008z M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88"/></svg>
+          </div>
+        </div>
+        <div class="course-body">
+          <span class="course-tag tag-soon">PRÓXIMAMENTE</span>
+          <div class="course-title">Diseño UI/UX Profesional</div>
+          <p class="course-desc">Figma, sistemas de diseño, componentes reutilizables y principios de experiencia de usuario.</p>
+          <div class="course-meta">
+            <div class="course-meta-item">
+              <svg viewBox="0 0 24 24"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg>
+              Próximamente
+            </div>
+          </div>
+          <button class="btn-course btn-course-locked" disabled>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            No disponible aún
+          </button>
+        </div>
+      </div>
+
+      <!-- Curso 3: Próximamente -->
+      <div class="course-card locked" style="animation-delay:0.2s">
+        <div class="course-thumb" style="background:linear-gradient(135deg,#14532d,#166534)">
+          <div class="course-thumb-icon">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v4H3zm0 7h18v4H3zm0 7h18v4H3z"/></svg>
+          </div>
+        </div>
+        <div class="course-body">
+          <span class="course-tag tag-soon">PRÓXIMAMENTE</span>
+          <div class="course-title">Marketing Digital</div>
+          <p class="course-desc">SEO, campañas digitales, analítica web, redes sociales y estrategias de conversión.</p>
+          <div class="course-meta">
+            <div class="course-meta-item">
+              <svg viewBox="0 0 24 24"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg>
+              Próximamente
+            </div>
+          </div>
+          <button class="btn-course btn-course-locked" disabled>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            No disponible aún
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ══════════════════ PANTALLA: CURSO ══════════════════ -->
+<div id="course-screen" style="display:none">
 
 <div class="shell">
 
@@ -2335,6 +3175,184 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
 </div><!-- /main -->
 </div><!-- /shell -->
 
+<!-- ══ Firebase Auth ══ -->
+<script>
+// ── Firebase Config ──────────────────────────────────────────────────────────
+// Reemplaza estos valores con los de tu proyecto en console.firebase.google.com
+// Proyecto → Configuración → Tus apps → Configuración del SDK
+const firebaseConfig = {
+  apiKey:            "AIzaSyC0B2yyVFLKRIuslI7sHMHjp4XLlrHzieY",
+  authDomain:        "dgp-academy.firebaseapp.com",
+  projectId:         "dgp-academy",
+  storageBucket:     "dgp-academy.firebasestorage.app",
+  messagingSenderId: "556603875596",
+  appId:             "1:556603875596:web:e65f527733c7bbdc44a929",
+  measurementId:     "G-2S5RJ9P6D1"
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
+let firebaseReady = false;
+let auth = null;
+
+try {
+  firebase.initializeApp(firebaseConfig);
+  auth = firebase.auth();
+  firebaseReady = true;
+} catch(e) {
+  // Firebase no configurado aún — modo demo
+  console.warn('Firebase no configurado. Modo demo activo.');
+}
+
+// ── Pantallas ────────────────────────────────────────────────────────────────
+function showAuth()      { document.getElementById('auth-screen').style.display='flex'; document.getElementById('dash-screen').style.display='none'; document.getElementById('course-screen').style.display='none'; }
+function showDashboard() { document.getElementById('auth-screen').style.display='none'; document.getElementById('dash-screen').style.display='block'; document.getElementById('course-screen').style.display='none'; updateDashStats(); }
+function showCourse()    { document.getElementById('auth-screen').style.display='none'; document.getElementById('dash-screen').style.display='none'; document.getElementById('course-screen').style.display='block'; }
+
+// ── Auth State ───────────────────────────────────────────────────────────────
+if (firebaseReady) {
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      fillUserUI(user);
+      showDashboard();
+    } else {
+      showAuth();
+    }
+  });
+} else {
+  // Modo demo: muestra auth directamente
+  showAuth();
+}
+
+// ── UI de usuario ─────────────────────────────────────────────────────────────
+function fillUserUI(user) {
+  const name    = user.displayName || user.email.split('@')[0];
+  const initial = name.charAt(0).toUpperCase();
+  document.getElementById('dash-avatar').textContent       = initial;
+  document.getElementById('dash-username').textContent     = name;
+  document.getElementById('dash-useremail').textContent    = user.email;
+  document.getElementById('dash-welcome-name').textContent = name.split(' ')[0].toUpperCase();
+}
+
+// ── Tabs login / registro ──────────────────────────────────────────────────────
+let authMode = 'login';
+function switchTab(mode) {
+  authMode = mode;
+  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', (i===0&&mode==='login')||(i===1&&mode==='register')));
+  document.getElementById('field-name').style.display    = mode==='register' ? 'block' : 'none';
+  document.getElementById('forgot-link').style.display   = mode==='login'    ? 'block' : 'none';
+  document.getElementById('auth-title').textContent      = mode==='login' ? 'Bienvenido' : 'Crear cuenta';
+  document.getElementById('auth-sub').textContent        = mode==='login' ? 'Ingresa con tu cuenta para acceder a tus cursos' : 'Completa tus datos para empezar';
+  document.getElementById('btn-auth-text').textContent   = mode==='login' ? 'Iniciar sesión' : 'Crear mi cuenta';
+  showAuthError('');
+}
+
+// ── Manejo del form ────────────────────────────────────────────────────────────
+function handleAuth(e) {
+  e.preventDefault();
+  const email    = document.getElementById('input-email').value.trim();
+  const password = document.getElementById('input-password').value;
+  const name     = document.getElementById('input-name').value.trim();
+  setAuthLoading(true);
+  showAuthError('');
+
+  if (!firebaseReady) {
+    // Modo demo sin Firebase configurado
+    setTimeout(() => {
+      setAuthLoading(false);
+      fillUserUI({ displayName: name || 'Usuario Demo', email });
+      showDashboard();
+    }, 900);
+    return;
+  }
+
+  if (authMode === 'login') {
+    auth.signInWithEmailAndPassword(email, password)
+      .then(cred => { fillUserUI(cred.user); showDashboard(); })
+      .catch(err => { setAuthLoading(false); showAuthError(mapAuthError(err.code)); });
+  } else {
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(cred => cred.user.updateProfile({ displayName: name }).then(() => { fillUserUI({ ...cred.user, displayName: name }); showDashboard(); }))
+      .catch(err => { setAuthLoading(false); showAuthError(mapAuthError(err.code)); });
+  }
+}
+
+function setAuthLoading(on) {
+  const btn = document.getElementById('btn-auth');
+  const txt = document.getElementById('btn-auth-text');
+  const ldr = document.getElementById('btn-loader');
+  btn.disabled = on;
+  txt.style.display = on ? 'none' : 'block';
+  ldr.style.display = on ? 'block' : 'none';
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.classList.toggle('show', !!msg);
+}
+
+function mapAuthError(code) {
+  const map = {
+    'auth/user-not-found':    'No existe una cuenta con ese correo.',
+    'auth/wrong-password':    'Contraseña incorrecta.',
+    'auth/invalid-email':     'El correo no es válido.',
+    'auth/email-already-in-use': 'Ya existe una cuenta con ese correo.',
+    'auth/weak-password':     'La contraseña debe tener al menos 6 caracteres.',
+    'auth/too-many-requests': 'Demasiados intentos. Espera unos minutos.',
+    'auth/invalid-credential':'Correo o contraseña incorrectos.',
+  };
+  return map[code] || 'Error al iniciar sesión. Intenta de nuevo.';
+}
+
+function forgotPassword() {
+  const email = document.getElementById('input-email').value.trim();
+  if (!email) { showAuthError('Escribe tu correo primero para recuperar la contraseña.'); return; }
+  if (!firebaseReady) { showAuthError('Firebase no configurado.'); return; }
+  auth.sendPasswordResetEmail(email)
+    .then(() => showAuthError('✓ Revisa tu correo para restablecer la contraseña.'))
+    .catch(() => showAuthError('No se pudo enviar el correo. Verifica la dirección.'));
+}
+
+// ── Sign out ──────────────────────────────────────────────────────────────────
+function signOut() {
+  if (firebaseReady) auth.signOut().then(showAuth);
+  else showAuth();
+}
+
+// ── Entrar al curso ────────────────────────────────────────────────────────────
+function enterCourse() {
+  showCourse();
+  updateProgress();
+}
+
+// ── Stats del dashboard ────────────────────────────────────────────────────────
+function updateDashStats() {
+  const n = completed.length;
+  const el1 = document.getElementById('dash-completed');
+  const el2 = document.getElementById('dash-remaining');
+  const elT = document.getElementById('dash-prog-text');
+  const elF = document.getElementById('dash-prog-fill');
+  if (el1) el1.textContent = n;
+  if (el2) el2.textContent = 10 - n;
+  if (elT) elT.textContent = n + ' / 10';
+  if (elF) elF.style.width = (n / 10 * 100) + '%';
+}
+
+// Botón "Volver al dashboard" en el curso — lo agregamos a la topbar
+document.addEventListener('DOMContentLoaded', () => {
+  const topbar = document.querySelector('.topbar-actions');
+  if (topbar) {
+    const backBtn = document.createElement('button');
+    backBtn.className = 'btn btn-ghost';
+    backBtn.style.cssText = 'display:flex;align-items:center;gap:6px;';
+    backBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Dashboard';
+    backBtn.onclick = () => { showDashboard(); updateDashStats(); };
+    topbar.insertBefore(backBtn, topbar.firstChild);
+  }
+});
+</script>
+
+<!-- ══ Lógica del curso ══ -->
 <script>
 const lessons = ['home','l1','l2','l3','l4','l5','l6','l7','l8','l9','l10'];
 const TOTAL = 10;
@@ -2454,5 +3472,8 @@ function quiz(el, result) {
 updateProgress();
 initAnimations();
 </script>
+
+</div><!-- /course-screen -->
+
 </body>
 </html>

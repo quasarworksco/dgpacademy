@@ -1567,22 +1567,47 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   }
   .sidebar.open { left: 0; box-shadow: 4px 0 24px rgba(0,0,0,0.2); }
   .main { margin-left: 0; width: 100%; min-width: 0; }
-  .topbar { padding: 12px 16px; }
-  .lesson { padding: 24px 16px 60px; }
+  .topbar { padding: 10px 14px; gap: 8px; }
+  .topbar-breadcrumb { font-size: 11px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 55vw; }
+  .lesson { padding: 20px 14px 72px; max-width: 100%; }
+  .hero-lesson { padding: 28px 14px 48px; max-width: 100%; }
+  .hero-lesson h1 { font-size: clamp(22px, 7vw, 36px); }
+  .lesson h1 { font-size: clamp(22px, 6vw, 34px); }
+  .lesson h2 { font-size: clamp(18px, 5vw, 26px); }
   .modules-overview { grid-template-columns: 1fr; }
   .tools-grid { grid-template-columns: repeat(2, 1fr); }
-  .diagram-wrap { overflow-x: auto; }
-  .diagram-wrap svg { min-width: 400px; }
-  pre.code-block { font-size: 12px; overflow-x: auto; }
-  .code-wrap { overflow-x: auto; }
+  .diagram-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 16px 12px; }
+  .diagram-wrap svg { min-width: 380px; max-width: none; display: block; }
+  pre.code-block, .code-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; font-size: 12px; }
   .compare-grid { grid-template-columns: 1fr; }
   .cards-grid, .flow-grid { grid-template-columns: 1fr; }
-  h1 { font-size: clamp(24px, 6vw, 40px); }
-  .hero-lesson { padding: 32px 0 0; }
-  .hero-lesson h1 { font-size: clamp(22px, 7vw, 38px); }
-  .quiz-card { padding: 16px; }
+  .card-grid { grid-template-columns: 1fr; }
+  .card-grid-3 { grid-template-columns: 1fr; }
+  .compare-row { grid-template-columns: 1fr; }
+  h1 { font-size: clamp(22px, 6vw, 40px); }
+  .quiz-card { padding: 16px 14px; }
+  .quiz-opt { font-size: 13px; padding: 10px 12px; }
   .step { flex-direction: column; gap: 8px; }
   .step-num { align-self: flex-start; }
+  .lesson-nav { flex-direction: column; gap: 10px; margin-top: 40px; padding-top: 24px; }
+  .lesson-nav .btn { width: 100%; justify-content: center; }
+  .callout { padding: 12px 14px; gap: 10px; }
+  .tool-card-header { gap: 10px; }
+  .tool-card-body { font-size: 13px; }
+  /* Sidebar overlay backdrop */
+  .sidebar-backdrop { display: none; position: fixed; inset: 0; z-index: 199; background: rgba(13,27,62,0.45); }
+  .sidebar-backdrop.show { display: block; }
+  /* Progress bar in sidebar */
+  .sidebar { padding-bottom: 80px; }
+  /* Tables */
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
+  /* Sidebar logo smaller */
+  .sidebar-logo h1 { font-size: 18px; }
+  .sidebar-logo { padding: 20px 16px 14px; }
+  .nav-item { padding: 8px 16px; font-size: 13px; }
+  /* Fix sidebar footer */
+  .sidebar-footer { padding: 12px 16px; }
+  /* Fix admin on mobile */
   .dash-main { padding: 16px; }
   .dash-welcome { flex-direction: column; gap: 16px; padding: 24px 16px; }
   .courses-grid { grid-template-columns: 1fr; }
@@ -1595,9 +1620,32 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   .admin-screen { padding: 0; }
   .admin-topbar { padding: 12px 16px; }
   .admin-body { padding: 16px; }
-  .admin-user-card { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .admin-toggles { flex-wrap: wrap; }
-  .auth-right { width: 100%; padding: 32px 20px; }
+  .admin-user-card { flex-wrap: wrap; }
+}
+
+@media (max-width: 480px) {
+  .topbar { padding: 8px 10px; min-height: 48px; }
+  .topbar-breadcrumb { max-width: 42vw; font-size: 10px; }
+  .lesson { padding: 16px 12px 72px; }
+  .hero-lesson { padding: 20px 12px 40px; }
+  .tools-grid { grid-template-columns: 1fr; }
+  .diagram-wrap svg { min-width: 320px; }
+  .lesson h1 { font-size: clamp(20px, 7vw, 28px); }
+  .lesson h2 { font-size: clamp(16px, 5vw, 22px); }
+  .lesson h3 { font-size: clamp(14px, 4.5vw, 18px); }
+  .lesson-intro { font-size: 14px; }
+  .body-text { font-size: 14px; }
+  .lesson-nav .btn { font-size: 13px; padding: 10px 14px; }
+  .card { padding: 16px 14px; }
+  .card-icon { font-size: 24px; }
+  pre.code-block { font-size: 11px; padding: 14px 12px; }
+  .quiz-opt { font-size: 12px; }
+  .btn { font-size: 13px; padding: 10px 16px; }
+  .callout { flex-direction: column; gap: 6px; }
+  .callout-icon { font-size: 16px; }
+  /* Chips and badges */
+  .lesson-tag { font-size: 9px; }
+  .lesson h1 { margin-top: 8px; }
 }
 
 #course-screen { overflow-x: hidden; }
@@ -3044,6 +3092,7 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
 <div id="course-screen" style="display:none">
 
 <div class="shell">
+<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
 
 <!-- ──── SIDEBAR ──── -->
 <nav class="sidebar" id="sidebar">
@@ -6177,6 +6226,8 @@ function goTo(id) {
 
   // close sidebar on mobile
   document.getElementById('sidebar').classList.remove('open');
+  const bd = document.getElementById('sidebar-backdrop');
+  if (bd) bd.classList.remove('show');
   // re-init animations for new lesson
   setTimeout(initAnimations, 50);
 }
@@ -6290,7 +6341,16 @@ function toggleCard(card) {
 }
 
 function toggleMenu() {
-  document.getElementById('sidebar').classList.toggle('open');
+  const sidebar = document.getElementById('sidebar');
+  const bd = document.getElementById('sidebar-backdrop');
+  const isOpen = sidebar.classList.toggle('open');
+  if (bd) bd.classList.toggle('show', isOpen);
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  const bd = document.getElementById('sidebar-backdrop');
+  if (bd) bd.classList.remove('show');
 }
 
 function resetProgress() {

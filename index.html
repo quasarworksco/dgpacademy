@@ -5787,6 +5787,68 @@ function filterAdminUsers(q) {
   renderAdminUsers(filtered);
 }
 
+function togglePaid(uid, isPaid) {
+  if (!db) return;
+  const newVal = !isPaid;
+  db.collection('users').doc(uid).update({ paid: newVal }).then(() => {
+    const u = allAdminUsers.find(x => x.uid === uid);
+    if (u) u.paid = newVal;
+    renderAdminStats();
+    const card = document.getElementById('auc-' + uid);
+    if (card) {
+      const btn = card.querySelector('.admin-paid-toggle');
+      if (btn) {
+        btn.className = 'admin-toggle admin-paid-toggle' + (newVal ? ' paid' : '');
+        btn.title = newVal ? 'Marcar como pendiente' : 'Marcar como pagado';
+        btn.style.cssText = newVal ? 'background:rgba(22,163,74,0.15);border-color:rgba(22,163,74,0.4);color:#16a34a;' : 'border-color:rgba(220,38,38,0.3);color:#dc2626;';
+        btn.setAttribute('onclick', 'togglePaid(\'' + uid + '\', ' + newVal + ')');
+        btn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">' +
+          (newVal ? '<polyline points="20 6 9 17 4 12"/>' : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>') +
+          '</svg> ' + (newVal ? 'Pagó' : 'Pendiente');
+      }
+    }
+  }).catch(err => alert('Error: ' + err.message));
+}
+
+function exportCSV() {
+  if (!allAdminUsers.length) { alert('No hay usuarios para exportar.'); return; }
+  const headers = ['Nombre', 'Email', 'Teléfono', 'Cursos', 'Pagó', 'Fecha registro'];
+  const rows = allAdminUsers.map(u => [
+    '"' + (u.name || '').replace(/"/g,'""') + '"',
+    '"' + (u.email || '') + '"',
+    '"' + (u.phone || '') + '"',
+    '"' + (u.courses || []).join(', ') + '"',
+    '"' + (u.paid ? 'Sí' : 'No') + '"',
+    '"' + (u.createdAt ? new Date(u.createdAt.seconds * 1000).toLocaleDateString('es') : '—') + '"'
+  ]);
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'dgp-academy-usuarios.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function loadCupos() {
+  if (!db) return;
+  db.collection('config').doc('cupos').get().then(doc => {
+    if (doc.exists) {
+      const input = document.getElementById('admin-cupos-input');
+      if (input) input.value = doc.data().disponibles ?? 20;
+    }
+  }).catch(() => {});
+}
+
+function saveCupos() {
+  if (!db) return;
+  const val = parseInt(document.getElementById('admin-cupos-input').value) || 0;
+  // Firestore rule needed: match /config/{doc} { allow read: if true; allow write: if request.auth.uid == 'xbrwtQPEmdPXUOqYabkZQPWG32C3'; }
+  db.collection('config').doc('cupos').set({ disponibles: val }).then(() => {
+    const msg = document.getElementById('admin-cupos-msg');
+    if (msg) { msg.textContent = 'Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+  }).catch(err => alert('Error: ' + err.message));
+}
+
 // ── UI de usuario ─────────────────────────────────────────────────────────────
 function fillUserUI(user) {
   const name    = user.displayName || user.email.split('@')[0];

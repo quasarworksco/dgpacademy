@@ -2730,7 +2730,20 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
           <span style="font-family:var(--font-display);font-size:64px;line-height:1;color:#1a56e8;letter-spacing:-1px;">$97</span>
           <span style="font-family:var(--font-mono);font-size:12px;color:#7090b8;text-transform:uppercase;letter-spacing:.1em;">USD · pago único</span>
         </div>
-        <div style="font-family:var(--font-mono);font-size:11px;color:#f97316;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);padding:4px 12px;border-radius:999px;display:inline-block;margin-bottom:20px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:5px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>Precio sube a $147 después de los primeros 20 estudiantes</div>
+        <!-- Contador de cupos dinámico -->
+        <div id="lp-cupos-wrap" style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div style="flex:1;background:#fff3ed;border:1.5px solid rgba(249,115,22,.25);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <div>
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:#c2410c;text-transform:uppercase;letter-spacing:.08em;">Cupos disponibles</div>
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#c2410c;line-height:1;margin-top:1px;">
+                <span id="lp-cupos-num">—</span>
+                <span style="font-size:13px;color:#f97316;font-family:'DM Mono',monospace;"> de 20 lugares</span>
+              </div>
+            </div>
+          </div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:#7090b8;text-align:center;line-height:1.4;">precio<br>sube a<br><strong style="color:#0d1b3e;font-size:13px;">$147</strong></div>
+        </div>
         <ul class="lp-access-list">
           <li>16 lecciones completas en texto interactivo</li>
           <li>5 módulos estructurados por nivel</li>
@@ -5531,6 +5544,8 @@ try {
   auth = firebase.auth();
   db   = firebase.firestore();
   firebaseReady = true;
+  // Carga cupos en el landing apenas Firebase esté listo
+  setTimeout(loadCupos, 0);
 } catch(e) {
   console.warn('Firebase no configurado. Modo demo activo.');
 }
@@ -5856,11 +5871,28 @@ function exportCSV() {
 function loadCupos() {
   if (!db) return;
   db.collection('config').doc('cupos').get().then(doc => {
-    if (doc.exists) {
-      const input = document.getElementById('admin-cupos-input');
-      if (input) input.value = doc.data().disponibles ?? 20;
+    const n = doc.exists ? (doc.data().disponibles ?? 20) : 20;
+    const input = document.getElementById('admin-cupos-input');
+    if (input) input.value = n;
+    const lpNum = document.getElementById('lp-cupos-num');
+    if (lpNum) {
+      lpNum.textContent = n;
+      const wrap = document.getElementById('lp-cupos-wrap');
+      if (wrap && n <= 5) {
+        wrap.querySelector('div').style.background = '#fef2f2';
+        wrap.querySelector('div').style.borderColor = 'rgba(220,38,38,.3)';
+        wrap.querySelectorAll('svg, div > div').forEach(el => {
+          if (el.tagName === 'svg') el.setAttribute('stroke','#dc2626');
+          if (el.style) { el.style.color = el.style.color.includes('c2410c') ? '#dc2626' : el.style.color; }
+        });
+      }
     }
   }).catch(() => {});
+}
+
+function updateLpCupos(n) {
+  const lpNum = document.getElementById('lp-cupos-num');
+  if (lpNum) lpNum.textContent = n;
 }
 
 function saveCupos() {
@@ -5870,6 +5902,7 @@ function saveCupos() {
   db.collection('config').doc('cupos').set({ disponibles: val }).then(() => {
     const msg = document.getElementById('admin-cupos-msg');
     if (msg) { msg.textContent = 'Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+    updateLpCupos(val);
   }).catch(err => alert('Error: ' + err.message));
 }
 

@@ -4,6 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DGP Academy — Plataforma de Cursos</title>
+<meta name="description" content="Aprende desarrollo web, IA aplicada y marketing digital con los mismos profesionales de DGP Global Group. Cursos interactivos, acceso inmediato, sin suscripción.">
+<meta name="author" content="DGP Global Group">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://academy.dgp-link.com">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://academy.dgp-link.com">
+<meta property="og:site_name" content="DGP Academy">
+<meta property="og:locale" content="es_LA">
+<meta property="og:title" content="DGP Academy — Plataforma de Cursos Online">
+<meta property="og:description" content="Aprende desarrollo web, IA aplicada y marketing digital. Cursos interactivos creados por el equipo de DGP Global Group. Un pago por curso, acceso de por vida.">
+<meta property="og:image" content="https://academy.dgp-link.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="DGP Academy — Plataforma de Cursos Online">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@dgpglobalgroup">
+<meta name="twitter:creator" content="@dgpglobalgroup">
+<meta name="twitter:title" content="DGP Academy — Plataforma de Cursos Online">
+<meta name="twitter:description" content="Aprende desarrollo web, IA aplicada y marketing digital. Cursos interactivos creados por el equipo de DGP Global Group. Un pago por curso, acceso de por vida.">
+<meta name="twitter:image" content="https://academy.dgp-link.com/og-image.png">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-auth-compat.js"></script>
@@ -503,14 +525,17 @@
 .course-card.locked { cursor: default; opacity: 0.65; }
 .course-card.locked:hover { transform: none; box-shadow: none; }
 .course-thumb {
-  height: 160px;
+  height: 140px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
-  padding: 0;
 }
+.course-thumb-icon {
+  position: relative; z-index: 1;
+}
+.course-thumb-icon svg { width: 56px; height: 56px; }
 .course-thumb::after {
   content: '';
   position: absolute;
@@ -1700,11 +1725,11 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   overflow: hidden; transition: all .3s cubic-bezier(0.34,1.56,0.64,1);
 }
 .lp-course-card:not(.lp-locked):hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(26,86,232,.13); border-color: var(--accent-border); }
-.lp-course-thumb { height: 190px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-.lp-course-thumb svg { width: 100%; height: 100%; }
-.lp-thumb-blue   { background: linear-gradient(135deg,#0d1b3e 0%,#1a3a8f 50%,#1a56e8 100%); }
-.lp-thumb-purple { background: linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#4f46e5 100%); }
-.lp-thumb-green  { background: linear-gradient(135deg,#052e16 0%,#14532d 50%,#16a34a 100%); }
+.lp-course-thumb { height: 140px; display: flex; align-items: center; justify-content: center; }
+.lp-course-thumb svg { opacity: .9; }
+.lp-thumb-blue  { background: linear-gradient(135deg,#0d1b3e,#1a56e8); }
+.lp-thumb-purple { background: linear-gradient(135deg,#312e81,#6366f1); }
+.lp-thumb-green  { background: linear-gradient(135deg,#14532d,#16a34a); }
 .lp-course-body { padding: 20px; }
 .lp-course-tag { display: inline-block; font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 999px; margin-bottom: 10px; }
 .lp-tag-available { color: var(--green); background: rgba(22,163,74,.1); }
@@ -1811,10 +1836,81 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   40%         { transform: scale(1); background: rgba(255,255,255,.9); }
 }
 
-/* ── DGP About section responsive ── */
-@media (max-width: 900px) {
-  .lp-dgp-about-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+/* ── Section anchor offset ── */
+#lp-cursos, #lp-aprende, #lp-acceso { scroll-margin-top: 80px; }
+
+/* ── Nav scrolled state ── */
+.lp-nav.scrolled {
+  box-shadow: 0 4px 24px rgba(26,86,232,0.12);
+  background: rgba(255,255,255,0.98);
 }
+
+/* ── Intersection-observer entrance animations ── */
+.lp-reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.6s cubic-bezier(0.22,1,0.36,1), transform 0.6s cubic-bezier(0.22,1,0.36,1);
+}
+.lp-reveal.lp-visible { opacity: 1; transform: none; }
+.lp-reveal-delay-1 { transition-delay: 0.08s; }
+.lp-reveal-delay-2 { transition-delay: 0.16s; }
+.lp-reveal-delay-3 { transition-delay: 0.24s; }
+.lp-reveal-delay-4 { transition-delay: 0.32s; }
+.lp-reveal-delay-5 { transition-delay: 0.40s; }
+.lp-reveal-delay-6 { transition-delay: 0.48s; }
+
+/* ── Stat number counter animation ── */
+@keyframes lp-count-pop {
+  0%   { transform: scale(0.7) translateY(10px); opacity: 0; }
+  70%  { transform: scale(1.08) translateY(-2px); }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+.lp-stat-num.counting { animation: lp-count-pop 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
+
+/* ── Feature icon colors per index ── */
+.lp-feature:nth-child(1) .lp-feature-icon { background: #1a56e8; }
+.lp-feature:nth-child(2) .lp-feature-icon { background: #f59e0b; }
+.lp-feature:nth-child(3) .lp-feature-icon { background: #0f172a; }
+.lp-feature:nth-child(4) .lp-feature-icon { background: #0ea5e9; }
+.lp-feature:nth-child(5) .lp-feature-icon { background: #f97316; }
+.lp-feature:nth-child(6) .lp-feature-icon { background: #8b5cf6; }
+
+/* ── Audience icon colors per index ── */
+.lp-audience-card:nth-child(1) .lp-audience-icon { background: rgba(26,86,232,0.08); }
+.lp-audience-card:nth-child(2) .lp-audience-icon { background: rgba(16,185,129,0.08); }
+.lp-audience-card:nth-child(3) .lp-audience-icon { background: rgba(249,115,22,0.08); }
+.lp-audience-card:nth-child(1) .lp-audience-icon svg { stroke: #1a56e8; }
+.lp-audience-card:nth-child(2) .lp-audience-icon svg { stroke: #10b981; }
+.lp-audience-card:nth-child(3) .lp-audience-icon svg { stroke: #f97316; }
+.lp-audience-card:nth-child(1):hover .lp-audience-icon { background: #1a56e8; }
+.lp-audience-card:nth-child(2):hover .lp-audience-icon { background: #10b981; }
+.lp-audience-card:nth-child(3):hover .lp-audience-icon { background: #f97316; }
+
+/* ── Course card thumb enhanced ── */
+.lp-course-thumb { height: 160px; position: relative; }
+.lp-course-thumb-scene { position: absolute; inset: 0; }
+
+/* ── Pill logo improved ── */
+.pill-logo { width: 20px; height: 20px; flex-shrink: 0; border-radius: 4px; }
+
+/* ── Stats pulse on viewport entry ── */
+@keyframes lp-stat-enter {
+  from { opacity: 0; transform: translateY(16px) scale(0.9); }
+  to   { opacity: 1; transform: none; }
+}
+.lp-stat { opacity: 0; }
+.lp-stat.stat-visible { opacity: 1; animation: lp-stat-enter 0.5s cubic-bezier(0.34,1.56,0.64,1) both; }
+.lp-stat:nth-child(1).stat-visible { animation-delay: 0s; }
+.lp-stat:nth-child(2).stat-visible { animation-delay: 0.08s; }
+.lp-stat:nth-child(3).stat-visible { animation-delay: 0.16s; }
+.lp-stat:nth-child(4).stat-visible { animation-delay: 0.24s; }
+
+/* ── Hero social proof ── */
+.lp-hero-social { margin-top: 4px; }
+.lp-hero-avatars span { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; }
+
+/* ── Tool pill icon size bump ── */
+.tool-pill { gap: 9px; }
 
 /* ── Tablet (900px) ── */
 @media (max-width: 900px) {
@@ -1866,6 +1962,13 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
 <!-- ══════════════════ SPLASH ══════════════════ -->
 <div id="splash-screen" class="splash-screen active">
   <div class="splash-logo-wrap">
+    <svg width="72" height="80" viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M48,20 C28,20 14,36 14,56 C14,78 28,96 50,96 C67,96 78,85 80,70 L80,52 L54,52 L54,63 L67,63 C63,75 57,82 50,82 C34,82 27,68 27,56 C27,40 36,28 48,28 Z" fill="rgba(255,255,255,0.25)"/>
+      <line x1="13" y1="97" x2="46" y2="7" stroke="rgba(255,255,255,0.9)" stroke-width="16" stroke-linecap="round"/>
+      <line x1="50" y1="5" x2="73" y2="41" stroke="#7dd3fc" stroke-width="14" stroke-linecap="round"/>
+      <line x1="73" y1="41" x2="73" y2="98" stroke="#7dd3fc" stroke-width="14" stroke-linecap="round"/>
+      <path d="M73,41 Q100,41 100,62 Q100,82 73,82" stroke="#7dd3fc" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
     <div class="splash-brand">DGP ACADEMY</div>
     <div class="splash-sub">DGP GLOBAL GROUP</div>
   </div>
@@ -1881,15 +1984,22 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
 
   <nav class="lp-nav">
     <div class="lp-nav-logo" onclick="document.getElementById('landing-screen').scrollTo(0,0)">
+      <svg width="34" height="38" viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M48,20 C28,20 14,36 14,56 C14,78 28,96 50,96 C67,96 78,85 80,70 L80,52 L54,52 L54,63 L67,63 C63,75 57,82 50,82 C34,82 27,68 27,56 C27,40 36,28 48,28 Z" fill="#1a56e8"/>
+        <line x1="13" y1="97" x2="46" y2="7" stroke="#0d1e5c" stroke-width="16" stroke-linecap="round"/>
+        <line x1="50" y1="5" x2="73" y2="41" stroke="#29aae1" stroke-width="14" stroke-linecap="round"/>
+        <line x1="73" y1="41" x2="73" y2="98" stroke="#29aae1" stroke-width="14" stroke-linecap="round"/>
+        <path d="M73,41 Q100,41 100,62 Q100,82 73,82" stroke="#29aae1" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
       <div class="lp-nav-logo-text">
         <span class="lp-brand-main">DGP <span style="font-weight:300;opacity:.6">ACADEMY</span></span>
         <span class="lp-brand-sub">· DGP Global Group</span>
       </div>
     </div>
     <div class="lp-nav-links">
-      <a href="#lp-cursos">Cursos</a>
-      <a href="#lp-aprende">¿Qué aprenderás?</a>
-      <a href="#lp-acceso">Acceso</a>
+      <a href="#lp-cursos" onclick="lpScrollTo('lp-cursos');return false">Cursos</a>
+      <a href="#lp-aprende" onclick="lpScrollTo('lp-aprende');return false">¿Qué aprenderás?</a>
+      <a href="#lp-acceso" onclick="lpScrollTo('lp-acceso');return false">Acceso</a>
     </div>
     <button onclick="goToAuth()" class="lp-btn-nav">Iniciar sesión</button>
   </nav>
@@ -1903,10 +2013,10 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
     <div class="lp-hero-left">
       <div class="lp-hero-badge">PLATAFORMA EDUCATIVA · DGP GLOBAL GROUP</div>
       <h1 class="lp-hero-headline">APRENDE.<br>CREA.<br><span>PUBLICA.</span></h1>
-      <p class="lp-hero-sub">Cursos de desarrollo web, inteligencia artificial y marketing digital. Aprende con las herramientas reales de DGP Global Group y lleva tus habilidades al siguiente nivel.</p>
+      <p class="lp-hero-sub">Domina el desarrollo web profesional con las mismas herramientas que usamos en DGP Global Group. Desde cero hasta tu primer sitio publicado.</p>
       <div class="lp-hero-ctas">
         <button onclick="goToAuth()" class="lp-btn-primary">Comenzar ahora →</button>
-        <a href="#lp-cursos" class="lp-btn-ghost">Ver cursos ↓</a>
+        <a href="#lp-cursos" onclick="lpScrollTo('lp-cursos');return false" class="lp-btn-ghost">Ver cursos ↓</a>
       </div>
       <div class="lp-hero-social">
         <div class="lp-hero-avatars">
@@ -1920,7 +2030,7 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
         <!-- Browser bar -->
         <div class="lp-card-bar">
           <div class="lp-card-dot"></div><div class="lp-card-dot"></div><div class="lp-card-dot"></div>
-          <div class="lp-card-url" style="display:flex;align-items:center;padding:0 10px;font-size:9px;color:#94a3b8;font-family:monospace;">academy.dgp-link.com</div>
+          <div class="lp-card-url" style="display:flex;align-items:center;padding:0 10px;font-size:9px;color:#94a3b8;font-family:monospace;">dgpacademy.com</div>
         </div>
         <!-- Platform mockup body -->
         <div style="display:flex;height:260px;">
@@ -1986,67 +2096,51 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   <!-- STATS -->
   <div class="lp-stats">
     <div class="lp-stats-inner">
-      <div class="lp-stat"><div class="lp-stat-num">10</div><div class="lp-stat-label">Lecciones</div></div>
-      <div class="lp-stat"><div class="lp-stat-num">3</div><div class="lp-stat-label">Módulos</div></div>
-      <div class="lp-stat"><div class="lp-stat-num">1</div><div class="lp-stat-label">Pago por curso</div></div>
-      <div class="lp-stat"><div class="lp-stat-num">2025</div><div class="lp-stat-label">Actualizado</div></div>
+      <div class="lp-stat"><div class="lp-stat-num">3+</div><div class="lp-stat-label">Cursos disponibles</div></div>
+      <div class="lp-stat"><div class="lp-stat-num">50+</div><div class="lp-stat-label">Estudiantes</div></div>
+      <div class="lp-stat"><div class="lp-stat-num">100%</div><div class="lp-stat-label">Online y asíncrono</div></div>
+      <div class="lp-stat"><div class="lp-stat-num">IA</div><div class="lp-stat-label">Integrada en cada curso</div></div>
     </div>
   </div>
 
   <!-- CURSOS -->
   <section id="lp-cursos">
     <div class="lp-section">
-      <div class="lp-section-header">
+      <div class="lp-section-header lp-reveal">
         <div class="lp-section-eyebrow">CURSOS DISPONIBLES</div>
         <h2 class="lp-section-title">Todo lo que puedes aprender</h2>
       </div>
       <div class="lp-courses-grid">
-        <div class="lp-course-card">
-          <div class="lp-course-thumb lp-thumb-blue">
-            <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" fill="none">
-              <!-- dot grid bg -->
-              <rect width="320" height="190" fill="url(#g1)"/>
-              <defs><radialGradient id="g1" cx="70%" cy="30%"><stop offset="0%" stop-color="rgba(100,150,255,0.15)"/><stop offset="100%" stop-color="rgba(0,0,0,0)"/></radialGradient></defs>
+        <div class="lp-course-card lp-reveal lp-reveal-delay-1">
+          <div class="lp-course-thumb lp-thumb-blue" style="overflow:hidden;position:relative;">
+            <!-- Web dev illustration: browser + code -->
+            <svg width="100%" height="160" viewBox="0 0 320 160" fill="none" style="position:absolute;inset:0;">
+              <rect width="320" height="160" fill="url(#web-bg)"/>
+              <defs><linearGradient id="web-bg" x1="0" y1="0" x2="320" y2="160"><stop stop-color="#0d1b3e"/><stop offset="1" stop-color="#1a56e8"/></linearGradient></defs>
+              <!-- Floating dots -->
+              <circle cx="20" cy="20" r="1.5" fill="rgba(255,255,255,0.15)"/>
+              <circle cx="280" cy="40" r="2" fill="rgba(168,192,255,0.2)"/>
+              <circle cx="60" cy="140" r="1.5" fill="rgba(255,255,255,0.12)"/>
               <!-- Browser window -->
-              <rect x="18" y="18" width="190" height="155" rx="10" fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-              <rect x="18" y="18" width="190" height="27" rx="10" fill="rgba(255,255,255,0.1)"/>
-              <circle cx="36" cy="31" r="4" fill="rgba(255,100,100,0.75)"/>
-              <circle cx="51" cy="31" r="4" fill="rgba(255,190,50,0.75)"/>
-              <circle cx="66" cy="31" r="4" fill="rgba(80,210,100,0.75)"/>
-              <rect x="80" y="25" width="80" height="12" rx="6" fill="rgba(255,255,255,0.08)"/>
-              <!-- Syntax-colored code lines -->
-              <rect x="30" y="57" width="36" height="7" rx="3" fill="rgba(180,140,255,0.75)"/>
-              <rect x="72" y="57" width="55" height="7" rx="3" fill="rgba(255,255,255,0.3)"/>
-              <rect x="42" y="72" width="28" height="7" rx="3" fill="rgba(100,200,255,0.7)"/>
-              <rect x="76" y="72" width="70" height="7" rx="3" fill="rgba(255,255,255,0.2)"/>
-              <rect x="42" y="87" width="48" height="7" rx="3" fill="rgba(255,200,80,0.6)"/>
-              <rect x="96" y="87" width="36" height="7" rx="3" fill="rgba(255,255,255,0.15)"/>
-              <rect x="30" y="102" width="60" height="7" rx="3" fill="rgba(100,200,255,0.45)"/>
-              <rect x="30" y="117" width="80" height="7" rx="3" fill="rgba(255,255,255,0.15)"/>
-              <rect x="42" y="132" width="44" height="7" rx="3" fill="rgba(180,140,255,0.5)"/>
-              <rect x="30" y="147" width="20" height="7" rx="3" fill="rgba(180,140,255,0.6)"/>
-              <rect x="54" y="148" width="2" height="9" rx="1" fill="rgba(255,255,255,0.9)"/>
-              <!-- AI panel right -->
-              <rect x="222" y="28" width="82" height="135" rx="12" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
-              <!-- Sparkle/star -->
-              <path d="M263 50 L266 61 L277 61 L269 68 L272 79 L263 72 L254 79 L257 68 L249 61 L260 61 Z" fill="rgba(255,255,255,0.92)" stroke="rgba(168,192,255,0.5)" stroke-width="0.5"/>
-              <!-- Claude badge -->
-              <rect x="232" y="86" width="62" height="18" rx="9" fill="rgba(168,192,255,0.2)" stroke="rgba(168,192,255,0.3)" stroke-width="1"/>
-              <text x="263" y="98.5" fill="rgba(255,255,255,0.9)" font-size="9" text-anchor="middle" font-family="monospace" font-weight="700">CLAUDE AI</text>
-              <!-- Suggestion pills -->
-              <rect x="232" y="112" width="62" height="5" rx="2.5" fill="rgba(255,255,255,0.18)"/>
-              <rect x="232" y="122" width="46" height="5" rx="2.5" fill="rgba(255,255,255,0.12)"/>
-              <rect x="232" y="132" width="54" height="5" rx="2.5" fill="rgba(255,255,255,0.1)"/>
-              <rect x="232" y="142" width="38" height="5" rx="2.5" fill="rgba(255,255,255,0.08)"/>
-              <!-- Floating tech tags -->
-              <rect x="18" y="175" width="44" height="14" rx="7" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-              <text x="40" y="185.5" fill="rgba(255,255,255,0.75)" font-size="8" text-anchor="middle" font-family="monospace">HTML</text>
-              <rect x="68" y="175" width="36" height="14" rx="7" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-              <text x="86" y="185.5" fill="rgba(255,255,255,0.75)" font-size="8" text-anchor="middle" font-family="monospace">CSS</text>
-              <rect x="110" y="175" width="28" height="14" rx="7" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-              <text x="124" y="185.5" fill="rgba(255,255,255,0.75)" font-size="8" text-anchor="middle" font-family="monospace">JS</text>
-              <rect x="144" y="175" width="38" height="14" rx="7" fill="rgba(168,192,255,0.2)" stroke="rgba(168,192,255,0.3)" stroke-width="1"/>
-              <text x="163" y="185.5" fill="rgba(255,255,255,0.85)" font-size="8" text-anchor="middle" font-family="monospace">+IA</text>
+              <rect x="60" y="28" width="200" height="110" rx="8" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+              <rect x="60" y="28" width="200" height="24" rx="8" fill="rgba(255,255,255,0.12)"/>
+              <rect x="60" y="40" width="200" height="12" fill="rgba(255,255,255,0.12)"/>
+              <circle cx="74" cy="40" r="4" fill="rgba(248,113,113,0.8)"/>
+              <circle cx="87" cy="40" r="4" fill="rgba(251,191,36,0.8)"/>
+              <circle cx="100" cy="40" r="4" fill="rgba(52,211,153,0.8)"/>
+              <rect x="114" y="35" width="120" height="10" rx="5" fill="rgba(255,255,255,0.15)"/>
+              <!-- Code lines -->
+              <rect x="74" y="64" width="55" height="5" rx="2.5" fill="rgba(100,160,255,0.6)"/>
+              <rect x="133" y="64" width="30" height="5" rx="2.5" fill="rgba(255,255,255,0.2)"/>
+              <rect x="82" y="75" width="80" height="5" rx="2.5" fill="rgba(168,192,255,0.4)"/>
+              <rect x="82" y="86" width="60" height="5" rx="2.5" fill="rgba(100,160,255,0.35)"/>
+              <rect x="74" y="97" width="45" height="5" rx="2.5" fill="rgba(255,255,255,0.2)"/>
+              <rect x="82" y="108" width="100" height="5" rx="2.5" fill="rgba(168,192,255,0.3)"/>
+              <rect x="82" y="119" width="70" height="5" rx="2.5" fill="rgba(100,160,255,0.25)"/>
+              <!-- Accent bar -->
+              <rect x="220" y="60" width="28" height="4" rx="2" fill="rgba(100,200,255,0.5)"/>
+              <rect x="220" y="70" width="20" height="4" rx="2" fill="rgba(255,255,255,0.2)"/>
+              <rect x="220" y="80" width="24" height="4" rx="2" fill="rgba(100,200,255,0.35)"/>
             </svg>
           </div>
           <div class="lp-course-body">
@@ -2057,49 +2151,35 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
             <button onclick="goToAuth()" class="lp-btn-course active">Acceder al curso →</button>
           </div>
         </div>
-        <div class="lp-course-card lp-locked">
-          <div class="lp-course-thumb lp-thumb-purple">
-            <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" fill="none">
-              <defs><radialGradient id="g2" cx="30%" cy="60%"><stop offset="0%" stop-color="rgba(150,130,255,0.2)"/><stop offset="100%" stop-color="rgba(0,0,0,0)"/></radialGradient></defs>
-              <rect width="320" height="190" fill="url(#g2)"/>
-              <!-- Neural network nodes -->
-              <!-- Input layer -->
-              <circle cx="48" cy="55" r="13" fill="rgba(255,255,255,0.1)" stroke="rgba(200,180,255,0.5)" stroke-width="1.5"/>
-              <circle cx="48" cy="95" r="13" fill="rgba(255,255,255,0.1)" stroke="rgba(200,180,255,0.5)" stroke-width="1.5"/>
-              <circle cx="48" cy="135" r="13" fill="rgba(255,255,255,0.1)" stroke="rgba(200,180,255,0.5)" stroke-width="1.5"/>
-              <!-- Hidden layer -->
-              <circle cx="128" cy="45" r="13" fill="rgba(150,130,255,0.35)" stroke="rgba(200,180,255,0.65)" stroke-width="1.5"/>
-              <circle cx="128" cy="82" r="13" fill="rgba(150,130,255,0.45)" stroke="rgba(200,180,255,0.7)" stroke-width="2"/>
-              <circle cx="128" cy="119" r="13" fill="rgba(150,130,255,0.35)" stroke="rgba(200,180,255,0.6)" stroke-width="1.5"/>
-              <circle cx="128" cy="152" r="13" fill="rgba(150,130,255,0.25)" stroke="rgba(200,180,255,0.45)" stroke-width="1.5"/>
-              <!-- Output layer -->
-              <circle cx="208" cy="72" r="16" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.7)" stroke-width="2"/>
-              <circle cx="208" cy="123" r="16" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+        <div class="lp-course-card lp-locked lp-reveal lp-reveal-delay-2">
+          <div class="lp-course-thumb lp-thumb-purple" style="overflow:hidden;position:relative;">
+            <!-- AI illustration: neural network + star -->
+            <svg width="100%" height="160" viewBox="0 0 320 160" fill="none" style="position:absolute;inset:0;">
+              <rect width="320" height="160" fill="url(#ai-bg)"/>
+              <defs><linearGradient id="ai-bg" x1="0" y1="0" x2="320" y2="160"><stop stop-color="#312e81"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs>
+              <!-- Neural net nodes -->
+              <circle cx="80" cy="50" r="8" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+              <circle cx="80" cy="80" r="8" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+              <circle cx="80" cy="110" r="8" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+              <circle cx="160" cy="40" r="8" fill="rgba(167,139,250,0.4)" stroke="rgba(167,139,250,0.6)" stroke-width="1"/>
+              <circle cx="160" cy="70" r="10" fill="rgba(167,139,250,0.5)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+              <circle cx="160" cy="100" r="8" fill="rgba(167,139,250,0.4)" stroke="rgba(167,139,250,0.6)" stroke-width="1"/>
+              <circle cx="160" cy="130" r="8" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+              <circle cx="240" cy="65" r="10" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+              <circle cx="240" cy="105" r="10" fill="rgba(167,139,250,0.35)" stroke="rgba(167,139,250,0.5)" stroke-width="1"/>
               <!-- Connections -->
-              <line x1="61" y1="55" x2="115" y2="47" stroke="rgba(200,180,255,0.25)" stroke-width="1"/>
-              <line x1="61" y1="55" x2="115" y2="82" stroke="rgba(200,180,255,0.5)" stroke-width="1.5"/>
-              <line x1="61" y1="95" x2="115" y2="82" stroke="rgba(200,180,255,0.45)" stroke-width="1.5"/>
-              <line x1="61" y1="95" x2="115" y2="119" stroke="rgba(200,180,255,0.3)" stroke-width="1"/>
-              <line x1="61" y1="135" x2="115" y2="119" stroke="rgba(200,180,255,0.35)" stroke-width="1"/>
-              <line x1="61" y1="135" x2="115" y2="152" stroke="rgba(200,180,255,0.2)" stroke-width="1"/>
-              <line x1="141" y1="82" x2="192" y2="72" stroke="rgba(255,255,255,0.6)" stroke-width="2"/>
-              <line x1="141" y1="119" x2="192" y2="123" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
-              <!-- Sparkle in center node -->
-              <path d="M128 76 L129.5 81 L134 81 L130.5 84 L132 89 L128 86 L124 89 L125.5 84 L122 81 L126.5 81 Z" fill="rgba(255,255,255,0.9)"/>
-              <!-- Business chart (right) -->
-              <rect x="238" y="28" width="68" height="135" rx="10" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <rect x="250" y="108" width="13" height="44" rx="4" fill="rgba(200,180,255,0.45)"/>
-              <rect x="267" y="85" width="13" height="67" rx="4" fill="rgba(200,180,255,0.6)"/>
-              <rect x="284" y="55" width="13" height="97" rx="4" fill="rgba(255,255,255,0.8)"/>
-              <!-- Green trend arrow -->
-              <polyline points="250,105 267,82 284,52" stroke="rgba(130,255,160,0.95)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="284" cy="52" r="5" fill="rgba(130,255,160,0.95)"/>
-              <!-- +38% badge -->
-              <rect x="238" y="15" width="68" height="18" rx="9" fill="rgba(130,255,160,0.2)" stroke="rgba(130,255,160,0.35)" stroke-width="1"/>
-              <text x="272" y="27.5" fill="rgba(180,255,200,0.95)" font-size="9" text-anchor="middle" font-family="monospace" font-weight="700">↑ 38% ROI</text>
-              <!-- Bottom labels -->
-              <text x="88" y="180" fill="rgba(200,180,255,0.55)" font-size="8" text-anchor="middle" font-family="monospace">red neuronal</text>
-              <text x="268" y="180" fill="rgba(200,180,255,0.55)" font-size="8" text-anchor="middle" font-family="monospace">resultados</text>
+              <line x1="88" y1="50" x2="152" y2="42" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+              <line x1="88" y1="50" x2="152" y2="70" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+              <line x1="88" y1="80" x2="152" y2="70" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+              <line x1="88" y1="80" x2="152" y2="100" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+              <line x1="88" y1="110" x2="152" y2="100" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+              <line x1="88" y1="110" x2="152" y2="130" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <line x1="168" y1="44" x2="232" y2="65" stroke="rgba(167,139,250,0.35)" stroke-width="1.2"/>
+              <line x1="168" y1="70" x2="232" y2="65" stroke="rgba(167,139,250,0.45)" stroke-width="1.2"/>
+              <line x1="168" y1="100" x2="232" y2="105" stroke="rgba(167,139,250,0.4)" stroke-width="1.2"/>
+              <line x1="168" y1="130" x2="232" y2="105" stroke="rgba(167,139,250,0.3)" stroke-width="1.2"/>
+              <!-- AI star -->
+              <path d="M260 38 L263 46 L272 46 L265 51 L268 60 L260 55 L252 60 L255 51 L248 46 L257 46 Z" fill="rgba(255,255,255,0.6)" opacity=".7"/>
             </svg>
           </div>
           <div class="lp-course-body">
@@ -2110,49 +2190,34 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
             <button class="lp-btn-course locked" disabled>Próximamente</button>
           </div>
         </div>
-        <div class="lp-course-card lp-locked">
-          <div class="lp-course-thumb lp-thumb-green">
-            <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" fill="none">
-              <defs><radialGradient id="g3" cx="65%" cy="40%"><stop offset="0%" stop-color="rgba(100,255,150,0.15)"/><stop offset="100%" stop-color="rgba(0,0,0,0)"/></radialGradient></defs>
-              <rect width="320" height="190" fill="url(#g3)"/>
-              <!-- Phone -->
-              <rect x="22" y="15" width="82" height="158" rx="14" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-              <rect x="29" y="28" width="68" height="132" rx="8" fill="rgba(0,0,0,0.35)"/>
-              <rect x="52" y="19" width="26" height="6" rx="3" fill="rgba(255,255,255,0.12)"/>
-              <!-- Post 1 -->
-              <rect x="33" y="33" width="60" height="42" rx="5" fill="rgba(255,255,255,0.1)"/>
-              <rect x="37" y="38" width="18" height="6" rx="3" fill="rgba(255,255,255,0.55)"/>
-              <rect x="37" y="48" width="52" height="4" rx="2" fill="rgba(255,255,255,0.2)"/>
-              <rect x="37" y="56" width="40" height="4" rx="2" fill="rgba(255,255,255,0.14)"/>
-              <circle cx="40" cy="70" r="5" fill="rgba(255,100,100,0.8)"/>
-              <rect x="49" y="67" width="14" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
-              <circle cx="70" cy="70" r="5" fill="rgba(100,180,255,0.7)"/>
-              <rect x="79" y="67" width="10" height="4" rx="2" fill="rgba(255,255,255,0.2)"/>
-              <!-- Post 2 -->
-              <rect x="33" y="82" width="60" height="40" rx="5" fill="rgba(255,255,255,0.07)"/>
-              <rect x="37" y="87" width="26" height="6" rx="3" fill="rgba(255,255,255,0.45)"/>
-              <rect x="37" y="97" width="52" height="4" rx="2" fill="rgba(255,255,255,0.15)"/>
-              <rect x="37" y="105" width="35" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
-              <circle cx="40" cy="117" r="5" fill="rgba(255,100,100,0.65)"/>
-              <!-- Post 3 -->
-              <rect x="33" y="128" width="60" height="28" rx="5" fill="rgba(255,255,255,0.06)"/>
-              <rect x="37" y="133" width="32" height="6" rx="3" fill="rgba(255,255,255,0.35)"/>
-              <rect x="37" y="143" width="50" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
-              <!-- Metrics area -->
-              <!-- Trend chart -->
-              <polyline points="140,148 162,122 182,130 202,100 222,78 242,55 268,32" stroke="rgba(100,255,160,0.9)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <polygon points="140,148 162,122 182,130 202,100 222,78 242,55 268,32 268,160 140,160" fill="rgba(100,255,160,0.06)"/>
-              <!-- Data points -->
-              <circle cx="202" cy="100" r="4" fill="rgba(100,255,160,0.9)"/>
-              <circle cx="242" cy="55" r="4" fill="rgba(100,255,160,0.9)"/>
-              <circle cx="268" cy="32" r="6" fill="rgba(255,255,255,0.9)"/>
-              <!-- Floating metric badges -->
-              <rect x="148" y="18" width="62" height="20" rx="10" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-              <text x="179" y="31.5" fill="rgba(255,255,255,0.88)" font-size="9" text-anchor="middle" font-family="monospace">+2.4K seguid.</text>
-              <rect x="224" y="48" width="58" height="20" rx="10" fill="rgba(100,255,160,0.2)" stroke="rgba(100,255,160,0.35)" stroke-width="1"/>
-              <text x="253" y="61.5" fill="rgba(180,255,210,0.95)" font-size="9" text-anchor="middle" font-family="monospace">↑ CTR 38%</text>
-              <rect x="192" y="160" width="54" height="20" rx="10" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-              <text x="219" y="173.5" fill="rgba(255,255,255,0.7)" font-size="9" text-anchor="middle" font-family="monospace">SEO · ADS</text>
+        <div class="lp-course-card lp-locked lp-reveal lp-reveal-delay-3">
+          <div class="lp-course-thumb lp-thumb-green" style="overflow:hidden;position:relative;">
+            <!-- Marketing illustration: chart + megaphone -->
+            <svg width="100%" height="160" viewBox="0 0 320 160" fill="none" style="position:absolute;inset:0;">
+              <rect width="320" height="160" fill="url(#mkt-bg)"/>
+              <defs><linearGradient id="mkt-bg" x1="0" y1="0" x2="320" y2="160"><stop stop-color="#14532d"/><stop offset="1" stop-color="#16a34a"/></linearGradient></defs>
+              <!-- Chart bars -->
+              <rect x="55" y="110" width="22" height="30" rx="4" fill="rgba(255,255,255,0.2)"/>
+              <rect x="85" y="88" width="22" height="52" rx="4" fill="rgba(255,255,255,0.3)"/>
+              <rect x="115" y="68" width="22" height="72" rx="4" fill="rgba(255,255,255,0.4)"/>
+              <rect x="145" y="50" width="22" height="90" rx="4" fill="rgba(255,255,255,0.55)"/>
+              <rect x="175" y="38" width="22" height="102" rx="4" fill="rgba(255,255,255,0.7)"/>
+              <!-- Trend line -->
+              <polyline points="66,110 96,88 126,68 156,50 186,38" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <!-- Dots on trend -->
+              <circle cx="66" cy="110" r="4" fill="#fff" opacity=".8"/>
+              <circle cx="96" cy="88" r="4" fill="#fff" opacity=".8"/>
+              <circle cx="126" cy="68" r="4" fill="#fff" opacity=".8"/>
+              <circle cx="156" cy="50" r="4" fill="#fff" opacity=".8"/>
+              <circle cx="186" cy="38" r="5" fill="#fff"/>
+              <!-- Megaphone -->
+              <path d="M240 55 L265 45 L265 85 L240 75 Z" fill="rgba(255,255,255,0.5)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linejoin="round"/>
+              <rect x="228" y="60" width="16" height="14" rx="3" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
+              <path d="M237 75 L237 90 M232 90 L242 90" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="270" cy="65" r="4" fill="rgba(255,255,255,0.4)"/>
+              <!-- Signal waves -->
+              <path d="M270 52 Q277 58 270 64" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <path d="M274 47 Q285 58 274 69" stroke="rgba(255,255,255,0.3)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
             </svg>
           </div>
           <div class="lp-course-body">
@@ -2171,16 +2236,52 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   <div class="lp-features-bg" id="lp-aprende">
     <div class="lp-section">
       <div class="lp-section-header">
-        <div class="lp-section-eyebrow">¿POR QUÉ DGP ACADEMY?</div>
-        <h2 class="lp-section-title">Aprende lo que el mercado necesita hoy</h2>
+        <div class="lp-section-eyebrow lp-reveal">¿QUÉ APRENDERÁS?</div>
+        <h2 class="lp-section-title lp-reveal lp-reveal-delay-1">Del código al sitio publicado</h2>
       </div>
       <div class="lp-features-grid">
-        <div class="lp-feature"><div class="lp-feature-icon"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div><div class="lp-feature-title">CURSOS PRÁCTICOS</div><p class="lp-feature-desc">Aprende haciendo. Cada lección incluye ejemplos reales, ejercicios y proyectos aplicables desde el primer día.</p></div>
-        <div class="lp-feature"><div class="lp-feature-icon"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg></div><div class="lp-feature-title">POTENCIADO CON IA</div><p class="lp-feature-desc">Integra herramientas de inteligencia artificial en tu trabajo. Multiplica tu productividad y resultados con IA.</p></div>
-        <div class="lp-feature"><div class="lp-feature-icon"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="lp-feature-title">SOPORTE DIRECTO</div><p class="lp-feature-desc">Acceso directo al equipo de DGP Global Group. Resuelve dudas y recibe orientación personalizada.</p></div>
-        <div class="lp-feature"><div class="lp-feature-icon"><svg width="22" height="22" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="lp-feature-title">HERRAMIENTAS REALES</div><p class="lp-feature-desc">Las mismas plataformas que usamos en DGP día a día: no teoría desconectada, sino flujos de trabajo reales.</p></div>
-        <div class="lp-feature"><div class="lp-feature-icon"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></div><div class="lp-feature-title">CERTIFICADO POR CURSO</div><p class="lp-feature-desc">Al completar cada curso recibes tu certificado. Demuestra tus habilidades con respaldo de DGP Global Group.</p></div>
-        <div class="lp-feature"><div class="lp-feature-icon"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg></div><div class="lp-feature-title">A TU RITMO</div><p class="lp-feature-desc">Sin fechas límite. Accede cuando quieras, desde cualquier dispositivo. El contenido siempre disponible.</p></div>
+        <div class="lp-feature lp-reveal lp-reveal-delay-1">
+          <div class="lp-feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div class="lp-feature-title">HTML &amp; CSS DESDE CERO</div>
+          <p class="lp-feature-desc">Estructura y estilo: construye páginas semánticas y diseños modernos con Flexbox y Grid.</p>
+        </div>
+        <div class="lp-feature lp-reveal lp-reveal-delay-2">
+          <div class="lp-feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="lp-feature-title">JAVASCRIPT &amp; INTERACTIVIDAD</div>
+          <p class="lp-feature-desc">Lógica, eventos y DOM. Haz que tus páginas cobren vida con JavaScript moderno.</p>
+        </div>
+        <div class="lp-feature lp-reveal lp-reveal-delay-3">
+          <div class="lp-feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          </div>
+          <div class="lp-feature-title">GITHUB &amp; CONTROL DE VERSIONES</div>
+          <p class="lp-feature-desc">Flujo profesional: branches, commits y despliegue automático con GitHub Pages.</p>
+        </div>
+        <div class="lp-feature lp-reveal lp-reveal-delay-4">
+          <div class="lp-feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <div class="lp-feature-title">GITHUB PAGES &amp; HOSTING</div>
+          <p class="lp-feature-desc">Publica gratis con GitHub Pages. Dominio .com personalizado y HTTPS automático.</p>
+        </div>
+        <div class="lp-feature lp-reveal lp-reveal-delay-5">
+          <div class="lp-feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.08 15.5c0 2.77 3.54 5 6.92 5s6.92-2.23 6.92-5c0-2.77-2.08-4.67-5.09-6.57.67 1.5.69 3.12.09 4.5-.09.21-.35.29-.55.16l-1.44-1.46a.88.88 0 00-1.25 0C9.17 13.04 5.08 13.73 5.08 15.5zm9.87-12.77c.44 2.41-.38 4.95-2.15 6.7l-1.58-1.23a.49.49 0 00-.83.16c-.3.72-.28 1.53.03 2.25L7.2 7.36c-.36-.36-.93-.24-1.12.24C5.37 9.09 5 10.41 5 11.5" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="lp-feature-title">FIREBASE &amp; BASE DE DATOS</div>
+          <p class="lp-feature-desc">Login de usuarios, Firestore y almacenamiento en la nube. Backend sin servidor.</p>
+        </div>
+        <div class="lp-feature lp-reveal lp-reveal-delay-6">
+          <div class="lp-feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+          </div>
+          <div class="lp-feature-title">IA COMO COPILOTO</div>
+          <p class="lp-feature-desc">Claude, Gemini y GitHub Copilot: aprende a usar IA para multiplicar tu productividad.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -2189,52 +2290,38 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   <section>
     <div class="lp-section">
       <div class="lp-section-header">
-        <div class="lp-section-eyebrow">¿PARA QUIÉN ES?</div>
-        <h2 class="lp-section-title">Hecho para ti</h2>
+        <div class="lp-section-eyebrow lp-reveal">¿PARA QUIÉN ES?</div>
+        <h2 class="lp-section-title lp-reveal lp-reveal-delay-1">Hecho para ti</h2>
       </div>
       <div class="lp-audience-grid">
-        <div class="lp-audience-card"><div class="lp-audience-icon"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div class="lp-audience-title">EMPRENDEDORES</div><p class="lp-audience-desc">Quieres crecer digitalmente sin depender de agencias. Aprende a construir, gestionar y escalar tu presencia online.</p></div>
-        <div class="lp-audience-card"><div class="lp-audience-icon"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="lp-audience-title">PROFESIONALES</div><p class="lp-audience-desc">Quieres agregar nuevas habilidades digitales: IA, marketing o desarrollo web para potenciar tu carrera.</p></div>
-        <div class="lp-audience-card"><div class="lp-audience-icon"><svg width="26" height="26" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div class="lp-audience-title">EQUIPOS Y EMPRESAS</div><p class="lp-audience-desc">Capacita a tu equipo con habilidades reales. Cursos diseñados para aplicar desde el primer día en el trabajo.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SOBRE DGP -->
-  <div class="lp-features-bg">
-    <div class="lp-section">
-      <div class="lp-dgp-about-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
-        <div>
-          <div class="lp-section-eyebrow" style="text-align:left;display:inline-block;">QUIÉNES SOMOS</div>
-          <h2 class="lp-section-title" style="text-align:left;margin:16px 0 20px;">DGP Global Group</h2>
-          <p style="font-size:16px;color:var(--text2);line-height:1.7;margin-bottom:16px;">Somos una empresa enfocada en transformación digital, desarrollo tecnológico y estrategia de negocios. Trabajamos con emprendedores, profesionales y empresas para llevar sus proyectos al siguiente nivel usando las herramientas más modernas del mercado.</p>
-          <p style="font-size:16px;color:var(--text2);line-height:1.7;margin-bottom:28px;">DGP Academy nace de nuestra experiencia práctica: compartimos el mismo conocimiento y flujos de trabajo que usamos internamente con quienes quieren aprender de verdad.</p>
-          <a href="https://dgpglobalgroup.com" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;font-family:var(--font);font-weight:600;font-size:14px;color:var(--accent);text-decoration:none;border:2px solid var(--accent-border);padding:11px 22px;border-radius:10px;transition:all .2s;" onmouseover="this.style.background='var(--accent-bg)'" onmouseout="this.style.background='transparent'">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            dgpglobalgroup.com
-          </a>
+        <div class="lp-audience-card lp-reveal lp-reveal-delay-1">
+          <div class="lp-audience-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="lp-audience-title">EMPRENDEDORES</div>
+          <p class="lp-audience-desc">Quieres presencia online sin depender de terceros. Aprende a construir y mantener tu propio sitio.</p>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-          <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center;">
-            <div style="font-family:var(--font-display);font-size:40px;color:var(--accent);line-height:1;letter-spacing:0.02em;">3+</div>
-            <div style="font-size:12px;color:var(--text3);margin-top:6px;text-transform:uppercase;letter-spacing:0.06em;font-family:var(--font-mono);">Cursos</div>
+        <div class="lp-audience-card lp-reveal lp-reveal-delay-2">
+          <div class="lp-audience-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
           </div>
-          <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center;">
-            <div style="font-family:var(--font-display);font-size:40px;color:var(--accent);line-height:1;letter-spacing:0.02em;">50+</div>
-            <div style="font-size:12px;color:var(--text3);margin-top:6px;text-transform:uppercase;letter-spacing:0.06em;font-family:var(--font-mono);">Estudiantes</div>
+          <div class="lp-audience-title">EQUIPOS</div>
+          <p class="lp-audience-desc">Necesitan publicar landing pages y micrositios rápido, sin agencias ni demoras.</p>
+        </div>
+        <div class="lp-audience-card lp-reveal lp-reveal-delay-3">
+          <div class="lp-audience-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.78a16 16 0 0 0 5.61 5.61l1.06-1.06a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.22 15z"/>
+            </svg>
           </div>
-          <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center;">
-            <div style="font-family:var(--font-display);font-size:40px;color:var(--accent);line-height:1;letter-spacing:0.02em;">100%</div>
-            <div style="font-size:12px;color:var(--text3);margin-top:6px;text-transform:uppercase;letter-spacing:0.06em;font-family:var(--font-mono);">Online</div>
-          </div>
-          <div style="background:var(--accent);border-radius:16px;padding:24px;text-align:center;">
-            <div style="font-family:var(--font-display);font-size:40px;color:#fff;line-height:1;letter-spacing:0.02em;">IA</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:6px;text-transform:uppercase;letter-spacing:0.06em;font-family:var(--font-mono);">Integrada</div>
-          </div>
+          <div class="lp-audience-title">FREELANCERS</div>
+          <p class="lp-audience-desc">Agrega desarrollo web a tu portafolio. Cobra más, entrega más rápido y diferénciate.</p>
         </div>
       </div>
-    </div>
-  </div>
     </div>
   </section>
 
@@ -2242,20 +2329,19 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   <div class="lp-access-bg" id="lp-acceso">
     <div class="lp-section">
       <div class="lp-section-header">
-        <div class="lp-section-eyebrow">ACCESO</div>
-        <h2 class="lp-section-title">Un pago por curso, acceso de por vida a ese curso</h2>
+        <div class="lp-section-eyebrow lp-reveal">ACCESO</div>
+        <h2 class="lp-section-title lp-reveal lp-reveal-delay-1">Un pago por curso, acceso de por vida</h2>
       </div>
-      <div class="lp-access-card">
-        <p style="font-size:14px;color:var(--text2);margin-bottom:20px;line-height:1.6;">Cada curso se adquiere por separado con un único pago. Una vez que tienes acceso a un curso, es tuyo para siempre.</p>
+      <div class="lp-access-card lp-reveal lp-reveal-delay-2">
         <ul class="lp-access-list">
-          <li>Pago único por cada curso que elijas</li>
-          <li>Acceso permanente al curso adquirido</li>
-          <li>Actualizaciones del curso incluidas sin costo extra</li>
+          <li>10 lecciones completas en texto interactivo</li>
+          <li>3 módulos estructurados por nivel</li>
+          <li>Actualizaciones incluidas sin costo extra</li>
           <li>Soporte directo del equipo DGP</li>
-          <li>Certificado de finalización por curso</li>
+          <li>Certificado de finalización del curso</li>
         </ul>
-        <button onclick="goToAuth()" class="lp-btn-access">Ver cursos disponibles →</button>
-        <div class="lp-access-note">PAGO POR CURSO · SIN SUSCRIPCIÓN · ACCESO PERMANENTE AL CURSO</div>
+        <button onclick="goToAuth()" class="lp-btn-access">Comenzar ahora — Acceso inmediato →</button>
+        <div class="lp-access-note">ACCESO INMEDIATO · SIN SUSCRIPCIÓN · DE POR VIDA</div>
       </div>
     </div>
   </div>
@@ -2263,13 +2349,17 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   <!-- FOOTER -->
   <footer class="lp-footer">
     <div class="lp-footer-brand">
+      <svg width="32" height="32" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="30" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+        <ellipse cx="32" cy="32" rx="12" ry="30" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"/>
+        <path d="M4 22h56M4 42h56" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
       <div>
         <div class="lp-footer-brand-name">DGP <span style="font-weight:300;opacity:.5">ACADEMY</span></div>
         <div class="lp-footer-copy">© 2025 DGP Global Group. Todos los derechos reservados.</div>
       </div>
     </div>
     <div class="lp-footer-links">
-      <a href="https://dgpglobalgroup.com" target="_blank" rel="noopener noreferrer">DGP Global Group</a>
       <a href="#">Política de privacidad</a>
       <a href="#">Términos de uso</a>
     </div>
@@ -2283,11 +2373,20 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   <!-- Izquierda: branding -->
   <div class="auth-left">
     <div class="auth-brand">
+      <div class="auth-brand-logo">
+        <svg width="28" height="31" viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M48,20 C28,20 14,36 14,56 C14,78 28,96 50,96 C67,96 78,85 80,70 L80,52 L54,52 L54,63 L67,63 C63,75 57,82 50,82 C34,82 27,68 27,56 C27,40 36,28 48,28 Z" fill="rgba(255,255,255,0.25)"/>
+          <line x1="13" y1="97" x2="46" y2="7" stroke="rgba(255,255,255,0.95)" stroke-width="16" stroke-linecap="round"/>
+          <line x1="50" y1="5" x2="73" y2="41" stroke="#7dd3fc" stroke-width="14" stroke-linecap="round"/>
+          <line x1="73" y1="41" x2="73" y2="98" stroke="#7dd3fc" stroke-width="14" stroke-linecap="round"/>
+          <path d="M73,41 Q100,41 100,62 Q100,82 73,82" stroke="#7dd3fc" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
       <div class="auth-brand-name">DGP Academy</div>
     </div>
 
-    <h1 class="auth-headline">Tu plataforma<br><span>educativa</span><br>profesional</h1>
-    <p class="auth-sub">Accede a tus cursos de desarrollo web, IA y marketing digital. Aprende con las herramientas reales del equipo DGP Global Group.</p>
+    <h1 class="auth-headline">Aprende a crear<br><span>sitios web</span><br>profesionales</h1>
+    <p class="auth-sub">Accede a todos tus cursos, sigue tu progreso y domina el desarrollo web moderno con las herramientas del equipo DGP.</p>
 
     <div class="auth-courses-preview">
       <div class="auth-course-chip">
@@ -2323,8 +2422,8 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
         <div class="auth-stat-label">Módulos</div>
       </div>
       <div>
-        <div class="auth-stat-num">1x</div>
-        <div class="auth-stat-label">Pago por curso</div>
+        <div class="auth-stat-num">∞</div>
+        <div class="auth-stat-label">Acceso</div>
       </div>
     </div>
   </div>
@@ -2332,7 +2431,16 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   <!-- Derecha: formulario -->
   <div class="auth-right">
     <div class="auth-form-wrap">
-      <div class="auth-form-logo">DGP Academy</div>
+      <div class="auth-form-logo" style="display:flex;align-items:center;gap:10px;">
+        <svg width="26" height="29" viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M48,20 C28,20 14,36 14,56 C14,78 28,96 50,96 C67,96 78,85 80,70 L80,52 L54,52 L54,63 L67,63 C63,75 57,82 50,82 C34,82 27,68 27,56 C27,40 36,28 48,28 Z" fill="#1a56e8"/>
+          <line x1="13" y1="97" x2="46" y2="7" stroke="#0d1e5c" stroke-width="16" stroke-linecap="round"/>
+          <line x1="50" y1="5" x2="73" y2="41" stroke="#29aae1" stroke-width="14" stroke-linecap="round"/>
+          <line x1="73" y1="41" x2="73" y2="98" stroke="#29aae1" stroke-width="14" stroke-linecap="round"/>
+          <path d="M73,41 Q100,41 100,62 Q100,82 73,82" stroke="#29aae1" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        DGP Academy
+      </div>
       <h2 class="auth-form-title" id="auth-title">Bienvenido</h2>
       <p class="auth-form-sub" id="auth-sub">Ingresa con tu cuenta para acceder a tus cursos</p>
 
@@ -2371,7 +2479,14 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
 <div id="dash-screen" class="dash-screen" style="display:none">
 
   <nav class="dash-nav">
-    <div class="dash-nav-brand">
+    <div class="dash-nav-brand" style="display:flex;align-items:center;gap:10px;">
+      <svg width="22" height="25" viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M48,20 C28,20 14,36 14,56 C14,78 28,96 50,96 C67,96 78,85 80,70 L80,52 L54,52 L54,63 L67,63 C63,75 57,82 50,82 C34,82 27,68 27,56 C27,40 36,28 48,28 Z" fill="#1a56e8"/>
+        <line x1="13" y1="97" x2="46" y2="7" stroke="#0d1e5c" stroke-width="16" stroke-linecap="round"/>
+        <line x1="50" y1="5" x2="73" y2="41" stroke="#29aae1" stroke-width="14" stroke-linecap="round"/>
+        <line x1="73" y1="41" x2="73" y2="98" stroke="#29aae1" stroke-width="14" stroke-linecap="round"/>
+        <path d="M73,41 Q100,41 100,62 Q100,82 73,82" stroke="#29aae1" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
       DGP Academy
     </div>
     <div class="dash-nav-right">
@@ -2416,39 +2531,10 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
 
       <!-- Curso 1: Desarrollo Web (activo) -->
       <div class="course-card" onclick="enterCourse()" style="animation-delay:0s">
-        <div class="course-thumb" style="background:linear-gradient(135deg,#0d1b3e 0%,#1a3a8f 50%,#1a56e8 100%);padding:0;">
-          <svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" fill="none" style="width:100%;height:100%;">
-            <rect x="16" y="10" width="170" height="120" rx="9" fill="rgba(0,0,0,0.22)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-            <rect x="16" y="10" width="170" height="24" rx="9" fill="rgba(255,255,255,0.08)"/>
-            <circle cx="31" cy="22" r="3.5" fill="rgba(255,100,100,0.7)"/><circle cx="43" cy="22" r="3.5" fill="rgba(255,190,50,0.7)"/><circle cx="55" cy="22" r="3.5" fill="rgba(80,210,100,0.7)"/>
-            <rect x="26" y="43" width="32" height="6" rx="3" fill="rgba(180,140,255,0.7)"/>
-            <rect x="64" y="43" width="50" height="6" rx="3" fill="rgba(255,255,255,0.25)"/>
-            <rect x="36" y="55" width="25" height="6" rx="3" fill="rgba(100,200,255,0.65)"/>
-            <rect x="67" y="55" width="62" height="6" rx="3" fill="rgba(255,255,255,0.18)"/>
-            <rect x="36" y="67" width="42" height="6" rx="3" fill="rgba(255,200,80,0.55)"/>
-            <rect x="26" y="79" width="55" height="6" rx="3" fill="rgba(100,200,255,0.4)"/>
-            <rect x="26" y="91" width="72" height="6" rx="3" fill="rgba(255,255,255,0.15)"/>
-            <rect x="36" y="103" width="38" height="6" rx="3" fill="rgba(180,140,255,0.45)"/>
-            <rect x="26" y="115" width="16" height="6" rx="3" fill="rgba(180,140,255,0.55)"/>
-            <rect x="46" y="115.5" width="1.5" height="8" rx="1" fill="rgba(255,255,255,0.85)"/>
-            <!-- AI panel -->
-            <rect x="200" y="18" width="106" height="115" rx="10" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-            <path d="M253 38 L256 48 L266 48 L258 55 L261 65 L253 58 L245 65 L248 55 L240 48 L250 48 Z" fill="rgba(255,255,255,0.9)"/>
-            <rect x="212" y="72" width="82" height="15" rx="7.5" fill="rgba(168,192,255,0.18)" stroke="rgba(168,192,255,0.28)" stroke-width="1"/>
-            <text x="253" y="82.5" fill="rgba(255,255,255,0.88)" font-size="8" text-anchor="middle" font-family="monospace" font-weight="700">CLAUDE AI</text>
-            <rect x="212" y="94" width="82" height="5" rx="2.5" fill="rgba(255,255,255,0.16)"/>
-            <rect x="212" y="104" width="60" height="5" rx="2.5" fill="rgba(255,255,255,0.1)"/>
-            <rect x="212" y="114" width="72" height="5" rx="2.5" fill="rgba(255,255,255,0.08)"/>
-            <!-- Tags -->
-            <rect x="16" y="132" width="36" height="12" rx="6" fill="rgba(255,255,255,0.1)"/>
-            <text x="34" y="141" fill="rgba(255,255,255,0.7)" font-size="7" text-anchor="middle" font-family="monospace">HTML</text>
-            <rect x="58" y="132" width="30" height="12" rx="6" fill="rgba(255,255,255,0.1)"/>
-            <text x="73" y="141" fill="rgba(255,255,255,0.7)" font-size="7" text-anchor="middle" font-family="monospace">CSS</text>
-            <rect x="94" y="132" width="24" height="12" rx="6" fill="rgba(255,255,255,0.1)"/>
-            <text x="106" y="141" fill="rgba(255,255,255,0.7)" font-size="7" text-anchor="middle" font-family="monospace">JS</text>
-            <rect x="124" y="132" width="32" height="12" rx="6" fill="rgba(168,192,255,0.18)"/>
-            <text x="140" y="141" fill="rgba(200,220,255,0.85)" font-size="7" text-anchor="middle" font-family="monospace">+IA</text>
-          </svg>
+        <div class="course-thumb" style="background:linear-gradient(135deg,#0d1b3e,#1a56e8)">
+          <div class="course-thumb-icon">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
+          </div>
         </div>
         <div class="course-body">
           <span class="course-tag tag-web">DESARROLLO WEB · IA</span>
@@ -2482,37 +2568,10 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
 
       <!-- Curso 2: Próximamente -->
       <div class="course-card locked" style="animation-delay:0.1s">
-        <div class="course-thumb" style="background:linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#4f46e5 100%);padding:0;">
-          <svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" fill="none" style="width:100%;height:100%;">
-            <!-- Neural nodes left -->
-            <circle cx="44" cy="42" r="11" fill="rgba(255,255,255,0.08)" stroke="rgba(200,180,255,0.45)" stroke-width="1.5"/>
-            <circle cx="44" cy="75" r="11" fill="rgba(255,255,255,0.08)" stroke="rgba(200,180,255,0.45)" stroke-width="1.5"/>
-            <circle cx="44" cy="108" r="11" fill="rgba(255,255,255,0.08)" stroke="rgba(200,180,255,0.45)" stroke-width="1.5"/>
-            <circle cx="115" cy="30" r="11" fill="rgba(150,130,255,0.3)" stroke="rgba(200,180,255,0.6)" stroke-width="1.5"/>
-            <circle cx="115" cy="62" r="11" fill="rgba(150,130,255,0.42)" stroke="rgba(200,180,255,0.7)" stroke-width="2"/>
-            <circle cx="115" cy="95" r="11" fill="rgba(150,130,255,0.3)" stroke="rgba(200,180,255,0.55)" stroke-width="1.5"/>
-            <circle cx="115" cy="125" r="11" fill="rgba(150,130,255,0.2)" stroke="rgba(200,180,255,0.4)" stroke-width="1.5"/>
-            <circle cx="186" cy="55" r="14" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.65)" stroke-width="2"/>
-            <circle cx="186" cy="100" r="14" fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
-            <line x1="55" y1="42" x2="104" y2="32" stroke="rgba(200,180,255,0.22)" stroke-width="1"/>
-            <line x1="55" y1="42" x2="104" y2="62" stroke="rgba(200,180,255,0.45)" stroke-width="1.5"/>
-            <line x1="55" y1="75" x2="104" y2="62" stroke="rgba(200,180,255,0.4)" stroke-width="1.5"/>
-            <line x1="55" y1="75" x2="104" y2="95" stroke="rgba(200,180,255,0.25)" stroke-width="1"/>
-            <line x1="55" y1="108" x2="104" y2="95" stroke="rgba(200,180,255,0.3)" stroke-width="1"/>
-            <line x1="126" y1="62" x2="172" y2="55" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
-            <line x1="126" y1="95" x2="172" y2="100" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
-            <path d="M115 56 L116.5 61 L121 61 L117.5 64 L119 69 L115 66 L111 69 L112.5 64 L109 61 L113.5 61 Z" fill="rgba(255,255,255,0.88)"/>
-            <!-- Chart right -->
-            <rect x="216" y="18" width="90" height="115" rx="9" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-            <rect x="228" y="85" width="14" height="40" rx="4" fill="rgba(200,180,255,0.4)"/>
-            <rect x="246" y="65" width="14" height="60" rx="4" fill="rgba(200,180,255,0.55)"/>
-            <rect x="264" y="42" width="14" height="83" rx="4" fill="rgba(255,255,255,0.78)"/>
-            <polyline points="228,82 246,62 264,40" stroke="rgba(130,255,160,0.9)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="264" cy="40" r="5" fill="rgba(130,255,160,0.9)"/>
-            <rect x="216" y="5" width="90" height="16" rx="8" fill="rgba(130,255,160,0.18)" stroke="rgba(130,255,160,0.3)" stroke-width="1"/>
-            <text x="261" y="16.5" fill="rgba(180,255,200,0.9)" font-size="8" text-anchor="middle" font-family="monospace" font-weight="700">↑ ROI IA</text>
-            <text x="115" y="140" fill="rgba(200,180,255,0.45)" font-size="7" text-anchor="middle" font-family="monospace">red neuronal</text>
-          </svg>
+        <div class="course-thumb" style="background:linear-gradient(135deg,#1e293b,#334155)">
+          <div class="course-thumb-icon">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 17.25h.008v.008H6.75v-.008z M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88"/></svg>
+          </div>
         </div>
         <div class="course-body">
           <span class="course-tag tag-soon">PRÓXIMAMENTE</span>
@@ -2533,42 +2592,10 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
 
       <!-- Curso 3: Próximamente -->
       <div class="course-card locked" style="animation-delay:0.2s">
-        <div class="course-thumb" style="background:linear-gradient(135deg,#052e16 0%,#14532d 50%,#16a34a 100%);padding:0;">
-          <svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" fill="none" style="width:100%;height:100%;">
-            <!-- Phone -->
-            <rect x="18" y="8" width="72" height="126" rx="12" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
-            <rect x="24" y="20" width="60" height="106" rx="7" fill="rgba(0,0,0,0.3)"/>
-            <rect x="44" y="13" width="22" height="5" rx="2.5" fill="rgba(255,255,255,0.1)"/>
-            <rect x="28" y="25" width="52" height="34" rx="4" fill="rgba(255,255,255,0.08)"/>
-            <rect x="32" y="30" width="16" height="5" rx="2.5" fill="rgba(255,255,255,0.5)"/>
-            <rect x="32" y="39" width="44" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
-            <rect x="32" y="47" width="34" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
-            <circle cx="35" cy="58" r="4" fill="rgba(255,100,100,0.75)"/>
-            <rect x="43" y="55" width="12" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
-            <circle cx="62" cy="58" r="4" fill="rgba(100,180,255,0.65)"/>
-            <rect x="28" y="68" width="52" height="30" rx="4" fill="rgba(255,255,255,0.06)"/>
-            <rect x="32" y="73" width="24" height="5" rx="2.5" fill="rgba(255,255,255,0.4)"/>
-            <rect x="32" y="82" width="44" height="4" rx="2" fill="rgba(255,255,255,0.14)"/>
-            <circle cx="35" cy="96" r="4" fill="rgba(255,100,100,0.6)"/>
-            <rect x="28" y="104" width="52" height="18" rx="4" fill="rgba(255,255,255,0.05)"/>
-            <rect x="32" y="109" width="28" height="5" rx="2.5" fill="rgba(255,255,255,0.32)"/>
-            <!-- Trend chart -->
-            <polyline points="112,126 135,104 158,112 182,86 206,64 232,42 258,22" stroke="rgba(100,255,160,0.88)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <polygon points="112,126 135,104 158,112 182,86 206,64 232,42 258,22 258,135 112,135" fill="rgba(100,255,160,0.05)"/>
-            <circle cx="182" cy="86" r="4" fill="rgba(100,255,160,0.88)"/>
-            <circle cx="232" cy="42" r="4" fill="rgba(100,255,160,0.88)"/>
-            <circle cx="258" cy="22" r="6" fill="rgba(255,255,255,0.9)"/>
-            <!-- Metric badges -->
-            <rect x="120" y="8" width="60" height="18" rx="9" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-            <text x="150" y="20.5" fill="rgba(255,255,255,0.82)" font-size="8" text-anchor="middle" font-family="monospace">+2.4K seguid.</text>
-            <rect x="200" y="38" width="56" height="18" rx="9" fill="rgba(100,255,160,0.18)" stroke="rgba(100,255,160,0.3)" stroke-width="1"/>
-            <text x="228" y="50.5" fill="rgba(180,255,200,0.92)" font-size="8" text-anchor="middle" font-family="monospace">↑ CTR 38%</text>
-            <!-- Bottom labels -->
-            <rect x="270" y="18" width="42" height="18" rx="9" fill="rgba(255,255,255,0.08)"/>
-            <text x="291" y="30.5" fill="rgba(255,255,255,0.6)" font-size="7" text-anchor="middle" font-family="monospace">SEO</text>
-            <rect x="270" y="42" width="42" height="18" rx="9" fill="rgba(255,255,255,0.08)"/>
-            <text x="291" y="54.5" fill="rgba(255,255,255,0.6)" font-size="7" text-anchor="middle" font-family="monospace">ADS</text>
-          </svg>
+        <div class="course-thumb" style="background:linear-gradient(135deg,#14532d,#166534)">
+          <div class="course-thumb-icon">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v4H3zm0 7h18v4H3zm0 7h18v4H3z"/></svg>
+          </div>
         </div>
         <div class="course-body">
           <span class="course-tag tag-soon">PRÓXIMAMENTE</span>
@@ -2600,6 +2627,13 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+      <svg width="28" height="31" viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M48,20 C28,20 14,36 14,56 C14,78 28,96 50,96 C67,96 78,85 80,70 L80,52 L54,52 L54,63 L67,63 C63,75 57,82 50,82 C34,82 27,68 27,56 C27,40 36,28 48,28 Z" fill="rgba(168,192,255,0.3)"/>
+        <line x1="13" y1="97" x2="46" y2="7" stroke="rgba(255,255,255,0.9)" stroke-width="16" stroke-linecap="round"/>
+        <line x1="50" y1="5" x2="73" y2="41" stroke="#7dd3fc" stroke-width="14" stroke-linecap="round"/>
+        <line x1="73" y1="41" x2="73" y2="98" stroke="#7dd3fc" stroke-width="14" stroke-linecap="round"/>
+        <path d="M73,41 Q100,41 100,62 Q100,82 73,82" stroke="#7dd3fc" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
       <div class="logo-badge">v1.0 · 2025</div>
     </div>
     <h1>Diseño y Desarrollo WEB con IA</h1>
@@ -2704,7 +2738,7 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   <div id="home" class="lesson active">
   <div class="hero-lesson" style="padding:80px 0 0;">
     <div class="hero-eyebrow">Diseño y Desarrollo WEB con IA · Desde cero</div>
-    <h1>Tu plataforma educativa profesional</h1>
+    <h1>Aprende a crear sitios web profesionales</h1>
     <p class="subtitle">Este curso te enseña todo lo que necesitas saber para construir, publicar y mantener sitios web usando las mismas herramientas que usamos en el equipo.</p>
 
     <div class="tools-grid">
@@ -2721,31 +2755,38 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
         Firebase
       </div>
       <div class="tool-pill">
-        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1BDBDB"/><text x="12" y="17" font-family="Arial Black,sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">GD</text></svg>
+        <!-- GoDaddy: green brand -->
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1B8B37"/><text x="12" y="10" font-family="Arial,sans-serif" font-size="6.5" font-weight="700" fill="#fff" text-anchor="middle">GO</text><text x="12" y="17.5" font-family="Arial,sans-serif" font-size="5.5" font-weight="400" fill="rgba(255,255,255,0.8)" text-anchor="middle">DADDY</text></svg>
         GoDaddy
       </div>
       <div class="tool-pill">
-        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#3448c5"/><path d="M5 14.5a7 7 0 0114 0H5z" fill="#fff"/><path d="M12 5.5v4m-3-1.5l3 1.5 3-1.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <!-- Cloudinary: blue with cloud -->
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#3448C5"/><path d="M17 14.5a3.5 3.5 0 00-2.5-6 5 5 0 00-9.5 2A3 3 0 005 16.5h12z" fill="#fff"/></svg>
         Cloudinary
       </div>
       <div class="tool-pill">
-        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#e34f26"/><path d="M6 4h12l-1.5 14L12 20l-4.5-2L6 4z" fill="#fff"/><path d="M12 17.5l3.2-1.5 1-10H12v11.5z" fill="#e34f26"/><path d="M9 10h3v2.5H9.5L9.7 15l2.3.7V18l-3.8-1.5-.5-6.5z" fill="#333"/><path d="M15 10h-3v2.5h2.5L14.3 15l-2.3.7V18l3.8-1.5.5-6.5z" fill="#333" opacity=".6"/></svg>
+        <!-- Formspree: coral F lettermark -->
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#E8445A"/><rect x="7" y="6" width="10" height="1.8" rx=".9" fill="#fff"/><rect x="7" y="10" width="7.5" height="1.8" rx=".9" fill="#fff"/><rect x="7" y="14.5" width="9" height="1.8" rx=".9" fill="#fff"/><rect x="7" y="18.5" width="6" height="1.5" rx=".75" fill="rgba(255,255,255,0.5)"/></svg>
         Formspree
       </div>
       <div class="tool-pill">
-        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#1a56e8"/><path d="M4 8l8 5 8-5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><rect x="4" y="7" width="16" height="10" rx="2" stroke="#fff" stroke-width="1.5"/></svg>
+        <!-- EmailJS: blue envelope -->
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#F5A623"/><rect x="4" y="7.5" width="16" height="10" rx="1.5" fill="#fff"/><path d="M4 9l8 5.5L20 9" stroke="#F5A623" stroke-width="1.5" stroke-linecap="round"/></svg>
         EmailJS
       </div>
       <div class="tool-pill">
-        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#0f172a"/><rect x="4" y="14" width="3" height="6" rx="1" fill="#38bdf8"/><rect x="9" y="10" width="3" height="10" rx="1" fill="#60a5fa"/><rect x="14" y="6" width="3" height="14" rx="1" fill="#a78bfa"/><rect x="19" y="3" width="1" height="3" rx=".5" fill="#f472b6"/></svg>
+        <!-- Databuddy: dark with colorful bars + trend line -->
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#0f172a"/><rect x="3.5" y="15" width="3" height="5.5" rx="1" fill="#38bdf8"/><rect x="8" y="11" width="3" height="9.5" rx="1" fill="#818cf8"/><rect x="12.5" y="7.5" width="3" height="13" rx="1" fill="#a78bfa"/><rect x="17" y="10" width="3" height="10.5" rx="1" fill="#f472b6" opacity=".8"/><polyline points="5,15 9.5,11 14,7.5 18.5,10" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".6"/></svg>
         Databuddy
       </div>
       <div class="tool-pill">
-        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#00c4cc"/><path d="M7 17L17 7M7 7h10v10" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <!-- Canva: cyan circle with C -->
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="12" fill="#00C4CC"/><path d="M15.5 9a5.5 5.5 0 100 6" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
         Canva
       </div>
       <div class="tool-pill">
-        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#111"/><circle cx="12" cy="11" r="3.5" stroke="#fff" stroke-width="1.5"/><path d="M5 19c1.5-3 3.5-5 7-5s5.5 2 7 5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <!-- Unsplash: black with tray+arrow download icon -->
+        <svg class="pill-logo" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#111"/><path d="M8 3h8v6H8z" fill="#fff"/><path d="M12 9v7M9 13l3 3 3-3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="18" width="16" height="3" rx="1" fill="#fff"/></svg>
         Unsplash
       </div>
       <div class="tool-pill">
@@ -4052,7 +4093,7 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
 // Proyecto → Configuración → Tus apps → Configuración del SDK
 const firebaseConfig = {
   apiKey:            "AIzaSyC0B2yyVFLKRIuslI7sHMHjp4XLlrHzieY",
-  authDomain:        "academy.dgp-link.com",
+  authDomain:        "dgp-academy.firebaseapp.com",
   projectId:         "dgp-academy",
   storageBucket:     "dgp-academy.firebasestorage.app",
   messagingSenderId: "556603875596",
@@ -4115,11 +4156,26 @@ function showCourse()    {
   document.getElementById('course-screen').style.display='block';
 }
 
-// ── Sticky nav shadow on scroll ───────────────────────────────────────────────
-window.addEventListener('scroll', function() {
-  const nav = document.querySelector('.lp-nav');
-  if (nav) nav.classList.toggle('scrolled', window.scrollY > 10);
-});
+// ── Sticky nav shadow on scroll (landing-screen scrolls, not window) ─────────
+(function() {
+  function bindLandingScroll() {
+    const ls = document.getElementById('landing-screen');
+    const nav = document.querySelector('.lp-nav');
+    if (!ls || !nav) return;
+    ls.addEventListener('scroll', function() {
+      nav.classList.toggle('scrolled', ls.scrollTop > 10);
+    });
+  }
+  bindLandingScroll();
+})();
+
+function lpScrollTo(id) {
+  const el  = document.getElementById(id);
+  const ls  = document.getElementById('landing-screen');
+  if (!el || !ls) return;
+  const offset = el.getBoundingClientRect().top - ls.getBoundingClientRect().top + ls.scrollTop - 75;
+  ls.scrollTo({ top: offset, behavior: 'smooth' });
+}
 
 // ── Auth State ───────────────────────────────────────────────────────────────
 if (firebaseReady) {
@@ -4384,6 +4440,41 @@ function quiz(el, result) {
 
 updateProgress();
 initAnimations();
+
+// ── Landing page reveal observer ──────────────────────────────────────────────
+// #landing-screen is the scroll container, so we use it as the IO root
+(function() {
+  var ls = document.getElementById('landing-screen');
+
+  var lpObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('lp-visible');
+        lpObserver.unobserve(entry.target);
+      }
+    });
+  }, { root: ls, threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  var statsObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('stat-visible');
+        statsObserver.unobserve(entry.target);
+      }
+    });
+  }, { root: ls, threshold: 0.3 });
+
+  function initLpReveal() {
+    document.querySelectorAll('.lp-reveal').forEach(function(el) { lpObserver.observe(el); });
+    document.querySelectorAll('.lp-stat').forEach(function(el) { statsObserver.observe(el); });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLpReveal);
+  } else {
+    initLpReveal();
+  }
+})();
 </script>
 
 </div><!-- /course-screen -->

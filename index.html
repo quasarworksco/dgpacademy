@@ -31,6 +31,10 @@
 <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore-compat.js"></script>
 <style>
+/* ── Global mobile safety ── */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: hidden; max-width: 100vw; }
+
 /* ════════════════════════════════════════
    PLATAFORMA — AUTH + DASHBOARD
    ════════════════════════════════════════ */
@@ -237,6 +241,9 @@
 .form-group {
   margin-bottom: 16px;
 }
+.form-row { display: flex; gap: 12px; }
+.form-row .form-group { flex: 1; margin-bottom: 0; }
+@media (max-width: 480px) { .form-row { flex-direction: column; gap: 0; } }
 .form-label {
   display: block;
   font-size: 12px;
@@ -829,6 +836,8 @@ body {
   margin-left: 280px;
   flex: 1;
   min-height: 100vh;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 .topbar {
@@ -2690,9 +2699,19 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
       <div id="auth-error" class="auth-error"></div>
 
       <form id="auth-form" onsubmit="handleAuth(event)">
-        <div class="form-group" id="field-name" style="display:none">
-          <label class="form-label">Nombre completo</label>
-          <input type="text" class="form-input" id="input-name" placeholder="Tu nombre" autocomplete="name">
+        <div class="form-row" id="field-name" style="display:none">
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-input" id="input-name" placeholder="Tu nombre" autocomplete="given-name">
+          </div>
+          <div class="form-group" id="field-apellido">
+            <label class="form-label">Apellido</label>
+            <input type="text" class="form-input" id="input-apellido" placeholder="Tu apellido" autocomplete="family-name">
+          </div>
+        </div>
+        <div class="form-group" id="field-phone" style="display:none">
+          <label class="form-label">Teléfono / WhatsApp</label>
+          <input type="tel" class="form-input" id="input-phone" placeholder="+51 999 999 999" autocomplete="tel">
         </div>
         <div class="form-group">
           <label class="form-label">Correo electrónico</label>
@@ -4343,14 +4362,6 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
       <li>Guardar credenciales en Google Drive (para clientes o uso propio)</li>
     </ul>
 
-    <div class="callout callout-green" style="margin-top:32px;">
-      <div class="callout-icon">🎉</div>
-      <div class="callout-content">
-        <strong>¡Felicitaciones! Has completado el curso</strong>
-        <p>Ahora tienes los conocimientos para crear y publicar sitios web profesionales — tanto para clientes como para proyectos propios: tu portafolio, una tienda personal, una landing para tu negocio, o cualquier idea que quieras llevar a la web. El siguiente paso es la práctica: crea tu primer proyecto.</p>
-      </div>
-    </div>
-
     <div class="lesson-nav">
       <button class="btn btn-ghost" onclick="goTo('l9')">← Anterior</button>
       <button class="btn btn-primary" onclick="markDoneAndNext('l10','l11')">Completado → Siguiente</button>
@@ -5293,22 +5304,25 @@ titulo<span class="c-gray">.</span>style<span class="c-gray">.</span>color <span
     </ul>
 
     <!-- Sección de felicitación -->
-    <div style="margin:48px 0 32px;padding:48px 40px;background:linear-gradient(135deg,rgba(26,86,232,0.15) 0%,rgba(45,212,191,0.15) 100%);border:1px solid rgba(26,86,232,0.3);border-radius:20px;text-align:center;">
+    <div style="margin:48px 0 32px;padding:48px 40px;background:linear-gradient(135deg,#0d1b3e 0%,#1a56e8 100%);border:none;border-radius:20px;text-align:center;color:#fff;">
       <div style="font-size:64px;margin-bottom:16px;">🎓</div>
       <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4vw,48px);letter-spacing:0.04em;color:#fff;margin-bottom:12px;line-height:1.1;">¡Felicitaciones! Completaste el curso</div>
-      <p style="font-size:16px;color:#a8c0ff;max-width:560px;margin:0 auto 24px;line-height:1.7;">Has recorrido las 16 lecciones y 5 módulos del curso <strong>Diseño y Desarrollo WEB con IA</strong>. Ahora tienes todas las herramientas para crear sitios profesionales, posicionarlos en Google y convertir tu habilidad en ingresos reales.</p>
+      <p style="font-size:16px;color:rgba(255,255,255,0.7);max-width:560px;margin:0 auto 24px;line-height:1.7;">Has recorrido las 16 lecciones y 5 módulos del curso <strong style="color:#fff;">Diseño y Desarrollo WEB con IA</strong>. Ahora tienes todas las herramientas para crear sitios profesionales, posicionarlos en Google y convertir tu habilidad en ingresos reales.</p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-        <div style="background:rgba(26,86,232,0.2);border:1px solid rgba(26,86,232,0.4);border-radius:10px;padding:16px 24px;">
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:#5a5a72;margin-bottom:4px;">COMPLETADO</div>
-          <div style="font-size:22px;font-weight:600;color:#e8e8f0;">16 lecciones</div>
+        <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:16px 24px;">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:4px;letter-spacing:0.06em;text-transform:uppercase;">Completado</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;line-height:1;">16</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.7);letter-spacing:0.06em;text-transform:uppercase;font-family:'DM Mono',monospace;">Lecciones</div>
         </div>
-        <div style="background:rgba(45,212,191,0.1);border:1px solid rgba(45,212,191,0.3);border-radius:10px;padding:16px 24px;">
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:#5a5a72;margin-bottom:4px;">MÓDULOS</div>
-          <div style="font-size:22px;font-weight:600;color:#2dd4bf;">5 módulos</div>
+        <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:16px 24px;">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:4px;letter-spacing:0.06em;text-transform:uppercase;">Módulos</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;line-height:1;">5</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.7);letter-spacing:0.06em;text-transform:uppercase;font-family:'DM Mono',monospace;">Módulos</div>
         </div>
-        <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:10px;padding:16px 24px;">
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:#5a5a72;margin-bottom:4px;">SIGUIENTE PASO</div>
-          <div style="font-size:22px;font-weight:600;color:#22c55e;">Tu primer cliente</div>
+        <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:16px 24px;">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:4px;letter-spacing:0.06em;text-transform:uppercase;">Completado</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;line-height:1;">100%</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.7);letter-spacing:0.06em;text-transform:uppercase;font-family:'DM Mono',monospace;">Completado</div>
         </div>
       </div>
     </div>
@@ -5614,7 +5628,8 @@ let authMode = 'login';
 function switchTab(mode) {
   authMode = mode;
   document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', (i===0&&mode==='login')||(i===1&&mode==='register')));
-  document.getElementById('field-name').style.display    = mode==='register' ? 'block' : 'none';
+  document.getElementById('field-name').style.display    = mode==='register' ? 'flex'  : 'none';
+  document.getElementById('field-phone').style.display   = mode==='register' ? 'block' : 'none';
   document.getElementById('forgot-link').style.display   = mode==='login'    ? 'block' : 'none';
   document.getElementById('auth-title').textContent      = mode==='login' ? 'Bienvenido' : 'Crear cuenta';
   document.getElementById('auth-sub').textContent        = mode==='login' ? 'Ingresa con tu cuenta para acceder a tus cursos' : 'Completa tus datos para empezar';
@@ -5628,6 +5643,9 @@ function handleAuth(e) {
   const email    = document.getElementById('input-email').value.trim();
   const password = document.getElementById('input-password').value;
   const name     = document.getElementById('input-name').value.trim();
+  const apellido = document.getElementById('input-apellido')?.value.trim() || '';
+  const phone    = document.getElementById('input-phone')?.value.trim() || '';
+  const fullName = authMode === 'register' ? `${name} ${apellido}`.trim() : name;
   setAuthLoading(true);
   showAuthError('');
 
@@ -5635,7 +5653,7 @@ function handleAuth(e) {
     // Modo demo sin Firebase configurado
     setTimeout(() => {
       setAuthLoading(false);
-      fillUserUI({ displayName: name || 'Usuario Demo', email });
+      fillUserUI({ displayName: fullName || 'Usuario Demo', email });
       showDashboard();
     }, 900);
     return;
@@ -5647,7 +5665,21 @@ function handleAuth(e) {
       .catch(err => { setAuthLoading(false); showAuthError(mapAuthError(err.code)); });
   } else {
     auth.createUserWithEmailAndPassword(email, password)
-      .then(cred => cred.user.updateProfile({ displayName: name }).then(() => { fillUserUI({ ...cred.user, displayName: name }); showDashboard(); }))
+      .then(cred => {
+        const user = cred.user;
+        return user.updateProfile({ displayName: fullName }).then(() => {
+          if (db) {
+            db.collection('users').doc(user.uid).set({
+              email: user.email,
+              name: fullName,
+              phone: phone,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+          }
+          fillUserUI({ ...user, displayName: fullName });
+          showDashboard();
+        });
+      })
       .catch(err => { setAuthLoading(false); showAuthError(mapAuthError(err.code)); });
   }
 }

@@ -6196,6 +6196,13 @@ function showSettings() {
     document.getElementById('settings-name').value = parts[0] || '';
     document.getElementById('settings-apellido').value = parts.slice(1).join(' ') || '';
   }
+  if (db && user) {
+    db.collection('users').doc(user.uid).get().then(doc => {
+      if (doc.exists && doc.data().phone) {
+        document.getElementById('settings-phone').value = doc.data().phone;
+      }
+    }).catch(() => {});
+  }
 }
 
 function closeSettings() {
@@ -6213,6 +6220,18 @@ function saveSettingsName() {
     if (db) db.collection('users').doc(user.uid).update({ name: fullName });
     fillUserUI(user);
     const msg = document.getElementById('settings-name-msg');
+    msg.style.display = 'block';
+    setTimeout(() => { msg.style.display = 'none'; }, 3000);
+  });
+}
+
+function saveSettingsPhone() {
+  const phone = document.getElementById('settings-phone').value.trim();
+  if (!phone) return;
+  const user = auth ? auth.currentUser : null;
+  if (!user || !db) return;
+  db.collection('users').doc(user.uid).update({ phone }).then(() => {
+    const msg = document.getElementById('settings-phone-msg');
     msg.style.display = 'block';
     setTimeout(() => { msg.style.display = 'none'; }, 3000);
   });
@@ -6434,6 +6453,16 @@ initAnimations();
       </div>
       <button onclick="saveSettingsName()" class="btn-auth" style="margin:0;">Guardar nombre</button>
       <div id="settings-name-msg" style="font-size:12px;color:#16a34a;margin-top:8px;display:none;">✓ Nombre actualizado</div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid rgba(26,86,232,0.1);margin:24px 0;">
+
+    <!-- Change phone -->
+    <div style="margin-bottom:24px;">
+      <div style="font-size:12px;font-weight:500;color:#3a5880;margin-bottom:12px;letter-spacing:.02em;">TELÉFONO / WHATSAPP</div>
+      <input id="settings-phone" type="tel" placeholder="+52 55 1234 5678" class="form-input" style="margin:0 0 10px;">
+      <button onclick="saveSettingsPhone()" class="btn-auth" style="margin:0;">Guardar teléfono</button>
+      <div id="settings-phone-msg" style="font-size:12px;color:#16a34a;margin-top:8px;display:none;">✓ Teléfono actualizado</div>
     </div>
 
     <hr style="border:none;border-top:1px solid rgba(26,86,232,0.1);margin:24px 0;">

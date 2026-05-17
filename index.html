@@ -616,6 +616,8 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   font-family: 'DM Mono', monospace;
   margin-bottom: 6px;
 }
+.dash-circle-progress { position:relative; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+.dash-circle-pct { position:absolute; font-family:'Bebas Neue',sans-serif; font-size:13px; color:#1a56e8; letter-spacing:.04em; }
 .course-progress-bar {
   height: 4px;
   background: rgba(26,86,232,0.1);
@@ -2119,6 +2121,7 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   color: #0d1b3e;
   line-height: 1;
 }
+.admin-cupos-box { background:#f4f8ff; border:1.5px solid rgba(26,86,232,0.12); border-radius:12px; padding:16px 20px; margin-bottom:24px; }
 .admin-search {
   width: 100%;
   max-width: 420px;
@@ -2936,14 +2939,30 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
             </div>
           </div>
           <div class="course-progress-wrap">
-            <div class="course-progress-label">
-              <span>Progreso</span>
-              <span id="dash-prog-text">0 / 16</span>
-            </div>
-            <div class="course-progress-bar">
-              <div class="course-progress-fill" id="dash-prog-fill" style="width:0%"></div>
-            </div>
-          </div>
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
+    <div class="dash-circle-progress" id="dash-circle-progress">
+      <svg viewBox="0 0 36 36" width="64" height="64">
+        <circle cx="18" cy="18" r="15.9" fill="none" stroke="rgba(26,86,232,0.1)" stroke-width="2.5"/>
+        <circle id="dash-circle-fill" cx="18" cy="18" r="15.9" fill="none" stroke="#1a56e8" stroke-width="2.5"
+          stroke-dasharray="0 100" stroke-linecap="round" transform="rotate(-90 18 18)"
+          style="transition:stroke-dasharray 0.6s ease;"/>
+      </svg>
+      <span class="dash-circle-pct" id="dash-circle-pct">0%</span>
+    </div>
+    <div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:.06em;color:#7090b8;">PROGRESO</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#0d1b3e;line-height:1;" id="dash-prog-text">0 / 16</div>
+      <div style="font-size:11px;color:#7090b8;font-family:'DM Mono',monospace;">lecciones completadas</div>
+    </div>
+  </div>
+  <div class="course-progress-label">
+    <span>Avance total</span>
+    <span id="dash-prog-pct-label">0%</span>
+  </div>
+  <div class="course-progress-bar">
+    <div class="course-progress-fill" id="dash-prog-fill" style="width:0%"></div>
+  </div>
+</div>
           <button id="btn-web-dev" class="btn-course btn-course-locked" disabled>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
             Sin acceso — contacta a DGP
@@ -5649,6 +5668,7 @@ function updateCourseAccess(courses) {
 let allAdminUsers = [];
 
 function loadAdminData() {
+  loadCupos();
   if (!db) {
     document.getElementById('admin-user-list').innerHTML =
       '<div style="color:#dc2626;padding:20px 0;font-size:14px;">Firestore no disponible en modo demo.</div>';
@@ -5674,9 +5694,12 @@ function renderAdminStats() {
   const total    = allAdminUsers.length;
   const active   = allAdminUsers.filter(u => u.courses && u.courses.length > 0).length;
   const webDone  = allAdminUsers.filter(u => u.courses && u.courses.includes('web-dev')).length;
+  const paid     = allAdminUsers.filter(u => u.paid).length;
   document.getElementById('admin-stat-total').textContent     = total;
   document.getElementById('admin-stat-active').textContent    = active;
   document.getElementById('admin-stat-completed').textContent = webDone;
+  const elPaid = document.getElementById('admin-stat-paid');
+  if (elPaid) elPaid.textContent = paid;
 }
 
 function renderAdminUsers(users) {
@@ -5690,12 +5713,16 @@ function renderAdminUsers(users) {
     const initial  = (u.name || u.email || '?').charAt(0).toUpperCase();
     const date     = u.lastLogin ? new Date(u.lastLogin.seconds * 1000).toLocaleDateString('es', { day:'2-digit', month:'short', year:'numeric' }) : '—';
     const webActive = courses.includes('web-dev');
+    const paid = !!u.paid;
     return '<div class="admin-user-card" id="auc-' + u.uid + '">' +
       '<div class="admin-user-avatar">' + initial + '</div>' +
       '<div class="admin-user-info">' +
         '<div class="admin-user-name">' + (u.name || '—') + '</div>' +
         '<div class="admin-user-email">' + (u.email || '—') + '</div>' +
-        '<div style="font-size:11px;color:#aec4e0;margin-top:2px;">' + (u.phone ? '📱 ' + u.phone : 'Sin teléfono') + '</div>' +
+        '<div style="font-size:11px;color:#aec4e0;margin-top:2px;display:flex;align-items:center;gap:4px;">' +
+          '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>' +
+          (u.phone || 'Sin teléfono') +
+        '</div>' +
         '<div class="admin-user-date">Último acceso: ' + date + '</div>' +
       '</div>' +
       '<div class="admin-course-toggles">' +
@@ -5712,6 +5739,14 @@ function renderAdminUsers(users) {
         '<button class="admin-toggle" disabled title="Próximamente">' +
           '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>' +
           ' Marketing' +
+        '</button>' +
+        '<button class="admin-toggle admin-paid-toggle ' + (paid ? 'paid' : '') + '" ' +
+          'onclick="togglePaid(\'' + u.uid + '\', ' + paid + ')" ' +
+          'title="' + (paid ? 'Marcar como pendiente' : 'Marcar como pagado') + '" ' +
+          'style="' + (paid ? 'background:rgba(22,163,74,0.15);border-color:rgba(22,163,74,0.4);color:#16a34a;' : 'border-color:rgba(220,38,38,0.3);color:#dc2626;') + '">' +
+          '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">' +
+          (paid ? '<polyline points="20 6 9 17 4 12"/>' : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>') +
+          '</svg> ' + (paid ? 'Pagó' : 'Pendiente') +
         '</button>' +
       '</div>' +
     '</div>';
@@ -5922,14 +5957,21 @@ function enterCourse() {
 // ── Stats del dashboard ────────────────────────────────────────────────────────
 function updateDashStats() {
   const n = completed.length;
+  const pct = Math.round(n / 16 * 100);
   const el1 = document.getElementById('dash-completed');
   const el2 = document.getElementById('dash-remaining');
   const elT = document.getElementById('dash-prog-text');
   const elF = document.getElementById('dash-prog-fill');
+  const elC = document.getElementById('dash-circle-fill');
+  const elP = document.getElementById('dash-circle-pct');
+  const elL = document.getElementById('dash-prog-pct-label');
   if (el1) el1.textContent = n;
   if (el2) el2.textContent = 16 - n;
   if (elT) elT.textContent = n + ' / 16';
-  if (elF) elF.style.width = (n / 16 * 100) + '%';
+  if (elF) elF.style.width = pct + '%';
+  if (elC) elC.setAttribute('stroke-dasharray', pct + ' ' + (100 - pct));
+  if (elP) elP.textContent = pct + '%';
+  if (elL) elL.textContent = pct + '%';
 }
 
 // Botón "Volver al dashboard" en el curso — lo agregamos a la topbar
@@ -6193,17 +6235,39 @@ initAnimations();
         <div class="admin-stat-label">Completaron web-dev</div>
         <div class="admin-stat-num" id="admin-stat-completed">—</div>
       </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-label">PAGARON</div>
+        <div class="admin-stat-num" id="admin-stat-paid">0</div>
+      </div>
+    </div>
+
+    <!-- Cupos editor -->
+    <div class="admin-cupos-box" id="admin-cupos-box">
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:#7090b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">Cupos disponibles</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <input type="number" id="admin-cupos-input" min="0" max="999" value="20"
+          style="width:72px;padding:8px 10px;border:1.5px solid rgba(26,86,232,0.2);border-radius:8px;background:#f4f8ff;color:#0d1b3e;font-family:'Bebas Neue',sans-serif;font-size:20px;text-align:center;outline:none;">
+        <button onclick="saveCupos()" style="padding:8px 16px;background:#1a56e8;color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;font-weight:500;">Guardar</button>
+        <span id="admin-cupos-msg" style="font-size:12px;color:#16a34a;font-family:'DM Mono',monospace;"></span>
+      </div>
     </div>
 
     <!-- Search -->
     <div class="admin-section-title">Usuarios</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
     <input
       class="admin-search"
       id="admin-search"
       type="text"
       placeholder="Buscar por nombre o correo…"
       oninput="filterAdminUsers(this.value)"
+      style="margin-bottom:0;flex:1;"
     >
+    <button onclick="exportCSV()" style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:#0d1b3e;color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Exportar CSV
+    </button>
+    </div>
 
     <!-- User list -->
     <div class="admin-user-list" id="admin-user-list">

@@ -271,6 +271,10 @@ html, body { overflow-x: hidden; max-width: 100vw; }
 }
 .form-input::placeholder { color: #aec4e0; }
 .form-input.error { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.08); }
+.pw-rule { display:flex; align-items:center; gap:6px; font-size:11px; font-family:'DM Mono',monospace; color:#7090b8; transition:color .2s; }
+.pw-rule svg { flex-shrink:0; transition:stroke .2s; }
+.pw-rule.ok { color:#16a34a; }
+.pw-rule.ok svg { stroke:#16a34a; }
 .btn-auth {
   width: 100%;
   padding: 13px;
@@ -2835,7 +2839,14 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
         </div>
         <div class="form-group">
           <label class="form-label">Contraseña</label>
-          <input type="password" class="form-input" id="input-password" placeholder="••••••••" required autocomplete="current-password">
+          <input type="password" class="form-input" id="input-password" placeholder="••••••••" required autocomplete="current-password" oninput="checkPasswordStrength(this.value)">
+          <div id="password-rules" style="display:none;margin-top:8px;display:flex;flex-direction:column;gap:4px;">
+            <div class="pw-rule" id="pw-len"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg> Mínimo 8 caracteres</div>
+            <div class="pw-rule" id="pw-upper"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg> Una letra mayúscula</div>
+            <div class="pw-rule" id="pw-lower"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg> Una letra minúscula</div>
+            <div class="pw-rule" id="pw-num"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg> Un número</div>
+            <div class="pw-rule" id="pw-special"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg> Un carácter especial (!@#$%...)</div>
+          </div>
           <div class="auth-forgot" id="forgot-link"><a onclick="forgotPassword()">¿Olvidaste tu contraseña?</a></div>
         </div>
         <button type="submit" class="btn-auth" id="btn-auth">
@@ -5762,10 +5773,39 @@ function switchTab(mode) {
   document.getElementById('auth-title').textContent      = mode==='login' ? 'Bienvenido' : 'Crear cuenta';
   document.getElementById('auth-sub').textContent        = mode==='login' ? 'Ingresa con tu cuenta para acceder a tus cursos' : 'Completa tus datos para empezar';
   document.getElementById('btn-auth-text').textContent   = mode==='login' ? 'Iniciar sesión' : 'Crear mi cuenta';
+  const rules = document.getElementById('password-rules');
+  if (rules) rules.style.display = 'none';
+  const pwInput = document.getElementById('input-password');
+  if (pwInput) pwInput.value = '';
   showAuthError('');
 }
 
 // ── Manejo del form ────────────────────────────────────────────────────────────
+function checkPasswordStrength(val) {
+  const rules = document.getElementById('password-rules');
+  if (!rules) return;
+  const isRegister = authMode === 'register';
+  rules.style.display = isRegister && val.length > 0 ? 'flex' : 'none';
+  const set = (id, ok) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle('ok', ok);
+    const svgOk = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    const svgNo = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>';
+    el.querySelector('svg').outerHTML; // noop read
+    el.innerHTML = (ok ? svgOk : svgNo) + ' ' + el.textContent.trim();
+  };
+  set('pw-len',     val.length >= 8);
+  set('pw-upper',   /[A-Z]/.test(val));
+  set('pw-lower',   /[a-z]/.test(val));
+  set('pw-num',     /[0-9]/.test(val));
+  set('pw-special', /[^A-Za-z0-9]/.test(val));
+}
+
+function passwordValid(val) {
+  return val.length >= 8 && /[A-Z]/.test(val) && /[a-z]/.test(val) && /[0-9]/.test(val) && /[^A-Za-z0-9]/.test(val);
+}
+
 function handleAuth(e) {
   e.preventDefault();
   const email    = document.getElementById('input-email').value.trim();
@@ -5774,6 +5814,12 @@ function handleAuth(e) {
   const apellido = document.getElementById('input-apellido')?.value.trim() || '';
   const phone    = document.getElementById('input-phone')?.value.trim() || '';
   const fullName = authMode === 'register' ? `${name} ${apellido}`.trim() : name;
+
+  if (authMode === 'register' && !passwordValid(password)) {
+    showAuthError('La contraseña debe tener mínimo 8 caracteres, mayúscula, minúscula, número y un carácter especial.');
+    return;
+  }
+
   setAuthLoading(true);
   showAuthError('');
 

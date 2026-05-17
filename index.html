@@ -3127,11 +3127,11 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
       <div class="dash-welcome-stats">
         <div class="dash-stat">
           <span class="dash-stat-num" id="dash-completed">0</span>
-          <div class="dash-stat-label">COMPLETADAS</div>
+          <div class="dash-stat-label">LECCIONES<br><span style="font-size:9px;opacity:.7;">WEB DEV</span></div>
         </div>
         <div class="dash-stat">
-          <span class="dash-stat-num" id="dash-remaining">10</span>
-          <div class="dash-stat-label">RESTANTES</div>
+          <span class="dash-stat-num" id="dash-remaining">16</span>
+          <div class="dash-stat-label">PENDIENTES<br><span style="font-size:9px;opacity:.7;">WEB DEV</span></div>
         </div>
       </div>
     </div>
@@ -5883,11 +5883,10 @@ function updateCourseAccess(courses) {
   const btn = document.getElementById('btn-web-dev');
   if (!btn) return;
   if (courses.includes('web-dev')) {
-    btn.textContent = '';
-    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Continuar curso';
     btn.className = 'btn-course btn-course-active';
     btn.disabled = false;
     btn.onclick = function() { enterCourse(); };
+    updateDashStats();
   } else {
     btn.textContent = 'Sin acceso — contacta a DGP';
     btn.className = 'btn-course btn-course-locked';
@@ -6302,6 +6301,7 @@ function enterCourse() {
 function updateDashStats() {
   const n = completed.length;
   const pct = Math.round(n / 16 * 100);
+  const done = n >= 16;
   const el1 = document.getElementById('dash-completed');
   const el2 = document.getElementById('dash-remaining');
   const elT = document.getElementById('dash-prog-text');
@@ -6310,12 +6310,29 @@ function updateDashStats() {
   const elP = document.getElementById('dash-circle-pct');
   const elL = document.getElementById('dash-prog-pct-label');
   if (el1) el1.textContent = n;
-  if (el2) el2.textContent = 16 - n;
-  if (elT) elT.textContent = n + ' / 16';
-  if (elF) elF.style.width = pct + '%';
-  if (elC) elC.setAttribute('stroke-dasharray', pct + ' ' + (100 - pct));
-  if (elP) elP.textContent = pct + '%';
-  if (elL) elL.textContent = pct + '%';
+  if (el2) el2.textContent = Math.max(0, 16 - n);
+  if (elT) elT.textContent = done ? '¡Completado!' : n + ' / 16';
+  if (elF) { elF.style.width = pct + '%'; elF.style.background = done ? '#16a34a' : ''; }
+  if (elC) { elC.setAttribute('stroke-dasharray', pct + ' ' + (100 - pct)); elC.setAttribute('stroke', done ? '#16a34a' : '#1a56e8'); }
+  if (elP) { elP.textContent = pct + '%'; elP.style.color = done ? '#16a34a' : ''; }
+  if (elL) elL.textContent = done ? '¡Completado!' : pct + '%';
+  // Update course button state
+  updateCourseBtn(done);
+}
+
+function updateCourseBtn(done) {
+  const btn = document.getElementById('btn-web-dev');
+  if (!btn || btn.disabled) return;
+  if (done) {
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Curso completado — Ver certificado';
+    btn.style.background = '#16a34a';
+    btn.style.borderColor = '#16a34a';
+    btn.onclick = function() { enterCourse(); setTimeout(() => { goTo('l16'); showCertificate(); }, 300); };
+  } else {
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Continuar curso';
+    btn.style.background = '';
+    btn.style.borderColor = '';
+  }
 }
 
 // Botón "Volver al dashboard" en el curso — lo agregamos a la topbar

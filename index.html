@@ -2343,7 +2343,7 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
     // EmailJS: reemplaza con tu Public Key desde emailjs.com → Account → API Keys
-    (function(){ if(window.emailjs) emailjs.init({ publicKey: 'TU_PUBLIC_KEY_EMAILJS' }); })();
+    (function(){ if(window.emailjs) emailjs.init({ publicKey: 'dM6Ej0oNNiVVj-4tB' }); })();
   </script>
 </head>
 <body>
@@ -5986,7 +5986,7 @@ function handleAuth(e) {
           // Email de bienvenida al nuevo estudiante via EmailJS
           // Requiere: crear cuenta en emailjs.com, configurar template y reemplazar IDs abajo
           if (window.emailjs && typeof emailjs.send === 'function') {
-            emailjs.send('TU_SERVICE_ID', 'TU_TEMPLATE_ID', {
+            emailjs.send('service_o1k4wpe', 'template_3sbztj9', {
               to_name:  fullName,
               to_email: user.email,
               reply_to: 'hola@dgpglobalgroup.com'

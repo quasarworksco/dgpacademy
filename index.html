@@ -1585,8 +1585,10 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   }
   .sidebar.open { left: 0; box-shadow: 4px 0 24px rgba(0,0,0,0.2); }
   .main { margin-left: 0; width: 100%; min-width: 0; }
-  .topbar { padding: 10px 14px; gap: 8px; }
-  .topbar-breadcrumb { font-size: 11px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 55vw; }
+  .topbar { padding: 10px 14px; gap: 8px; flex-wrap: nowrap; }
+  .topbar-breadcrumb { font-size: 11px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 44vw; flex-shrink: 1; min-width: 0; }
+  .topbar-actions { flex-shrink: 0; gap: 8px; }
+  .topbar-actions .btn { padding: 8px 12px; font-size: 12px; white-space: nowrap; }
   .lesson { padding: 20px 14px 72px; max-width: 100%; }
   .hero-lesson { padding: 28px 14px 48px; max-width: 100%; }
   .hero-lesson h1 { font-size: clamp(22px, 7vw, 36px); }
@@ -1630,10 +1632,11 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   .dash-welcome { flex-direction: column; gap: 16px; padding: 24px 16px; }
   .courses-grid { grid-template-columns: 1fr; }
   .course-card { min-width: 0; }
-  .dash-nav { padding: 0 12px; gap: 8px; }
-  .dash-nav-brand { font-size: 15px; }
+  .dash-nav { padding: 0 14px; height: 58px; }
+  .dash-nav-brand { font-size: 18px; }
+  .dash-nav-right { gap: 10px; }
   .dash-user-name, .dash-user-email { display: none; }
-  .btn-signout { padding: 8px 10px; }
+  .btn-signout { padding: 8px 12px; }
   .btn-signout-label { display: none; }
   .admin-screen { padding: 0; }
   .admin-topbar { padding: 12px 16px; }
@@ -1642,8 +1645,15 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
 }
 
 @media (max-width: 480px) {
-  .topbar { padding: 8px 10px; min-height: 48px; }
-  .topbar-breadcrumb { max-width: 42vw; font-size: 10px; }
+  .topbar { padding: 8px 10px; min-height: 52px; gap: 6px; }
+  .topbar-breadcrumb { max-width: 38vw; font-size: 10px; }
+  /* Course action buttons — compact icon+short text on mobile */
+  .topbar-actions { gap: 6px; }
+  .topbar-actions .btn { padding: 8px 10px; font-size: 11px; border-radius: 8px; }
+  .topbar-actions .btn-ghost .btn-label-full { display: none; }
+  .topbar-actions .btn-ghost .btn-label-short { display: inline; }
+  .topbar-actions .btn-primary .btn-label-full { display: none; }
+  .topbar-actions .btn-primary .btn-label-short { display: inline; }
   .lesson { padding: 16px 12px 72px; }
   .hero-lesson { padding: 20px 12px 40px; }
   .tools-grid { grid-template-columns: 1fr; }
@@ -1661,9 +1671,17 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   .btn { font-size: 13px; padding: 10px 16px; }
   .callout { flex-direction: column; gap: 6px; }
   .callout-icon { font-size: 16px; }
-  /* Chips and badges */
   .lesson-tag { font-size: 9px; }
   .lesson h1 { margin-top: 8px; }
+  /* Dashboard nav — only icons on tiny screens */
+  .dash-nav { padding: 0 12px; height: 56px; }
+  .dash-nav-brand { font-size: 17px; letter-spacing: .04em; }
+  .dash-nav-right { gap: 8px; }
+  .dash-user-info { display: none; }
+  .btn-signout { padding: 7px 8px; border-radius: 8px; }
+  .btn-signout-label { display: none; }
+  .btn-admin { padding: 7px 8px; font-size: 11px; gap: 4px; }
+  .btn-admin span.admin-label { display: none; }
 }
 
 #course-screen { overflow-x: hidden; }
@@ -3193,7 +3211,7 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
       <!-- Admin button: only shown if current user is ADMIN_UID -->
       <button id="btn-admin-panel" class="btn-admin" style="display:none" onclick="showAdmin()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        Admin
+        <span class="admin-label">Admin</span>
       </button>
       <button class="btn-settings" onclick="showSettings()" title="Configuración">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
@@ -3513,8 +3531,14 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
       <div class="topbar-breadcrumb" id="breadcrumb">Inicio → <span>Bienvenida</span></div>
     </div>
     <div class="topbar-actions">
-      <button class="btn btn-ghost" onclick="markDone()">✓ Marcar completado</button>
-      <button class="btn btn-primary" onclick="nextLesson()">Siguiente →</button>
+      <button class="btn btn-ghost" onclick="markDone()">
+        <span class="btn-label-full">✓ Marcar completado</span>
+        <span class="btn-label-short" style="display:none;">✓ Listo</span>
+      </button>
+      <button class="btn btn-primary" onclick="nextLesson()">
+        <span class="btn-label-full">Siguiente →</span>
+        <span class="btn-label-short" style="display:none;">Sig. →</span>
+      </button>
     </div>
   </div>
 

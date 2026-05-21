@@ -5964,7 +5964,9 @@ function showBook(bookId) {
   document.getElementById('admin-screen').style.display = 'none';
   const bs = document.getElementById('book-screen');
   bs.style.display = 'block';
-  goToChapter('ch-intro');
+  // Resume from last saved chapter (Firestore)
+  const startChapter = window._bookLastChapter || 'ch-intro';
+  goToChapter(startChapter);
 }
 
 function closeBook() {
@@ -5999,6 +6001,13 @@ function goToChapter(id) {
     if (lbl) lbl.textContent = labels[id] || id;
   }
   currentChapter = id;
+  // Save chapter position to Firestore per user
+  window._bookLastChapter = id;
+  if (db && auth && auth.currentUser) {
+    db.collection('users').doc(auth.currentUser.uid).update({
+      'bookProgress.7st': id
+    }).catch(() => {});
+  }
   document.getElementById('book-nav').classList.remove('open');
 }
 
@@ -6049,6 +6058,28 @@ if (firebaseReady) {
           updateCourseAccess(courses);
           const books = docData.books || [];
           updateBookAccess(books);
+          // ── Load course progress from Firestore (not localStorage) ──
+          const savedLessons = (docData.completedLessons && docData.completedLessons['web-dev']) || null;
+          if (savedLessons && savedLessons.length > 0) {
+            completed = savedLessons;
+          } else {
+            // Fallback: reconstruct from count if completedLessons not stored yet
+            const count = (docData.progress && docData.progress['web-dev']) || 0;
+            if (count > 0) {
+              completed = lessons.filter(l => l !== 'home').slice(0, count);
+            } else {
+              completed = [];
+            }
+          }
+          // Ensure completedCourses flag is reflected
+          if (docData.completedCourses && docData.completedCourses.includes('web-dev') && !completed.includes('l16')) {
+            completed.push('l16');
+          }
+          // ── Load book chapter position ──
+          window._bookLastChapter = (docData.bookProgress && docData.bookProgress['7st']) || 'ch-intro';
+          // Sync to localStorage as cache
+          localStorage.setItem('curso_done_' + user.uid, JSON.stringify(completed));
+          updateDashStats();
         })
         .catch(() => { updateCourseAccess([]); updateBookAccess([]); });
       }
@@ -6585,13 +6616,15 @@ document.addEventListener('DOMContentLoaded', () => {
 const lessons = ['home','l1','l2','l3','l4','l5','l6','l7','l8','l9','l10','l11','l12','l13','l14','l15','l16'];
 const TOTAL = 16;
 let current = 'home';
-let completed = JSON.parse(localStorage.getItem('curso_done') || '[]');
+let completed = [];
 
 function save() {
-  localStorage.setItem('curso_done', JSON.stringify(completed));
-  if (db && auth && auth.currentUser) {
-    db.collection('users').doc(auth.currentUser.uid).update({
-      'progress.web-dev': completed.length,
+  const uid = auth && auth.currentUser ? auth.currentUser.uid : null;
+  if (uid) localStorage.setItem('curso_done_' + uid, JSON.stringify(completed));
+  if (db && uid) {
+    db.collection('users').doc(uid).update({
+      'progress.web-dev': completed.filter(l => l !== 'home').length,
+      'completedLessons.web-dev': completed,
       lastActivity: firebase.firestore.FieldValue.serverTimestamp()
     }).catch(() => {});
   }
@@ -6795,6 +6828,12 @@ function resetProgress() {
   if (!confirm('¿Reiniciar todo el progreso? Esto borrará las lecciones completadas.')) return;
   completed = [];
   save();
+  if (db && auth && auth.currentUser) {
+    db.collection('users').doc(auth.currentUser.uid).update({
+      'completedCourses': firebase.firestore.FieldValue.arrayRemove('web-dev'),
+      'completedLessons.web-dev': []
+    }).catch(() => {});
+  }
   updateProgress();
   const btn = document.querySelector('.reset-btn');
   btn.textContent = '✓ Reiniciado';

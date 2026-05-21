@@ -7077,5 +7077,327 @@ initAnimations();
   </div>
 </div>
 
+<!-- ══════════════════ PANTALLA: LIBRO ══════════════════ -->
+<div id="book-screen" style="display:none;">
+  <div style="display:flex; height:100vh; overflow:hidden;">
+
+    <!-- Book sidebar/TOC -->
+    <nav class="book-nav" id="book-nav">
+      <div class="book-nav-header">
+        <button onclick="closeBook()" class="book-back-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          Dashboard
+        </button>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#0d1b3e;letter-spacing:.06em;margin-top:16px;">7ST</div>
+        <div style="font-size:11px;color:#7090b8;font-family:'DM Mono',monospace;margin-top:2px;">10 capítulos</div>
+      </div>
+      <div class="book-toc">
+        <div class="book-toc-item active" onclick="goToChapter('ch-intro')" data-ch="ch-intro">Introducción</div>
+        <div class="book-toc-item" onclick="goToChapter('ch-1')" data-ch="ch-1">1. El Entorno Digital</div>
+        <div class="book-toc-item" onclick="goToChapter('ch-2')" data-ch="ch-2">2. Por Qué Necesitas un Sitio Web</div>
+        <div class="book-toc-item" onclick="goToChapter('ch-3')" data-ch="ch-3">3. Identidad de Marca</div>
+        <div class="book-toc-item" onclick="goToChapter('ch-4')" data-ch="ch-4">4. Creación de Contenido</div>
+        <div class="book-toc-item" onclick="goToChapter('ch-5')" data-ch="ch-5">5. Comunidad e Influencers</div>
+        <div class="book-toc-item" onclick="goToChapter('ch-6')" data-ch="ch-6">6. Análisis y Optimización</div>
+        <div class="book-toc-item" onclick="goToChapter('ch-7')" data-ch="ch-7">7. Aspectos Legales y Éticos</div>
+        <div class="book-toc-item" onclick="goToChapter('ch-8')" data-ch="ch-8">8. Casos de Éxito</div>
+        <div class="book-toc-item" onclick="goToChapter('ch-9')" data-ch="ch-9">9. Mentalidad y Finanzas</div>
+        <div class="book-toc-item" onclick="goToChapter('ch-10')" data-ch="ch-10">10. Recursos y Herramientas</div>
+        <div class="book-toc-item" onclick="goToChapter('ch-conclusion')" data-ch="ch-conclusion">Conclusión</div>
+      </div>
+    </nav>
+
+    <!-- Book content -->
+    <main class="book-main" id="book-main">
+      <div class="book-topbar">
+        <button class="book-menu-btn" onclick="toggleBookNav()" id="book-menu-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="book-topbar-title" id="book-chapter-label">Introducción</span>
+      </div>
+
+      <div class="book-content" id="book-content">
+
+        <!-- INTRO -->
+        <section class="book-chapter active" id="ch-intro">
+          <div class="book-ch-eyebrow">DGP GLOBAL GROUP PRESENTA</div>
+          <h1 class="book-ch-title">7ST: Guía Definitiva para Emprender en las Redes Sociales</h1>
+          <p class="book-lead">Vivimos en la era más emocionante de la historia del emprendimiento. Nunca antes en la historia de la humanidad una persona con una idea, una conexión a Internet y determinación pudo llegar a millones de personas sin necesidad de una gran inversión, sin oficinas físicas y sin intermediarios.</p>
+          <p>Las redes sociales han democratizado el acceso al mercado. Hoy, un emprendedor desde su habitación en Miami, Caracas, Madrid o Bogotá puede construir una marca global, generar ingresos reales y cambiar su vida. Pero también es verdad que la mayoría fracasa. ¿Por qué? Porque lanzarse sin estrategia es como subir a un avión sin saber a qué ciudad vas.</p>
+          <p>Y más allá de la estrategia técnica, está el factor humano: el miedo al fracaso, el síndrome del impostor, y la duda de si <em>"esto es realmente para mí"</em>. Todo emprendedor exitoso ha sentido ese vértigo al publicar su primer post o lanzar su primer producto. Esa sensación no significa que vas por mal camino, significa que estás saliendo de tu zona de confort.</p>
+          <p>Esta guía existe para que no te pierdas en ese viaje.</p>
+          <div class="book-callout book-callout-blue">
+            <div class="book-callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg></div>
+            <div><strong>Consejo de DGP Global Group</strong><p>El conocimiento sin acción no vale nada. Por cada capítulo que leas, comprométete a implementar al menos UNA cosa. El progreso constante siempre supera a la perfección paralizante.</p></div>
+          </div>
+          <div class="book-ch-nav"><button class="btn btn-primary" onclick="goToChapter('ch-1')">Capítulo 1 →</button></div>
+        </section>
+
+        <!-- CAP 1 -->
+        <section class="book-chapter" id="ch-1">
+          <div class="book-ch-num">CAPÍTULO 1</div>
+          <h1 class="book-ch-title">El Entorno Digital y las Redes Sociales</h1>
+          <p class="book-lead">Para ganar en cualquier juego, primero necesitas entender las reglas. El mundo digital tiene sus propias leyes, sus propios algoritmos y su propia cultura. Los emprendedores que los ignoran desperdician tiempo y dinero. Los que los comprenden, escalan más rápido.</p>
+          <h2>¿Qué son las redes sociales y por qué importan tanto?</h2>
+          <p>Las redes sociales son plataformas digitales que permiten a las personas crear contenido, compartirlo y conectarse con otras personas e instituciones en tiempo real. En términos de negocio, son el canal de marketing más poderoso que ha existido jamás.</p>
+          <div class="book-stats-row">
+            <div class="book-stat-card"><div class="book-stat-num">5,000M+</div><div class="book-stat-lbl">personas usan redes sociales</div></div>
+            <div class="book-stat-card"><div class="book-stat-num">2–3h</div><div class="book-stat-lbl">promedio diario en redes</div></div>
+            <div class="book-stat-card"><div class="book-stat-num">76%</div><div class="book-stat-lbl">han comprado algo visto en redes</div></div>
+            <div class="book-stat-card"><div class="book-stat-num">3x</div><div class="book-stat-lbl">más ingresos con presencia activa</div></div>
+          </div>
+          <h2>Las principales plataformas</h2>
+          <div class="book-platform-grid">
+            <div class="book-platform"><div class="book-platform-name">Instagram</div><div class="book-platform-desc">Plataforma visual. Ideal para marcas con estética clara, productos físicos, moda. Formato estrella: Reels. Audiencia: 18–44 años.</div></div>
+            <div class="book-platform"><div class="book-platform-name">TikTok</div><div class="book-platform-desc">Rey del contenido corto y viral. Algoritmo democrático. Videos de 15–60 seg. Audiencia: 16–34 años.</div></div>
+            <div class="book-platform"><div class="book-platform-name">Facebook</div><div class="book-platform-desc">Mayor base de usuarios. Insustituible para publicidad pagada y negocios locales. Audiencia: 30–65 años.</div></div>
+            <div class="book-platform"><div class="book-platform-name">LinkedIn</div><div class="book-platform-desc">Red profesional. Ideal para B2B y servicios profesionales. Audiencia: 25–55 años.</div></div>
+            <div class="book-platform"><div class="book-platform-name">YouTube</div><div class="book-platform-desc">2.º motor de búsqueda del mundo. Contenido de larga vida útil. Ideal para autoridad a largo plazo.</div></div>
+          </div>
+          <div class="book-callout book-callout-orange">
+            <div class="book-callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div><strong>Regla de DGP</strong><p>Primero domina UNA plataforma. Construye tu sistema, entiende su algoritmo y genera tus primeros resultados. Solo cuando tengas un flujo automatizado, expándete a la segunda.</p></div>
+          </div>
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter('ch-intro')">← Intro</button><button class="btn btn-primary" onclick="goToChapter('ch-2')">Cap. 2 →</button></div>
+        </section>
+
+        <!-- CAP 2 -->
+        <section class="book-chapter" id="ch-2">
+          <div class="book-ch-num">CAPÍTULO 2</div>
+          <h1 class="book-ch-title">Por Qué Necesitas un Sitio Web</h1>
+          <p class="book-lead">Muchos emprendedores cometen el error de construir toda su presencia digital sobre tierra ajena. Las redes sociales son plataformas de terceros: pueden cambiar sus algoritmos, cerrar cuentas, aumentar precios o simplemente desaparecer. Tu sitio web, en cambio, es tuyo.</p>
+          <blockquote class="book-quote">Si las redes sociales son tu escaparate, tu sitio web es tu tienda. Y nadie construye una tienda en terreno ajeno.</blockquote>
+          <h2>7 razones por las que necesitas un sitio web</h2>
+          <div class="book-list-cards">
+            <div class="book-list-card"><span class="book-list-num">1</span><div><strong>Credibilidad profesional</strong><p>Un sitio web dice: "Soy un negocio real, serio y aquí para quedarse". Reduce la fricción de desconfianza.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">2</span><div><strong>Propiedad digital</strong><p>Instagram puede cerrar tu cuenta mañana. Tu sitio web no. Eres el dueño absoluto de tus datos.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">3</span><div><strong>SEO — Clientes orgánicos</strong><p>Aparecer en Google es como tener una máquina que genera prospectos gratuitos mientras duermes.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">4</span><div><strong>Captura de leads y lista de correo</strong><p>Una base de datos propia vale oro. No dependes de pagar anuncios para hablar con clientes interesados.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">5</span><div><strong>Tienda online permanente</strong><p>Un e-commerce acepta pagos y cierra ventas a las 3 de la mañana sin que tengas que intervenir.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">6</span><div><strong>Análisis y datos propios</strong><p>Saber qué hacen los usuarios te permite tomar decisiones basadas en números, no en emociones.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">7</span><div><strong>Destino para publicidad</strong><p>Las campañas que llevan a landing pages profesionales convierten hasta 5 veces más.</p></div></div>
+          </div>
+          <div class="book-callout book-callout-blue">
+            <div class="book-callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg></div>
+            <div><strong>Dato clave</strong><p>El 75% de los consumidores juzga la credibilidad de una empresa basándose en el diseño de su sitio web.</p></div>
+          </div>
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter('ch-1')">← Cap. 1</button><button class="btn btn-primary" onclick="goToChapter('ch-3')">Cap. 3 →</button></div>
+        </section>
+
+        <!-- CAP 3 -->
+        <section class="book-chapter" id="ch-3">
+          <div class="book-ch-num">CAPÍTULO 3</div>
+          <h1 class="book-ch-title">Construye tu Identidad de Marca</h1>
+          <p class="book-lead">En el mercado digital existe una regla brutal: si no eres memorable, eres invisible. Y si eres invisible, no vendes.</p>
+          <blockquote class="book-quote">Una marca no es solo un logo o unos colores bonitos. Es lo que dices cuando no estás en la sala.</blockquote>
+          <h2>Los fundamentos de una identidad sólida</h2>
+          <div class="book-list-cards">
+            <div class="book-list-card"><span class="book-list-num">1</span><div><strong>Tu Propósito: el Por Qué</strong><p>¿Por qué existes? Las marcas que conectan emocionalmente siempre tienen un propósito claro más allá de facturar.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">2</span><div><strong>Tu Promesa de Marca</strong><p>¿Qué le prometes a tu cliente? Específica, medible y cumplible. La confianza es tu activo más rentable.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">3</span><div><strong>Tu Público Objetivo</strong><p>No puedes hablarle a todo el mundo. Cuanto más específico seas, más resonará tu mensaje.</p></div></div>
+          </div>
+          <h2>Identidad Visual</h2>
+          <div class="book-platform-grid">
+            <div class="book-platform"><div class="book-platform-name">Nombre</div><div class="book-platform-desc">Memorable, fácil de pronunciar y disponible como dominio.</div></div>
+            <div class="book-platform"><div class="book-platform-name">Logo</div><div class="book-platform-desc">Simple, profesional, versátil. Los mejores logos (Nike, Apple) son extremadamente simples.</div></div>
+            <div class="book-platform"><div class="book-platform-name">Colores</div><div class="book-platform-desc">Azul = confianza. Rojo = energía. Verde = crecimiento. Negro = lujo. Elige 2–3 colores consistentes.</div></div>
+            <div class="book-platform"><div class="book-platform-name">Tipografía</div><div class="book-platform-desc">Serif para tradición, Sans-serif para modernidad. La consistencia crea reconocimiento.</div></div>
+          </div>
+          <div class="book-callout book-callout-blue">
+            <div class="book-callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg></div>
+            <div><strong>Ejercicio práctico</strong><p>Dale un nombre a tu cliente ideal. Ejemplo: "María, 32 años, emprendedora en Miami, mamá de dos hijos, quiere escalar su negocio online pero siente que no tiene tiempo."</p></div>
+          </div>
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter('ch-2')">← Cap. 2</button><button class="btn btn-primary" onclick="goToChapter('ch-4')">Cap. 4 →</button></div>
+        </section>
+
+        <!-- CAP 4 -->
+        <section class="book-chapter" id="ch-4">
+          <div class="book-ch-num">CAPÍTULO 4</div>
+          <h1 class="book-ch-title">Creación de Contenido Atractivo</h1>
+          <p class="book-lead">El contenido es la forma en que tu marca habla con el mundo. Es tu vendedor que trabaja 24/7. Sin contenido consistente y de calidad, ninguna estrategia funciona.</p>
+          <h2>Tipos de contenido que funcionan</h2>
+          <div class="book-list-cards">
+            <div class="book-list-card"><span class="book-list-num" style="background:#1a56e8;">E</span><div><strong>Educativo</strong><p>Genera guardados y compartidos. Aporta valor concreto que tu audiencia pueda usar hoy.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num" style="background:#f97316;">D</span><div><strong>Entretenimiento</strong><p>Genera alcance orgánico masivo. El formato más efectivo para llegar a nuevas personas.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num" style="background:#16a34a;">I</span><div><strong>Inspiración</strong><p>Historias de transformación y resiliencia. Conecta a nivel emocional y construye lealtad.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num" style="background:#7c3aed;">C</span><div><strong>Conversión</strong><p>Donde ofreces tus servicios. No más del 20% de tu contenido. Vende desde el servicio.</p></div></div>
+          </div>
+          <h2>La regla del 80/20</h2>
+          <div class="book-stats-row">
+            <div class="book-stat-card" style="flex:2"><div class="book-stat-num" style="color:#1a56e8;">80%</div><div class="book-stat-lbl">Aportar valor sin pedir nada</div></div>
+            <div class="book-stat-card"><div class="book-stat-num" style="color:#f97316;">20%</div><div class="book-stat-lbl">Vender o pedir acción</div></div>
+          </div>
+          <div class="book-callout book-callout-blue">
+            <div class="book-callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg></div>
+            <div><strong>Herramienta clave</strong><p>Usa Meta Business Suite (gratis) para programar tu contenido. El "batching" te permite agrupar tareas en bloques de tiempo y ser más productivo.</p></div>
+          </div>
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter('ch-3')">← Cap. 3</button><button class="btn btn-primary" onclick="goToChapter('ch-5')">Cap. 5 →</button></div>
+        </section>
+
+        <!-- CAP 5 -->
+        <section class="book-chapter" id="ch-5">
+          <div class="book-ch-num">CAPÍTULO 5</div>
+          <h1 class="book-ch-title">Comunidad, Interacción e Influencers</h1>
+          <p class="book-lead">Las marcas que entienden que las redes no son un megáfono unidireccional, sino un teléfono de dos vías, son las que triunfan.</p>
+          <h2>Cómo construir una comunidad leal</h2>
+          <div class="book-list-cards">
+            <div class="book-list-card"><span class="book-list-num">1</span><div><strong>Responde todos los comentarios</strong><p>En las primeras etapas, esto es oro. Demuestra que hay un ser humano al otro lado.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">2</span><div><strong>Haz preguntas</strong><p>Termina tus posts con un llamado a la conversación, no solo a la compra.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">3</span><div><strong>Contenido generado por el usuario</strong><p>Invita a tus clientes a mostrar cómo usan tu producto. La autenticidad vende más que una producción de estudio.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">4</span><div><strong>Usa las Stories para conectar</strong><p>Es el formato más íntimo. Muestra los errores, el detrás de escena. Eso humaniza.</p></div></div>
+          </div>
+          <h2>Tipos de Influencers: ¿en cuál invertir?</h2>
+          <div class="book-platform-grid">
+            <div class="book-platform"><div class="book-platform-name">Mega (+1M)</div><div class="book-platform-desc">Costosos, engagement bajo. Para grandes marcas con presupuesto.</div></div>
+            <div class="book-platform"><div class="book-platform-name">Macro (100k–1M)</div><div class="book-platform-desc">Reconocimiento de marca. Costo medio-alto.</div></div>
+            <div class="book-platform" style="border-color:rgba(26,86,232,0.4);background:rgba(26,86,232,0.04);"><div class="book-platform-name" style="color:#1a56e8;">Micro/Nano (1k–100k) ★</div><div class="book-platform-desc">La mejor inversión (ROI) para el emprendedor. Comunidades leales y específicas.</div></div>
+          </div>
+          <div class="book-callout book-callout-red">
+            <div class="book-callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div><strong>Regla financiera de oro</strong><p>NUNCA inviertas en publicidad pagada si no tienes validado tu producto de forma orgánica. Valida primero gratis, escala pagando.</p></div>
+          </div>
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter('ch-4')">← Cap. 4</button><button class="btn btn-primary" onclick="goToChapter('ch-6')">Cap. 6 →</button></div>
+        </section>
+
+        <!-- CAP 6 -->
+        <section class="book-chapter" id="ch-6">
+          <div class="book-ch-num">CAPÍTULO 6</div>
+          <h1 class="book-ch-title">Herramientas de Análisis y Optimización</h1>
+          <p class="book-lead">Los datos son el superpoder del emprendedor digital. El emprendedor moderno no adivina: mide, analiza y optimiza.</p>
+          <h2>Métricas de vanidad vs. métricas reales</h2>
+          <div class="book-stats-row">
+            <div class="book-stat-card" style="border-color:rgba(220,38,38,0.2);"><div class="book-stat-num" style="color:#dc2626;font-size:14px;">⚠ Vanidad</div><div class="book-stat-lbl">Seguidores · Likes</div></div>
+            <div class="book-stat-card" style="border-color:rgba(22,163,74,0.2);"><div class="book-stat-num" style="color:#16a34a;font-size:14px;">✓ Reales</div><div class="book-stat-lbl">Engagement · CAC · ROI · Conversión</div></div>
+          </div>
+          <h2>Las métricas que importan</h2>
+          <div class="book-list-cards">
+            <div class="book-list-card"><span class="book-list-num">%</span><div><strong>Tasa de engagement</strong><p>(Interacciones / Seguidores) × 100. Un 3–6% es saludable.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">$</span><div><strong>CAC — Costo de Adquisición</strong><p>Si tu producto deja $50 de ganancia y te cuesta $60 conseguir el cliente, estás perdiendo dinero sin importar los likes.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">↩</span><div><strong>ROI</strong><p>Por cada dólar invertido, cuánto regresa. La métrica más honesta del negocio.</p></div></div>
+          </div>
+          <div class="book-callout book-callout-blue">
+            <div class="book-callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg></div>
+            <div><strong>Consejo avanzado</strong><p>Crea un Google Sheet simple y anota tus números clave cada semana. El simple acto de registrarlos manualmente te hace más consciente de la salud de tu negocio.</p></div>
+          </div>
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter('ch-5')">← Cap. 5</button><button class="btn btn-primary" onclick="goToChapter('ch-7')">Cap. 7 →</button></div>
+        </section>
+
+        <!-- CAP 7 -->
+        <section class="book-chapter" id="ch-7">
+          <div class="book-ch-num">CAPÍTULO 7</div>
+          <h1 class="book-ch-title">Aspectos Legales y Éticos</h1>
+          <p class="book-lead">El mundo digital puede parecer un espacio libre de reglas, pero no lo es. La ética es lo que sostiene un negocio a largo plazo.</p>
+          <blockquote class="book-quote">"Sé impecable con tus palabras." — Don Miguel Ruiz, Los 4 Acuerdos. Marketing honesto: no prometas lo que no puedes cumplir.</blockquote>
+          <h2>Regulaciones que debes conocer</h2>
+          <div class="book-list-cards">
+            <div class="book-list-card"><span class="book-list-num">🔒</span><div><strong>Protección de Datos (GDPR/CCPA)</strong><p>Si recopilas emails, necesitas una Política de Privacidad visible en tu web. Trata los datos con respeto.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">©</span><div><strong>Derechos de Autor</strong><p>No uses música, imágenes o videos de terceros sin licencia. Usa bancos gratuitos: Unsplash, Pexels, Epidemic Sound.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">#</span><div><strong>Publicidad Honesta (FTC)</strong><p>Declara siempre cuando un contenido es pagado (#publicidad, #ad). La transparencia genera confianza.</p></div></div>
+          </div>
+          <h2>Protocolo de manejo de crisis</h2>
+          <div class="book-list-cards">
+            <div class="book-list-card"><span class="book-list-num">1</span><div><strong>Respira</strong><p>No respondas de forma impulsiva. Deja pasar 15 minutos.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">2</span><div><strong>Evalúa</strong><p>¿Es crítica constructiva u odio destructivo? Si es constructiva, atiende. Si es hate, ignora.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">3</span><div><strong>Responde rápido y con empatía</strong><p>Reconoce el problema públicamente, luego lleva la conversación a privado.</p></div></div>
+          </div>
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter('ch-6')">← Cap. 6</button><button class="btn btn-primary" onclick="goToChapter('ch-8')">Cap. 8 →</button></div>
+        </section>
+
+        <!-- CAP 8 -->
+        <section class="book-chapter" id="ch-8">
+          <div class="book-ch-num">CAPÍTULO 8</div>
+          <h1 class="book-ch-title">Casos de Éxito y Lecciones Aprendidas</h1>
+          <p class="book-lead">No hay mejor maestro que la experiencia, pero no tienes que cometer todos los errores tú mismo.</p>
+          <h2>Patrones de los emprendedores exitosos</h2>
+          <div class="book-list-cards">
+            <div class="book-list-card"><span class="book-list-num">1</span><div><strong>Empezaron antes de estar listos</strong><p>El perfeccionismo es el enemigo de la rentabilidad. Lanza con lo que tienes, aprende del mercado y mejora en movimiento.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">2</span><div><strong>Fueron consistentes cuando nadie miraba</strong><p>Publicaron su post número 50 aunque el 49 haya tenido solo 3 likes. Tolerancia a la frustración.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">3</span><div><strong>Invirtieron en sí mismos</strong><p>Pagaron cursos, consultorías y delegaron tareas técnicas a expertos para enfocarse en su zona de genialidad.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">4</span><div><strong>Construyeron relaciones</strong><p>No vieron a sus seguidores como "números de tarjetas de crédito", sino como personas.</p></div></div>
+          </div>
+          <h2>Las lecciones más valiosas del fracaso</h2>
+          <div class="book-callout book-callout-orange">
+            <div class="book-callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg></div>
+            <div>
+              <p><em>"Intenté llegar a todo el mundo y no llegué a nadie."</em> — Falta de nicho</p>
+              <p><em>"Publiqué sin estrategia durante meses y me quemé."</em> — Falta de planificación</p>
+              <p><em>"Construí mi negocio solo en Instagram y me hackearon la cuenta."</em> — Sin sitio web propio</p>
+            </div>
+          </div>
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter('ch-7')">← Cap. 7</button><button class="btn btn-primary" onclick="goToChapter('ch-9')">Cap. 9 →</button></div>
+        </section>
+
+        <!-- CAP 9 -->
+        <section class="book-chapter" id="ch-9">
+          <div class="book-ch-num">CAPÍTULO 9</div>
+          <h1 class="book-ch-title">Mentalidad y Finanzas del Emprendedor Digital</h1>
+          <p class="book-lead">Puedes tener la mejor estrategia de Instagram del mundo, pero si tu mentalidad es frágil y tus finanzas un desastre, el negocio colapsará.</p>
+          <blockquote class="book-quote">Estás pasando de la mentalidad de empleado a la mentalidad de creador: de cambiar tiempo por dinero seguro, a asumir riesgo temporal para construir un activo a largo plazo.</blockquote>
+          <h2>El salto de mentalidad</h2>
+          <div class="book-callout book-callout-blue">
+            <div class="book-callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg></div>
+            <div><strong>Cambio de Paradigma</strong><p>No pienses "Voy a venderles". Piensa "Tengo una solución que va a ayudar a estas personas a vivir mejor. Si no se las ofrezco, les estoy haciendo un daño". Vender desde el servicio cambia todo.</p></div>
+          </div>
+          <h2>Principios financieros no negociables</h2>
+          <div class="book-list-cards">
+            <div class="book-list-card"><span class="book-list-num">$</span><div><strong>Separa tus finanzas desde el día 1</strong><p>Nunca mezcles el dinero personal con el del negocio. Abre una cuenta separada exclusiva para tu emprendimiento.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">↑</span><div><strong>Gasto vs. Inversión</strong><p>Evalúa todo con: "¿Esto me generará más ingresos a mediano plazo o me ahorrará tiempo para vender más?"</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">%</span><div><strong>Págate a ti mismo con inteligencia</strong><p>30% reinvertir en el negocio · % para tu sueldo · % para impuestos y contingencias.</p></div></div>
+          </div>
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter('ch-8')">← Cap. 8</button><button class="btn btn-primary" onclick="goToChapter('ch-10')">Cap. 10 →</button></div>
+        </section>
+
+        <!-- CAP 10 -->
+        <section class="book-chapter" id="ch-10">
+          <div class="book-ch-num">CAPÍTULO 10</div>
+          <h1 class="book-ch-title">Recursos, Herramientas y Lecturas Recomendadas</h1>
+          <p class="book-lead">No necesitas reinventar la rueda. Existen herramientas y sabidurías que pueden multiplicar tu productividad y afilar tu mente.</p>
+          <h2>Biblioteca del Emprendedor</h2>
+          <div class="book-list-cards">
+            <div class="book-list-card"><span class="book-list-num">1</span><div><strong>Cómo ganar amigos e influir sobre las personas</strong><p>Dale Carnegie. El manual definitivo sobre empatía, servicio y ventas. Te enseñará a crear comunidades genuinas.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">2</span><div><strong>El monje que vendió su Ferrari</strong><p>Robin Sharma. Cuida tu mente, cuerpo y propósito mientras persigues el éxito financiero.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">3</span><div><strong>¿Quién se ha llevado mi queso?</strong><p>Spencer Johnson. Los algoritmos cambiarán. Aprende a adaptarte rápidamente al cambio.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">4</span><div><strong>Los 4 acuerdos</strong><p>Don Miguel Ruiz. Esencial para la salud mental del creador. "No te tomes nada personalmente."</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">5</span><div><strong>Las 7 leyes espirituales del éxito</strong><p>Deepak Chopra. Aportar valor antes de vender. Alinea tu emprendimiento con lo que el mundo necesita.</p></div></div>
+          </div>
+          <h2>Herramientas por categoría</h2>
+          <div class="book-platform-grid">
+            <div class="book-platform"><div class="book-platform-name">Canva</div><div class="book-platform-desc">Diseño de posts, stories, carruseles. Gratis / Pro accesible.</div></div>
+            <div class="book-platform"><div class="book-platform-name">CapCut</div><div class="book-platform-desc">Edición de videos para Reels y TikToks. Gratis.</div></div>
+            <div class="book-platform"><div class="book-platform-name">Meta Business Suite</div><div class="book-platform-desc">Programar en Facebook e Instagram. Gratis.</div></div>
+            <div class="book-platform"><div class="book-platform-name">ChatGPT / Claude</div><div class="book-platform-desc">Asistente de ideas y redacción. Gratis / Premium.</div></div>
+            <div class="book-platform"><div class="book-platform-name">Google Analytics 4</div><div class="book-platform-desc">El estándar para analítica web. Gratis.</div></div>
+            <div class="book-platform"><div class="book-platform-name">Metricool</div><div class="book-platform-desc">Análisis y programación multi-plataforma. Gratis (limitado).</div></div>
+          </div>
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter('ch-9')">← Cap. 9</button><button class="btn btn-primary" onclick="goToChapter('ch-conclusion')">Conclusión →</button></div>
+        </section>
+
+        <!-- CONCLUSION -->
+        <section class="book-chapter" id="ch-conclusion">
+          <div class="book-ch-num">CONCLUSIÓN</div>
+          <h1 class="book-ch-title">El camino está frente a ti</h1>
+          <p class="book-lead">Llegaste al final de esta guía. Pero en realidad, solo has llegado a la línea de salida de tu viaje.</p>
+          <p>Tienes en tus manos el mapa completo: entiendes el entorno, sabes por qué tu sitio web es tu activo más valioso, cómo forjar una identidad magnética, crear contenido de valor, medir tus finanzas y nutrir tu mente.</p>
+          <blockquote class="book-quote">El perfeccionismo es solo miedo con un traje elegante. No exigimos perfección en tus primeros pasos — solo exigimos movimiento.</blockquote>
+          <h2>Tu plan de acción para los próximos 30 días</h2>
+          <div class="book-list-cards">
+            <div class="book-list-card"><span class="book-list-num">S1</span><div><strong>Semana 1</strong><p>Define tu cliente ideal, tu propuesta de valor y optimiza tus biografías en redes sociales.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">S2</span><div><strong>Semana 2</strong><p>Construye tu "casa propia". Levanta tu sitio web o landing page con ayuda profesional.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">S3</span><div><strong>Semana 3</strong><p>Publica tu primera semana de contenido sin esperar la perfección. Empieza a leer el primer libro recomendado.</p></div></div>
+            <div class="book-list-card"><span class="book-list-num">S4</span><div><strong>Semana 4</strong><p>Revisa tus números, ajusta lo que no funcionó y celebra que has cruzado la barrera del miedo.</p></div></div>
+          </div>
+          <div class="book-callout book-callout-blue" style="margin-top:32px;">
+            <div class="book-callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+            <div><strong>DGP Global Group</strong><p>Transformamos marcas en movimientos. dgpglobalgroup.com · +1 (239) 823-1738 · @dgpgroup.us · Florida, USA</p></div>
+          </div>
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter('ch-10')">← Cap. 10</button><button class="btn btn-primary" onclick="closeBook()">Volver al dashboard</button></div>
+        </section>
+
+      </div><!-- /book-content -->
+    </main>
+
+  </div>
+</div><!-- /book-screen -->
+
 </body>
 </html>

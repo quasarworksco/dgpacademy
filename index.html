@@ -3415,12 +3415,50 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
               DGP Global Group
             </div>
           </div>
+          <div class="book-read-progress" id="book-7st-progress" style="display:none;">
+            <span class="book-read-label" id="book-read-label">0 / 12 capítulos leídos</span>
+            <div class="book-read-bar-wrap"><div class="book-read-bar-fill" id="book-read-bar-fill" style="width:0%"></div></div>
+          </div>
           <button id="btn-7st" class="btn-book btn-book-locked" disabled>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
             Sin acceso — contacta a DGP
           </button>
         </div>
       </div>
+
+      <!-- Vol. 2 Preview (próximamente) -->
+      <div class="book-card" style="opacity:.92;">
+        <div class="book-cover" style="background:linear-gradient(135deg,#064e3b 0%,#065f46 40%,#047857 100%);">
+          <div class="book-cover-inner">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,0.55);margin-bottom:10px;">DGP GLOBAL GROUP · VOL. 2</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.04em;color:#fff;line-height:1.1;">DE LA SEMILLA<br>AL ÁRBOL</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:10px;color:rgba(255,255,255,0.65);margin-top:8px;line-height:1.4;">Guía humana para emprender con propósito, libertad financiera y crecimiento personal</div>
+          </div>
+          <div class="book-card-locked-overlay">
+            <div class="book-card-coming">⏳ PRÓXIMAMENTE</div>
+          </div>
+        </div>
+        <div class="book-body">
+          <span class="book-tag" style="background:rgba(5,150,105,0.1);color:#047857;border-color:rgba(5,150,105,0.2);">CRECIMIENTO PERSONAL</span>
+          <div class="book-title">De la Semilla al Árbol</div>
+          <p class="book-desc">Emprender con propósito, construir libertad financiera y crecer como persona mientras escalas tu negocio digital. Vol. 2 de la serie 7ST.</p>
+          <div class="book-meta">
+            <div class="book-meta-item">
+              <svg viewBox="0 0 24 24"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg>
+              Próximamente
+            </div>
+            <div class="book-meta-item">
+              <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+              DGP Global Group
+            </div>
+          </div>
+          <button class="btn-book" disabled style="background:#f0fdf4;color:#047857;border:1.5px solid rgba(5,150,105,0.25);cursor:not-allowed;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
+            Disponible pronto
+          </button>
+        </div>
+      </div>
+
     </div>
 
   </main>
@@ -6031,6 +6069,47 @@ function closeBook() {
 }
 
 let currentChapter = 'ch-intro';
+window._bookReadChapters = window._bookReadChapters || new Set();
+const BOOK_CHAPTERS = ['ch-intro','ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-conclusion'];
+
+function markChapterRead(id) {
+  if (!BOOK_CHAPTERS.includes(id)) return;
+  if (window._bookReadChapters.has(id)) return; // already marked
+  window._bookReadChapters.add(id);
+  // Update TOC checkmark
+  const tocEl = document.querySelector('[data-ch="' + id + '"]');
+  if (tocEl) tocEl.classList.add('read');
+  // Update library card progress bar
+  updateBookReadProgress();
+  // Save to Firestore
+  if (db && auth && auth.currentUser) {
+    db.collection('users').doc(auth.currentUser.uid).update({
+      'bookProgress.7st-read': Array.from(window._bookReadChapters)
+    }).catch(() => {});
+  }
+}
+
+function updateBookReadProgress() {
+  const total = BOOK_CHAPTERS.length;
+  const done = BOOK_CHAPTERS.filter(c => window._bookReadChapters.has(c)).length;
+  const pct = Math.round((done / total) * 100);
+  const fill = document.getElementById('book-read-bar-fill');
+  const lbl  = document.getElementById('book-read-label');
+  if (fill) fill.style.width = pct + '%';
+  if (lbl)  lbl.textContent = done + ' / ' + total + ' capítulos leídos';
+}
+
+function loadBookReadChapters(arr) {
+  window._bookReadChapters = new Set(arr || []);
+  BOOK_CHAPTERS.forEach(id => {
+    if (window._bookReadChapters.has(id)) {
+      const tocEl = document.querySelector('[data-ch="' + id + '"]');
+      if (tocEl) tocEl.classList.add('read');
+    }
+  });
+  updateBookReadProgress();
+}
+
 function goToChapter(id) {
   document.querySelectorAll('.book-chapter').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.book-toc-item').forEach(el => el.classList.remove('active'));
@@ -6051,12 +6130,15 @@ function goToChapter(id) {
       'ch-8': 'Cap. 8 · Casos de Éxito',
       'ch-9': 'Cap. 9 · Mentalidad y Finanzas',
       'ch-10': 'Cap. 10 · Recursos',
-      'ch-conclusion': 'Conclusión'
+      'ch-conclusion': 'Conclusión',
+      'ch-quiz': '📝 Evaluación Final'
     };
     const lbl = document.getElementById('book-chapter-label');
     if (lbl) lbl.textContent = labels[id] || id;
   }
   currentChapter = id;
+  // Mark chapter as read
+  markChapterRead(id);
   // Save chapter position to Firestore per user
   window._bookLastChapter = id;
   if (db && auth && auth.currentUser) {
@@ -6138,6 +6220,8 @@ if (firebaseReady) {
           }
           // ── Load book chapter position ──
           window._bookLastChapter = (docData.bookProgress && docData.bookProgress['7st']) || 'ch-intro';
+          // ── Load read chapters ──
+          loadBookReadChapters((docData.bookProgress && docData.bookProgress['7st-read']) || []);
           // Sync to localStorage as cache
           localStorage.setItem('curso_done_' + user.uid, JSON.stringify(completed));
           updateDashStats();
@@ -6174,18 +6258,101 @@ function updateCourseAccess(courses) {
 
 function updateBookAccess(books) {
   const btn = document.getElementById('btn-7st');
+  const progressWrap = document.getElementById('book-7st-progress');
   if (!btn) return;
   if (books.includes('7st')) {
-    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> Leer libro';
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> Continuar leyendo';
     btn.className = 'btn-book btn-book-active';
     btn.disabled = false;
     btn.onclick = function() { showBook('7st'); };
+    if (progressWrap) progressWrap.style.display = 'block';
+    updateBookReadProgress();
   } else {
     btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Sin acceso — contacta a DGP';
     btn.className = 'btn-book btn-book-locked';
     btn.disabled = true;
     btn.onclick = null;
+    if (progressWrap) progressWrap.style.display = 'none';
   }
+}
+
+// ── Book Quiz ────────────────────────────────────────────────────────────────
+const QUIZ_ANSWERS = [1, 2, 1, 1, 1, 1, 1, 2, 2, 1]; // correct index per question (0-based)
+const quizSelected = new Array(10).fill(-1);
+
+function selectOpt(btn) {
+  const q = parseInt(btn.getAttribute('data-q'));
+  const i = parseInt(btn.getAttribute('data-i'));
+  // Clear previous selection for this question
+  document.querySelectorAll('[data-q="' + q + '"].quiz-opt').forEach(el => el.classList.remove('selected'));
+  btn.classList.add('selected');
+  quizSelected[q] = i;
+  // Enable submit if all answered
+  const allAnswered = quizSelected.every(v => v !== -1);
+  const sub = document.getElementById('btn-submit-quiz');
+  if (sub) sub.disabled = !allAnswered;
+}
+
+function submitQuiz() {
+  // Disable all options
+  document.querySelectorAll('.quiz-opt').forEach(btn => {
+    btn.disabled = true;
+    const q = parseInt(btn.getAttribute('data-q'));
+    const i = parseInt(btn.getAttribute('data-i'));
+    if (i === QUIZ_ANSWERS[q]) btn.classList.add('reveal-correct');
+    else if (btn.classList.contains('selected') && i !== QUIZ_ANSWERS[q]) btn.classList.add('wrong');
+    btn.classList.remove('selected');
+  });
+  // Score
+  let score = 0;
+  for (let q = 0; q < 10; q++) {
+    if (quizSelected[q] === QUIZ_ANSWERS[q]) score++;
+  }
+  const pass = score >= 7;
+  const pct = Math.round((score / 10) * 100);
+  const sub = document.getElementById('btn-submit-quiz');
+  if (sub) sub.style.display = 'none';
+  const resultEl = document.getElementById('quiz-result');
+  resultEl.style.display = 'block';
+  if (pass) {
+    resultEl.innerHTML = '<div class="quiz-result-banner pass">' +
+      '<div class="quiz-score-big">' + score + '/10</div>' +
+      '<div class="quiz-score-lbl">Has aprobado la evaluación</div>' +
+      '<div class="quiz-cert-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg> Certificado de Lectura 7ST Vol. 1</div>' +
+      '<p style="color:rgba(255,255,255,0.8);font-size:14px;margin-top:8px;">¡Felicitaciones! Completaste el 7ST Vol. 1 con ' + pct + '% de precisión.<br>Eres parte de la comunidad DGP Global Group.</p>' +
+      '<button class="btn btn-primary" style="margin-top:16px;background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.4);color:#fff;" onclick="closeBook()">Volver al dashboard →</button>' +
+      '</div>';
+    // Save completion to Firestore
+    if (db && auth && auth.currentUser) {
+      db.collection('users').doc(auth.currentUser.uid).update({
+        'bookProgress.7st-quiz-score': score,
+        'bookProgress.7st-completed': true
+      }).catch(() => {});
+    }
+    // Mark quiz chapter read
+    markChapterRead('ch-conclusion');
+  } else {
+    resultEl.innerHTML = '<div class="quiz-result-banner fail">' +
+      '<div class="quiz-score-big">' + score + '/10</div>' +
+      '<div class="quiz-score-lbl">Necesitas 7 o más para aprobar</div>' +
+      '<p style="color:rgba(255,255,255,0.7);font-size:14px;margin-top:10px;">¡Casi! Revisa los capítulos donde fallaste y vuelve a intentarlo.</p>' +
+      '<button class="btn btn-primary" style="margin-top:14px;background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.3);color:#fff;" onclick="retryQuiz()">Reintentar evaluación</button>' +
+      '</div>';
+  }
+  resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function retryQuiz() {
+  for (let i = 0; i < 10; i++) quizSelected[i] = -1;
+  document.querySelectorAll('.quiz-opt').forEach(btn => {
+    btn.disabled = false;
+    btn.classList.remove('selected','correct','wrong','reveal-correct');
+  });
+  const sub = document.getElementById('btn-submit-quiz');
+  if (sub) { sub.style.display = ''; sub.disabled = true; }
+  const resultEl = document.getElementById('quiz-result');
+  if (resultEl) resultEl.style.display = 'none';
+  document.getElementById('book-content').scrollTop = 0;
 }
 
 // ── Admin panel ───────────────────────────────────────────────────────────────
@@ -7208,6 +7375,37 @@ initAnimations();
 .book-author-note p { color:rgba(255,255,255,0.75); font-size:14px; line-height:1.7; margin:0 0 12px; }
 .book-author-note strong { color:#fff; }
 .book-author-note .author-contact { font-family:'DM Mono',monospace; font-size:10px; color:rgba(255,255,255,0.4); letter-spacing:.08em; margin-top:12px; }
+/* ── TOC read state ── */
+.book-toc-item.read { color:#16a34a; }
+.book-toc-item.read::after { content:'✓'; margin-left:auto; font-size:11px; color:#16a34a; font-weight:700; }
+.book-toc-item { display:flex; align-items:center; }
+/* ── Quiz styles ── */
+.quiz-q { background:#f8fafc; border:1px solid rgba(26,86,232,0.1); border-radius:12px; padding:18px 20px; margin-bottom:16px; }
+.quiz-q-text { font-size:15px; color:#0d1b3e; font-weight:600; margin-bottom:14px; line-height:1.5; }
+.quiz-q-num { font-family:'DM Mono',monospace; font-size:10px; color:#1a56e8; letter-spacing:.1em; margin-bottom:6px; text-transform:uppercase; }
+.quiz-options { display:flex; flex-direction:column; gap:8px; }
+.quiz-opt { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:8px; border:1.5px solid rgba(26,86,232,0.12); background:#fff; cursor:pointer; font-size:14px; color:#3a5880; transition:all .15s; text-align:left; }
+.quiz-opt:hover { border-color:#1a56e8; background:rgba(26,86,232,0.04); color:#0d1b3e; }
+.quiz-opt.selected { border-color:#1a56e8; background:rgba(26,86,232,0.07); color:#0d1b3e; font-weight:500; }
+.quiz-opt.correct { border-color:#16a34a; background:rgba(22,163,74,0.08); color:#14532d; }
+.quiz-opt.wrong { border-color:#dc2626; background:rgba(220,38,38,0.06); color:#7f1d1d; }
+.quiz-opt.reveal-correct { border-color:#16a34a; background:rgba(22,163,74,0.08); color:#14532d; }
+.quiz-opt-dot { width:16px; height:16px; border-radius:50%; border:2px solid currentColor; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:9px; }
+.quiz-result-banner { text-align:center; padding:32px 24px; border-radius:16px; margin:24px 0; }
+.quiz-result-banner.pass { background:linear-gradient(135deg,#0d1b3e,#1a56e8); }
+.quiz-result-banner.fail { background:linear-gradient(135deg,#1e293b,#475569); }
+.quiz-score-big { font-family:'Bebas Neue',sans-serif; font-size:72px; color:#fff; line-height:1; }
+.quiz-score-lbl { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.14em; color:rgba(255,255,255,0.55); text-transform:uppercase; margin-top:4px; }
+.quiz-cert-badge { display:inline-flex; align-items:center; gap:10px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); border-radius:30px; padding:10px 22px; margin:16px 0; color:#fff; font-size:14px; font-weight:600; }
+/* ── Book progress bar in library card ── */
+.book-read-progress { margin-top:10px; }
+.book-read-bar-wrap { height:4px; background:rgba(26,86,232,0.1); border-radius:4px; overflow:hidden; margin-top:4px; }
+.book-read-bar-fill { height:100%; background:#1a56e8; border-radius:4px; transition:width .5s ease; }
+.book-read-label { font-size:11px; color:#7090b8; font-family:'DM Mono',monospace; }
+/* ── Vol 2 locked card ── */
+.book-card-locked-overlay { position:absolute; inset:0; background:rgba(13,27,62,0.5); display:flex; align-items:center; justify-content:center; border-radius:12px 12px 0 0; backdrop-filter:blur(2px); }
+.book-card-coming { display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em; border-radius:20px; padding:5px 14px; }
+.book-cover { position:relative; }
 </style>
 <div id="book-screen" style="display:none;">
   <div id="book-backdrop" onclick="toggleBookNav()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:399;"></div>
@@ -7227,18 +7425,19 @@ initAnimations();
         </div>
       </div>
       <div class="book-toc">
-        <div class="book-toc-item active" onclick="goToChapter('ch-intro')" data-ch="ch-intro">Introducción</div>
-        <div class="book-toc-item" onclick="goToChapter('ch-1')" data-ch="ch-1">1 · El Entorno Digital</div>
-        <div class="book-toc-item" onclick="goToChapter('ch-2')" data-ch="ch-2">2 · Por Qué Necesitas un Sitio Web</div>
-        <div class="book-toc-item" onclick="goToChapter('ch-3')" data-ch="ch-3">3 · Identidad de Marca</div>
-        <div class="book-toc-item" onclick="goToChapter('ch-4')" data-ch="ch-4">4 · Creación de Contenido</div>
-        <div class="book-toc-item" onclick="goToChapter('ch-5')" data-ch="ch-5">5 · Comunidad e Influencers</div>
-        <div class="book-toc-item" onclick="goToChapter('ch-6')" data-ch="ch-6">6 · Análisis y Optimización</div>
-        <div class="book-toc-item" onclick="goToChapter('ch-7')" data-ch="ch-7">7 · Aspectos Legales y Éticos</div>
-        <div class="book-toc-item" onclick="goToChapter('ch-8')" data-ch="ch-8">8 · Casos de Éxito</div>
-        <div class="book-toc-item" onclick="goToChapter('ch-9')" data-ch="ch-9">9 · Mentalidad y Finanzas</div>
-        <div class="book-toc-item" onclick="goToChapter('ch-10')" data-ch="ch-10">10 · Recursos y Herramientas</div>
-        <div class="book-toc-item" onclick="goToChapter('ch-conclusion')" data-ch="ch-conclusion">Conclusión</div>
+        <div class="book-toc-item active" onclick="goToChapter('ch-intro')" data-ch="ch-intro"><span>Introducción</span></div>
+        <div class="book-toc-item" onclick="goToChapter('ch-1')" data-ch="ch-1"><span>1 · El Entorno Digital</span></div>
+        <div class="book-toc-item" onclick="goToChapter('ch-2')" data-ch="ch-2"><span>2 · Por Qué Necesitas un Sitio Web</span></div>
+        <div class="book-toc-item" onclick="goToChapter('ch-3')" data-ch="ch-3"><span>3 · Identidad de Marca</span></div>
+        <div class="book-toc-item" onclick="goToChapter('ch-4')" data-ch="ch-4"><span>4 · Creación de Contenido</span></div>
+        <div class="book-toc-item" onclick="goToChapter('ch-5')" data-ch="ch-5"><span>5 · Comunidad e Influencers</span></div>
+        <div class="book-toc-item" onclick="goToChapter('ch-6')" data-ch="ch-6"><span>6 · Análisis y Optimización</span></div>
+        <div class="book-toc-item" onclick="goToChapter('ch-7')" data-ch="ch-7"><span>7 · Aspectos Legales y Éticos</span></div>
+        <div class="book-toc-item" onclick="goToChapter('ch-8')" data-ch="ch-8"><span>8 · Casos de Éxito</span></div>
+        <div class="book-toc-item" onclick="goToChapter('ch-9')" data-ch="ch-9"><span>9 · Mentalidad y Finanzas</span></div>
+        <div class="book-toc-item" onclick="goToChapter('ch-10')" data-ch="ch-10"><span>10 · Recursos y Herramientas</span></div>
+        <div class="book-toc-item" onclick="goToChapter('ch-conclusion')" data-ch="ch-conclusion"><span>Conclusión</span></div>
+        <div class="book-toc-item" onclick="goToChapter('ch-quiz')" data-ch="ch-quiz" style="margin-top:8px;border-top:1px solid rgba(26,86,232,0.1);padding-top:10px;color:#1a56e8;font-weight:600;"><span>📝 Evaluación Final</span></div>
       </div>
     </nav>
 
@@ -8170,7 +8369,138 @@ initAnimations();
             <div style="font-size:12px;color:#64748b;margin-top:4px;">Publicidad Digital Avanzada · Escala y Automatización</div>
           </div>
 
-          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter('ch-10')">← Cap. 10</button><button class="btn btn-primary" onclick="closeBook()">Volver al dashboard →</button></div>
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter('ch-10')">← Cap. 10</button><button class="btn btn-primary" onclick="goToChapter('ch-quiz')">📝 Evaluación Final →</button></div>
+        </section>
+
+        <!-- QUIZ -->
+        <section class="book-chapter" id="ch-quiz">
+          <div class="book-ch-num">EVALUACIÓN FINAL</div>
+          <h1 class="book-ch-title">Pon a prueba lo que aprendiste</h1>
+          <p class="book-lead">10 preguntas basadas en el contenido del 7ST Vol. 1. Necesitas <strong>7 o más correctas</strong> para obtener tu certificado de lectura.</p>
+
+          <div id="quiz-questions">
+            <!-- Q1 -->
+            <div class="quiz-q" data-q="0">
+              <div class="quiz-q-num">Pregunta 1 de 10</div>
+              <div class="quiz-q-text">¿Cuál es la proporción de contenido recomendada en la regla del 80/20?</div>
+              <div class="quiz-options">
+                <button class="quiz-opt" data-q="0" data-i="0" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> 50% valor / 50% venta</button>
+                <button class="quiz-opt" data-q="0" data-i="1" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> 80% valor / 20% venta</button>
+                <button class="quiz-opt" data-q="0" data-i="2" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> 70% entretenimiento / 30% educativo</button>
+                <button class="quiz-opt" data-q="0" data-i="3" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> 60% venta / 40% valor</button>
+              </div>
+            </div>
+            <!-- Q2 -->
+            <div class="quiz-q" data-q="1">
+              <div class="quiz-q-num">Pregunta 2 de 10</div>
+              <div class="quiz-q-text">¿Qué tipo de influencer ofrece el mejor ROI para un emprendedor al inicio?</div>
+              <div class="quiz-options">
+                <button class="quiz-opt" data-q="1" data-i="0" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Mega-influencers (+1M seguidores)</button>
+                <button class="quiz-opt" data-q="1" data-i="1" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Macro-influencers (100k–1M)</button>
+                <button class="quiz-opt" data-q="1" data-i="2" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Micro/Nano-influencers (1k–100k)</button>
+                <button class="quiz-opt" data-q="1" data-i="3" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Celebrities con +5M seguidores</button>
+              </div>
+            </div>
+            <!-- Q3 -->
+            <div class="quiz-q" data-q="2">
+              <div class="quiz-q-num">Pregunta 3 de 10</div>
+              <div class="quiz-q-text">¿Qué significa la sigla CAC en el contexto del marketing digital?</div>
+              <div class="quiz-options">
+                <button class="quiz-opt" data-q="2" data-i="0" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Canal de Atención al Cliente</button>
+                <button class="quiz-opt" data-q="2" data-i="1" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Costo de Adquisición de Cliente</button>
+                <button class="quiz-opt" data-q="2" data-i="2" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Ciclo de Automatización de Contenido</button>
+                <button class="quiz-opt" data-q="2" data-i="3" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Campaña de Alcance Continuo</button>
+              </div>
+            </div>
+            <!-- Q4 -->
+            <div class="quiz-q" data-q="3">
+              <div class="quiz-q-num">Pregunta 4 de 10</div>
+              <div class="quiz-q-text">Según el 7ST, ¿cuál es el "activo digital más valioso" del emprendedor?</div>
+              <div class="quiz-options">
+                <button class="quiz-opt" data-q="3" data-i="0" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Una cuenta de Instagram con muchos seguidores</button>
+                <button class="quiz-opt" data-q="3" data-i="1" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Tu sitio web propio con dominio personal</button>
+                <button class="quiz-opt" data-q="3" data-i="2" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Un canal de YouTube monetizado</button>
+                <button class="quiz-opt" data-q="3" data-i="3" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Una lista de email marketing</button>
+              </div>
+            </div>
+            <!-- Q5 -->
+            <div class="quiz-q" data-q="4">
+              <div class="quiz-q-num">Pregunta 5 de 10</div>
+              <div class="quiz-q-text">¿Qué tasa de engagement se considera saludable en redes sociales?</div>
+              <div class="quiz-options">
+                <button class="quiz-opt" data-q="4" data-i="0" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> 0.1% – 1%</button>
+                <button class="quiz-opt" data-q="4" data-i="1" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> 3% – 6%</button>
+                <button class="quiz-opt" data-q="4" data-i="2" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> 10% – 20%</button>
+                <button class="quiz-opt" data-q="4" data-i="3" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Más del 50%</button>
+              </div>
+            </div>
+            <!-- Q6 -->
+            <div class="quiz-q" data-q="5">
+              <div class="quiz-q-num">Pregunta 6 de 10</div>
+              <div class="quiz-q-text">¿Qué debes validar ANTES de invertir en publicidad pagada (Ads)?</div>
+              <div class="quiz-options">
+                <button class="quiz-opt" data-q="5" data-i="0" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Tener al menos 10,000 seguidores</button>
+                <button class="quiz-opt" data-q="5" data-i="1" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Tu producto y mensaje de forma orgánica</button>
+                <button class="quiz-opt" data-q="5" data-i="2" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Contar con un presupuesto mínimo de $1,000</button>
+                <button class="quiz-opt" data-q="5" data-i="3" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Tener un equipo de marketing contratado</button>
+              </div>
+            </div>
+            <!-- Q7 -->
+            <div class="quiz-q" data-q="6">
+              <div class="quiz-q-num">Pregunta 7 de 10</div>
+              <div class="quiz-q-text">¿Cuál es el primer principio financiero NO negociable según el libro?</div>
+              <div class="quiz-options">
+                <button class="quiz-opt" data-q="6" data-i="0" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Invertir el 100% de las ganancias en Ads</button>
+                <button class="quiz-opt" data-q="6" data-i="1" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Separar las finanzas personales de las del negocio</button>
+                <button class="quiz-opt" data-q="6" data-i="2" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Contratar un contador desde el día 1</button>
+                <button class="quiz-opt" data-q="6" data-i="3" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Ahorrar el 90% de las ganancias</button>
+              </div>
+            </div>
+            <!-- Q8 -->
+            <div class="quiz-q" data-q="7">
+              <div class="quiz-q-num">Pregunta 8 de 10</div>
+              <div class="quiz-q-text">¿De quién es el libro "Cómo ganar amigos e influir sobre las personas" recomendado en el Cap. 10?</div>
+              <div class="quiz-options">
+                <button class="quiz-opt" data-q="7" data-i="0" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Robin Sharma</button>
+                <button class="quiz-opt" data-q="7" data-i="1" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Don Miguel Ruiz</button>
+                <button class="quiz-opt" data-q="7" data-i="2" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Dale Carnegie</button>
+                <button class="quiz-opt" data-q="7" data-i="3" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Deepak Chopra</button>
+              </div>
+            </div>
+            <!-- Q9 -->
+            <div class="quiz-q" data-q="8">
+              <div class="quiz-q-num">Pregunta 9 de 10</div>
+              <div class="quiz-q-text">¿Qué significan las siglas UGC en marketing digital?</div>
+              <div class="quiz-options">
+                <button class="quiz-opt" data-q="8" data-i="0" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> User Growth Channel (Canal de Crecimiento del Usuario)</button>
+                <button class="quiz-opt" data-q="8" data-i="1" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Unique Google Campaign (Campaña Única de Google)</button>
+                <button class="quiz-opt" data-q="8" data-i="2" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> User Generated Content (Contenido Generado por el Usuario)</button>
+                <button class="quiz-opt" data-q="8" data-i="3" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Universal Growth Code (Código Universal de Crecimiento)</button>
+              </div>
+            </div>
+            <!-- Q10 -->
+            <div class="quiz-q" data-q="9">
+              <div class="quiz-q-num">Pregunta 10 de 10</div>
+              <div class="quiz-q-text">Según el 7ST, ¿qué representa la "casa propia" en el ecosistema digital?</div>
+              <div class="quiz-options">
+                <button class="quiz-opt" data-q="9" data-i="0" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Tu página de Facebook o Instagram</button>
+                <button class="quiz-opt" data-q="9" data-i="1" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Tu sitio web propio con dominio personalizado</button>
+                <button class="quiz-opt" data-q="9" data-i="2" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Tu comunidad de WhatsApp</button>
+                <button class="quiz-opt" data-q="9" data-i="3" onclick="selectOpt(this)"><span class="quiz-opt-dot"></span> Tu canal de YouTube</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:28px;text-align:center;">
+            <button id="btn-submit-quiz" class="btn btn-primary" style="padding:14px 40px;font-size:15px;" onclick="submitQuiz()" disabled>
+              Ver resultados →
+            </button>
+            <p style="font-size:12px;color:#94a3b8;margin-top:10px;">Responde todas las preguntas para continuar</p>
+          </div>
+
+          <div id="quiz-result" style="display:none;"></div>
+
+          <div class="book-ch-nav" style="margin-top:32px;"><button class="btn btn-ghost" onclick="goToChapter('ch-conclusion')">← Conclusión</button><button class="btn btn-ghost" onclick="closeBook()">Volver al dashboard</button></div>
         </section>
 
       </div><!-- /book-content -->

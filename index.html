@@ -2634,9 +2634,41 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   .book-nav { position: fixed; top: 0; left: -260px; bottom: 0; z-index: 400; transition: left .3s ease; box-shadow: none; }
   .book-nav.open { left: 0; box-shadow: 4px 0 24px rgba(0,0,0,0.15); }
   .book-menu-btn { display: block; }
-  .book-chapter { padding: 28px 16px 60px; }
+  .book-chapter { padding: 24px 14px 72px; }
+  .book-topbar { padding: 10px 16px; }
   .book-platform-grid { grid-template-columns: 1fr; }
   .book-stats-row { flex-direction: column; }
+  .book-ch-nav { margin-top: 36px; gap: 10px; }
+  .book-ch-nav .btn { padding: 12px 18px; font-size: 14px; flex: 1; text-align: center; }
+  .book-svg-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .book-list-card { padding: 12px 14px; }
+}
+@media (max-width: 480px) {
+  .book-chapter { padding: 18px 12px 80px; }
+  .book-topbar { padding: 8px 12px; gap: 8px; }
+  .book-topbar-title { font-size: 11px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: calc(100vw - 80px); }
+  .book-ch-num { font-size: 10px; }
+  .book-ch-title { font-size: clamp(24px,7vw,34px); margin-bottom: 16px; }
+  .book-lead { font-size: 15px; }
+  .book-chapter h2 { font-size: 19px; margin: 28px 0 12px; }
+  .book-chapter p { font-size: 14px; line-height: 1.7; }
+  .book-quote { font-size: 14px; padding: 10px 14px; }
+  .book-ch-nav { flex-direction: column; gap: 10px; margin-top: 32px; }
+  .book-ch-nav .btn { width: 100%; padding: 14px 16px; font-size: 15px; justify-content: center; text-align: center; }
+  .book-list-num { width: 26px; height: 26px; font-size: 11px; flex-shrink: 0; }
+  .book-list-card strong { font-size: 13px; }
+  .book-list-card p { font-size: 12px; }
+  .book-callout { padding: 12px 14px; gap: 10px; }
+  .book-callout p { font-size: 13px; }
+  .book-platform-name { font-size: 13px; }
+  .book-platform-desc { font-size: 11px; }
+  .book-stat-num { font-size: 22px; }
+  .book-cover-hero { padding: 36px 20px 32px; }
+  .book-cover-logo { font-size: clamp(52px,14vw,80px); }
+  .book-cover-sub { font-size: 14px; }
+  .book-cover-tagline { font-size: 13px; }
+  .book-author-note { padding: 20px 16px; }
+  .book-formula { padding: 14px 16px; }
 }
 
 @media print {
@@ -6033,10 +6065,15 @@ function goToChapter(id) {
     }).catch(() => {});
   }
   document.getElementById('book-nav').classList.remove('open');
+  const bd = document.getElementById('book-backdrop');
+  if (bd) bd.style.display = 'none';
 }
 
 function toggleBookNav() {
-  document.getElementById('book-nav').classList.toggle('open');
+  const nav = document.getElementById('book-nav');
+  nav.classList.toggle('open');
+  const bd = document.getElementById('book-backdrop');
+  if (bd) bd.style.display = nav.classList.contains('open') ? 'block' : 'none';
 }
 
 // ── Sticky nav shadow on scroll (landing-screen scrolls, not window) ─────────
@@ -7164,14 +7201,16 @@ initAnimations();
 .book-checklist li { display:flex; align-items:flex-start; gap:10px; font-size:14px; color:#3a5880; line-height:1.6; }
 .book-checklist li::before { content:''; display:block; width:18px; height:18px; border-radius:50%; background:#1a56e8; flex-shrink:0; margin-top:2px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-size:11px; background-repeat:no-repeat; background-position:center; }
 .book-formula { background:#f4f8ff; border:1.5px dashed rgba(26,86,232,0.25); border-radius:12px; padding:20px 24px; margin:20px 0; text-align:center; }
-.book-formula .formula-text { font-family:'DM Mono',monospace; font-size:14px; color:#0d1b3e; line-height:1.8; }
+.book-formula .formula-text, .book-formula-body { font-family:'DM Mono',monospace; font-size:14px; color:#0d1b3e; line-height:1.8; }
 .book-formula .formula-label { font-size:11px; color:#7090b8; margin-top:6px; }
+.book-formula-title { font-size:11px; color:#7090b8; margin-bottom:6px; font-family:'DM Mono',monospace; letter-spacing:.06em; text-transform:uppercase; }
 .book-author-note { background:linear-gradient(135deg,#0d1b3e,#1a56e8); border-radius:16px; padding:28px 32px; margin-top:40px; text-align:center; }
 .book-author-note p { color:rgba(255,255,255,0.75); font-size:14px; line-height:1.7; margin:0 0 12px; }
 .book-author-note strong { color:#fff; }
 .book-author-note .author-contact { font-family:'DM Mono',monospace; font-size:10px; color:rgba(255,255,255,0.4); letter-spacing:.08em; margin-top:12px; }
 </style>
 <div id="book-screen" style="display:none;">
+  <div id="book-backdrop" onclick="toggleBookNav()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:399;"></div>
   <div style="display:flex; height:100vh; overflow:hidden;">
 
     <!-- Book sidebar/TOC -->

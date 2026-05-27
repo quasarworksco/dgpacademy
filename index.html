@@ -8179,5 +8179,1416 @@ initAnimations();
   </div>
 </div><!-- /book-screen -->
 
+
+
+<style>
+/* Vol. 2 green theme */
+#book-screen-2 .book-ch-num { color: #059669; }
+#book-screen-2 .book-toc-item.active { background: rgba(5,150,105,0.08); color: #059669; border-left-color: #059669; }
+#book-screen-2 .book-toc-item.read::after { color: #059669; }
+#book-screen-2 .book-toc-item.read { color: #059669; }
+#book-screen-2 .book-quote { border-left-color: #059669; background: rgba(5,150,105,0.04); }
+#book-screen-2 .book-callout-green { background: rgba(5,150,105,0.06); border-color: rgba(5,150,105,0.2); color: #064e3b; }
+#book-screen-2 .book-callout-green strong { color: #059669; display: block; margin-bottom: 4px; }
+#book-screen-2 .book-callout-green p { color: #065f46; margin: 0; font-size: 14px; }
+#book-screen-2 .book-callout-green .book-callout-icon svg { stroke: #059669; }
+.book-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0 24px; border-radius: 10px; border: 1px solid rgba(26,86,232,0.1); }
+.book-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 420px; }
+.book-table th { background: #0d1b3e; color: #fff; padding: 10px 12px; text-align: left; font-weight: 600; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .06em; }
+.book-table td { padding: 9px 12px; border-bottom: 1px solid rgba(26,86,232,0.08); color: #3a5880; vertical-align: top; line-height: 1.5; }
+.book-table tr:nth-child(even) td { background: #f8fafc; }
+.book-table tr.tbl-section td { background: #f0fdf4; color: #065f46; font-weight: 600; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.book-part-header { background: linear-gradient(135deg,#064e3b 0%,#059669 100%); border-radius: 16px; padding: 28px 24px; margin-bottom: 32px; }
+.book-part-badge { font-family: 'DM Mono',monospace; font-size: 9px; letter-spacing: .18em; color: rgba(255,255,255,0.55); text-transform: uppercase; margin-bottom: 8px; }
+.book-part-title { font-family: 'Bebas Neue',sans-serif; font-size: 28px; color: #fff; letter-spacing: .04em; line-height: 1.1; }
+.book-part-sub { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 8px; }
+.book-card-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0 20px; }
+@media(max-width:600px) { .book-card-pair { grid-template-columns: 1fr; } }
+.book-inner-card { background: #f4f8ff; border: 1px solid rgba(26,86,232,0.1); border-radius: 10px; padding: 14px 16px; }
+.book-inner-card h4 { font-family: 'Bebas Neue',sans-serif; font-size: 14px; letter-spacing: .06em; color: #0d1b3e; margin: 0 0 6px; }
+.book-inner-card p { font-size: 12px; color: #7090b8; margin: 0; line-height: 1.55; }
+.book-level-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; margin-bottom: 8px; background: #f4f8ff; border: 1px solid rgba(26,86,232,0.08); }
+.book-level-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue',sans-serif; font-size: 16px; color: #fff; flex-shrink: 0; }
+.book-level-body strong { font-size: 14px; color: #0d1b3e; display: block; margin-bottom: 2px; }
+.book-level-body span { font-size: 12px; color: #7090b8; }
+</style>
+
+<div id="book-screen-2" style="display:none;">
+  <div id="book-backdrop-2" onclick="toggleBookNav2()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:399;"></div>
+  <div style="display:flex; height:100vh; overflow:hidden;">
+
+    <!-- Book sidebar/TOC -->
+    <nav class="book-nav" id="book-nav-2">
+      <div class="book-nav-header">
+        <button onclick="closeBook2()" class="book-back-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          Dashboard
+        </button>
+        <div style="margin-top:18px;">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;color:#059669;text-transform:uppercase;margin-bottom:4px;">DGP Global Group · Vol. 2 de 3</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#0d1b3e;letter-spacing:.06em;line-height:1.1;">DE LA SEMILLA<br>AL ÁRBOL</div>
+          <div style="font-size:11px;color:#059669;font-family:'DM Mono',monospace;margin-top:2px;letter-spacing:.04em;">Estrategia · Finanzas · Propósito</div>
+        </div>
+      </div>
+      <div class="book-toc">
+        <div class="book-toc-item active" onclick="goToChapter2('s2-nota')" data-ch="s2-nota"><span>Nota Inicial</span></div>
+        <div class="book-toc-item" onclick="goToChapter2('s2-1')" data-ch="s2-1"><span>Cap. 1 · Por Qué Emprendes</span></div>
+        <div class="book-toc-item" onclick="goToChapter2('s2-2')" data-ch="s2-2"><span>Cap. 2 · Los Libros que Cambian Vidas</span></div>
+        <div class="book-toc-item" onclick="goToChapter2('s2-3')" data-ch="s2-3"><span>Cap. 3 · Mensajes que Necesitas Escuchar</span></div>
+        <div class="book-toc-item" onclick="goToChapter2('s2-4')" data-ch="s2-4"><span>Cap. 4 · El Dinero No es el Enemigo</span></div>
+        <div class="book-toc-item" onclick="goToChapter2('s2-5')" data-ch="s2-5"><span>Cap. 5 · Cómo Administrar lo que Tienes</span></div>
+        <div class="book-toc-item" onclick="goToChapter2('s2-6')" data-ch="s2-6"><span>Cap. 6 · Deuda, Inversión y Libertad</span></div>
+        <div class="book-toc-item" onclick="goToChapter2('s2-7')" data-ch="s2-7"><span>Cap. 7 · Tu Marca Personal</span></div>
+        <div class="book-toc-item" onclick="goToChapter2('s2-8')" data-ch="s2-8"><span>Cap. 8 · Redes Sociales como Negocio</span></div>
+        <div class="book-toc-item" onclick="goToChapter2('s2-9')" data-ch="s2-9"><span>Cap. 9 · Tu Sitio Web</span></div>
+        <div class="book-toc-item" onclick="goToChapter2('s2-10')" data-ch="s2-10"><span>Cap. 10 · Contenido con Alma</span></div>
+        <div class="book-toc-item" onclick="goToChapter2('s2-11')" data-ch="s2-11"><span>Cap. 11 · Tu Plan de 90 Días</span></div>
+        <div class="book-toc-item" onclick="goToChapter2('s2-recursos')" data-ch="s2-recursos" style="margin-top:8px;border-top:1px solid rgba(5,150,105,0.15);padding-top:10px;color:#059669;font-weight:600;"><span>✨ Recursos Especiales</span></div>
+        <div class="book-toc-item" onclick="goToChapter2('s2-conclusion')" data-ch="s2-conclusion"><span>Conclusión: Ahora Eres el Árbol</span></div>
+      </div>
+    </nav>
+
+    <!-- Book content -->
+    <main class="book-main" id="book-main-2">
+      <div class="book-topbar">
+        <button class="book-menu-btn" onclick="toggleBookNav2()" id="book-menu-btn-2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="book-topbar-title" id="book-chapter-label-2">Nota Inicial</span>
+      </div>
+
+      <div class="book-content" id="book-content-2">
+
+        <!-- NOTA INICIAL -->
+        <section class="book-chapter active" id="s2-nota">
+          <div class="book-cover-hero" style="background:linear-gradient(150deg,#064e3b 0%,#065f46 50%,#059669 100%);">
+            <div class="book-vol-badge">DGP Global Group · Vol. 2 de 3</div>
+            <div class="book-cover-logo" style="font-size:52px;line-height:1;">🌱</div>
+            <div class="book-cover-logo" style="font-size:36px;letter-spacing:.08em;">DE LA SEMILLA</div>
+            <div class="book-cover-logo" style="font-size:36px;letter-spacing:.08em;">AL ÁRBOL</div>
+            <div class="book-cover-sub">Estrategia Digital · Educación Financiera · Crecimiento Personal</div>
+            <div class="book-cover-tagline">El libro que te hubiera gustado tener desde el principio.</div>
+          </div>
+
+          <div class="book-chapter">
+            <div class="book-ch-eyebrow">Bienvenida</div>
+            <h2 class="book-ch-title">Una Nota Para Ti</h2>
+            <p class="book-lead">Este libro no es un manual de instrucciones. Es una conversación.</p>
+            <p>Es la conversación que me hubiera gustado tener cuando empecé. La que nadie me dio cuando tenía el sueño en la cabeza pero el miedo en el estómago. La que me habría ahorrado años de rodeos, dinero mal invertido y energía desperdiciada en el camino equivocado.</p>
+            <p>No te voy a hablar como experto desde un pedestal. Te voy a hablar como alguien que también tuvo que aprender, que también se equivocó, que también dudó. Porque eso es lo que somos: seres humanos intentando construir algo mejor con lo que tenemos.</p>
+            <p>Este libro tiene tres ingredientes principales:</p>
+            <ul class="book-checklist">
+              <li>Estrategia digital real</li>
+              <li>Educación financiera</li>
+              <li>Crecimiento personal</li>
+            </ul>
+            <p>Léelo con calma. Subraya lo que te resuena. Anota lo que quieres aplicar.</p>
+            <div class="book-quote">
+              <p>"El mejor momento para plantar un árbol fue hace 20 años. El segundo mejor momento es ahora."</p>
+              <span>— Proverbio chino</span>
+            </div>
+          </div>
+          <div class="book-ch-nav"><button class="btn btn-primary" onclick="goToChapter2('s2-1')">Cap. 1 →</button></div>
+        </section>
+
+        <!-- CAP 1 -->
+        <section class="book-chapter" id="s2-1">
+          <div class="book-part-header">
+            <div class="book-part-badge">Parte I · La Semilla</div>
+            <div class="book-part-title">Mentalidad y Propósito</div>
+            <div class="book-part-sub">Antes de construir tu negocio, construye tu base interior.</div>
+          </div>
+
+          <div class="book-ch-num">Capítulo 1</div>
+          <h2 class="book-ch-title">¿Por Qué Emprendes?</h2>
+          <p class="book-lead">Antes de hablar de redes sociales, de algoritmos, de logos o de dinero... necesito hacerte una pregunta. Una sola. ¿Por qué emprendes?</p>
+          <p>No es una pregunta trampa. No hay respuesta correcta. Pero sí hay respuestas honestas y respuestas que te estás contando a ti mismo para no ver la verdad. La diferencia entre ambas puede ser la diferencia entre construir algo que dure y construir algo que te agote.</p>
+
+          <div class="book-section-divider"></div>
+
+          <h3>Los Tres Tipos de Emprendedores</h3>
+
+          <div class="book-svg-wrap">
+            <svg viewBox="0 0 520 160" width="100%" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="20" width="155" height="120" rx="12" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+              <text x="87" y="50" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="13" fill="#059669" letter-spacing="1">NECESIDAD</text>
+              <text x="87" y="72" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">Emprende para</text>
+              <text x="87" y="87" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">sobrevivir o salir</text>
+              <text x="87" y="102" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">de una situación</text>
+              <text x="87" y="125" text-anchor="middle" font-size="22">🌱</text>
+
+              <rect x="182" y="20" width="155" height="120" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+              <text x="259" y="50" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="13" fill="#059669" letter-spacing="1">VOCACIÓN</text>
+              <text x="259" y="72" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">Emprende porque</text>
+              <text x="259" y="87" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">tiene un talento</text>
+              <text x="259" y="102" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">que quiere usar</text>
+              <text x="259" y="125" text-anchor="middle" font-size="22">🌿</text>
+
+              <rect x="354" y="20" width="155" height="120" rx="12" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+              <text x="431" y="50" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="13" fill="#059669" letter-spacing="1">PROPÓSITO</text>
+              <text x="431" y="72" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">Emprende para</text>
+              <text x="431" y="87" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">cambiar algo en</text>
+              <text x="431" y="102" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">el mundo</text>
+              <text x="431" y="125" text-anchor="middle" font-size="22">🌳</text>
+            </svg>
+          </div>
+
+          <p><strong>El emprendedor por necesidad</strong> es quizás el más común. Perdió su trabajo. Le redujeron el sueldo. Necesita más ingresos para su familia. Emprende porque no tiene otra opción, o porque la opción que tiene es peor. No hay nada de malo en eso. De hecho, la necesidad es el motor más poderoso que existe. Cuando tienes que hacerlo, lo haces. Pero cuidado: si solo emprendes por necesidad, en el momento en que la necesidad desaparece (o se vuelve muy difícil), también desaparece tu motivación.</p>
+
+          <p><strong>El emprendedor por vocación</strong> tiene un talento, una habilidad, algo que hace naturalmente bien. Es el diseñador que siempre estuvo en empleos que no lo valoraban. La cocinera que todos le decían "deberías vender esto". El fotógrafo que regalaba su talento. La vocación es un regalo, pero también puede ser una trampa: muchos emprendedores por vocación son brillantes en su oficio y terribles en los negocios. Saber hacer algo bien no es lo mismo que saber monetizarlo.</p>
+
+          <p><strong>El emprendedor por propósito</strong> tiene algo más profundo. Ve un problema en el mundo y no puede dormir hasta resolverlo. Quiere construir algo que dure más que él. Tiene una misión. Este tipo de emprendedor tiene la motivación más sostenible, pero también puede caer en el error de idealizar tanto su misión que olvida que los negocios necesitan ingresos para sobrevivir.</p>
+
+          <p>La mayoría de nosotros somos una mezcla de los tres. Y los tres son válidos.</p>
+
+          <div class="book-callout book-callout-green">
+            <div class="book-callout-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+            <div>
+              <strong>Ejercicio: Tu Por Qué</strong>
+              <p>Toma una hoja de papel y responde estas preguntas sin censurarte:<br>
+              1. ¿Qué te duele del mundo que quieres cambiar?<br>
+              2. ¿Cómo quieres que te recuerden?<br>
+              3. ¿Qué harías si el dinero no fuera el problema?<br>
+              4. ¿A quién quieres demostrarle algo... y por qué?</p>
+            </div>
+          </div>
+
+          <h3>El Miedo es Normal. El Estancamiento No.</h3>
+          <p>Voy a ser directo: el miedo no desaparece. Los emprendedores exitosos no son personas sin miedo, son personas que aprendieron a actuar a pesar de él. Susan Jeffers lo dijo perfectamente en su libro clásico: <em>"Siente el miedo y hazlo de todas formas."</em> El miedo es información. Te dice que algo importa. Te dice que estás en territorio desconocido. Eso no es malo. Lo malo es confundir el miedo con una señal de stop cuando en realidad es una señal de precaución.</p>
+          <p>El estancamiento, en cambio, es el resultado de dejarle demasiado poder al miedo. Es quedarte en el mismo lugar mes tras mes, año tras año, repitiendo los mismos patrones y esperando resultados diferentes. El estancamiento no duele tanto como el fracaso, pero te cobra mucho más caro a largo plazo.</p>
+
+          <h3>Tu Identidad de Emprendedor</h3>
+          <p>James Clear, en su libro Hábitos Atómicos, plantea algo que cambió mi forma de pensar: el cambio más profundo no viene de cambiar lo que haces, sino de cambiar lo que crees que eres. Hay una diferencia enorme entre alguien que dice "estoy tratando de construir un negocio" y alguien que dice "soy un emprendedor que está en proceso de crecimiento." El primero puede rendirse. El segundo no, porque rendirse significaría traicionarse a sí mismo.</p>
+          <p>Empieza a hablar de ti mismo como lo que quieres ser, no como lo que todavía no has logrado. La identidad precede al comportamiento. Cuando te ves como emprendedor, tomas decisiones de emprendedor. Cuando te ves como alguien que "está intentando", tomas decisiones de alguien que todavía no está seguro.</p>
+
+          <div class="book-callout book-callout-green">
+            <div class="book-callout-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div>
+              <strong>Afirmaciones de Identidad</strong>
+              <p>Soy un emprendedor que crea valor.<br>
+              Estoy construyendo algo que importa.<br>
+              Tengo lo que se necesita para lograrlo.</p>
+            </div>
+          </div>
+
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter2('s2-nota')">← Nota Inicial</button><button class="btn btn-primary" onclick="goToChapter2('s2-2')">Cap. 2 →</button></div>
+        </section>
+
+        <!-- CAP 2 -->
+        <section class="book-chapter" id="s2-2">
+          <div class="book-ch-num">Capítulo 2</div>
+          <h2 class="book-ch-title">Los Libros que Cambian Vidas</h2>
+          <p class="book-lead">Uno de los mejores retornos de inversión que puedes hacer es comprar un libro de $15 que cambie tu forma de pensar. Aquí están los ocho que más me han impactado.</p>
+
+          <div class="book-svg-wrap">
+            <svg viewBox="0 0 520 120" width="100%" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="10" width="48" height="100" rx="4" fill="#059669"/>
+              <text x="34" y="68" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#fff" transform="rotate(-90,34,68)">Carnegie</text>
+              <rect x="68" y="20" width="48" height="90" rx="4" fill="#064e3b"/>
+              <text x="92" y="72" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#fff" transform="rotate(-90,92,72)">Sharma</text>
+              <rect x="126" y="15" width="48" height="95" rx="4" fill="#34d399"/>
+              <text x="150" y="70" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#064e3b" transform="rotate(-90,150,70)">Johnson</text>
+              <rect x="184" y="25" width="48" height="85" rx="4" fill="#065f46"/>
+              <text x="208" y="75" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#fff" transform="rotate(-90,208,75)">Ruiz</text>
+              <rect x="242" y="10" width="48" height="100" rx="4" fill="#6ee7b7"/>
+              <text x="266" y="68" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#064e3b" transform="rotate(-90,266,68)">Chopra</text>
+              <rect x="300" y="18" width="48" height="92" rx="4" fill="#059669"/>
+              <text x="324" y="72" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#fff" transform="rotate(-90,324,72)">Hill</text>
+              <rect x="358" y="22" width="48" height="88" rx="4" fill="#064e3b"/>
+              <text x="382" y="74" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#fff" transform="rotate(-90,382,74)">Clear</text>
+              <rect x="416" y="12" width="48" height="98" rx="4" fill="#34d399"/>
+              <text x="440" y="69" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#064e3b" transform="rotate(-90,440,69)">Goleman</text>
+              <text x="260" y="118" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#7090b8">8 Libros · 8 Transformaciones</text>
+            </svg>
+          </div>
+
+          <div class="book-section-divider"></div>
+
+          <h3>1. Cómo Ganar Amigos e Influir sobre las Personas</h3>
+          <p style="font-size:12px;color:#7090b8;font-family:'DM Mono',monospace;">Dale Carnegie · 1936</p>
+          <p><strong>Lección central:</strong> Las personas no cambian de opinión por lógica; cambian por cómo las haces sentir. Carnegie descubrió en los años 30 lo que la neurociencia confirma hoy: las decisiones son emocionales, no racionales. Su libro, escrito hace casi 90 años, sigue siendo el manual más práctico de relaciones humanas que existe.</p>
+          <p><strong>Cómo aplicarlo hoy:</strong> En tus redes sociales, en lugar de hablar de tus productos, habla de los problemas de tus clientes. Muestra que los entiendes. Usa su nombre. Escucha antes de hablar. El secreto del marketing digital no es gritar más fuerte; es conectar más profundo.</p>
+          <div class="book-quote"><p>"Puedes hacer más amigos en dos meses interesándote en los demás que en dos años tratando de que los demás se interesen en ti."</p><span>— Dale Carnegie</span></div>
+
+          <h3>2. El Monje que Vendió su Ferrari</h3>
+          <p style="font-size:12px;color:#7090b8;font-family:'DM Mono',monospace;">Robin Sharma · 1997</p>
+          <p><strong>Lección central:</strong> El éxito externo sin riqueza interior es una trampa. Julian Mantle, el protagonista, lo tenía todo: el Ferrari, la mansión, el prestigio. Y casi muere de un infarto a los 53 años porque vivía para impresionar a otros, no para construirse a sí mismo. El libro es una fábula sobre lo que realmente importa: la maestría personal, el propósito, el tiempo como el recurso más valioso.</p>
+          <p><strong>Cómo aplicarlo hoy:</strong> Antes de obsesionarte con el dinero, pregúntate: ¿qué tipo de vida quiero construir? ¿Estoy construyendo un negocio que me dé libertad o una nueva jaula con mejores adornos? Las rutinas matutinas que Sharma describe no son lujos; son la base de la productividad sostenible.</p>
+          <div class="book-quote"><p>"El secreto de la felicidad es descubrir tu propósito más profundo y luego enfocarte en él con toda tu energía."</p><span>— Robin Sharma</span></div>
+
+          <h3>3. ¿Quién se ha Llevado mi Queso?</h3>
+          <p style="font-size:12px;color:#7090b8;font-family:'DM Mono',monospace;">Spencer Johnson · 1998</p>
+          <p><strong>Lección central:</strong> El cambio es inevitable. La pregunta no es si cambiará tu mercado, tu industria o tus circunstancias; es si estarás listo para adaptarte. Los cuatro personajes del laberinto representan las diferentes formas en que los humanos respondemos al cambio: hay quienes entran en negación, quienes se quejan, y quienes salen corriendo a buscar nuevo queso.</p>
+          <p><strong>Cómo aplicarlo hoy:</strong> Las plataformas cambian. Los algoritmos cambian. Los consumidores cambian. El emprendedor que entiende que el queso siempre se mueve tiene una ventaja enorme sobre quien construye su negocio asumiendo que las reglas son permanentes. Adaptarse no es debilidad; es inteligencia.</p>
+          <div class="book-quote"><p>"Si no cambias, puedes extinguirte."</p><span>— Spencer Johnson</span></div>
+
+          <h3>4. Los Cuatro Acuerdos</h3>
+          <p style="font-size:12px;color:#7090b8;font-family:'DM Mono',monospace;">Miguel Ruiz · 1997</p>
+          <p><strong>Lección central:</strong> La mayor parte de nuestro sufrimiento viene de acuerdos que hicimos de niños sobre quiénes somos y cómo funciona el mundo. Ruiz propone cuatro acuerdos nuevos que transforman la experiencia humana:</p>
+          <ul class="book-checklist">
+            <li><strong>Sé impecable con tus palabras</strong> — Lo que dices sobre ti mismo y los demás crea realidad.</li>
+            <li><strong>No te tomes nada personalmente</strong> — Los comentarios negativos de otros no son sobre ti; son sobre ellos.</li>
+            <li><strong>No hagas suposiciones</strong> — Pregunta en lugar de asumir. La mayoría de los conflictos nacen de malentendidos.</li>
+            <li><strong>Haz siempre tu máximo esfuerzo</strong> — No el de ayer, no el de mañana; el de hoy.</li>
+          </ul>
+          <p><strong>Cómo aplicarlo hoy:</strong> En los negocios, no tomarte personalmente los comentarios negativos o las ventas que no se cierran es una habilidad que separa a los emprendedores resilientes de los que se quiebran al primer rechazo.</p>
+          <div class="book-quote"><p>"Nada de lo que otros hacen es por ti. Lo hacen por ellos mismos."</p><span>— Miguel Ruiz</span></div>
+
+          <h3>5. Las Siete Leyes Espirituales del Éxito</h3>
+          <p style="font-size:12px;color:#7090b8;font-family:'DM Mono',monospace;">Deepak Chopra · 1994</p>
+          <p><strong>Lección central:</strong> El éxito no es solo resultado del esfuerzo bruto. Chopra introduce principios como la Ley del Dar (lo que das regresa multiplicado), la Ley del Karma (cada acción tiene consecuencias), y la Ley del Desapego (actúa con intención pero sin aferrarte al resultado). Para muchos emprendedores, este libro es el primero que les enseña que hay una dimensión energética en los negocios.</p>
+          <p><strong>Cómo aplicar la Ley del Dar:</strong> Comparte conocimiento gratuito. Ayuda a otros emprendedores. Da valor antes de pedir nada. Esta no es solo filosofía; es la base del marketing de contenidos más efectivo que existe.</p>
+          <div class="book-quote"><p>"Cuando renuncias a la necesidad de aprobación de los demás, y en cambio buscas la aprobación de tu propia alma, te vuelves irresistible."</p><span>— Deepak Chopra</span></div>
+
+          <h3>6. Piense y Hágase Rico</h3>
+          <p style="font-size:12px;color:#7090b8;font-family:'DM Mono',monospace;">Napoleon Hill · 1937</p>
+          <p><strong>Lección central:</strong> Los pensamientos son cosas. Hill pasó 20 años entrevistando a los hombres más exitosos de su época (Carnegie, Ford, Edison) y descubrió que todos compartían un patrón: una obsesión definida con un objetivo, una fe absoluta en su capacidad de lograrlo, y un plan en acción. No es magia; es el poder de la mente enfocada.</p>
+          <p><strong>Ejercicio de la tarjeta:</strong> Escribe en una tarjeta la cantidad exacta que quieres ganar, para cuándo y lo que harás a cambio. Léela en voz alta dos veces al día. Esto no es pseudociencia; es programación de tu sistema de activación reticular para que busque oportunidades que siempre estuvieron ahí.</p>
+          <div class="book-quote"><p>"Los pensamientos son cosas, y cosas poderosas cuando se mezclan con definiteness de propósito, persistencia y un deseo ardiente de traducirlos en riqueza u otros objetos materiales."</p><span>— Napoleon Hill</span></div>
+
+          <h3>7. Hábitos Atómicos</h3>
+          <p style="font-size:12px;color:#7090b8;font-family:'DM Mono',monospace;">James Clear · 2018</p>
+          <p><strong>Lección central:</strong> Mejorar un 1% cada día durante un año significa ser 37 veces mejor al final de ese año. El problema es que buscamos transformaciones masivas e ignoramos las pequeñas mejoras diarias. Clear demuestra que no son las grandes decisiones las que nos cambian la vida, sino los sistemas de hábitos pequeños y consistentes.</p>
+          <p><strong>Pequeño hábito de emprendedor:</strong> En lugar de decidir que vas a "hacer marketing todos los días" (vago e imposible de medir), decide que vas a publicar una historia en Instagram a las 9 AM. Empieza con 2 minutos. La consistencia crea impulso.</p>
+
+          <h3>8. La Inteligencia Emocional</h3>
+          <p style="font-size:12px;color:#7090b8;font-family:'DM Mono',monospace;">Daniel Goleman · 1995</p>
+          <p><strong>Lección central:</strong> El coeficiente intelectual (CI) predice quizás un 20% del éxito en la vida. El 80% restante está determinado por la inteligencia emocional: la capacidad de reconocer, entender y gestionar tus propias emociones y las de los demás. En los negocios, esto se traduce en liderazgo, ventas, manejo de conflictos y toma de decisiones bajo presión.</p>
+          <p><strong>Práctica del espacio de 90 segundos:</strong> Cuando sientas una emoción intensa (frustración, miedo, ira), espera 90 segundos antes de reaccionar. Goleman explica que las emociones son respuestas químicas que duran 90 segundos; lo que dura más es porque seguimos alimentándolas con nuestros pensamientos.</p>
+
+          <div class="book-section-divider"></div>
+
+          <h3>Más Libros que Transforman</h3>
+          <ul class="book-checklist">
+            <li>El Poder del Ahora — Eckhart Tolle</li>
+            <li>Padre Rico Padre Pobre — Robert Kiyosaki</li>
+            <li>El Alquimista — Paulo Coelho</li>
+            <li>La Semana Laboral de 4 Horas — Tim Ferriss</li>
+            <li>Mindset — Carol Dweck</li>
+            <li>El Código del Dinero — Raimon Samsó</li>
+            <li>Empieza con el Por Qué — Simon Sinek</li>
+            <li>Las 48 Leyes del Poder — Robert Greene</li>
+          </ul>
+
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter2('s2-1')">← Cap. 1</button><button class="btn btn-primary" onclick="goToChapter2('s2-3')">Cap. 3 →</button></div>
+        </section>
+
+        <!-- CAP 3 -->
+        <section class="book-chapter" id="s2-3">
+          <div class="book-ch-num">Capítulo 3</div>
+          <h2 class="book-ch-title">Mensajes que Necesitas Escuchar</h2>
+          <p class="book-lead">Este capítulo es diferente. No tiene fórmulas ni estrategias. Es solo palabras para los días difíciles.</p>
+
+          <div class="book-svg-wrap">
+            <svg viewBox="0 0 520 140" width="100%" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="10" width="230" height="55" rx="10" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+              <text x="125" y="32" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#059669" letter-spacing="1">PARA EL DÍA QUE QUIERAS RENDIRTE</text>
+              <text x="125" y="48" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#065f46">"Resiste un día más."</text>
+              <rect x="280" y="10" width="230" height="55" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+              <text x="395" y="32" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#059669" letter-spacing="1">CUANDO NO ERES SUFICIENTE</text>
+              <text x="395" y="48" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#065f46">"Ya eres suficiente."</text>
+              <rect x="10" y="80" width="230" height="55" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+              <text x="125" y="102" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#059669" letter-spacing="1">CUANDO TODO SALE MAL</text>
+              <text x="125" y="118" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#065f46">"Esto también pasará."</text>
+              <rect x="280" y="80" width="230" height="55" rx="10" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+              <text x="395" y="102" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#059669" letter-spacing="1">CUANDO TE SIENTES SOLO</text>
+              <text x="395" y="118" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#065f46">"Tu comunidad existe."</text>
+            </svg>
+          </div>
+
+          <div class="book-section-divider"></div>
+
+          <h3>Para el Día que Quieras Rendirte</h3>
+          <p>Llegarán esos días. Te lo prometo. Días en que te preguntas si vale la pena. Días en que compras la historia de que "esto no es para ti". Días en que el cansancio es tan grande que rendirse se siente como la decisión más sensata del mundo.</p>
+          <p>En esos días, recuerda esto: el fracaso no es caerse. El fracaso es quedarse caído. Muhammad Ali decía: <em>"No es cuántas veces te derriban; es cuántas veces te levantas."</em> Y Winston Churchill, en uno de los momentos más oscuros de la Segunda Guerra Mundial, dijo algo que se convirtió en el consejo de vida más corto y poderoso de la historia: <em>"Nunca te rindas. Nunca, nunca, nunca."</em></p>
+          <p>Cuando quieras rendirte, no decidas rendirte hoy. Toma la decisión mañana. Y mañana, vuelve a posponerla. La mayoría de los grandes éxitos del mundo fueron construidos por personas que simplemente no se rindieron un día más que todos los demás.</p>
+
+          <h3>Para Cuando Sientas que No Eres Suficiente</h3>
+          <p>El síndrome del impostor es real. Esa voz que dice: "¿Quién te crees que eres? ¿Por qué alguien te pagaría por esto? Hay miles de personas más capaces que tú." Es una voz que casi todos los emprendedores conocen, y muchos creen que solo les pasa a ellos.</p>
+          <p>La verdad: esa voz nunca desaparece completamente. Los grandes empresarios, los mejores conferencistas, los autores más vendidos... todos la escuchan. La diferencia es que aprendieron a no obedecerla.</p>
+
+          <div class="book-callout book-callout-green">
+            <div class="book-callout-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+            <div>
+              <strong>Recuerda Esto</strong>
+              <p>No necesitas saber todo para empezar. Solo necesitas saber un poco más que la persona que ayudas. Hay alguien en este momento que necesita lo que tú ya sabes. No lo hagas esperar mientras tú decides si eres "suficientemente bueno".</p>
+            </div>
+          </div>
+
+          <h3>Para el Día que Todo Salga Mal</h3>
+          <p>Habrá días en que todo falle. El cliente canceló. La campaña no funcionó. El proveedor falló. El socio traicionó. El dinero no alcanza. Todo al mismo tiempo, como si el universo hubiera decidido organizarse en tu contra.</p>
+          <p>Viktor Frankl sobrevivió los campos de concentración nazis y escribió <em>El Hombre en Busca de Sentido</em>. Su conclusión, después de haber perdido absolutamente todo: <em>"Entre el estímulo y la respuesta existe un espacio. En ese espacio reside nuestra libertad y nuestro poder para elegir nuestra respuesta."</em></p>
+          <p>No puedes controlar lo que pasa. Sí puedes controlar cómo respondes. En el peor día de tu vida como emprendedor, todavía tienes esa elección.</p>
+
+          <h3>Para Cuando Sientas que Estás Solo</h3>
+          <p>El emprendimiento puede ser increíblemente solitario. Especialmente al principio, cuando tu círculo más cercano no entiende por qué no te quedas en el empleo "seguro", cuando tus amigos te cambian el tema cuando hablas de tu negocio, cuando sientes que nadie a tu alrededor habla tu idioma.</p>
+          <p>No estás solo. En DGP Academy hay una comunidad de personas que están exactamente en tu mismo camino. Que entienden el lenguaje del emprendimiento. Que saben lo que se siente madrugar a trabajar en algo propio antes de ir al trabajo de otro. Esa comunidad existe para ti.</p>
+
+          <div class="book-callout book-callout-green">
+            <div class="book-callout-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div>
+              <strong>Afirmaciones para los Días Difíciles</strong>
+              <p>Soy más fuerte de lo que creo.<br>
+              Cada obstáculo me está preparando para algo mayor.<br>
+              No tengo que hacerlo perfectamente, solo tengo que seguir.<br>
+              Estoy en el camino correcto aunque no lo parezca.<br>
+              Mi historia aún no ha terminado.</p>
+            </div>
+          </div>
+
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter2('s2-2')">← Cap. 2</button><button class="btn btn-primary" onclick="goToChapter2('s2-4')">Cap. 4 →</button></div>
+        </section>
+
+        <!-- CAP 4 -->
+        <section class="book-chapter" id="s2-4">
+          <div class="book-part-header">
+            <div class="book-part-badge">Parte II · Las Raíces</div>
+            <div class="book-part-title">Educación Financiera</div>
+            <div class="book-part-sub">Sin raíces profundas, ningún árbol sobrevive la tormenta.</div>
+          </div>
+
+          <div class="book-ch-num">Capítulo 4</div>
+          <h2 class="book-ch-title">El Dinero No es el Enemigo</h2>
+          <p class="book-lead">El dinero es una herramienta. Como un martillo: puedes construir una casa o romperte el pulgar. El problema no es el martillo.</p>
+
+          <div class="book-quote"><p>"Los ricos no trabajan por dinero. Hacen que el dinero trabaje para ellos."</p><span>— Robert Kiyosaki</span></div>
+
+          <div class="book-svg-wrap">
+            <svg viewBox="0 0 520 180" width="100%" xmlns="http://www.w3.org/2000/svg">
+              <!-- Activo vs Pasivo -->
+              <rect x="10" y="10" width="230" height="130" rx="12" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+              <text x="125" y="38" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="16" fill="#059669" letter-spacing="2">ACTIVO</text>
+              <text x="125" y="58" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">Pone dinero en tu bolsillo</text>
+              <text x="35" y="82" font-family="sans-serif" font-size="10" fill="#065f46">✓ Negocio propio</text>
+              <text x="35" y="98" font-family="sans-serif" font-size="10" fill="#065f46">✓ Inversión en acciones</text>
+              <text x="35" y="114" font-family="sans-serif" font-size="10" fill="#065f46">✓ Propiedad en renta</text>
+              <text x="35" y="130" font-family="sans-serif" font-size="10" fill="#065f46">✓ Derechos de autor</text>
+
+              <rect x="280" y="10" width="230" height="130" rx="12" fill="#fff5f5" stroke="#e53e3e" stroke-width="1.5"/>
+              <text x="395" y="38" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="16" fill="#e53e3e" letter-spacing="2">PASIVO</text>
+              <text x="395" y="58" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#742a2a">Saca dinero de tu bolsillo</text>
+              <text x="295" y="82" font-family="sans-serif" font-size="10" fill="#742a2a">✗ Auto financiado</text>
+              <text x="295" y="98" font-family="sans-serif" font-size="10" fill="#742a2a">✗ Ropa de lujo a crédito</text>
+              <text x="295" y="114" font-family="sans-serif" font-size="10" fill="#742a2a">✗ Gadgets que no producen</text>
+              <text x="295" y="130" font-family="sans-serif" font-size="10" fill="#742a2a">✗ Casa propia (con hipoteca)</text>
+
+              <!-- Growth line -->
+              <polyline points="10,170 80,165 150,155 220,140 290,118 360,90 430,55 510,20" stroke="#059669" stroke-width="2.5" fill="none" stroke-dasharray="4,2"/>
+              <text x="260" y="178" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#7090b8">Interés compuesto a lo largo del tiempo →</text>
+            </svg>
+          </div>
+
+          <h3>Activo vs. Pasivo</h3>
+          <p>Robert Kiyosaki cambió la forma en que millones de personas ven el dinero con una distinción simple pero revolucionaria. Un activo es algo que pone dinero en tu bolsillo. Un pasivo es algo que saca dinero de tu bolsillo. La clase media pasa su vida acumulando pasivos que cree que son activos.</p>
+          <p>El ejemplo más claro: tu celular. Si lo usas para ver Netflix y jugar, es un pasivo. Si lo usas para crear contenido que genera ingresos, es un activo. La herramienta es la misma; lo que cambia es la mentalidad con que la usas. Empieza a mirar cada cosa que compras preguntando: ¿Esto me va a generar dinero o me lo va a quitar?</p>
+
+          <h3>El Interés Compuesto</h3>
+          <p>Albert Einstein supuestamente lo llamó "la octava maravilla del mundo". No sé si lo dijo, pero la matemática sí es maravillosa. Si inviertes $100 al mes durante 40 años con un rendimiento del 8% anual, terminarás con aproximadamente $350,000. Si esperas 20 años para empezar y haces lo mismo, terminarás con apenas $59,000. La diferencia no es el dinero; es el tiempo.</p>
+          <p>Ahora imagina que en lugar de empezar a los 45, empezaras a los 25. Esos 20 años de diferencia representan $291,000 adicionales. Eso es lo que te cuesta esperar.</p>
+
+          <h3>Flujo de Caja</h3>
+          <p>El flujo de caja es simplemente el dinero que entra menos el dinero que sale. Parece obvio, pero la mayoría de los emprendedores lo ignoran completamente. Puedes tener ventas de $3,000 al mes y estar en quiebra si tus gastos son $3,200. El negocio más común que falla no falla por falta de ventas; falla por flujo de caja negativo. Conoce tus números todos los días, no solo a fin de mes.</p>
+
+          <h3>La Regla del 72</h3>
+          <p>Divide 72 entre la tasa de rendimiento anual y obtendrás los años que tarda tu dinero en duplicarse. Al 8% anual: 72 ÷ 8 = 9 años para que tu dinero se duplique. Al 12% anual: 72 ÷ 12 = 6 años. Al 1% (cuenta de ahorros tradicional): 72 ÷ 1 = 72 años. Esta regla te ayuda a comparar opciones de inversión en segundos.</p>
+
+          <h3>Ingresos Activos vs. Pasivos</h3>
+          <p>Un ingreso activo requiere tu tiempo para existir. Si dejas de trabajar, deja de existir. Un ingreso pasivo sigue llegando aunque estés dormido. El objetivo del emprendedor no es solo ganar más dinero activo; es construir fuentes de ingreso pasivo que eventualmente superen tus gastos. Un canal de YouTube con contenido evergreen, un ebook, un curso grabado, una propiedad en renta: todos son ejemplos de activos que generan ingresos mientras tú duermes.</p>
+
+          <div class="book-section-divider"></div>
+
+          <h3>La Mentalidad Financiera que Nadie te Enseñó</h3>
+
+          <div class="book-list-cards">
+            <div class="book-list-card">
+              <div class="book-list-num">01</div>
+              <div>
+                <strong>Págate a Ti Primero</strong>
+                <p>Antes de pagar cualquier gasto, transfiere un porcentaje fijo a tu ahorro e inversión. No lo que sobra; lo primero que sale. La mayoría de las personas ahorra lo que sobra al final del mes. Los ricos invierten primero y viven con el resto.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">02</div>
+              <div>
+                <strong>Distingue Necesidades de Deseos</strong>
+                <p>Una necesidad es algo que necesitas para sobrevivir o trabajar. Un deseo es algo que quieres. Ninguno es malo, pero confundirlos es uno de los errores financieros más comunes y costosos.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">03</div>
+              <div>
+                <strong>El Costo de Oportunidad</strong>
+                <p>Cada vez que gastas $100 en algo, no solo gastas esos $100. Pierdes también lo que esos $100 podrían haberte generado si los hubieras invertido. Ese es el verdadero costo de cada compra.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="book-callout book-callout-green">
+            <div class="book-callout-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+            <div>
+              <strong>El Ejercicio del Café</strong>
+              <p>Si compras un café de $5 cada día laboral durante 20 años, gastas aproximadamente $26,000 en café. Si en cambio invirtieras ese mismo dinero al 8% anual, tendría un valor de más de $91,000. No se trata de no disfrutar el café; se trata de tomar decisiones conscientes.</p>
+            </div>
+          </div>
+
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter2('s2-3')">← Cap. 3</button><button class="btn btn-primary" onclick="goToChapter2('s2-5')">Cap. 5 →</button></div>
+        </section>
+
+        <!-- CAP 5 -->
+        <section class="book-chapter" id="s2-5">
+          <div class="book-ch-num">Capítulo 5</div>
+          <h2 class="book-ch-title">Cómo Administrar lo que Tienes Hoy</h2>
+          <p class="book-lead">No importa cuánto ganes si no sabes a dónde va. La administración financiera no es un lujo para cuando tengas más dinero; es la razón por la que tendrás más dinero.</p>
+
+          <div class="book-svg-wrap">
+            <svg viewBox="0 0 520 180" width="100%" xmlns="http://www.w3.org/2000/svg">
+              <!-- Donut segments approximated with arcs -->
+              <circle cx="140" cy="90" r="70" fill="none" stroke="#e2e8f0" stroke-width="28"/>
+              <!-- 55% gastos: stroke-dasharray = 55% of 2*pi*70 = 439.8 -->
+              <circle cx="140" cy="90" r="70" fill="none" stroke="#059669" stroke-width="28" stroke-dasharray="241.9 197.9" stroke-dashoffset="0" transform="rotate(-90 140 90)"/>
+              <!-- 10% ahorro -->
+              <circle cx="140" cy="90" r="70" fill="none" stroke="#34d399" stroke-width="28" stroke-dasharray="43.98 395.82" stroke-dashoffset="-241.9" transform="rotate(-90 140 90)"/>
+              <!-- 10% inversión -->
+              <circle cx="140" cy="90" r="70" fill="none" stroke="#064e3b" stroke-width="28" stroke-dasharray="43.98 395.82" stroke-dashoffset="-285.88" transform="rotate(-90 140 90)"/>
+              <!-- 10% educación -->
+              <circle cx="140" cy="90" r="70" fill="none" stroke="#6ee7b7" stroke-width="28" stroke-dasharray="43.98 395.82" stroke-dashoffset="-329.86" transform="rotate(-90 140 90)"/>
+              <!-- 10% diversión -->
+              <circle cx="140" cy="90" r="70" fill="none" stroke="#a7f3d0" stroke-width="28" stroke-dasharray="43.98 395.82" stroke-dashoffset="-373.84" transform="rotate(-90 140 90)"/>
+              <!-- 5% dar -->
+              <circle cx="140" cy="90" r="70" fill="none" stroke="#d1fae5" stroke-width="28" stroke-dasharray="21.99 417.81" stroke-dashoffset="-417.82" transform="rotate(-90 140 90)"/>
+              <text x="140" y="86" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="14" fill="#0d1b3e">SOBRES</text>
+              <text x="140" y="101" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#7090b8">Tu dinero</text>
+
+              <!-- Legend -->
+              <rect x="240" y="18" width="12" height="12" rx="2" fill="#059669"/>
+              <text x="258" y="28" font-family="sans-serif" font-size="11" fill="#0d1b3e">55% Gastos necesarios</text>
+              <rect x="240" y="38" width="12" height="12" rx="2" fill="#34d399"/>
+              <text x="258" y="48" font-family="sans-serif" font-size="11" fill="#0d1b3e">10% Ahorro</text>
+              <rect x="240" y="58" width="12" height="12" rx="2" fill="#064e3b"/>
+              <text x="258" y="68" font-family="sans-serif" font-size="11" fill="#0d1b3e">10% Inversión</text>
+              <rect x="240" y="78" width="12" height="12" rx="2" fill="#6ee7b7"/>
+              <text x="258" y="88" font-family="sans-serif" font-size="11" fill="#0d1b3e">10% Educación</text>
+              <rect x="240" y="98" width="12" height="12" rx="2" fill="#a7f3d0"/>
+              <text x="258" y="108" font-family="sans-serif" font-size="11" fill="#0d1b3e">10% Diversión</text>
+              <rect x="240" y="118" width="12" height="12" rx="2" fill="#d1fae5"/>
+              <text x="258" y="128" font-family="sans-serif" font-size="11" fill="#0d1b3e">5% Dar</text>
+            </svg>
+          </div>
+
+          <h3>El Sistema de los Sobres</h3>
+          <p>T. Harv Eker popularizó este sistema en <em>Los Secretos de la Mente Millonaria</em>. La idea es simple: cada vez que recibes dinero, lo divides inmediatamente en proporciones fijas. No esperas a fin de mes para ver qué sobra; defines de antemano a dónde va cada peso.</p>
+
+          <div class="book-table-wrap">
+            <table class="book-table">
+              <thead>
+                <tr><th>Sobre</th><th>%</th><th>Para qué</th><th>Ejemplo ($2,000/mes)</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Gastos necesarios</strong></td><td>55%</td><td>Renta, comida, transporte, servicios básicos</td><td>$1,100</td></tr>
+                <tr><td><strong>Ahorro</strong></td><td>10%</td><td>Fondo de emergencia, metas a corto plazo</td><td>$200</td></tr>
+                <tr><td><strong>Inversión</strong></td><td>10%</td><td>Acciones, fondos indexados, negocios</td><td>$200</td></tr>
+                <tr><td><strong>Educación</strong></td><td>10%</td><td>Libros, cursos, mentorías, conferencias</td><td>$200</td></tr>
+                <tr><td><strong>Diversión</strong></td><td>10%</td><td>Experiencias, entretenimiento, gustos</td><td>$200</td></tr>
+                <tr><td><strong>Dar</strong></td><td>5%</td><td>Donaciones, ayudar a otros, propinas generosas</td><td>$100</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Tu Presupuesto Mensual: Plantilla Práctica</h3>
+          <p>Un presupuesto no es una restricción; es un plan. La diferencia entre alguien que siempre le falta dinero y alguien que siempre tiene dinero, muchas veces, no es el ingreso; es el plan. Aquí una plantilla básica:</p>
+
+          <div class="book-table-wrap">
+            <table class="book-table">
+              <thead>
+                <tr><th>Concepto</th><th>Presupuestado</th><th>Real</th></tr>
+              </thead>
+              <tbody>
+                <tr class="tbl-section"><td colspan="3">Ingresos</td></tr>
+                <tr><td>Salario / Ingresos principales</td><td>$_____</td><td>$_____</td></tr>
+                <tr><td>Ingresos extras / negocio</td><td>$_____</td><td>$_____</td></tr>
+                <tr class="tbl-section"><td colspan="3">Gastos Fijos</td></tr>
+                <tr><td>Renta / Hipoteca</td><td>$_____</td><td>$_____</td></tr>
+                <tr><td>Servicios (luz, agua, internet)</td><td>$_____</td><td>$_____</td></tr>
+                <tr><td>Transporte</td><td>$_____</td><td>$_____</td></tr>
+                <tr class="tbl-section"><td colspan="3">Gastos Variables</td></tr>
+                <tr><td>Comida / Supermercado</td><td>$_____</td><td>$_____</td></tr>
+                <tr><td>Salud</td><td>$_____</td><td>$_____</td></tr>
+                <tr><td>Entretenimiento</td><td>$_____</td><td>$_____</td></tr>
+                <tr class="tbl-section"><td colspan="3">Objetivos Financieros</td></tr>
+                <tr><td>Ahorro</td><td>$_____</td><td>$_____</td></tr>
+                <tr><td>Inversión</td><td>$_____</td><td>$_____</td></tr>
+                <tr><td>Educación</td><td>$_____</td><td>$_____</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Los 5 Errores Financieros más Comunes del Emprendedor</h3>
+
+          <div class="book-list-cards">
+            <div class="book-list-card">
+              <div class="book-list-num">01</div>
+              <div>
+                <strong>Mezclar finanzas personales con las del negocio</strong>
+                <p>Tener una cuenta bancaria separada para tu negocio no es burocracia; es claridad. Cuando mezclas tus cuentas, no sabes si tu negocio es rentable o si estás sobreviviendo con tu salario.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">02</div>
+              <div>
+                <strong>No tener fondo de emergencia</strong>
+                <p>Los expertos recomiendan de 3 a 6 meses de gastos en una cuenta de fácil acceso. Para emprendedores, donde el ingreso puede ser irregular, yo recomiendo al menos 6 meses. Sin este fondo, cualquier emergencia puede destruir años de trabajo.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">03</div>
+              <div>
+                <strong>Invertir en herramientas antes de tener ingresos</strong>
+                <p>Comprar el mejor software, el mejor equipo, la mejor oficina antes de tener clientes es poner el carro delante del caballo. Valida tu idea primero. Invierte cuando los ingresos justifiquen la inversión.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">04</div>
+              <div>
+                <strong>No reinvertir en el negocio</strong>
+                <p>Cuando empiezan a llegar ingresos, muchos emprendedores los gastan en consumo personal. La regla general en los primeros años: reinvierte al menos el 30% de las ganancias del negocio en el negocio mismo.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">05</div>
+              <div>
+                <strong>Fijar precios por miedo, no por valor</strong>
+                <p>Cobrar barato no te hace más accesible; te hace menos creíble. El precio que cobras envía un mensaje sobre el valor que ofreces. Aprende a calcular tus precios basándote en el valor que entregas, no en lo que crees que "está bien cobrar".</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter2('s2-4')">← Cap. 4</button><button class="btn btn-primary" onclick="goToChapter2('s2-6')">Cap. 6 →</button></div>
+        </section>
+
+        <!-- CAP 6 -->
+        <section class="book-chapter" id="s2-6">
+          <div class="book-ch-num">Capítulo 6</div>
+          <h2 class="book-ch-title">Deuda, Inversión y Libertad Financiera</h2>
+          <p class="book-lead">La libertad financiera no significa ser millonario. Significa que tus activos generan suficiente ingreso pasivo para cubrir tus gastos. Ese es el número al que apuntas.</p>
+
+          <div class="book-svg-wrap">
+            <svg viewBox="0 0 520 160" width="100%" xmlns="http://www.w3.org/2000/svg">
+              <!-- Steps ascending -->
+              <rect x="10" y="120" width="80" height="30" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+              <text x="50" y="140" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#065f46">Nivel 1</text>
+              <rect x="110" y="95" width="80" height="55" rx="6" fill="#a7f3d0" stroke="#059669" stroke-width="1.5"/>
+              <text x="150" y="126" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#065f46">Nivel 2</text>
+              <rect x="210" y="68" width="80" height="82" rx="6" fill="#6ee7b7" stroke="#059669" stroke-width="1.5"/>
+              <text x="250" y="112" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#065f46">Nivel 3</text>
+              <rect x="310" y="38" width="80" height="112" rx="6" fill="#34d399" stroke="#059669" stroke-width="1.5"/>
+              <text x="350" y="97" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#064e3b">Nivel 4</text>
+              <rect x="410" y="10" width="100" height="140" rx="6" fill="#059669" stroke="#059669" stroke-width="1.5"/>
+              <text x="460" y="82" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="13" fill="#fff">LIBERTAD</text>
+              <text x="460" y="98" text-anchor="middle" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,0.8)">Nivel 5</text>
+              <text x="260" y="155" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#7090b8">Tu camino a la libertad financiera</text>
+            </svg>
+          </div>
+
+          <h3>Deuda Buena vs. Deuda Mala</h3>
+          <p>No toda deuda es igual. La deuda mala te empobrece; la deuda buena puede hacerte más rico. La diferencia está en lo que compras con ella.</p>
+
+          <div class="book-table-wrap">
+            <table class="book-table">
+              <thead>
+                <tr><th>Deuda Buena</th><th>Deuda Mala</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Financia activos que generan ingresos</td><td>Financia consumo que se deprecia</td></tr>
+                <tr><td>Préstamo para iniciar un negocio rentable</td><td>Tarjeta de crédito para ropa o electrónicos</td></tr>
+                <tr><td>Hipoteca de propiedad que se valoriza</td><td>Crédito de auto para un carro de lujo</td></tr>
+                <tr><td>Intereses bajos (menor al 10% anual)</td><td>Intereses altos (tarjetas: 30-50% anual)</td></tr>
+                <tr><td>Te acerca a tu libertad financiera</td><td>Te aleja de tu libertad financiera</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Primeros Pasos en Inversión</h3>
+
+          <div class="book-list-cards">
+            <div class="book-list-card">
+              <div class="book-list-num">01</div>
+              <div>
+                <strong>Fondo de emergencia primero</strong>
+                <p>Antes de invertir un solo peso, asegúrate de tener 3-6 meses de gastos en una cuenta de fácil acceso. Sin este colchón, cualquier emergencia te obligará a vender tus inversiones en el peor momento.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">02</div>
+              <div>
+                <strong>Salda las deudas de alto interés</strong>
+                <p>Si tienes una tarjeta de crédito al 40% anual, pagarla es la mejor inversión que puedes hacer. No hay ningún vehículo de inversión legal que te garantice un 40% de retorno. Pagar esa deuda es igual a ganar un 40%.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">03</div>
+              <div>
+                <strong>Invierte en ti mismo</strong>
+                <p>Antes de invertir en acciones o bienes raíces, invierte en tu capacidad de generar ingresos. Un curso que duplica tu valor en el mercado puede ser el mejor retorno de inversión de tu vida.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">04</div>
+              <div>
+                <strong>Diversifica gradualmente</strong>
+                <p>No pongas todos los huevos en una canasta. A medida que crezcas, distribuye tus inversiones entre diferentes activos: fondos indexados, tu propio negocio, quizás bienes raíces eventualmente.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="book-callout book-callout-green">
+            <div class="book-callout-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+            <div>
+              <strong>La Recomendación de Warren Buffett</strong>
+              <p>El inversor más exitoso de la historia recomienda a la mayoría de las personas invertir en fondos indexados de bajo costo que replican el S&amp;P 500. Históricamente han rendido entre 7% y 10% anual. No requieren conocimiento especializado y han superado a la mayoría de los fondos administrados activamente.</p>
+            </div>
+          </div>
+
+          <h3>Tu Camino a la Libertad Financiera: 5 Niveles</h3>
+
+          <div class="book-level-row">
+            <div class="book-level-num" style="background:#d1fae5;color:#064e3b;">1</div>
+            <div class="book-level-body">
+              <strong>Claridad Financiera</strong>
+              <span>Sabes exactamente cuánto ganas, cuánto gastas y a dónde va cada peso. Tienes un presupuesto y lo sigues.</span>
+            </div>
+          </div>
+          <div class="book-level-row">
+            <div class="book-level-num" style="background:#a7f3d0;color:#064e3b;">2</div>
+            <div class="book-level-body">
+              <strong>Estabilidad Financiera</strong>
+              <span>Tienes fondo de emergencia de 6 meses, sin deudas de alto interés y ahorras consistentemente.</span>
+            </div>
+          </div>
+          <div class="book-level-row">
+            <div class="book-level-num" style="background:#6ee7b7;color:#064e3b;">3</div>
+            <div class="book-level-body">
+              <strong>Libertad Financiera Básica</strong>
+              <span>Tus ingresos pasivos cubren tus gastos básicos. Podrías sobrevivir sin trabajar por meses.</span>
+            </div>
+          </div>
+          <div class="book-level-row">
+            <div class="book-level-num" style="background:#34d399;color:#064e3b;">4</div>
+            <div class="book-level-body">
+              <strong>Libertad Financiera Plena</strong>
+              <span>Tus ingresos pasivos cubren completamente tu estilo de vida actual. Trabajas porque quieres, no porque debes.</span>
+            </div>
+          </div>
+          <div class="book-level-row">
+            <div class="book-level-num" style="background:#059669;">5</div>
+            <div class="book-level-body">
+              <strong>Abundancia Financiera</strong>
+              <span>Tus ingresos pasivos superan ampliamente tus gastos. Tienes recursos para impactar a otros y crear legado.</span>
+            </div>
+          </div>
+
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter2('s2-5')">← Cap. 5</button><button class="btn btn-primary" onclick="goToChapter2('s2-7')">Cap. 7 →</button></div>
+        </section>
+
+        <!-- CAP 7 -->
+        <section class="book-chapter" id="s2-7">
+          <div class="book-part-header">
+            <div class="book-part-badge">Parte III · El Tronco</div>
+            <div class="book-part-title">Tu Negocio Digital</div>
+            <div class="book-part-sub">El tronco sostiene todas las ramas. Tu negocio es la estructura que lo hace posible.</div>
+          </div>
+
+          <div class="book-ch-num">Capítulo 7</div>
+          <h2 class="book-ch-title">Tu Marca Personal y Presencia Online</h2>
+          <p class="book-lead">En la economía digital, las personas no compran productos o servicios. Compran personas. Compran historia, autenticidad y confianza.</p>
+
+          <div class="book-quote"><p>"Tu marca personal es lo que la gente dice de ti cuando no estás en la habitación."</p><span>— Jeff Bezos</span></div>
+
+          <div class="book-svg-wrap">
+            <svg viewBox="0 0 520 180" width="100%" xmlns="http://www.w3.org/2000/svg">
+              <!-- Hub and spokes brand wheel -->
+              <circle cx="260" cy="90" r="40" fill="#059669"/>
+              <text x="260" y="86" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="12" fill="#fff">MARCA</text>
+              <text x="260" y="101" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="12" fill="#fff">PERSONAL</text>
+              <!-- Spokes -->
+              <line x1="260" y1="50" x2="260" y2="20" stroke="#059669" stroke-width="2"/>
+              <rect x="200" y="5" width="120" height="24" rx="6" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+              <text x="260" y="21" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">Autenticidad</text>
+
+              <line x1="300" y1="65" x2="340" y2="40" stroke="#059669" stroke-width="2"/>
+              <rect x="338" y="28" width="110" height="24" rx="6" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+              <text x="393" y="44" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">Historia</text>
+
+              <line x1="300" y1="115" x2="340" y2="140" stroke="#059669" stroke-width="2"/>
+              <rect x="338" y="128" width="120" height="24" rx="6" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+              <text x="398" y="144" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">Consistencia</text>
+
+              <line x1="220" y1="115" x2="180" y2="140" stroke="#059669" stroke-width="2"/>
+              <rect x="60" y="128" width="125" height="24" rx="6" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+              <text x="122" y="144" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">Propuesta de Valor</text>
+            </svg>
+          </div>
+
+          <h3>Los Fundamentos de tu Marca Personal</h3>
+
+          <div class="book-card-pair">
+            <div class="book-inner-card">
+              <h4>Autenticidad sobre Perfección</h4>
+              <p>Las personas se conectan con la humanidad, no con la perfección. Mostrar tu proceso, tus errores y tu aprendizaje crea más confianza que mostrar solo los resultados pulidos. La era de los influencers perfectos está terminando; la era de los humanos auténticos apenas comienza.</p>
+            </div>
+            <div class="book-inner-card">
+              <h4>Tu Historia es tu Superpoder</h4>
+              <p>Nadie más en el mundo tiene exactamente tu combinación de experiencias, fracasos, aprendizajes y perspectiva. Tu historia es lo único que no pueden copiarte. Úsala. Cuéntala. Las historias generan conexión emocional, y la conexión emocional genera confianza, y la confianza genera ventas.</p>
+            </div>
+            <div class="book-inner-card">
+              <h4>La Consistencia Construye Reconocimiento</h4>
+              <p>No se trata de publicar perfecto; se trata de publicar siempre. Los colores, la voz, el tono, los valores que comunicas deben ser reconocibles en todos tus canales. La consistencia no es repetición aburrida; es confiabilidad. Y la confiabilidad construye audiencias leales.</p>
+            </div>
+            <div class="book-inner-card">
+              <h4>Tu Propuesta de Valor</h4>
+              <p>Necesitas poder responder en una oración: ¿A quién ayudas? ¿Con qué problema? ¿Cómo? Si no puedes responder esto claramente, tu audiencia tampoco podrá entender por qué seguirte.</p>
+            </div>
+          </div>
+
+          <h3>Tu Propuesta de Valor Personal</h3>
+          <p>Usa esta fórmula para construir tu propuesta de valor:</p>
+
+          <div class="book-formula">
+            Ayudo a <span>[persona específica]</span> a <span>[resultado específico]</span> mediante <span>[método único]</span>
+          </div>
+
+          <div class="book-callout book-callout-green">
+            <div class="book-callout-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+            <div>
+              <strong>Ejemplo Real</strong>
+              <p>"Ayudo a <strong>emprendedores latinos principiantes</strong> a <strong>construir su primera fuente de ingresos digitales en 90 días</strong> mediante <strong>estrategias de contenido auténtico y educación financiera práctica</strong>."<br><br>
+              Ahora escribe la tuya. No tiene que ser perfecta. Solo tiene que ser honesta.</p>
+            </div>
+          </div>
+
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter2('s2-6')">← Cap. 6</button><button class="btn btn-primary" onclick="goToChapter2('s2-8')">Cap. 8 →</button></div>
+        </section>
+
+        <!-- CAP 8 -->
+        <section class="book-chapter" id="s2-8">
+          <div class="book-ch-num">Capítulo 8</div>
+          <h2 class="book-ch-title">Redes Sociales como Herramienta de Negocio</h2>
+          <p class="book-lead">Las redes sociales no son un pasatiempo. Son el medio de distribución más poderoso y democrático que ha existido en la historia humana.</p>
+
+          <div class="book-svg-wrap">
+            <svg viewBox="0 0 520 160" width="100%" xmlns="http://www.w3.org/2000/svg">
+              <!-- Bar chart platforms -->
+              <text x="10" y="15" font-family="'DM Mono',monospace" font-size="9" fill="#7090b8">USUARIOS ACTIVOS (miles de millones)</text>
+              <!-- Instagram -->
+              <rect x="20" y="30" width="70" height="110" rx="4" fill="#059669"/>
+              <text x="55" y="150" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#7090b8">Instagram</text>
+              <text x="55" y="25" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#059669">2B</text>
+              <!-- TikTok -->
+              <rect x="110" y="50" width="70" height="90" rx="4" fill="#34d399"/>
+              <text x="145" y="150" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#7090b8">TikTok</text>
+              <text x="145" y="45" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#34d399">1.5B</text>
+              <!-- LinkedIn -->
+              <rect x="200" y="80" width="70" height="60" rx="4" fill="#064e3b"/>
+              <text x="235" y="150" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#7090b8">LinkedIn</text>
+              <text x="235" y="75" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#064e3b">900M</text>
+              <!-- YouTube -->
+              <rect x="290" y="20" width="70" height="120" rx="4" fill="#059669"/>
+              <text x="325" y="150" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#7090b8">YouTube</text>
+              <text x="325" y="15" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#059669">2.7B</text>
+              <!-- Facebook -->
+              <rect x="380" y="10" width="70" height="130" rx="4" fill="#6ee7b7"/>
+              <text x="415" y="150" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#7090b8">Facebook</text>
+              <text x="415" y="5" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#064e3b">3B</text>
+              <line x1="10" y1="140" x2="510" y2="140" stroke="#e2e8f0" stroke-width="1"/>
+            </svg>
+          </div>
+
+          <div class="book-quote"><p>"Deja de vender. Empieza a ayudar."</p><span>— Gary Vaynerchuk</span></div>
+
+          <h3>La Regla de Oro del Contenido</h3>
+          <p>Gary Vee tiene una fórmula que parece contraintuitiva pero funciona: da, da, da, pide. Publica valor 3 o 4 veces antes de pedir algo a cambio. Educa, entretiene, inspira. Cuando hayas dado suficiente valor, cuando tu audiencia confíe en ti, entonces puedes hacer una oferta. Las personas que solo publican para vender espantan a su audiencia. Las personas que publican para dar, la construyen.</p>
+
+          <h3>Las Plataformas y su Personalidad</h3>
+
+          <div class="book-list-cards">
+            <div class="book-list-card">
+              <div class="book-list-num" style="background:#e1306c;color:#fff;">IG</div>
+              <div>
+                <strong>Instagram — Visual e Inspiracional</strong>
+                <p>Ideal para marcas visuales, moda, comida, viajes, fitness, educación. Reels hasta 90 segundos tienen el mayor alcance orgánico actualmente. Los Stories crean cercanía diaria. El feed construye tu galería de marca. Frecuencia recomendada: 1 post + 3-5 stories diarias.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num" style="background:#000;color:#fff;">TT</div>
+              <div>
+                <strong>TikTok — Entretenimiento y Descubrimiento</strong>
+                <p>La plataforma con mayor alcance orgánico en este momento. El algoritmo favorece el contenido, no los seguidores. Puedes tener 0 seguidores y viralizarte si tu contenido engancha en los primeros 3 segundos. Ideal para educación, humor, detrás de escenas, tendencias.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num" style="background:#0077b5;color:#fff;">LI</div>
+              <div>
+                <strong>LinkedIn — Profesional y B2B</strong>
+                <p>Si tu cliente es una empresa o un profesional, LinkedIn es tu plataforma. El contenido tiene una vida útil más larga que en otras redes. Los textos largos y reflexivos funcionan bien. Una historia de fracaso y aprendizaje puede generar miles de reacciones. Es la red menos saturada de contenido de calidad.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num" style="background:#ff0000;color:#fff;">YT</div>
+              <div>
+                <strong>YouTube — El Motor de Búsqueda Visual</strong>
+                <p>YouTube es el segundo motor de búsqueda más grande del mundo. Los videos aquí duran años. Una vez que tu canal tiene volumen, cada video sigue atrayendo audiencia mucho después de publicarse. Ideal para contenido educativo profundo, tutoriales y reviews. Mayor esfuerzo inicial, pero el mejor ROI a largo plazo.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num" style="background:#1877f2;color:#fff;">FB</div>
+              <div>
+                <strong>Facebook — Comunidad y Publicidad</strong>
+                <p>El alcance orgánico de Facebook ha caído dramáticamente, pero sigue siendo la plataforma de publicidad paga más segmentada del mundo. Los grupos de Facebook son una herramienta poderosa para construir comunidades de nicho. Si tienes presupuesto para publicidad, Meta Ads (Facebook + Instagram) es imbatible en segmentación.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="book-callout book-callout-green">
+            <div class="book-callout-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div>
+              <strong>Consejo DGP: Empieza con UNA Plataforma</strong>
+              <p>El error más común es querer estar en todas partes al mismo tiempo. Elige la plataforma donde está tu cliente ideal, aprende cómo funciona su algoritmo, y publica consistentemente durante 90 días. Domina una antes de agregar otra. La presencia mediocre en 5 redes vale menos que la excelencia en una.</p>
+            </div>
+          </div>
+
+          <h3>Tu Sistema de Contenido Semanal</h3>
+
+          <div class="book-table-wrap">
+            <table class="book-table">
+              <thead>
+                <tr><th>Día</th><th>Tipo de Contenido</th><th>Objetivo</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Lunes</strong></td><td>Educativo / Tip práctico</td><td>Posicionarte como experto</td></tr>
+                <tr><td><strong>Martes</strong></td><td>Historia personal / Proceso</td><td>Crear conexión y confianza</td></tr>
+                <tr><td><strong>Miércoles</strong></td><td>Pregunta o encuesta</td><td>Aumentar engagement</td></tr>
+                <tr><td><strong>Jueves</strong></td><td>Testimonio o resultado de cliente</td><td>Construir prueba social</td></tr>
+                <tr><td><strong>Viernes</strong></td><td>Reflexión motivacional</td><td>Inspirar y retener</td></tr>
+                <tr><td><strong>Sábado</strong></td><td>Detrás de escenas / Entretenimiento</td><td>Mostrar la persona detrás del negocio</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter2('s2-7')">← Cap. 7</button><button class="btn btn-primary" onclick="goToChapter2('s2-9')">Cap. 9 →</button></div>
+        </section>
+
+        <!-- CAP 9 -->
+        <section class="book-chapter" id="s2-9">
+          <div class="book-ch-num">Capítulo 9</div>
+          <h2 class="book-ch-title">Tu Sitio Web: la Base que Nadie Te Puede Quitar</h2>
+          <p class="book-lead">Cuando construyes en redes sociales, construyes en tierra alquilada. Cuando construyes tu sitio web, construyes en tierra propia.</p>
+
+          <div class="book-quote"><p>"Las redes sociales son tierra alquilada. Tu sitio web es tierra propia. El dueño del terreno cambia las reglas cuando quiere."</p><span>— DGP Global Group</span></div>
+
+          <div class="book-svg-wrap">
+            <svg viewBox="0 0 520 130" width="100%" xmlns="http://www.w3.org/2000/svg">
+              <!-- Timeline: 3 stages -->
+              <line x1="60" y1="65" x2="460" y2="65" stroke="#059669" stroke-width="2"/>
+              <!-- Stage 1 -->
+              <circle cx="100" cy="65" r="18" fill="#059669"/>
+              <text x="100" y="70" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#fff">1</text>
+              <text x="100" y="95" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#0d1b3e">Validación</text>
+              <text x="100" y="108" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#7090b8">Landing page</text>
+              <text x="100" y="119" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#7090b8">+ formulario</text>
+              <text x="100" y="40" text-anchor="middle" font-family="'DM Mono',monospace" font-size="9" fill="#059669">MES 1-3</text>
+              <!-- Stage 2 -->
+              <circle cx="260" cy="65" r="18" fill="#059669"/>
+              <text x="260" y="70" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#fff">2</text>
+              <text x="260" y="95" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#0d1b3e">Crecimiento</text>
+              <text x="260" y="108" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#7090b8">Blog + tienda</text>
+              <text x="260" y="119" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#7090b8">+ SEO</text>
+              <text x="260" y="40" text-anchor="middle" font-family="'DM Mono',monospace" font-size="9" fill="#059669">MES 4-12</text>
+              <!-- Stage 3 -->
+              <circle cx="420" cy="65" r="18" fill="#064e3b"/>
+              <text x="420" y="70" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#fff">3</text>
+              <text x="420" y="95" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#0d1b3e">Escala</text>
+              <text x="420" y="108" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#7090b8">Membresías +</text>
+              <text x="420" y="119" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#7090b8">automatización</text>
+              <text x="420" y="40" text-anchor="middle" font-family="'DM Mono',monospace" font-size="9" fill="#059669">AÑO 2+</text>
+            </svg>
+          </div>
+
+          <h3>Lo que un Sitio Web Hace por Ti</h3>
+          <ul class="book-checklist">
+            <li>Funciona como tu carta de presentación profesional 24/7, incluso cuando duermes.</li>
+            <li>Te permite capturar correos electrónicos y construir tu propia lista de contactos (que NADIE te puede quitar).</li>
+            <li>Posiciona en Google para que personas que nunca te han visto en redes sociales te encuentren.</li>
+            <li>Da credibilidad y legitimidad a tu negocio frente a clientes que investigan antes de comprar.</li>
+            <li>Es la única plataforma donde tienes control total sobre el diseño, el mensaje y los datos.</li>
+          </ul>
+
+          <h3>El Sitio Web que Necesitas según tu Etapa</h3>
+
+          <div class="book-list-cards">
+            <div class="book-list-card">
+              <div class="book-list-num">V</div>
+              <div>
+                <strong>Etapa de Validación (Meses 1-3)</strong>
+                <p>No necesitas un sitio web perfecto para empezar. Necesitas una landing page simple con: tu propuesta de valor clara, una foto tuya, lo que ofreces y un botón de contacto o formulario de captura de correo. Herramientas: Carrd, Linktree Pro, o WordPress con tema simple. Inversión: $0 a $30 al mes.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">C</div>
+              <div>
+                <strong>Etapa de Crecimiento (Meses 4-12)</strong>
+                <p>Ya tienes clientes, tienes claridad sobre tu oferta y necesitas más presencia. Agrega: blog con contenido SEO, página de servicios o tienda, testimonios de clientes, y blog para posicionamiento orgánico. Herramientas: WordPress + WooCommerce, Shopify, Squarespace. Inversión: $30 a $100 al mes.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">E</div>
+              <div>
+                <strong>Etapa de Escala (Año 2+)</strong>
+                <p>Tu negocio ya tiene tracción. Hora de automatizar y escalar. Agrega: membresías o área de clientes, integraciones de pago automáticas, email marketing automatizado y análisis avanzados. Herramientas: WordPress + MemberPress, Kajabi, o desarrollo personalizado. Inversión: $100+ al mes.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="book-callout book-callout-green">
+            <div class="book-callout-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+            <div>
+              <strong>DGP Global Group te Ayuda</strong>
+              <p>Nuestro equipo diseña y desarrolla sitios web profesionales para emprendedores en todas las etapas. Desde landing pages hasta e-commerce completos. Sin tecnicismos, sin complicaciones. Contáctanos en dgpglobalgroup.com</p>
+            </div>
+          </div>
+
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter2('s2-8')">← Cap. 8</button><button class="btn btn-primary" onclick="goToChapter2('s2-10')">Cap. 10 →</button></div>
+        </section>
+
+        <!-- CAP 10 -->
+        <section class="book-chapter" id="s2-10">
+          <div class="book-part-header">
+            <div class="book-part-badge">Parte IV · Las Ramas</div>
+            <div class="book-part-title">Crecimiento y Comunidad</div>
+            <div class="book-part-sub">Las ramas dan sombra, dan frutos y conectan con el mundo.</div>
+          </div>
+
+          <div class="book-ch-num">Capítulo 10</div>
+          <h2 class="book-ch-title">Contenido con Alma</h2>
+          <p class="book-lead">El contenido que solo busca gustarle al algoritmo dura poco. El contenido que busca conectar con personas, dura siempre.</p>
+
+          <div class="book-svg-wrap">
+            <svg viewBox="0 0 520 180" width="100%" xmlns="http://www.w3.org/2000/svg">
+              <!-- Content types wheel -->
+              <circle cx="260" cy="90" r="35" fill="#059669"/>
+              <text x="260" y="86" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#fff">CONTENIDO</text>
+              <text x="260" y="101" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="11" fill="#fff">CON ALMA</text>
+              <!-- 5 spokes -->
+              <line x1="260" y1="55" x2="260" y2="18" stroke="#059669" stroke-width="1.5"/>
+              <rect x="200" y="5" width="120" height="20" rx="6" fill="#f0fdf4" stroke="#059669" stroke-width="1.2"/>
+              <text x="260" y="19" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#065f46">Tu Historia</text>
+
+              <line x1="293" y1="68" x2="340" y2="38" stroke="#059669" stroke-width="1.5"/>
+              <rect x="338" y="27" width="120" height="20" rx="6" fill="#f0fdf4" stroke="#059669" stroke-width="1.2"/>
+              <text x="398" y="41" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#065f46">Lo que Aprendes</text>
+
+              <line x1="295" y1="115" x2="345" y2="145" stroke="#059669" stroke-width="1.5"/>
+              <rect x="343" y="135" width="130" height="20" rx="6" fill="#f0fdf4" stroke="#059669" stroke-width="1.2"/>
+              <text x="408" y="149" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#065f46">Lo que te Duele</text>
+
+              <line x1="225" y1="115" x2="175" y2="145" stroke="#059669" stroke-width="1.5"/>
+              <rect x="55" y="135" width="122" height="20" rx="6" fill="#f0fdf4" stroke="#059669" stroke-width="1.2"/>
+              <text x="116" y="149" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#065f46">El Proceso</text>
+
+              <line x1="227" y1="68" x2="180" y2="38" stroke="#059669" stroke-width="1.5"/>
+              <rect x="60" y="27" width="120" height="20" rx="6" fill="#f0fdf4" stroke="#059669" stroke-width="1.2"/>
+              <text x="120" y="41" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#065f46">Tu Opinión</text>
+            </svg>
+          </div>
+
+          <h3>Los 5 Tipos de Contenido que Conectan</h3>
+
+          <div class="book-list-cards">
+            <div class="book-list-card">
+              <div class="book-list-num">01</div>
+              <div>
+                <strong>Tu Historia</strong>
+                <p>¿De dónde vienes? ¿Qué obstáculos superaste? ¿Por qué empezaste? Las historias de origen crean empatía instantánea. No tienes que haber superado algo épico; tienes que haber superado algo real. El fracaso que convertiste en aprendizaje conecta más que el éxito perfecto.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">02</div>
+              <div>
+                <strong>Lo que Aprendes</strong>
+                <p>Documenta tu proceso de aprendizaje en tiempo real. No tienes que ser el experto definitivo; tienes que estar un paso adelante de tu audiencia y compartir lo que aprendes. "Hoy aprendí que..." es uno de los formatos de mayor engagement en todas las plataformas.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">03</div>
+              <div>
+                <strong>Lo que te Duele del Mundo</strong>
+                <p>Comparte lo que te indigna, lo que te frustra, lo que quieres cambiar. Este tipo de contenido polariza (lo cual no es malo) y atrae a personas que comparten tus valores. Las marcas más poderosas tienen puntos de vista claros sobre lo que está mal y lo que quieren mejorar.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">04</div>
+              <div>
+                <strong>El Proceso, No Solo el Resultado</strong>
+                <p>A las personas les fascina ver cómo se hace algo. El detrás de escenas, el antes y el después, el proceso de creación... todo esto genera más engagement que el resultado final. No esperes tener el éxito para empezar a documentar; documenta el camino desde ahora.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">05</div>
+              <div>
+                <strong>Tu Opinión</strong>
+                <p>El contenido más seguro es el más aburrido. Tener una perspectiva clara, incluso si no todos están de acuerdo, te diferencia en un océano de creadores tibios que tratan de gustarle a todos. Tu opinión honesta sobre un tema de tu industria puede convertirse en tu contenido más viral.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="book-section-divider"></div>
+
+          <h3>La Fórmula del Contenido que Convierte</h3>
+          <p>No todo el contenido tiene el mismo objetivo. El contenido que construye audiencia y el contenido que convierte audiencia en clientes son diferentes. Aquí la fórmula que funciona:</p>
+
+          <div class="book-list-cards">
+            <div class="book-list-card">
+              <div class="book-list-num" style="background:#059669;color:#fff;">H</div>
+              <div>
+                <strong>Hook — Los Primeros 3 Segundos</strong>
+                <p>Si no capturas la atención en los primeros 3 segundos, pierdes al espectador. El hook puede ser una pregunta provocadora, una estadística sorprendente, una afirmación polémica o el inicio de una historia emocionante. Todo lo demás es secundario si no hay hook.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num" style="background:#059669;color:#fff;">V</div>
+              <div>
+                <strong>Valor — El Núcleo del Contenido</strong>
+                <p>Entrega lo que prometiste en el hook. Educa, entretiene o inspira. No guardes lo mejor para el final; ponlo en el medio. Las personas deciden si siguen viendo basándose en si el valor llega rápido.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num" style="background:#059669;color:#fff;">C</div>
+              <div>
+                <strong>Cierre — La Resolución Emocional</strong>
+                <p>Termina con una conclusión que genere emoción o reflexión. Una historia siempre necesita un cierre. Un tutorial necesita un resultado claro. Una reflexión necesita una conclusión que dé sentido a todo lo anterior.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num" style="background:#059669;color:#fff;">A</div>
+              <div>
+                <strong>Call to Action — El Siguiente Paso</strong>
+                <p>Dile a tu audiencia qué hacer después. No asumas que lo sabrán. "Guarda este post para cuando lo necesites." "Comparte con alguien que está empezando." "Escríbeme al privado para más información." El CTA específico multiplica la acción.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter2('s2-9')">← Cap. 9</button><button class="btn btn-primary" onclick="goToChapter2('s2-11')">Cap. 11 →</button></div>
+        </section>
+
+        <!-- CAP 11 -->
+        <section class="book-chapter" id="s2-11">
+          <div class="book-ch-num">Capítulo 11</div>
+          <h2 class="book-ch-title">Tu Plan de Acción: 90 Días</h2>
+          <p class="book-lead">El conocimiento sin acción es entretenimiento. Este capítulo convierte todo lo que leíste en un plan concreto con fechas y metas.</p>
+
+          <div class="book-svg-wrap">
+            <svg viewBox="0 0 520 120" width="100%" xmlns="http://www.w3.org/2000/svg">
+              <!-- 3 blocks timeline -->
+              <rect x="10" y="20" width="155" height="80" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+              <text x="87" y="48" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="13" fill="#059669" letter-spacing="1">DÍAS 1-30</text>
+              <text x="87" y="66" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">Los Cimientos</text>
+              <text x="87" y="82" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#7090b8">Claridad y arranque</text>
+
+              <rect x="182" y="20" width="155" height="80" rx="10" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+              <text x="259" y="48" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="13" fill="#059669" letter-spacing="1">DÍAS 31-60</text>
+              <text x="259" y="66" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#065f46">El Impulso</text>
+              <text x="259" y="82" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#7090b8">Consistencia y aprendizaje</text>
+
+              <rect x="354" y="20" width="155" height="80" rx="10" fill="#059669" stroke="#059669" stroke-width="1.5"/>
+              <text x="431" y="48" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="13" fill="#fff" letter-spacing="1">DÍAS 61-90</text>
+              <text x="431" y="66" text-anchor="middle" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,0.9)">La Aceleración</text>
+              <text x="431" y="82" text-anchor="middle" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,0.7)">Optimización y escala</text>
+            </svg>
+          </div>
+
+          <div class="book-section-divider"></div>
+
+          <h3>DÍAS 1-30: Los Cimientos</h3>
+
+          <p><strong>Semana 1: Claridad Total</strong></p>
+          <ul class="book-checklist">
+            <li>Escribe tu por qué (el ejercicio del capítulo 1)</li>
+            <li>Define tu cliente ideal con el mayor detalle posible: edad, trabajo, miedos, sueños, qué consume en redes</li>
+            <li>Escribe tu propuesta de valor usando la fórmula del capítulo 7</li>
+            <li>Elige UNA plataforma de redes sociales para comenzar</li>
+          </ul>
+
+          <p><strong>Semana 2: Fundamentos Financieros</strong></p>
+          <ul class="book-checklist">
+            <li>Calcula tus gastos mensuales reales (tómate 2 horas, revisa tus últimos 3 meses)</li>
+            <li>Crea tu sistema de sobres o presupuesto mensual</li>
+            <li>Abre una cuenta bancaria separada para tu negocio si no la tienes</li>
+            <li>Define cuánto necesitas ganar para cubrir tus gastos básicos</li>
+          </ul>
+
+          <p><strong>Semana 3: Tu Presencia Digital Base</strong></p>
+          <ul class="book-checklist">
+            <li>Actualiza o crea tu perfil en la plataforma elegida con foto profesional, bio clara y link de contacto</li>
+            <li>Crea una landing page simple (aunque sea en Carrd o Linktree)</li>
+            <li>Publica tu primer contenido contando tu historia de inicio</li>
+            <li>Lee los capítulos 7 y 8 de este libro nuevamente con papel y pluma</li>
+          </ul>
+
+          <p><strong>Semana 4: Los Primeros Pasos en Acción</strong></p>
+          <ul class="book-checklist">
+            <li>Publica contenido 5 días seguidos (no tiene que ser perfecto)</li>
+            <li>Interactúa genuinamente con 10 cuentas de tu nicho al día</li>
+            <li>Habla con al menos 5 personas que podrían ser clientes potenciales</li>
+            <li>Haz una lista de 10 formas en que podrías generar ingresos con lo que sabes</li>
+          </ul>
+
+          <div class="book-callout book-callout-green">
+            <div class="book-callout-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <div>
+              <strong>Meta del Primer Mes</strong>
+              <p>Al terminar el día 30, deberías tener: un perfil digital optimizado, un presupuesto personal claro, al menos 20 piezas de contenido publicadas, y una lista de posibles primeros clientes o colaboraciones. No perfección. Momentum.</p>
+            </div>
+          </div>
+
+          <h3>DÍAS 31-60: El Impulso</h3>
+          <ul class="book-checklist">
+            <li>Analiza qué contenido funcionó en el mes 1 y haz más de eso</li>
+            <li>Lanza tu primera oferta aunque sea pequeña: consultoría, servicio, producto digital</li>
+            <li>Construye tu primera lista de correos electrónicos (mínimo 50 contactos)</li>
+            <li>Lee un libro de la lista del capítulo 2</li>
+            <li>Aplica el sistema de sobres por 30 días y revisa los resultados</li>
+            <li>Busca un mentor o comunidad de emprendedores (DGP Academy)</li>
+            <li>Documenta todo: qué funciona, qué no, qué aprendes</li>
+            <li>Establece tu rutina matutina: mínimo 30 minutos antes de revisar el teléfono</li>
+          </ul>
+
+          <h3>DÍAS 61-90: La Aceleración</h3>
+          <ul class="book-checklist">
+            <li>Optimiza tu oferta basándote en el feedback de los primeros clientes</li>
+            <li>Crea un sistema de testimonios: pide a tus clientes que compartan su experiencia</li>
+            <li>Invierte el 10% de tus ganancias en publicidad paga o en educación</li>
+            <li>Considera agregar una segunda plataforma de distribución de contenido</li>
+            <li>Revisa tus finanzas: ¿estás en el nivel 1 de libertad financiera? (claridad)</li>
+            <li>Escribe tus 3 metas principales para los próximos 90 días</li>
+            <li>Celebra lo que construiste. Genuinamente. Esto importa.</li>
+          </ul>
+
+          <div class="book-quote">
+            <p>"No midas tu progreso por lo que aún no tienes. Mídelo por lo que eres hoy comparado con quien eras hace 90 días."</p>
+            <span>— DGP Global Group</span>
+          </div>
+
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter2('s2-10')">← Cap. 10</button><button class="btn btn-primary" onclick="goToChapter2('s2-recursos')">Recursos →</button></div>
+        </section>
+
+        <!-- RECURSOS ESPECIALES -->
+        <section class="book-chapter" id="s2-recursos">
+          <div class="book-ch-num" style="color:#059669;">✨ Recursos Especiales</div>
+          <h2 class="book-ch-title">Tu Kit de Herramientas del Emprendedor</h2>
+          <p class="book-lead">Todo lo que necesitas en un solo lugar. Guarda esta sección; la usarás muchas veces.</p>
+
+          <h3>Tu Lista de Lecturas por Objetivo</h3>
+
+          <div class="book-list-cards">
+            <div class="book-list-card">
+              <div class="book-list-num">01</div>
+              <div>
+                <strong>Para fortalecer tu mentalidad</strong>
+                <p>Mindset — Carol Dweck<br>
+                El Monje que Vendió su Ferrari — Robin Sharma<br>
+                Los Cuatro Acuerdos — Miguel Ruiz<br>
+                Siente el Miedo y Hazlo de Todas Formas — Susan Jeffers</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">02</div>
+              <div>
+                <strong>Para mejorar tus finanzas</strong>
+                <p>Padre Rico Padre Pobre — Robert Kiyosaki<br>
+                Los Secretos de la Mente Millonaria — T. Harv Eker<br>
+                El Hombre Más Rico de Babilonia — George Clason<br>
+                El Código del Dinero — Raimon Samsó</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">03</div>
+              <div>
+                <strong>Para construir hábitos y productividad</strong>
+                <p>Hábitos Atómicos — James Clear<br>
+                El Poder de los Hábitos — Charles Duhigg<br>
+                La Semana Laboral de 4 Horas — Tim Ferriss<br>
+                Comienza con el Por Qué — Simon Sinek</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">04</div>
+              <div>
+                <strong>Para mejorar en ventas y marketing</strong>
+                <p>Cómo Ganar Amigos e Influir sobre las Personas — Dale Carnegie<br>
+                $100M Offers — Alex Hormozi<br>
+                Influence — Robert Cialdini<br>
+                This is Marketing — Seth Godin</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num">05</div>
+              <div>
+                <strong>Para el crecimiento personal profundo</strong>
+                <p>Las Siete Leyes Espirituales del Éxito — Deepak Chopra<br>
+                El Alquimista — Paulo Coelho<br>
+                El Poder del Ahora — Eckhart Tolle<br>
+                Piense y Hágase Rico — Napoleon Hill</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="book-section-divider"></div>
+
+          <h3>Herramientas Esenciales</h3>
+
+          <div class="book-table-wrap">
+            <table class="book-table">
+              <thead>
+                <tr><th>Área</th><th>Herramienta</th><th>Para qué la usas</th></tr>
+              </thead>
+              <tbody>
+                <tr class="tbl-section"><td colspan="3">Diseño y Contenido</td></tr>
+                <tr><td>Diseño</td><td>Canva</td><td>Posts, stories, presentaciones, logos básicos</td></tr>
+                <tr><td>Edición de video</td><td>CapCut</td><td>Reels, TikToks, shorts de YouTube</td></tr>
+                <tr><td>Fotografía de producto</td><td>Lightroom Mobile</td><td>Editar fotos desde el celular</td></tr>
+                <tr class="tbl-section"><td colspan="3">Gestión y Organización</td></tr>
+                <tr><td>Gestión de proyectos</td><td>Notion</td><td>Planificar contenido, llevar ideas, gestionar tareas</td></tr>
+                <tr><td>Calendario de contenido</td><td>Later / Buffer</td><td>Programar publicaciones con anticipación</td></tr>
+                <tr><td>Comunicación con clientes</td><td>WhatsApp Business</td><td>Catálogo de productos, respuestas automáticas</td></tr>
+                <tr class="tbl-section"><td colspan="3">Marketing y Ventas</td></tr>
+                <tr><td>Email marketing</td><td>Mailchimp / Brevo</td><td>Newsletters, automatizaciones de correo</td></tr>
+                <tr><td>Landing pages</td><td>Carrd / WordPress</td><td>Capturar leads, vender productos</td></tr>
+                <tr><td>Analytics</td><td>Google Analytics</td><td>Medir tráfico de tu sitio web</td></tr>
+                <tr class="tbl-section"><td colspan="3">Finanzas</td></tr>
+                <tr><td>Presupuesto personal</td><td>YNAB / Fintonic</td><td>Llevar tus finanzas personales y de negocio</td></tr>
+                <tr><td>Facturación</td><td>Wave / FreshBooks</td><td>Crear facturas profesionales y cobrar</td></tr>
+                <tr><td>Inversión</td><td>Fondos indexados (ETF)</td><td>Invertir consistentemente con bajo costo</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="book-section-divider"></div>
+
+          <h3>Afirmaciones Diarias del Emprendedor</h3>
+          <p>Lee estas afirmaciones en voz alta cada mañana. Toma 3 minutos. Cambia más de lo que crees.</p>
+
+          <ul class="book-checklist">
+            <li>Soy un emprendedor que crea valor real en el mundo.</li>
+            <li>Mis finanzas mejoran cada día porque tomo decisiones conscientes.</li>
+            <li>Tengo todo lo que necesito para empezar donde estoy.</li>
+            <li>Los obstáculos son lecciones que me están preparando para algo mayor.</li>
+            <li>Estoy construyendo un legado que va más allá del dinero.</li>
+            <li>Atraigo clientes que valoran lo que ofrezco y pagan lo que vale.</li>
+            <li>Mi historia importa y puede inspirar a otros.</li>
+            <li>Cada día publico, aprendo y mejoro.</li>
+            <li>La consistencia es mi superpoder.</li>
+            <li>Soy libre de construir la vida que quiero.</li>
+          </ul>
+
+          <div class="book-section-divider"></div>
+
+          <h3>Tu Diario de Progreso — Plantilla Semanal</h3>
+          <p>Dedica 10 minutos cada domingo a completar esta reflexión. La claridad que genera vale infinitamente más que el tiempo que inviertes.</p>
+
+          <div class="book-table-wrap">
+            <table class="book-table">
+              <thead>
+                <tr><th>Pregunta</th><th>Mi Respuesta Esta Semana</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>¿Qué 3 cosas salieron bien esta semana?</td><td style="min-width:200px;">1.<br>2.<br>3.</td></tr>
+                <tr><td>¿Qué 1 cosa haré diferente la próxima semana?</td><td>&nbsp;</td></tr>
+                <tr><td>¿Cuánto generé / cuánto ahorré / cuánto invertí?</td><td>Generé: $___<br>Ahorré: $___<br>Invertí: $___</td></tr>
+                <tr><td>¿Qué contenido creé esta semana?</td><td>&nbsp;</td></tr>
+                <tr><td>¿A quién ayudé o impacté esta semana?</td><td>&nbsp;</td></tr>
+                <tr><td>¿Qué aprendí que no sabía hace 7 días?</td><td>&nbsp;</td></tr>
+                <tr><td>¿Cuál es mi intención más importante para la próxima semana?</td><td>&nbsp;</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter2('s2-11')">← Cap. 11</button><button class="btn btn-primary" onclick="goToChapter2('s2-conclusion')">Conclusión →</button></div>
+        </section>
+
+        <!-- CONCLUSIÓN -->
+        <section class="book-chapter" id="s2-conclusion">
+          <div class="book-ch-num">Conclusión</div>
+          <h2 class="book-ch-title">Ahora Eres el Árbol</h2>
+          <p class="book-lead">Llegaste al final de este libro. Eso ya dice algo sobre ti.</p>
+
+          <p>La mayoría de las personas que compran libros no los terminan. La mayoría de las personas que empiezan algo no lo terminan. Tú lo hiciste. Y eso, aunque parezca pequeño, es evidencia de quién eres.</p>
+
+          <p>Cuando empezamos este libro, eras la semilla. Tenías el potencial, el deseo, quizás el sueño. Pero eras potencial sin forma, energía sin dirección. A lo largo de estas páginas, construimos algo juntos:</p>
+
+          <div class="book-list-cards">
+            <div class="book-list-card">
+              <div class="book-list-num" style="background:#d1fae5;color:#064e3b;">🌱</div>
+              <div>
+                <strong>La Semilla — Eres Tú</strong>
+                <p>Tu historia, tu por qué, tu identidad de emprendedor. Todo lo que eres ya contiene todo lo que necesitas para crecer.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num" style="background:#a7f3d0;color:#064e3b;">🌿</div>
+              <div>
+                <strong>Las Raíces — Tu Educación Financiera</strong>
+                <p>Sin raíces profundas, ningún árbol sobrevive la tormenta. La educación financiera es lo que te da estabilidad cuando el mundo tiembla.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num" style="background:#6ee7b7;color:#064e3b;">🌳</div>
+              <div>
+                <strong>El Tronco — Tu Negocio Digital</strong>
+                <p>Tu marca personal, tu sitio web, tu presencia en redes sociales: el tronco que sostiene todo lo demás y que te hace visible al mundo.</p>
+              </div>
+            </div>
+            <div class="book-list-card">
+              <div class="book-list-num" style="background:#059669;">🍃</div>
+              <div>
+                <strong>Las Ramas — Tus Relaciones y Contenido</strong>
+                <p>El contenido con alma, la comunidad, las conexiones: las ramas que se extienden, dan sombra y eventualmente darán frutos.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="book-quote">
+            <p>"No le preguntes al árbol cuándo dará frutos. Pregúntate si estás dándole suficiente agua, luz y tiempo."</p>
+            <span>— Anónimo</span>
+          </div>
+
+          <p>Los frutos, que son la libertad financiera, el impacto, el legado, llegarán cuando el árbol esté listo. Y el árbol se prepara con raíces profundas, con un tronco sólido y con ramas que no tienen miedo de extenderse.</p>
+
+          <p>No sé exactamente en qué punto de tu camino estás mientras lees esto. Quizás estás en el día 1. Quizás llevas años en esto y este libro te recordó algo que habías olvidado. Quizás estás en uno de esos momentos oscuros donde todo parece difícil. En cualquiera de esos casos, este libro fue escrito para ti.</p>
+
+          <p>El camino no es una línea recta. Habrá temporadas de sequía y temporadas de lluvia. Habrá vientos que doblegan las ramas y temporadas de tanta luz que apenas puedes creer que es tu vida. Todo eso es parte del proceso de convertirte en el árbol.</p>
+
+          <div class="book-callout book-callout-green">
+            <div class="book-callout-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <div>
+              <strong>¿Listo para Dar el Siguiente Paso?</strong>
+              <p>DGP Academy es la comunidad donde los emprendedores como tú vienen a crecer juntos. Cursos, mentorías, comunidad activa y herramientas para construir tu negocio digital. Tu árbol crece más rápido en un bosque que solo.</p>
+            </div>
+          </div>
+
+          <div class="book-author-note">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#0d1b3e;letter-spacing:.06em;margin-bottom:6px;">DGP Global Group</div>
+            <div style="font-size:13px;color:#3a5880;margin-bottom:4px;">Educación para emprendedores que construyen en serio.</div>
+            <div style="font-size:12px;color:#059669;font-family:'DM Mono',monospace;">dgpglobalgroup.com</div>
+            <p style="margin-top:12px;font-size:13px;color:#7090b8;">Síguenos en redes sociales: <strong>@dgpglobalgroup</strong><br>
+            Únete a DGP Academy y continúa tu camino hacia el Vol. 3.</p>
+          </div>
+
+          <div class="book-ch-nav"><button class="btn btn-ghost" onclick="goToChapter2('s2-recursos')">← Recursos</button><button class="btn btn-ghost" onclick="closeBook2()">Volver al dashboard</button></div>
+        </section>
+
+      </div><!-- /book-content-2 -->
+    </main>
+
+  </div>
+</div><!-- /book-screen-2 -->
+
 </body>
 </html>

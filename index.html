@@ -3452,9 +3452,13 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
               DGP Global Group
             </div>
           </div>
-          <button class="btn-book" disabled style="background:#f0fdf4;color:#047857;border:1.5px solid rgba(5,150,105,0.25);cursor:not-allowed;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
-            Disponible pronto
+          <div class="book-read-progress" id="book2-progress" style="display:none;">
+            <span class="book-read-label" id="book2-read-label" style="color:#059669;">0 / 14 capítulos leídos</span>
+            <div class="book-read-bar-wrap"><div class="book-read-bar-fill" id="book2-read-bar-fill" style="width:0%;background:#059669;"></div></div>
+          </div>
+          <button id="btn-semilla" class="btn-book btn-book-locked" disabled>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            Próximamente disponible
           </button>
         </div>
       </div>
@@ -6220,8 +6224,11 @@ if (firebaseReady) {
           }
           // ── Load book chapter position ──
           window._bookLastChapter = (docData.bookProgress && docData.bookProgress['7st']) || 'ch-intro';
+          window._book2LastChapter = (docData.bookProgress && docData.bookProgress['semilla']) || 's2-nota';
           // ── Load read chapters ──
           loadBookReadChapters((docData.bookProgress && docData.bookProgress['7st-read']) || []);
+          loadBook2ReadChapters((docData.bookProgress && docData.bookProgress['semilla-read']) || []);
+          updateBookAccess2(docData.books || []);
           // Sync to localStorage as cache
           localStorage.setItem('curso_done_' + user.uid, JSON.stringify(completed));
           updateDashStats();
@@ -6355,6 +6362,124 @@ function retryQuiz() {
   document.getElementById('book-content').scrollTop = 0;
 }
 
+// ── Book 2 (De la Semilla al Árbol) ──────────────────────────────────────────
+const BOOK2_CHAPTERS = ['s2-nota','s2-1','s2-2','s2-3','s2-4','s2-5','s2-6','s2-7','s2-8','s2-9','s2-10','s2-11','s2-recursos','s2-conclusion'];
+window._book2ReadChapters = window._book2ReadChapters || new Set();
+let currentChapter2 = 's2-nota';
+
+function showBook2() {
+  ['landing-screen','auth-screen','dash-screen','course-screen','admin-screen','book-screen'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  const bs = document.getElementById('book-screen-2');
+  if (bs) bs.style.display = 'block';
+  const startChapter = window._book2LastChapter || 's2-nota';
+  goToChapter2(startChapter);
+}
+
+function closeBook2() {
+  const bs = document.getElementById('book-screen-2');
+  if (bs) bs.style.display = 'none';
+  showDashboard();
+}
+
+function toggleBookNav2() {
+  const nav = document.getElementById('book-nav-2');
+  if (!nav) return;
+  nav.classList.toggle('open');
+  const bd = document.getElementById('book-backdrop-2');
+  if (bd) bd.style.display = nav.classList.contains('open') ? 'block' : 'none';
+}
+
+function goToChapter2(id) {
+  document.querySelectorAll('#book-screen-2 .book-chapter').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('#book-screen-2 .book-toc-item').forEach(el => el.classList.remove('active'));
+  const ch = document.getElementById(id);
+  if (ch) { ch.classList.add('active'); const bc = document.getElementById('book-content-2'); if (bc) bc.scrollTop = 0; }
+  const tocItem = document.querySelector('#book-screen-2 [data-ch="' + id + '"]');
+  if (tocItem) {
+    tocItem.classList.add('active');
+    const labels = {
+      's2-nota':'Nota Inicial','s2-1':'Cap. 1 · Por Qué Emprendes','s2-2':'Cap. 2 · Libros que Cambian Vidas',
+      's2-3':'Cap. 3 · Mensajes para Ti','s2-4':'Cap. 4 · El Dinero','s2-5':'Cap. 5 · Administrar',
+      's2-6':'Cap. 6 · Inversión y Libertad','s2-7':'Cap. 7 · Marca Personal',
+      's2-8':'Cap. 8 · Redes Sociales','s2-9':'Cap. 9 · Tu Sitio Web',
+      's2-10':'Cap. 10 · Contenido con Alma','s2-11':'Cap. 11 · 90 Días',
+      's2-recursos':'✨ Recursos Especiales','s2-conclusion':'Conclusión'
+    };
+    const lbl = document.getElementById('book-chapter-label-2');
+    if (lbl) lbl.textContent = labels[id] || id;
+  }
+  currentChapter2 = id;
+  markChapter2Read(id);
+  window._book2LastChapter = id;
+  if (db && auth && auth.currentUser) {
+    db.collection('users').doc(auth.currentUser.uid).update({ 'bookProgress.semilla': id }).catch(() => {});
+  }
+  const nav = document.getElementById('book-nav-2');
+  if (nav) nav.classList.remove('open');
+  const bd = document.getElementById('book-backdrop-2');
+  if (bd) bd.style.display = 'none';
+}
+
+function markChapter2Read(id) {
+  if (!BOOK2_CHAPTERS.includes(id)) return;
+  if (window._book2ReadChapters.has(id)) return;
+  window._book2ReadChapters.add(id);
+  const tocEl = document.querySelector('#book-screen-2 [data-ch="' + id + '"]');
+  if (tocEl) tocEl.classList.add('read');
+  updateBook2ReadProgress();
+  if (db && auth && auth.currentUser) {
+    db.collection('users').doc(auth.currentUser.uid).update({
+      'bookProgress.semilla-read': Array.from(window._book2ReadChapters)
+    }).catch(() => {});
+  }
+}
+
+function updateBook2ReadProgress() {
+  const total = BOOK2_CHAPTERS.length;
+  const done = BOOK2_CHAPTERS.filter(c => window._book2ReadChapters.has(c)).length;
+  const pct = Math.round((done / total) * 100);
+  const fill = document.getElementById('book2-read-bar-fill');
+  const lbl = document.getElementById('book2-read-label');
+  if (fill) fill.style.width = pct + '%';
+  if (lbl) lbl.textContent = done + ' / ' + total + ' capítulos leídos';
+}
+
+function loadBook2ReadChapters(arr) {
+  window._book2ReadChapters = new Set(arr || []);
+  BOOK2_CHAPTERS.forEach(id => {
+    if (window._book2ReadChapters.has(id)) {
+      const tocEl = document.querySelector('#book-screen-2 [data-ch="' + id + '"]');
+      if (tocEl) tocEl.classList.add('read');
+    }
+  });
+  updateBook2ReadProgress();
+}
+
+function updateBookAccess2(books) {
+  const btn = document.getElementById('btn-semilla');
+  const progressWrap = document.getElementById('book2-progress');
+  if (!btn) return;
+  if (books.includes('semilla')) {
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> Continuar leyendo';
+    btn.className = 'btn-book btn-book-active';
+    btn.style.background = '#059669';
+    btn.disabled = false;
+    btn.onclick = function() { showBook2(); };
+    if (progressWrap) progressWrap.style.display = 'block';
+    updateBook2ReadProgress();
+  } else {
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Próximamente disponible';
+    btn.className = 'btn-book btn-book-locked';
+    btn.style.background = '';
+    btn.disabled = true;
+    btn.onclick = null;
+    if (progressWrap) progressWrap.style.display = 'none';
+  }
+}
+
 // ── Admin panel ───────────────────────────────────────────────────────────────
 let allAdminUsers = [];
 
@@ -6456,6 +6581,15 @@ function renderAdminUsers(users) {
             'title="' + (bookActive ? 'Quitar acceso a 7ST' : 'Dar acceso a libro 7ST') + '">' +
             '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>' +
             ' 7ST' +
+          '</button>';
+        })() +
+        (function() {
+          var semillaActive = !!(u.books && u.books.includes('semilla'));
+          return '<button class="admin-toggle ' + (semillaActive ? 'active' : '') + '" ' +
+            'onclick="toggleBook(\'' + u.uid + '\', \'semilla\', ' + semillaActive + ')" ' +
+            'title="' + (semillaActive ? 'Quitar Semilla al Árbol' : 'Dar acceso a Semilla al Árbol') + '" ' +
+            'style="' + (semillaActive ? 'border-color:rgba(5,150,105,0.5);color:#059669;background:rgba(5,150,105,0.1);' : '') + '">' +
+            '🌱 Semilla' +
           '</button>';
         })() +
         '<button class="admin-toggle admin-paid-toggle ' + (webPaid ? 'paid' : '') + '" ' +

@@ -16,11 +16,13 @@ async function loadMembersAdmin() {
   if (!allAdminUsers.length) { const r = await sb.rpc('admin_students'); allAdminUsers = r.data || []; }
   const dl = document.getElementById('mp-user-list');
   if (dl && !dl.options.length) dl.innerHTML = allAdminUsers.filter(u => !u.is_admin).map(u => '<option value="' + escapeHtml(u.email) + '">' + escapeHtml(u.full_name || '') + '</option>').join('');
-  const [{ data, error }, plans, court] = await Promise.all([sb.rpc('admin_members'), sb.from('plans').select('*').order('position'), sb.from('courtesy').select('*').order('created_at', { ascending: false })]);
+  const [{ data, error }, plans, court, slots] = await Promise.all([sb.rpc('admin_members'), sb.from('plans').select('*').order('position'), sb.from('courtesy').select('*').order('created_at', { ascending: false }),
+    sb.from('meeting_slots').select('id, starts_at, minutes, booked_by').gte('starts_at', new Date().toISOString()).order('starts_at').limit(200)]);
   if (error) { document.getElementById('mk-body').innerHTML = '<div class="admin-empty is-error">' + escapeHtml(rpcError(error)) + '</div>'; return; }
   MK = data;
   MK.plans = plans.data || [];
   MK.courtesy = court.data || [];
+  MK.slots = slots.data || [];
   const now = Date.now();
   const active = MK.subscriptions.filter(s => ['active', 'past_due'].includes(s.status) && new Date(s.current_period_end).getTime() > now);
   const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
@@ -116,11 +118,55 @@ async function uploadFlyerFile(input) {
 }
 
 // ── Asesorías ──
+// ── Horarios de asesoría: el equipo los publica y el estudiante elige ──
+function mkSlots() {
+  const today = new Date(); const iso = d => d.toISOString().slice(0, 10);
+  const in30 = new Date(Date.now() + 30 * 864e5);
+  const days = (LANG === 'en' ? ['M', 'T', 'W', 'T', 'F', 'S', 'S'] : ['L', 'M', 'X', 'J', 'V', 'S', 'D']).map((l, i) => [String(i + 1), l]);
+  const tzs = ['America/Chicago', 'America/New_York', 'America/Denver', 'America/Los_Angeles', 'America/Mexico_City', 'America/Bogota', 'America/Lima'];
+  const who = id => { const u = allAdminUsers.find(x => x.id === id); return u ? (u.full_name || u.email) : t('Reservado'); };
+  const byDay = {};
+  MK.slots.forEach(sl => { const k = new Date(sl.starts_at).toLocaleDateString(locale(), { weekday: 'long', day: 'numeric', month: 'long' }); (byDay[k] = byDay[k] || []).push(sl); });
+  return '<form class="adm-card" onsubmit="event.preventDefault();addSlots()">' +
+      '<div class="adm-card-head"><h2>' + escapeHtml(t('Horarios disponibles')) + '</h2><span class="adm-card-sub">' + escapeHtml(t('Publica tus horarios y cada estudiante elige día y hora desde su panel.')) + '</span></div>' +
+      '<div class="adm-form-grid">' +
+        '<label class="adm-field"><span>' + escapeHtml(t('Desde')) + '</span><input class="form-input" type="date" id="sl-from" value="' + iso(today) + '"></label>' +
+        '<label class="adm-field"><span>' + escapeHtml(t('Hasta')) + '</span><input class="form-input" type="date" id="sl-to" value="' + iso(in30) + '"></label>' +
+        '<div class="adm-field adm-field--wide"><span>' + escapeHtml(t('Días')) + '</span><div class="sl-days">' + days.map(([v, l]) => '<label><input type="checkbox" value="' + v + '"' + (Number(v) <= 5 ? ' checked' : '') + '><span>' + escapeHtml(l) + '</span></label>').join('') + '</div></div>' +
+        '<label class="adm-field adm-field--wide"><span>' + escapeHtml(t('Horas (separadas por coma)')) + '</span><input class="form-input" id="sl-times" value="10:00, 11:00, 16:00" placeholder="10:00, 11:30, 16:00"></label>' +
+        '<label class="adm-field"><span>' + escapeHtml(t('Duración')) + '</span><select class="form-input" id="sl-min"><option value="30">30 min</option><option value="45" selected>45 min</option><option value="60">60 min</option></select></label>' +
+        '<label class="adm-field"><span>' + escapeHtml(t('Zona horaria')) + '</span><select class="form-input" id="sl-tz">' + tzs.map(z => '<option>' + z + '</option>').join('') + '</select></label>' +
+      '</div>' +
+      '<div class="adm-form-actions"><span class="admin-ok" id="sl-msg"></span><button class="ui-btn ui-btn--primary ui-btn--sm">' + escapeHtml(t('Publicar horarios')) + '</button></div>' +
+      '<div class="sl-list">' + (MK.slots.length ? Object.entries(byDay).map(([d, list]) =>
+        '<div class="sl-day"><b>' + escapeHtml(d) + '</b><div>' + list.map(sl => {
+          const tm = new Date(sl.starts_at).toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit' });
+          return sl.booked_by
+            ? '<span class="sl-chip is-booked" title="' + escapeHtml(who(sl.booked_by)) + '">' + tm + ' · ' + escapeHtml(who(sl.booked_by)) + '</span>'
+            : '<span class="sl-chip">' + tm + '<button type="button" onclick="deleteSlot(\'' + cleanId(sl.id) + '\')" aria-label="' + escapeHtml(t('Quitar')) + '">×</button></span>';
+        }).join('') + '</div></div>').join('') : '<div class="admin-empty">' + escapeHtml(t('Todavía no publicaste horarios.')) + '</div>') + '</div>' +
+    '</form>';
+}
+async function addSlots() {
+  const weekdays = [...document.querySelectorAll('.sl-days input:checked')].map(i => Number(i.value));
+  const times = document.getElementById('sl-times').value.split(',').map(x => x.trim()).filter(x => /^\d{1,2}:\d{2}$/.test(x));
+  if (!weekdays.length || !times.length) { flash('sl-msg', t('Elige al menos un día y una hora válida (ej. 10:00)'), true); return; }
+  const { data, error } = await sb.rpc('admin_add_slots', { from_date: document.getElementById('sl-from').value, to_date: document.getElementById('sl-to').value, weekdays, times, minutes: Number(document.getElementById('sl-min').value), tz: document.getElementById('sl-tz').value });
+  if (error) { flash('sl-msg', rpcError(error), true); return; }
+  toast(data + ' ' + t('horarios publicados'));
+  await loadMembersAdmin(); mkView('asesorias');
+}
+async function deleteSlot(id) {
+  const { error } = await sb.rpc('admin_delete_slot', { slot: id });
+  if (error) { toast(rpcError(error)); return; }
+  MK.slots = MK.slots.filter(x => x.id !== id); mkView('asesorias');
+}
+
 function mkMeetings() {
-  if (!MK.meetings.length) return '<div class="admin-empty">' + escapeHtml(t('No hay asesorías solicitadas.')) + '</div>';
+  if (!MK.meetings.length) return mkSlots() + '<div class="admin-empty">' + escapeHtml(t('No hay asesorías solicitadas.')) + '</div>';
   const defUrl = ((SITE_CFG.membership || {}).meet_url || '');
   const toLocal = d => { if (!d) return ''; const x = new Date(d); x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); return x.toISOString().slice(0, 16); };
-  return '<div class="mk-list">' + MK.meetings.map(m => {
+  return mkSlots() + '<div class="mk-list">' + MK.meetings.map(m => {
     const st = MEETING_STATUS[m.status] || [m.status, ''];
     const id = cleanId(m.id);
     return '<article class="mk-card">' +

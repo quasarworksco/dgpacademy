@@ -71,6 +71,7 @@ async function loadMembership() {
   MEMBER.raffle = (rf.data || [])[0] || null;
   MEMBER.posts = po.data || [];
   renderMember();
+  if (typeof loadAdvisory === 'function') loadAdvisory().catch(() => {});
   // Si eligió un plan antes de crear su cuenta, se lo mostramos al entrar
   let pending = null;
   try { pending = sessionStorage.getItem('dgp-plan'); sessionStorage.removeItem('dgp-plan'); } catch (e) {}
@@ -151,7 +152,7 @@ function renderMember() {
       (MEMBER.flyers.length ? '<ul class="mb-list">' + MEMBER.flyers.map(flyerItem).join('') + '</ul>' : '<p class="mb-empty">' + escapeHtml(t('Aún no has pedido flyers este mes. Cuéntanos qué necesitas y nuestro equipo lo diseña.')) + '</p>') +
     '</div></div>' +
     '<div class="mb-pane" data-tab="meetings"' + (tab === 'meetings' ? '' : ' hidden') + '><div class="mb-card">' +
-      '<div class="mb-card-head"><h4>' + escapeHtml(t('Mis asesorías')) + '</h4><button class="ui-btn ui-btn--primary ui-btn--sm" ' + (mLeft ? '' : 'disabled ') + 'onclick="openRequest(\'meeting\')"><svg><use href="#i-plus"/></svg>' + escapeHtml(t('Agendar')) + '</button></div>' +
+      '<div class="mb-card-head"><h4>' + escapeHtml(t('Mis asesorías')) + '</h4><button class="ui-btn ui-btn--primary ui-btn--sm" ' + (mLeft ? '' : 'disabled ') + 'onclick="openBooking()"><svg><use href="#i-plus"/></svg>' + escapeHtml(t('Agendar')) + '</button></div>' +
       (MEMBER.meetings.length ? '<ul class="mb-list">' + MEMBER.meetings.map(meetingItem).join('') + '</ul>' : '<p class="mb-empty">' + escapeHtml(t('Agenda tu primera sesión de seguimiento con el equipo de DGP.')) + '</p>') +
     '</div></div>' +
     '<div class="mb-pane" data-tab="coach"' + (tab === 'coach' ? '' : ' hidden') + '>' + coachCard() + '</div>' +
@@ -461,15 +462,62 @@ function blogCards(list) {
     '<span class="blog-body"><span class="blog-cat">' + escapeHtml(g.category || '') + ' · ' + g.minutes + ' min</span>' +
     '<span class="blog-title">' + escapeHtml(g.title) + '</span><span class="blog-lead">' + escapeHtml(g.lead || '') + '</span></span></button>').join('');
 }
-function renderBlog() {
+// Tarjeta pequeña para el inicio y el panel (los 3 artículos más recientes)
+function blogMini(list) {
+  return list.map(g => '<button class="blog-mini" onclick="openGuide(\'' + escapeHtml(g.ref) + '\')">' +
+    '<span class="blog-mini-img"><img src="' + escapeHtml(g.image) + '" alt="" loading="lazy" width="320" height="168"></span>' +
+    '<span class="blog-mini-body"><span class="blog-cat">' + escapeHtml(g.category || '') + ' · ' + g.minutes + ' min</span>' +
+    '<span class="blog-mini-title">' + escapeHtml(g.title) + '</span></span></button>').join('');
+}
+function blogList() {
   const mine = BLOG.filter(g => g.lang === LANG);
-  const list = mine.length ? mine : BLOG.filter(g => g.lang === 'es');
-  [['lp-blog', 'lp-blog-grid', 3], ['dash-blog', 'dash-blog-grid', 6]].forEach(([sec, grid, n]) => {
+  return mine.length ? mine : BLOG.filter(g => g.lang === 'es');
+}
+function renderBlog() {
+  const list = blogList();
+  [['lp-blog', 'lp-blog-grid'], ['dash-blog', 'dash-blog-grid']].forEach(([sec, grid]) => {
     const s = document.getElementById(sec), g = document.getElementById(grid);
     if (!s || !g) return;
     s.hidden = !list.length;
-    g.innerHTML = blogCards(list.slice(0, n));
+    g.innerHTML = blogMini(list.slice(0, 3));
+    s.querySelectorAll('.blog-all-n').forEach(el => { el.textContent = list.length; });
   });
+  if (document.getElementById('blog-page') && !document.getElementById('blog-page').hidden) renderBlogPage();
+}
+
+// Página completa del blog: búsqueda y filtro por tema
+let BLOG_FILTER = { cat: '', q: '' };
+function openBlogPage() {
+  let el = document.getElementById('blog-page');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'blog-page';
+    el.className = 'blog-page';
+    el.innerHTML = '<header class="blog-page-top"><div class="lp-wrap blog-page-bar">' +
+        '<button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" onclick="closeBlogPage()"><svg><use href="#i-back"/></svg>' + escapeHtml(t('Volver')) + '</button>' +
+        '<span class="brand"><svg class="brand-mark"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span></span></div></header>' +
+      '<div class="lp-wrap blog-page-wrap">' +
+        '<div class="blog-page-head"><span class="eyebrow">' + escapeHtml(t('Blog y guías')) + '</span><h1 class="lp-h2">' + escapeHtml(t('Aprende gratis con nuestras guías')) + '</h1>' +
+        '<p class="lp-lead">' + escapeHtml(t('Artículos prácticos del equipo de DGP Global Group sobre páginas web, IA, Google, ventas y negocios.')) + '</p></div>' +
+        '<div class="blog-tools"><input class="form-input" id="blog-q" type="search" placeholder="' + escapeHtml(t('Buscar artículos…')) + '" oninput="BLOG_FILTER.q=this.value;renderBlogPage()"><div class="blog-cats" id="blog-cats"></div></div>' +
+        '<div class="blog-grid" id="blog-page-grid"></div>' +
+      '</div>';
+    document.body.appendChild(el);
+  }
+  el.hidden = false;
+  document.body.classList.add('blog-open');
+  el.scrollTop = 0;
+  renderBlogPage();
+}
+function closeBlogPage() { const el = document.getElementById('blog-page'); if (el) el.hidden = true; document.body.classList.remove('blog-open'); }
+function renderBlogPage() {
+  const list = blogList();
+  const cats = [...new Set(list.map(g => (g.category || '').split('·')[0].trim()).filter(Boolean))];
+  document.getElementById('blog-cats').innerHTML = ['', ...cats].map(c => '<button type="button" class="blog-cat-chip' + (BLOG_FILTER.cat === c ? ' is-on' : '') + '" onclick="BLOG_FILTER.cat=this.dataset.c;renderBlogPage()" data-c="' + escapeHtml(c) + '">' + escapeHtml(c || t('Todos')) + '</button>').join('');
+  const q = BLOG_FILTER.q.trim().toLowerCase();
+  const shown = list.filter(g => (!BLOG_FILTER.cat || (g.category || '').startsWith(BLOG_FILTER.cat)) &&
+    (!q || (g.title + ' ' + (g.lead || '') + ' ' + (g.category || '')).toLowerCase().includes(q)));
+  document.getElementById('blog-page-grid').innerHTML = shown.length ? blogCards(shown) : '<div class="admin-empty">' + escapeHtml(t('No encontramos artículos con esa búsqueda.')) + '</div>';
 }
 function openGuide(ref) {
   const g = BLOG.find(x => x.ref === ref && x.lang === LANG) || BLOG.find(x => x.ref === ref);

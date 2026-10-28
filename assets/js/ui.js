@@ -317,3 +317,34 @@ document.addEventListener('DOMContentLoaded', () => {
   const n = document.getElementById('cookie-note');
   if (n && !seen) setTimeout(() => { n.hidden = false; }, 1500);
 });
+
+// Barra de secciones del campus: salto suave y resaltado de la sección visible
+function campusGo(id) {
+  if (id === 'top') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+  const el = document.getElementById(id);
+  if (!el || el.hidden) return;
+  const y = el.getBoundingClientRect().top + window.scrollY - 128;
+  window.scrollTo({ top: y, behavior: 'smooth' });
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const bar = document.getElementById('campus-tabs');
+  if (!bar) return;
+  bar.addEventListener('click', e => { const b = e.target.closest('button[data-t]'); if (b) campusGo(b.dataset.t); });
+  const mark = () => {
+    const dash = document.getElementById('dash-screen');
+    if (!dash || dash.style.display === 'none') return;
+    let cur = 'top';
+    bar.querySelectorAll('button[data-t]').forEach(b => {
+      b.hidden = b.dataset.t !== 'top' && (!document.getElementById(b.dataset.t) || document.getElementById(b.dataset.t).hidden);
+      const el = document.getElementById(b.dataset.t);
+      if (el && !el.hidden && el.getBoundingClientRect().top < 180) cur = b.dataset.t;
+    });
+    bar.querySelectorAll('button[data-t]').forEach(b => {
+      const on = b.dataset.t === cur;
+      if (on && !b.classList.contains('is-on')) b.scrollIntoView({ block: 'nearest', inline: 'center' });
+      b.classList.toggle('is-on', on);
+    });
+  };
+  window.addEventListener('scroll', mark, { passive: true });
+  setInterval(mark, 1500);
+});

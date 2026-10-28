@@ -86,7 +86,7 @@
       <nav class="lp-nav-links" aria-label="Secciones">
         <a href="#lp-cursos" data-scroll="lp-cursos">Programas</a>
         <a href="#lp-membresia" data-scroll="lp-membresia">Membresía</a>
-        <a href="#lp-blog" data-scroll="lp-blog">Blog</a>
+        <a href="#blog" onclick="openBlogPage();return false">Blog</a>
         <a href="#lp-nosotros" data-scroll="lp-nosotros">Nosotros</a>
         <a href="#lp-acceso" data-scroll="lp-acceso">Precio</a>
         <a href="#lp-faq" data-scroll="lp-faq">Preguntas</a>
@@ -102,7 +102,7 @@
     <div class="lp-mobile-menu" id="lp-mobile-menu">
       <a href="#lp-cursos" data-scroll="lp-cursos">Programas</a>
       <a href="#lp-membresia" data-scroll="lp-membresia">Membresía</a>
-      <a href="#lp-blog" data-scroll="lp-blog">Blog</a>
+      <a href="#blog" onclick="openBlogPage();return false">Blog</a>
       <a href="#lp-nosotros" data-scroll="lp-nosotros">Nosotros</a>
       <a href="#lp-acceso" data-scroll="lp-acceso">Precio</a>
       <a href="#lp-faq" data-scroll="lp-faq">Preguntas frecuentes</a>
@@ -462,7 +462,8 @@
         </div>
         <p class="lp-lead reveal" data-d="2">Artículos prácticos del equipo de DGP Global Group sobre páginas web, Google, ventas y negocios.</p>
       </div>
-      <div class="blog-grid" id="lp-blog-grid"></div>
+      <div class="blog-minis" id="lp-blog-grid"></div>
+      <div class="blog-more reveal"><button type="button" class="ui-btn ui-btn--ghost" onclick="openBlogPage()"><span>Ver todos los artículos (<span class="blog-all-n">0</span>)</span><svg><use href="#i-arrow"/></svg></button></div>
     </div>
   </section>
 
@@ -669,6 +670,18 @@
     </div>
   </nav>
 
+  <nav class="campus-tabs" id="campus-tabs" aria-label="Secciones del campus">
+    <div class="campus-tabs-in">
+      <button type="button" data-t="top"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg>Inicio</button>
+      <button type="button" data-t="dash-programs"><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>Programas</button>
+      <button type="button" data-t="dash-library"><svg viewBox="0 0 24 24"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg>Biblioteca</button>
+      <button type="button" data-t="dash-advisory"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Asesorías</button>
+      <button type="button" data-t="dash-certificates"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M8.5 14.2 7 22l5-3 5 3-1.5-7.8"/></svg>Certificados</button>
+      <button type="button" data-t="dash-member"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>Membresía</button>
+      <button type="button" data-t="dash-blog"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Blog</button>
+    </div>
+  </nav>
+
   <main class="dash-main">
 
     <div class="dash-announce" id="dash-announce" hidden><svg><use href="#i-chat"/></svg><p id="dash-announce-text"></p></div>
@@ -801,7 +814,12 @@
       </div>
     </section>
 
-    <section class="dash-block">
+    <section class="dash-block" id="dash-advisory">
+      <div class="dash-block-head"><h2>Asesorías 1 a 1</h2><span class="dash-block-sub">Agenda una videollamada con el equipo de DGP</span></div>
+      <div id="adv-root"><div class="admin-empty">Cargando…</div></div>
+    </section>
+
+    <section class="dash-block" id="dash-certificates">
       <div class="dash-block-head"><h2>Mis certificados</h2><span class="dash-block-sub">Descárgalos en PDF cuando quieras</span></div>
       <div class="dash-certs" id="dash-certs"></div>
     </section>
@@ -813,8 +831,8 @@
     </section>
 
     <section class="dash-block" id="dash-blog" hidden>
-      <div class="dash-block-head"><h2>Blog y guías</h2><span class="dash-block-sub">Del equipo de DGP Global Group</span></div>
-      <div class="blog-grid blog-grid--dash" id="dash-blog-grid"></div>
+      <div class="dash-block-head"><h2>Blog y guías</h2><button type="button" class="lp-link" onclick="openBlogPage()"><span>Ver todos (<span class="blog-all-n">0</span>)</span><svg><use href="#i-arrow"/></svg></button></div>
+      <div class="blog-minis" id="dash-blog-grid"></div>
     </section>
 
     <section class="dash-block" id="dash-payments" hidden>
@@ -1827,6 +1845,7 @@
 <script src="assets/js/reader.js"></script>
 <script src="assets/js/ai-course.js"></script>
 <script src="assets/js/assistant.js"></script>
+<script src="assets/js/booking.js"></script>
 <script src="assets/js/admin-members.js"></script>
 </body>
 </html>

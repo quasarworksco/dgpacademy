@@ -1108,11 +1108,35 @@ function updateDashStats() {
       btn.innerHTML = ICON.play + (n === 0 ? 'Comenzar' : 'Continuar');
     }
   }
+  if (card && preferAICourse()) {
+    const ri = STATE.reading['ia'] || {};
+    const doneIA = AI_COUNTED.filter(id => readSet('ia').has(id)).length;
+    const nextIA = AI_COUNTED.find(id => !readSet('ia').has(id)) || 'ai16';
+    const cur = ri.last_item && ri.last_item !== 'ai0' ? ri.last_item : (doneIA ? nextIA : 'ai0');
+    const l = AI_COURSE.lessons.find(x => x.id === cur) || AI_COURSE.lessons[0];
+    card.classList.remove('is-locked');
+    document.getElementById('dash-continue-kicker').textContent = cur === 'ai0' ? t('Empieza aquí') : t('Tu siguiente lección') + ' · ' + t('Lección') + ' ' + AI_LESSONS.indexOf(cur);
+    document.getElementById('dash-continue-title').textContent = aiTitle(l);
+    document.getElementById('dash-continue-meta').textContent = t('IA aplicada a los negocios') + ' · ' + doneIA + ' ' + t('de') + ' 16 ' + t('completadas');
+    document.getElementById('dash-continue-btn').innerHTML = ICON.play + (doneIA ? t('Continuar') : t('Comenzar'));
+  }
   updateCourseBtn(done);
   renderCertificates();
 }
 
+// La tarjeta "continúa" lleva al programa de IA si es el que la persona tiene o usó más recientemente
+function preferAICourse() {
+  if (typeof AI_COURSE === 'undefined' || !hasAccess('ia')) return false;
+  if (!hasWebAccess) return true;
+  const ri = STATE.reading['ia'], rw = STATE.reading['web-dev'];
+  const started = readSet('ia').size > 0 || !!(ri && ri.last_item && ri.last_item !== 'ai0');
+  if (!started) return false;
+  if (!completed.filter(l => l !== 'home').length) return true;
+  return !!(ri && ri.updated_at && (!rw || !rw.updated_at || new Date(ri.updated_at) > new Date(rw.updated_at)));
+}
+
 function continueCourse() {
+  if (preferAICourse()) { showAICourse(); return; }
   if (!hasWebAccess) {
     const box = document.getElementById('dash-activate');
     if (box) { box.style.display = 'grid'; box.scrollIntoView({ behavior: 'smooth', block: 'center' }); }

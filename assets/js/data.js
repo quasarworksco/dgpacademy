@@ -45,7 +45,7 @@ async function loadUserData() {
     sb.from('profiles').select('email, full_name, phone, is_admin, lang, gender').eq('id', uid).maybeSingle(),
     sb.from('access').select('product_id, active, paid').eq('user_id', uid),
     sb.from('progress').select('product_id, item_id').eq('user_id', uid),
-    sb.from('reading_state').select('product_id, last_item, quiz_score, quiz_passed').eq('user_id', uid),
+    sb.from('reading_state').select('product_id, last_item, quiz_score, quiz_passed, updated_at').eq('user_id', uid),
     sb.from('certificates').select('product_id, number, full_name, issued_at').eq('user_id', uid),
     sb.rpc('is_courtesy')
   ]);
@@ -83,7 +83,7 @@ function clearProgress(product) {
 const _posTimers = {};
 function savePosition(product, item) {
   if (!STATE.user || !hasAccess(product)) return;
-  STATE.reading[product] = Object.assign({}, STATE.reading[product], { last_item: item });
+  STATE.reading[product] = Object.assign({}, STATE.reading[product], { last_item: item, updated_at: new Date().toISOString() });
   clearTimeout(_posTimers[product]);
   _posTimers[product] = setTimeout(() => {
     sb.from('reading_state')

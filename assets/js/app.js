@@ -504,7 +504,7 @@ function renderAdminUsers(users) {
     return '<div class="admin-user-card">' +
       '<div class="admin-user-avatar">' + escapeHtml(initial) + '</div>' +
       '<div class="admin-user-info">' +
-        '<div class="admin-user-name">' + escapeHtml(u.full_name || '—') + (u.is_admin ? ' <span class="chip chip--accent">Admin</span>' : '') + '</div>' +
+        '<div class="admin-user-name">' + escapeHtml(u.full_name || '—') + (u.is_admin ? ' <span class="chip chip--accent">Admin</span>' : '') + (u.courtesy ? ' <span class="chip chip--gold">Cortesía</span>' : '') + (u.suspended ? ' <span class="chip chip--danger">Suspendida</span>' : '') + (u.member_plan ? ' <span class="chip chip--light">' + escapeHtml(((SITE_CFG.plans || {})[u.member_plan] || {}).name || u.member_plan) + '</span>' : '') + '</div>' +
         '<div class="admin-user-email">' + escapeHtml(u.email || '—') + '</div>' +
         '<div class="admin-user-phone">' + escapeHtml(u.phone || 'Sin teléfono') + ' · Registro: ' + escapeHtml(fmtDate(u.created_at)) + ' · Última visita: ' + escapeHtml(fmtDate(u.last_seen_at)) + '</div>' +
         '<div class="admin-user-prog"><div class="admin-user-prog-label"><span>Web Dev</span><span>' + prog + ' / 16' + (done ? ' · completado' : '') + '</span></div>' +
@@ -517,6 +517,11 @@ function renderAdminUsers(users) {
         adminToggle('Semilla', { cls: bs.active ? 'active is-green' : '', on: bs.active, action: "setAccess('" + uid + "','semilla','active'," + !bs.active + ")", title: bs.active ? 'Quitar De la semilla al árbol' : 'Dar acceso a De la semilla al árbol' }) +
         adminToggle('IA', { disabled: true, title: 'Próximamente' }) +
         adminToggle('Marketing', { disabled: true, title: 'Próximamente' }) +
+        (u.is_admin ? '' :
+          '<span class="admin-acct">' +
+          adminToggle(u.suspended ? 'Reactivar' : 'Suspender', { cls: u.suspended ? 'unpaid' : '', action: "suspendUser('" + uid + "'," + !u.suspended + ")", title: u.suspended ? 'Permitir de nuevo el acceso' : 'Bloquear el inicio de sesión' }) +
+          adminToggle('Eliminar', { cls: 'is-danger', action: "deleteUser('" + uid + "')", title: 'Eliminar la cuenta para siempre' }) +
+          '</span>') +
       '</div>' +
     '</div>';
   }).join('');
@@ -541,6 +546,31 @@ async function setAccess(uid, product, field, value) {
   } else {
     toast('Cambios guardados');
   }
+}
+
+// Suspender bloquea el inicio de sesión; eliminar borra la cuenta (los pagos quedan en Conciliación)
+async function suspendUser(uid, suspend) {
+  const u = allAdminUsers.find(x => x.id === uid);
+  if (!u) return;
+  if (suspend && !confirm(t('¿Suspender la cuenta de') + ' ' + (u.full_name || u.email) + '? ' + t('No podrá entrar hasta que la reactives.'))) return;
+  const { error } = await sb.rpc('admin_suspend_user', { uid, suspend });
+  if (error) { toast(error.message); return; }
+  u.suspended = suspend;
+  refreshAdminList();
+  toast(t(suspend ? 'Cuenta suspendida' : 'Cuenta reactivada'));
+}
+
+async function deleteUser(uid) {
+  const u = allAdminUsers.find(x => x.id === uid);
+  if (!u) return;
+  const typed = prompt(t('Esto borra la cuenta, su progreso y certificados para siempre. Los pagos se conservan para tu contabilidad. Escribe el correo de la cuenta para confirmar:') + '\n' + u.email, '');
+  if (typed === null) return;
+  if (typed.trim().toLowerCase() !== (u.email || '').toLowerCase()) { toast(t('El correo no coincide. No se eliminó nada.')); return; }
+  const { error } = await sb.rpc('admin_delete_user', { uid });
+  if (error) { toast(error.message); return; }
+  allAdminUsers = allAdminUsers.filter(x => x.id !== uid);
+  renderAdminStats(); refreshAdminList();
+  toast(t('Cuenta eliminada'));
 }
 
 function filterAdminUsers(q) {
@@ -581,8 +611,6 @@ async function loadCupos() {
   try {
     const v = await loadCuposPublic();
     cuposTotal = v.total || 20;
-    const input = document.getElementById('admin-cupos-input');
-    if (input) input.value = v.disponibles;
     updateLpCupos(v.disponibles, cuposTotal);
   } catch (e) { /* sin cupos */ }
 }
@@ -591,6 +619,8 @@ function updateLpCupos(n, total) {
   total = total || cuposTotal;
   const lpNum = document.getElementById('lp-cupos-num');
   if (lpNum) lpNum.textContent = n;
+  const lpTotal = document.getElementById('lp-cupos-total');
+  if (lpTotal) lpTotal.textContent = total;
   const bar = document.getElementById('lp-cupos-bar');
   if (bar) bar.style.width = Math.max(0, Math.min(100, n / total * 100)) + '%';
   const wrap = document.getElementById('lp-cupos-wrap');
@@ -898,12 +928,13 @@ document.addEventListener('DOMContentLoaded', () => {
 function onLangChange() {
   if (STATE.user) {
     renderActivation(); renderCertificates();
-    renderAnnouncement(); renderMyPayments(); renderPendingNotice();
+    renderAnnouncement(); renderMyPayments(); renderPendingNotice(); renderMember();
     if (STATE.profile) STATE.profile.lang = LANG;
     sb.from('profiles').update({ lang: LANG }).eq('id', STATE.user.id).then(() => {}, () => {});
   }
   if (document.getElementById('admin-screen').style.display === 'block') adminRefresh();
   if (typeof previewCertificate === 'function') previewCertificate();
+  renderLandingPlans(); renderBlog();
   const course = document.getElementById('course-screen');
   if (course && course.style.display === 'block') {
     loadContent('web-dev', '#course-screen').then(() => { goTo(current); updateFinishBtn(); }).catch(() => {});

@@ -28,6 +28,7 @@ function adminLoad(tab) {
   else if (tab === 'estudiantes') loadAdminData();
   else if (tab === 'pagos') loadOrders();
   else if (tab === 'conciliacion') loadWeekly();
+  else if (tab === 'membresias') loadMembersAdmin();
   else if (tab === 'config') loadConfig();
 }
 
@@ -430,7 +431,8 @@ async function loadConfig() {
   (st.data || []).forEach(r => { CFG[r.key] = r.value; });
   const pay = CFG.payments || {}, z = pay.zelle || {}, sq = pay.square || {}, em = CFG.email || {}, bi = CFG.billing || {}, co = CFG.contact || {}, an = CFG.announcement || {}, cu = CFG.cupos || {};
   setVal('cf-price', pr.data && pr.data.price_usd); setVal('cf-regular', pr.data && pr.data.regular_price_usd);
-  setVal('admin-cupos-input', cu.disponibles); setVal('cf-cupos-total', cu.total);
+  setVal('cf-cupos-total', cu.total || 20);
+  loadCuposPublic().then(v => setVal('cf-cupos-taken', v.taken + ' / ' + v.total));
   setChk('cf-zelle-on', z.enabled !== false); setVal('cf-zelle-email', z.email); setVal('cf-zelle-phone', z.phone); setVal('cf-zelle-holder', z.holder);
   setVal('cf-zelle-ins-es', z.instructions_es); setVal('cf-zelle-ins-en', z.instructions_en);
   setChk('cf-sq-on', sq.enabled); setVal('cf-sq-env', sq.env || 'sandbox'); setVal('cf-sq-app', sq.app_id); setVal('cf-sq-loc', sq.location_id); setVal('cf-sq-token', '');
@@ -446,13 +448,18 @@ async function loadConfig() {
   };
   status('cf-sq-token-status', 'square_access_token');
   status('cf-smtp-status', 'smtp_password');
+  status('cf-sq-hook-status', 'square_webhook_key');
+  status('cf-ai-status', 'groq_api_key');
+  const ai = CFG.ai || {};
+  setChk('cf-ai-on', ai.enabled !== false); setVal('cf-ai-model', ai.model || 'llama-3.3-70b-versatile'); setVal('cf-ai-free', ai.free_monthly != null ? ai.free_monthly : 3); setVal('cf-ai-key', '');
+  setVal('cf-sq-hook', '');
 }
 
 async function saveSetting(key, value) {
   const { error } = await sb.from('settings').upsert({ key, value }, { onConflict: 'key' });
   if (error) throw error;
   CFG[key] = value;
-  if (['payments', 'contact', 'announcement'].includes(key)) SITE_CFG[key] = value;
+  if (['payments', 'contact', 'announcement', 'membership'].includes(key)) SITE_CFG[key] = value;
 }
 
 async function savePrices() {
@@ -461,11 +468,12 @@ async function savePrices() {
     if (!(price > 0)) throw new Error(t('Escribe un precio válido'));
     const { error } = await sb.rpc('admin_set_price', { p: 'web-dev', price, regular });
     if (error) throw error;
-    const disp = Math.max(0, parseInt(val('admin-cupos-input')) || 0);
-    const total = Math.max(disp, parseInt(val('cf-cupos-total')) || disp || 20);
-    await saveSetting('cupos', { disponibles: disp, total });
-    cuposTotal = total;
-    updateLpCupos(disp, total);
+    const total = Math.max(1, parseInt(val('cf-cupos-total')) || 20);
+    await saveSetting('cupos', { total });
+    const v = await loadCuposPublic();
+    cuposTotal = v.total;
+    updateLpCupos(v.disponibles, v.total);
+    setVal('cf-cupos-taken', v.taken + ' / ' + v.total);
     SITE_CFG.products['web-dev'] = Object.assign({}, SITE_CFG.products['web-dev'], { price_usd: price, regular_price_usd: regular });
     renderLandingPrice();
     flash('cf-prices-msg', 'Guardado');
@@ -491,6 +499,11 @@ async function saveSquare() {
     if (pay.square.app_id && pay.square.env === 'sandbox' && !/^sandbox-/.test(pay.square.app_id)) throw new Error(t('Ese Application ID es de producción: cambia el entorno a Producción'));
     if (token) {
       const { error } = await sb.rpc('admin_set_secret', { k: 'square_access_token', v: token });
+      if (error) throw error;
+    }
+    const hook = document.getElementById('cf-sq-hook').value.trim();
+    if (hook) {
+      const { error } = await sb.rpc('admin_set_secret', { k: 'square_webhook_key', v: hook });
       if (error) throw error;
     }
     await saveSetting('payments', pay);
@@ -535,4 +548,27 @@ async function saveSite() {
     renderAnnouncement(); renderActivation();
     flash('cf-site-msg', 'Guardado');
   } catch (e) { flash('cf-site-msg', rpcError(e), true); }
+}
+
+async function saveAI() {
+  try {
+    const key = document.getElementById('cf-ai-key').value.trim();
+    if (key) {
+      const { error } = await sb.rpc('admin_set_secret', { k: 'groq_api_key', v: key });
+      if (error) throw error;
+    }
+    await saveSetting('ai', Object.assign({}, CFG.ai, { enabled: chk('cf-ai-on'), model: val('cf-ai-model'), free_monthly: Math.max(0, parseInt(val('cf-ai-free')) || 0) }));
+    flash('cf-ai-msg', 'Guardado');
+    loadConfig();
+  } catch (e) { flash('cf-ai-msg', rpcError(e), true); }
+}
+
+async function testAI() {
+  flash('cf-ai-msg', 'Probando…');
+  try {
+    const { data, error } = await sb.functions.invoke('coach', { body: { action: 'test' } });
+    if (error) { let m = error.message; try { const j = await error.context.json(); if (j.error) m = j.error; } catch (x) {} throw new Error(m); }
+    if (data && data.error) throw new Error(data.error);
+    flash('cf-ai-msg', 'La IA responde correctamente');
+  } catch (e) { flash('cf-ai-msg', e.message, true); }
 }

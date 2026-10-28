@@ -7,6 +7,11 @@
 //   weekly_report → (admin) envía por correo el resumen semanal de ingresos (Zelle / Square / manual)
 //   order_rejected→ (admin) avisa al estudiante que su pago no se pudo verificar
 //   test_email    → (admin) correo de prueba para revisar la configuración SMTP
+//   square_setup_plans → (admin) crea los planes de membresía en el catálogo de Square
+//   square_subscribe   → guarda la tarjeta y crea el cobro mensual automático
+//   cancel_membership  → cancela la renovación (sigue activa hasta fin de mes)
+//   member_request     → aviso al equipo de un flyer o asesoría solicitada
+//   member_notify      → (admin) avisa al miembro: flyer entregado o asesoría agendada
 // Secretos (token de Square, contraseña SMTP) se leen de private.secrets: nunca llegan al navegador.
 // =========================================================
 import { createClient } from "npm:@supabase/supabase-js@2.49.4";
@@ -122,8 +127,11 @@ async function invoiceHtml(o: any) {
 
 async function loadOrder(id: string) {
   const [o] = await sql`
-    select o.*, p.email, p.full_name, p.lang, pd.title, pd.title_en
-    from public.orders o join public.profiles p on p.id = o.user_id join public.products pd on pd.id = o.product_id
+    select o.*, p.email, p.full_name, p.lang,
+      coalesce(pd.title, 'Membresía ' || pl.name || ' (1 mes)') as title,
+      coalesce(pd.title_en, pl.name_en || ' membership (1 month)') as title_en
+    from public.orders o join public.profiles p on p.id = o.user_id
+    left join public.products pd on pd.id = o.product_id left join public.plans pl on pl.id = o.plan_id
     where o.id = ${id}`;
   return o;
 }
@@ -138,6 +146,102 @@ async function sendInvoice(id: string) {
 }
 
 // ── Square ───────────────────────────────────────────────────────────────────
+async function squareCfg() {
+  const pay = await setting("payments");
+  const sq = pay.square || {};
+  if (!sq.enabled) throw new Error("El pago con tarjeta no está activo");
+  const token = await secret("square_access_token");
+  if (!token || !sq.location_id) throw new Error("Square no está configurado");
+  const base = sq.env === "production" ? "https://connect.squareup.com" : "https://connect.squareupsandbox.com";
+  return { sq, token, base, currency: pay.currency || "USD" };
+}
+async function squareApi(c: { token: string; base: string }, path: string, method = "GET", body?: unknown) {
+  const res = await fetch(`${c.base}${path}`, {
+    method,
+    headers: { Authorization: `Bearer ${c.token}`, "Content-Type": "application/json", "Square-Version": "2024-10-17" },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.errors?.[0]?.detail || `Square respondió ${res.status}`);
+  return data;
+}
+
+// Crea en el catálogo de Square el plan de membresía con una variación por nivel
+async function squareSetupPlans() {
+  const c = await squareCfg();
+  const plans = await sql`select * from public.plans where active order by position`;
+  const plan = await squareApi(c, "/v2/catalog/object", "POST", {
+    idempotency_key: crypto.randomUUID(),
+    object: { type: "SUBSCRIPTION_PLAN", id: "#dgp_membership", subscription_plan_data: { name: "DGP Academy — Membresía" } },
+  });
+  const planId = plan.catalog_object.id;
+  const out: Record<string, string> = {};
+  for (const p of plans) {
+    const v = await squareApi(c, "/v2/catalog/object", "POST", {
+      idempotency_key: crypto.randomUUID(),
+      object: {
+        type: "SUBSCRIPTION_PLAN_VARIATION", id: `#v_${p.id}`,
+        subscription_plan_variation_data: {
+          name: `${p.name} — $${Number(p.price_usd)}/mes`, subscription_plan_id: planId,
+          phases: [{ cadence: "MONTHLY", ordinal: 0, pricing: { type: "STATIC", price_money: { amount: Math.round(Number(p.price_usd) * 100), currency: c.currency } } }],
+        },
+      },
+    });
+    out[p.id] = v.catalog_object.id;
+    await sql`update public.plans set square_variation_id = ${v.catalog_object.id} where id = ${p.id}`;
+  }
+  return out;
+}
+
+// Suscribe al estudiante: guarda la tarjeta en Square y crea el cobro mensual automático
+async function squareSubscribe(userId: string, body: any) {
+  const c = await squareCfg();
+  const [pl] = await sql`select * from public.plans where id = ${body.plan_id} and active`;
+  if (!pl) throw new Error("Plan no disponible");
+  if (!pl.square_variation_id) throw new Error("Los planes aún no están creados en Square");
+  const [bp] = await sql`select 1 from public.business_profiles where user_id = ${userId}`;
+  if (!bp) throw new Error("Completa primero la encuesta de tu negocio");
+  const [prof] = await sql`select email, full_name from public.profiles where id = ${userId}`;
+  const [cur] = await sql`select * from public.subscriptions where user_id = ${userId}`;
+  if (cur?.square_subscription_id && cur.status === "active" && !cur.cancel_at_period_end) throw new Error("Ya tienes una membresía activa con tarjeta");
+
+  let customerId = cur?.square_customer_id;
+  if (!customerId) {
+    const cu = await squareApi(c, "/v2/customers", "POST", {
+      idempotency_key: crypto.randomUUID(), email_address: prof.email, given_name: prof.full_name || undefined, reference_id: userId,
+    });
+    customerId = cu.customer.id;
+  }
+  const card = await squareApi(c, "/v2/cards", "POST", {
+    idempotency_key: crypto.randomUUID(), source_id: body.source_id, verification_token: body.verification_token || undefined,
+    card: { customer_id: customerId, reference_id: userId },
+  });
+  const sub = await squareApi(c, "/v2/subscriptions", "POST", {
+    idempotency_key: crypto.randomUUID(), location_id: c.sq.location_id, plan_variation_id: pl.square_variation_id,
+    customer_id: customerId, card_id: card.card.id, timezone: "America/New_York",
+  });
+  // Queda activa al momento; el webhook registra cada cobro mensual y extiende el periodo
+  await sql`
+    insert into public.subscriptions (user_id, plan_id, status, method, current_period_start, current_period_end,
+      square_customer_id, square_card_id, square_subscription_id, updated_at)
+    values (${userId}, ${pl.id}, 'active', 'square', now(), now() + interval '1 month', ${customerId}, ${card.card.id}, ${sub.subscription.id}, now())
+    on conflict (user_id) do update set plan_id = excluded.plan_id, status = 'active', method = 'square',
+      current_period_start = excluded.current_period_start, current_period_end = excluded.current_period_end,
+      square_customer_id = excluded.square_customer_id, square_card_id = excluded.square_card_id,
+      square_subscription_id = excluded.square_subscription_id, cancel_at_period_end = false, updated_at = now()`;
+  return { subscription_id: sub.subscription.id };
+}
+
+async function squareCancel(userId: string) {
+  const [cur] = await sql`select * from public.subscriptions where user_id = ${userId}`;
+  if (!cur) throw new Error("No tienes una membresía");
+  if (cur.method === "square" && cur.square_subscription_id) {
+    const c = await squareCfg();
+    await squareApi(c, `/v2/subscriptions/${cur.square_subscription_id}/cancel`, "POST", {});
+  }
+  await sql`update public.subscriptions set cancel_at_period_end = true, updated_at = now() where user_id = ${userId}`;
+}
+
 async function squarePay(userId: string, body: any) {
   const pay = await setting("payments");
   const sq = pay.square || {};
@@ -185,6 +289,14 @@ async function squarePay(userId: string, body: any) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   try {
+    // Llamada interna del webhook de Square (con la clave de servicio): enviar factura
+    const auth = req.headers.get("Authorization") ?? "";
+    const service = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (service && auth === `Bearer ${service}` && req.headers.get("x-internal") === "1") {
+      const b = await req.json();
+      if (b.action === "internal_invoice") { await sendInvoice(b.order_id); return json({ ok: true }); }
+      return json({ error: "Acción no válida" }, 400);
+    }
     const supa = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: req.headers.get("Authorization") ?? "" } },
     });
@@ -224,6 +336,58 @@ Deno.serve(async (req) => {
       case "square_pay": {
         const o = await squarePay(user.id, body);
         return json({ ok: true, order: o });
+      }
+      case "square_setup_plans": {
+        if (!isAdmin) return json({ error: "Solo administradores" }, 403);
+        return json({ ok: true, variations: await squareSetupPlans() });
+      }
+      case "square_subscribe": {
+        return json({ ok: true, ...(await squareSubscribe(user.id, body)) });
+      }
+      case "cancel_membership": {
+        await squareCancel(user.id);
+        return json({ ok: true });
+      }
+      case "member_request": {
+        // El estudiante pidió un flyer o una asesoría: aviso al equipo
+        const cfg = await setting("email");
+        const table = body.type === "meeting" ? "meetings" : "flyer_requests";
+        const [r] = table === "meetings"
+          ? await sql`select m.topic as title, m.preferred_times as extra from public.meetings m where m.id = ${body.id} and m.user_id = ${user.id}`
+          : await sql`select f.title, f.headline || ' · ' || f.format as extra from public.flyer_requests f where f.id = ${body.id} and f.user_id = ${user.id}`;
+        if (!r) return json({ error: "Solicitud no encontrada" }, 404);
+        await sendMail(cfg.from_email, `${body.type === "meeting" ? "Nueva asesoría solicitada" : "Nuevo flyer solicitado"} — ${prof.full_name || prof.email}`, shell(`
+          <p style="font-size:16px;font-weight:700;margin:0 0 10px">${body.type === "meeting" ? "Nueva asesoría solicitada" : "Nuevo flyer solicitado"}</p>
+          <p style="margin:0;font-size:14px;line-height:1.7">Miembro: <strong>${esc(prof.full_name)}</strong> (${esc(prof.email)})<br>
+          ${esc(r.title)}<br><span style="color:#5d6982">${esc(r.extra)}</span></p>
+          <p style="margin:20px 0 0"><a href="${SITE}" style="display:inline-block;background:#0a1430;color:#fff;text-decoration:none;font-weight:700;padding:11px 20px;border-radius:999px">Abrir el panel admin</a></p>`));
+        return json({ ok: true });
+      }
+      case "member_notify": {
+        // (admin) avisa al miembro: flyer entregado o asesoría agendada
+        if (!isAdmin) return json({ error: "Solo administradores" }, 403);
+        if (body.type === "meeting") {
+          const [m] = await sql`select m.*, p.email, p.full_name, p.lang from public.meetings m join public.profiles p on p.id = m.user_id where m.id = ${body.id}`;
+          if (!m) return json({ error: "Asesoría no encontrada" }, 404);
+          const en = m.lang === "en";
+          const when = m.scheduled_at ? new Date(m.scheduled_at).toLocaleString(en ? "en-US" : "es-ES", { dateStyle: "full", timeStyle: "short", timeZone: "America/New_York" }) + " (Florida)" : "";
+          await sendMail(m.email, en ? "Your advisory session is scheduled — DGP Academy" : "Tu asesoría está agendada — DGP Academy", shell(`
+            <p style="font-size:16px;font-weight:700;margin:0 0 10px">${en ? "Your session is scheduled" : "Tu asesoría está agendada"}</p>
+            <p style="margin:0 0 8px;font-size:14px;color:#3d4a63">${esc(m.topic)}</p>
+            <p style="margin:0 0 16px;font-size:15px"><strong>${esc(when)}</strong></p>
+            ${m.meet_url ? `<p style="margin:0 0 16px"><a href="${esc(m.meet_url)}" style="display:inline-block;background:#1a56e8;color:#fff;text-decoration:none;font-weight:700;padding:12px 22px;border-radius:999px">${en ? "Join the meeting" : "Entrar a la reunión"}</a></p>` : ""}
+            ${m.admin_note ? `<p style="margin:0;font-size:14px;color:#3d4a63">${esc(m.admin_note)}</p>` : ""}`));
+        } else {
+          const [f] = await sql`select f.*, p.email, p.full_name, p.lang from public.flyer_requests f join public.profiles p on p.id = f.user_id where f.id = ${body.id}`;
+          if (!f) return json({ error: "Flyer no encontrado" }, 404);
+          const en = f.lang === "en";
+          await sendMail(f.email, en ? "Your flyer is ready — DGP Academy" : "Tu flyer está listo — DGP Academy", shell(`
+            <p style="font-size:16px;font-weight:700;margin:0 0 10px">${en ? "Your flyer is ready" : "Tu flyer está listo"}</p>
+            <p style="margin:0 0 16px;font-size:14px;color:#3d4a63">${esc(f.title)}</p>
+            ${f.caption ? `<p style="margin:0 0 16px;font-size:14px;color:#3d4a63;white-space:pre-line">${esc(f.caption)}</p>` : ""}
+            <p style="margin:0"><a href="${SITE}" style="display:inline-block;background:#1a56e8;color:#fff;text-decoration:none;font-weight:700;padding:12px 22px;border-radius:999px">${en ? "Download it from your dashboard" : "Descárgalo desde tu panel"}</a></p>`));
+        }
+        return json({ ok: true });
       }
       case "weekly_report": {
         if (!isAdmin) return json({ error: "Solo administradores" }, 403);

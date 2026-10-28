@@ -17,16 +17,17 @@ const STATE = {
   access: {},          // producto → { active, paid }
   reading: {},         // producto → { last_item, quiz_score, quiz_passed }
   certificates: {},    // producto → { number, full_name, issued_at }
-  progress: {}         // producto → Set de lecciones / capítulos completados
+  progress: {},        // producto → Set de lecciones / capítulos completados
+  courtesy: false      // acceso de cortesía a todo (empleados e invitados)
 };
 
 function resetState() {
   STATE.user = null; STATE.profile = null; STATE.access = {}; STATE.reading = {};
-  STATE.certificates = {}; STATE.progress = {};
+  STATE.certificates = {}; STATE.progress = {}; STATE.courtesy = false;
 }
 
 function hasAccess(product) {
-  return !!(STATE.profile && STATE.profile.is_admin) || !!(STATE.access[product] && STATE.access[product].active);
+  return !!(STATE.profile && STATE.profile.is_admin) || STATE.courtesy || !!(STATE.access[product] && STATE.access[product].active);
 }
 
 function displayName() {
@@ -38,13 +39,15 @@ function displayName() {
 // Carga todo lo del estudiante en paralelo
 async function loadUserData() {
   const uid = STATE.user.id;
-  const [prof, acc, prog, read, certs] = await Promise.all([
+  const [prof, acc, prog, read, certs, court] = await Promise.all([
     sb.from('profiles').select('email, full_name, phone, is_admin, lang').eq('id', uid).maybeSingle(),
     sb.from('access').select('product_id, active, paid').eq('user_id', uid),
     sb.from('progress').select('product_id, item_id').eq('user_id', uid),
     sb.from('reading_state').select('product_id, last_item, quiz_score, quiz_passed').eq('user_id', uid),
-    sb.from('certificates').select('product_id, number, full_name, issued_at').eq('user_id', uid)
+    sb.from('certificates').select('product_id, number, full_name, issued_at').eq('user_id', uid),
+    sb.rpc('is_courtesy')
   ]);
+  STATE.courtesy = !!court.data;
   const err = prof.error || acc.error || prog.error || read.error || certs.error;
   if (err) throw err;
   STATE.profile = prof.data || { email: STATE.user.email, full_name: '', phone: '', is_admin: false };
@@ -139,6 +142,8 @@ async function syncCertificates() {
 }
 
 async function loadCuposPublic() {
-  const { data } = await sb.from('settings').select('value').eq('key', 'cupos').maybeSingle();
-  return data ? data.value : { disponibles: 20, total: 20 };
+  // Los cupos ocupados se cuentan en el servidor desde los estudiantes que ya pagaron
+  const { data, error } = await sb.rpc('public_cupos');
+  if (error || !data) return { disponibles: 20, total: 20, taken: 0 };
+  return data;
 }

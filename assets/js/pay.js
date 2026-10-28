@@ -8,6 +8,7 @@
 const SITE_CFG = { payments: null, contact: null, announcement: null, products: {} };
 let MY_ORDERS = [];
 let coProduct = 'web-dev';
+let coPlan = null;   // id del plan cuando se paga una membresía
 
 // Dólares siempre como $97 o $97.50, en los dos idiomas
 function fmtMoney(n) {
@@ -17,16 +18,20 @@ function fmtMoney(n) {
 
 // Ajustes públicos: se leen sin sesión (políticas de lectura pública)
 async function loadSiteSettings() {
-  const [st, pr] = await Promise.all([
-    sb.from('settings').select('key, value').in('key', ['payments', 'contact', 'announcement']),
-    sb.from('products').select('id, title, title_en, price_usd, regular_price_usd, status')
+  const [st, pr, pl] = await Promise.all([
+    sb.from('settings').select('key, value').in('key', ['payments', 'contact', 'announcement', 'membership']),
+    sb.from('products').select('id, title, title_en, price_usd, regular_price_usd, status'),
+    sb.from('plans').select('*').eq('active', true).order('position')
   ]);
+  SITE_CFG.plans = {}; SITE_CFG.planList = pl.data || [];
+  SITE_CFG.planList.forEach(p => { SITE_CFG.plans[p.id] = p; });
   (st.data || []).forEach(r => { SITE_CFG[r.key] = r.value; });
   (pr.data || []).forEach(r => { SITE_CFG.products[r.id] = r; });
   const c = SITE_CFG.contact || {};
   if (c.email) CONTACT.email = c.email;
   CONTACT.whatsapp = String(c.whatsapp || '').replace(/\D/g, '');
   renderLandingPrice();
+  if (typeof renderLandingPlans === 'function') renderLandingPlans();
 }
 
 function productTitle(p) {
@@ -48,7 +53,7 @@ function renderLandingPrice() {
 async function loadMyOrders() {
   if (!STATE.user) { MY_ORDERS = []; return; }
   const { data } = await sb.from('orders')
-    .select('id, product_id, amount, currency, method, status, reference, invoice_number, created_at, verified_at')
+    .select('id, kind, product_id, plan_id, amount, currency, method, status, reference, invoice_number, created_at, verified_at')
     .eq('user_id', STATE.user.id).order('created_at', { ascending: false });
   MY_ORDERS = data || [];
 }
@@ -58,6 +63,7 @@ async function paymentsOnUser() {
   renderAnnouncement();
   renderMyPayments();
   renderPendingNotice();
+  if (typeof loadMembership === 'function') loadMembership().catch(() => {});
 }
 
 function renderAnnouncement() {
@@ -85,7 +91,7 @@ function renderMyPayments() {
   list.innerHTML = MY_ORDERS.map(o => {
     const st = ORDER_STATUS[o.status] || [o.status, ''];
     return '<div class="dash-pay">' +
-      '<div class="dash-pay-main"><div class="dash-pay-title">' + escapeHtml(productTitle(o.product_id) || o.product_id) + '</div>' +
+      '<div class="dash-pay-main"><div class="dash-pay-title">' + escapeHtml(o.kind === 'subscription' ? planTitle(o.plan_id) : (productTitle(o.product_id) || o.product_id)) + '</div>' +
       '<div class="dash-pay-meta">' + escapeHtml(fmtDate(o.created_at)) + ' · ' + escapeHtml(t(METHOD_LABEL[o.method] || o.method)) +
       (o.invoice_number ? ' · <span class="mono">' + escapeHtml(o.invoice_number) + '</span>' : '') + '</div></div>' +
       '<div class="dash-pay-amt">' + fmtMoney(o.amount) + '</div>' +
@@ -116,17 +122,31 @@ function renderPendingNotice() {
 }
 
 // ── Checkout ─────────────────────────────────────────────────────────────────
+function planTitle(id) {
+  const p = (SITE_CFG.plans || {})[id];
+  return p ? (LANG === 'en' ? p.name_en + ' membership' : 'Membresía ' + p.name) : id;
+}
+
+// Membresía: misma ventana de pago, con monto mensual del plan
+function openPlanCheckout(planId) {
+  coPlan = planId;
+  openCheckout(null);
+}
+
 function openCheckout(product) {
   if (!STATE.user) { goToRegister(); return; }
-  coProduct = product || 'web-dev';
-  const pr = SITE_CFG.products[coProduct] || {};
+  if (product) { coPlan = null; coProduct = product; }
+  const plan = coPlan ? (SITE_CFG.plans || {})[coPlan] : null;
+  const pr = plan ? { price_usd: plan.price_usd } : (SITE_CFG.products[coProduct] || {});
   const pay = SITE_CFG.payments || {};
   const z = pay.zelle || {};
   const sq = pay.square || {};
   const price = pr.price_usd != null ? fmtMoney(pr.price_usd) : '—';
 
-  document.getElementById('co-product').textContent = productTitle(coProduct);
-  document.getElementById('co-price').textContent = price;
+  document.getElementById('co-product').textContent = plan ? planTitle(coPlan) : productTitle(coProduct);
+  document.getElementById('co-price').textContent = plan ? price + t('/mes') : price;
+  document.getElementById('co-kicker').textContent = t(plan ? 'Membresía mensual · cancela cuando quieras' : 'Pago único · acceso de por vida');
+  document.getElementById('co-img').src = plan ? 'assets/img/perfil-emprendedores.webp' : 'assets/img/curso-web.webp';
   document.getElementById('co-regular').textContent = pr.regular_price_usd ? fmtMoney(pr.regular_price_usd) : '';
   document.getElementById('co-zelle-amount').textContent = price;
   document.getElementById('co-zelle-email').textContent = z.email || CONTACT.email;
@@ -134,9 +154,15 @@ function openCheckout(product) {
   document.getElementById('co-zelle-phone-row').hidden = !z.phone;
   document.getElementById('co-zelle-holder').textContent = z.holder || 'DGP Global Group';
   document.getElementById('co-zelle-ins').textContent = (LANG === 'en' ? (z.instructions_en || z.instructions_es) : (z.instructions_es || z.instructions_en)) || '';
-  document.getElementById('co-card-btn').textContent = t('Pagar') + ' ' + price;
+  document.getElementById('co-card-btn').textContent = plan ? t('Suscribirme por') + ' ' + price + t('/mes') : t('Pagar') + ' ' + price;
+  document.getElementById('co-card-note').textContent = t(plan
+    ? 'Se cobra automáticamente cada mes con Square. Cancelas cuando quieras desde tu panel.'
+    : 'Pago seguro procesado por Square. No guardamos los datos de tu tarjeta.');
+  document.getElementById('co-zelle-foot').textContent = t(plan
+    ? 'Con Zelle la membresía se paga mes a mes: te avisamos antes de que venza. Verificamos el pago en menos de 24 horas.'
+    : 'Verificamos los pagos de Zelle a mano, normalmente en menos de 24 horas. Te avisamos por correo.');
 
-  const pending = MY_ORDERS.find(o => o.status === 'pending' && o.product_id === coProduct);
+  const pending = MY_ORDERS.find(o => o.status === 'pending' && (plan ? o.kind === 'subscription' : o.product_id === coProduct));
   document.getElementById('co-ref').value = pending ? pending.reference : '';
   document.getElementById('co-payer').value = pending ? '' : (STATE.profile && STATE.profile.full_name) || '';
 
@@ -197,7 +223,9 @@ async function submitZelle() {
   if (ref.length < 3) { coError('Escribe el número de confirmación del pago'); return; }
   btn.disabled = true; coError('');
   try {
-    const { data, error } = await sb.rpc('create_order', { p: coProduct, method: 'zelle', reference: ref, payer: payer });
+    const { data, error } = coPlan
+      ? await sb.rpc('create_subscription_order', { plan: coPlan, reference: ref, payer: payer })
+      : await sb.rpc('create_order', { p: coProduct, method: 'zelle', reference: ref, payer: payer });
     if (error) throw error;
     // Los correos son un extra: si fallan, el pedido ya quedó registrado
     sb.functions.invoke('payments', { body: { action: 'order_placed', order_id: data.id } }).catch(() => {});
@@ -245,7 +273,10 @@ async function submitSquare() {
   try {
     const r = await sqCard.tokenize();
     if (r.status !== 'OK') throw new Error((r.errors && r.errors[0] && r.errors[0].message) || 'Revisa los datos de la tarjeta');
-    const { data, error } = await sb.functions.invoke('payments', { body: { action: 'square_pay', product_id: coProduct, source_id: r.token } });
+    const body = coPlan
+      ? { action: 'square_subscribe', plan_id: coPlan, source_id: r.token }
+      : { action: 'square_pay', product_id: coProduct, source_id: r.token };
+    const { data, error } = await sb.functions.invoke('payments', { body });
     if (error) {
       let msg = error.message;
       try { const j = await error.context.json(); if (j.error) msg = j.error; } catch (x) {}
@@ -254,7 +285,8 @@ async function submitSquare() {
     if (!data || !data.ok) throw new Error((data && data.error) || 'El pago fue rechazado');
     await loadUserData();
     applyUserData();
-    coDone('¡Pago aprobado!', 'Tu programa ya está activo. Te enviamos la factura por correo.');
+    if (coPlan) { await loadMembership(); coDone('¡Bienvenido a la membresía!', 'Tu membresía ya está activa. Ya puedes pedir tus flyers y agendar tus asesorías.'); }
+    else coDone('¡Pago aprobado!', 'Tu programa ya está activo. Te enviamos la factura por correo.');
   } catch (e) {
     coError(friendlyPayError(e));
   } finally {

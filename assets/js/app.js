@@ -37,7 +37,7 @@ function goToRegister() { withSplash(() => { showAuth(); switchTab('register'); 
 function showAuth()      { showScreen('auth-screen', 'flex'); hideSplash(); }
 function showDashboard() { showScreen('dash-screen'); updateDashStats(); hideSplash(); }
 function showCourse()    { showScreen('course-screen'); }
-function showAdmin()     { showScreen('admin-screen'); loadAdminData(); }
+function showAdmin()     { showScreen('admin-screen'); adminTab(ADMIN_TAB); }
 
 // ── Lector de libros ─────────────────────────────────────────────────────────
 // Abre un producto protegido: descarga su contenido y luego muestra la pantalla
@@ -187,6 +187,7 @@ function applyUserData() {
   updateBook2ReadProgress();
   updateProgress();
   updateDashStats();
+  paymentsOnUser();
 }
 
 sb.auth.onAuthStateChange((event, session) => {
@@ -452,7 +453,6 @@ function adminMessage(text, isError) {
 }
 
 async function loadAdminData() {
-  loadCupos();
   adminMessage('Cargando usuarios…');
   const { data, error } = await sb.rpc('admin_students');
   if (error) { adminMessage('Error cargando usuarios: ' + error.message, true); return; }
@@ -595,15 +595,6 @@ function updateLpCupos(n, total) {
   if (bar) bar.style.width = Math.max(0, Math.min(100, n / total * 100)) + '%';
   const wrap = document.getElementById('lp-cupos-wrap');
   if (wrap) wrap.classList.toggle('is-low', n <= 5);
-}
-
-async function saveCupos() {
-  const val = Math.max(0, parseInt(document.getElementById('admin-cupos-input').value) || 0);
-  const { error } = await sb.from('settings').update({ value: { disponibles: val, total: Math.max(cuposTotal, val) } }).eq('key', 'cupos');
-  if (error) { toast('Error: ' + error.message); return; }
-  const msg = document.getElementById('admin-cupos-msg');
-  if (msg) { msg.textContent = 'Guardado'; setTimeout(() => msg.textContent = '', 2000); }
-  updateLpCupos(val);
 }
 
 // ── UI de usuario ─────────────────────────────────────────────────────────────
@@ -907,10 +898,11 @@ document.addEventListener('DOMContentLoaded', () => {
 function onLangChange() {
   if (STATE.user) {
     renderActivation(); renderCertificates();
+    renderAnnouncement(); renderMyPayments(); renderPendingNotice();
     if (STATE.profile) STATE.profile.lang = LANG;
     sb.from('profiles').update({ lang: LANG }).eq('id', STATE.user.id).then(() => {}, () => {});
   }
-  if (document.getElementById('admin-screen').style.display === 'block') refreshAdminList();
+  if (document.getElementById('admin-screen').style.display === 'block') adminRefresh();
   if (typeof previewCertificate === 'function') previewCertificate();
   const course = document.getElementById('course-screen');
   if (course && course.style.display === 'block') {

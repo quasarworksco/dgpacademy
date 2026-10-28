@@ -6,6 +6,8 @@
 @font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 300 800; font-display: swap; src: url("../fonts/inter-tight-latin.woff2") format("woff2"); }
 @font-face { font-family: "Instrument Serif"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/instrument-serif-latin.woff2") format("woff2"); }
 @font-face { font-family: "Instrument Serif"; font-style: italic; font-weight: 400; font-display: swap; src: url("../fonts/instrument-serif-italic-latin.woff2") format("woff2"); }
+/* Respaldo con las mismas medidas que Inter Tight: si la fuente tarda, el texto no salta al cargar */
+@font-face { font-family: "Inter Tight Fallback"; src: local("Arial"), local("Helvetica Neue"), local("Helvetica"); size-adjust: 93%; ascent-override: 98%; descent-override: 24%; line-gap-override: 0%; }
 @font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 400 600; font-display: swap; src: url("../fonts/jetbrains-mono-latin.woff2") format("woff2"); }
 
 :root {
@@ -47,8 +49,8 @@
   --teal-bg: rgba(3,105,161,0.08);
 
   /* Tipografía */
-  --font: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
-  --font-display: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --font: "Inter Tight", "Inter Tight Fallback", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Inter Tight", "Inter Tight Fallback", "Helvetica Neue", Arial, sans-serif;
   --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
@@ -215,3 +217,5 @@ em.serif, .serif {
   max-width: calc(100vw - 32px);
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+[hidden] { display: none !important; }

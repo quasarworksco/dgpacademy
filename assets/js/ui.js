@@ -175,7 +175,7 @@ function certHTML(data) {
       '<div class="c-bottom">' +
         '<div class="c-sig">' + art.signature + '<div class="c-sig-line">Dirección Académica</div><div class="c-sig-role">DGP Global Group</div></div>' +
         art.seal +
-        '<div class="c-sig"><div class="c-date">' + escapeHtml(data.date) + '</div><div class="c-sig-line">Fecha de emisión</div><div class="c-sig-role">Verifícalo en academy.dgp-link.com</div></div>' +
+        '<div class="c-sig"><div class="c-date">' + escapeHtml(data.date) + '</div><div class="c-sig-line">Fecha de emisión</div><div class="c-sig-role">Verifícalo en academy.dgpglobalgroup.com</div></div>' +
       '</div>' +
     '</div>' +
   '</div>';

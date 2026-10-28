@@ -1,6 +1,6 @@
 # DGP Academy
 
-Plataforma educativa de DGP Global Group — [academy.dgp-link.com](https://academy.dgp-link.com).
+Plataforma educativa de DGP Global Group — [academy.dgpglobalgroup.com](https://academy.dgpglobalgroup.com).
 
 Sitio estático (GitHub Pages) con **Supabase** (autenticación + base de datos). Sin build: se publica tal cual.
 
@@ -69,7 +69,7 @@ update public.profiles set is_admin = true where email = 'correo@del-admin.com';
 
 ### Configuración en Supabase
 
-- Authentication → URL Configuration: Site URL `https://academy.dgp-link.com` y Redirect URL `https://academy.dgp-link.com/**`.
+- Authentication → URL Configuration: Site URL `https://academy.dgpglobalgroup.com` y Redirect URL `https://academy.dgpglobalgroup.com/**`.
 - Authentication → Emails → SMTP: `smtp.gmail.com:587` con info@dgpglobalgroup.com y contraseña de aplicación.
 
 ## Fotografías

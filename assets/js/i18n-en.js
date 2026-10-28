@@ -434,7 +434,7 @@ window.I18N_EN = {
   'Diez capítulos sobre entorno digital, identidad de marca, contenido, comunidad, analítica, aspectos legales y mentalidad emprendedora.': 'Ten chapters on the digital landscape, brand identity, content, community, analytics, legal matters and the entrepreneurial mindset.',
   'Dirección Académica': 'Academic Director',
   'Fecha de emisión': 'Issue date',
-  'Verifícalo en academy.dgp-link.com': 'Verify at academy.dgp-link.com',
+  'Verifícalo en academy.dgpglobalgroup.com': 'Verify at academy.dgpglobalgroup.com',
   '7ST · Vol. 1 — Redes Sociales y Emprendimiento': '7ST · Vol. 1 — Social Media and Entrepreneurship',
   'Tu nombre aquí': 'Your name here',
   'Programa · 16 lecciones': 'Program · 16 lessons',

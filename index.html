@@ -63,6 +63,8 @@
   <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/><path d="M22 9v6"/></symbol>
 </svg>
 
 <!-- ══════════════════ SPLASH ══════════════════ -->
@@ -81,36 +83,46 @@
         <span class="brand-name">DGP <span>Academy</span></span>
       </button>
       <nav class="lp-nav-links" aria-label="Secciones">
-        <a href="#lp-programa" data-scroll="lp-programa">Programa</a>
-        <a href="#lp-como" data-scroll="lp-como">Cómo funciona</a>
-        <a href="#lp-biblioteca" data-scroll="lp-biblioteca">Biblioteca</a>
-        <a href="#lp-certificado" data-scroll="lp-certificado">Certificado</a>
+        <a href="#lp-cursos" data-scroll="lp-cursos">Programas</a>
+        <a href="#lp-membresia" data-scroll="lp-membresia">Membresía</a>
+        <a href="#lp-blog" data-scroll="lp-blog">Blog</a>
+        <a href="#lp-nosotros" data-scroll="lp-nosotros">Nosotros</a>
         <a href="#lp-acceso" data-scroll="lp-acceso">Precio</a>
         <a href="#lp-faq" data-scroll="lp-faq">Preguntas</a>
       </nav>
       <div class="lp-nav-cta">
         <span data-lang-slot></span>
-        <button class="lp-nav-login" onclick="goToAuth()">Iniciar sesión</button>
-        <button class="ui-btn ui-btn--primary ui-btn--sm" onclick="goToRegister()">Inscribirme</button>
+        <button class="lp-nav-login guest-only" onclick="goToAuth()">Iniciar sesión</button>
+        <button class="ui-btn ui-btn--primary ui-btn--sm guest-only" onclick="goToRegister()">Inscribirme</button>
+        <button class="ui-btn ui-btn--primary ui-btn--sm auth-only" onclick="showDashboard()"><svg><use href="#i-cap"/></svg>Mi campus</button>
         <button class="icon-btn lp-nav-toggle" onclick="toggleLpMenu()" aria-label="Abrir menú" aria-expanded="false" id="lp-nav-toggle"><svg><use href="#i-menu"/></svg></button>
       </div>
     </div>
     <div class="lp-mobile-menu" id="lp-mobile-menu">
-      <a href="#lp-programa" data-scroll="lp-programa">Programa</a>
-      <a href="#lp-como" data-scroll="lp-como">Cómo funciona</a>
-      <a href="#lp-biblioteca" data-scroll="lp-biblioteca">Biblioteca</a>
-      <a href="#lp-certificado" data-scroll="lp-certificado">Certificado</a>
+      <a href="#lp-cursos" data-scroll="lp-cursos">Programas</a>
+      <a href="#lp-membresia" data-scroll="lp-membresia">Membresía</a>
+      <a href="#lp-blog" data-scroll="lp-blog">Blog</a>
+      <a href="#lp-nosotros" data-scroll="lp-nosotros">Nosotros</a>
       <a href="#lp-acceso" data-scroll="lp-acceso">Precio</a>
       <a href="#lp-faq" data-scroll="lp-faq">Preguntas frecuentes</a>
       <div class="lp-mobile-actions">
         <span data-lang-slot="lang-switch--block"></span>
-        <button class="ui-btn ui-btn--ghost ui-btn--block" onclick="goToAuth()">Iniciar sesión</button>
-        <button class="ui-btn ui-btn--primary ui-btn--block" onclick="goToRegister()">Crear mi cuenta</button>
+        <button class="ui-btn ui-btn--ghost ui-btn--block guest-only" onclick="goToAuth()">Iniciar sesión</button>
+        <button class="ui-btn ui-btn--primary ui-btn--block guest-only" onclick="goToRegister()">Crear mi cuenta</button>
+        <button class="ui-btn ui-btn--primary ui-btn--block auth-only" onclick="showDashboard()">Ir a mi campus</button>
       </div>
     </div>
   </header>
 
   <!-- HERO -->
+  <div class="lp-welcome" id="lp-welcome" hidden>
+    <div class="lp-wrap lp-welcome-inner">
+      <span class="lp-welcome-ic"><svg><use href="#i-cap"/></svg></span>
+      <p><b id="lp-welcome-name">Hola</b><span>Estás viendo el inicio de DGP Academy. Tus programas, libros y membresía te esperan en tu campus.</span></p>
+      <button class="ui-btn ui-btn--primary ui-btn--sm" onclick="showDashboard()">Ir a mi campus <svg><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+
   <section class="lp-hero">
     <div class="lp-wrap lp-hero-grid">
       <div class="lp-hero-copy">
@@ -261,38 +273,41 @@
   <!-- CATÁLOGO -->
   <section class="lp-section" id="lp-cursos">
     <div class="lp-wrap">
-      <div class="lp-section-head">
-        <span class="eyebrow reveal">Catálogo</span>
-        <h2 class="lp-h2 reveal" data-d="1">Una escuela que crece <em class="serif">contigo</em></h2>
-        <p class="lp-lead reveal" data-d="2">Empezamos con el programa de desarrollo web. Los siguientes programas se suman a tu misma cuenta.</p>
+      <div class="lp-section-head lp-section-head--split">
+        <div>
+          <span class="eyebrow reveal">Programas</span>
+          <h2 class="lp-h2 reveal" data-d="1">Una escuela que crece <em class="serif">contigo</em></h2>
+        </div>
+        <p class="lp-lead reveal" data-d="2">Programas prácticos creados por el equipo de DGP Global Group. Todo vive en tu misma cuenta: cuando se suma un programa nuevo, lo ves en tu campus.</p>
       </div>
-      <div class="lp-catalog">
-        <article class="lp-course reveal">
-          <div class="lp-course-img"><img src="assets/img/curso-web.webp" alt="" loading="lazy" width="900" height="600"><span class="chip chip--green"><span class="dot"></span>Disponible</span></div>
-          <div class="lp-course-body">
-            <div class="lp-course-kicker">Desarrollo web · IA</div>
-            <h3>Diseño y Desarrollo Web con IA</h3>
-            <p>HTML, CSS, JavaScript, GitHub Pages, Firebase y Claude Code para construir y publicar sitios profesionales.</p>
-            <div class="lp-course-foot"><span>16 lecciones · 5 módulos</span><button class="lp-link" onclick="goToRegister()">Inscribirme <svg><use href="#i-arrow"/></svg></button></div>
-          </div>
+      <div class="lp-programs">
+        <article class="lp-prog reveal" onclick="openProgram('web-dev')">
+          <div class="lp-prog-img"><img src="assets/img/curso-web.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">Disponible</span></div>
+          <h3>Diseño y Desarrollo Web con IA</h3>
+          <div class="lp-prog-meta"><b>16 lecciones</b><span>5 módulos · certificado</span></div>
+          <p>Aprende HTML, CSS, JavaScript, GitHub Pages, Firebase y Claude Code construyendo y publicando un sitio profesional real.</p>
+          <div class="lp-prog-modes"><span>Online</span><span>A tu ritmo</span><span>Asesorías</span></div>
         </article>
-        <article class="lp-course is-soon reveal" data-d="1">
-          <div class="lp-course-img"><img src="assets/img/curso-ia.webp" alt="" loading="lazy" width="900" height="600"><span class="chip chip--dark">Próximamente</span></div>
-          <div class="lp-course-body">
-            <div class="lp-course-kicker">Inteligencia artificial</div>
-            <h3>IA aplicada a los negocios</h3>
-            <p>Automatización, productividad y análisis con IA para equipos y empresas que quieren trabajar mejor.</p>
-            <div class="lp-course-foot"><span>En preparación</span></div>
-          </div>
+        <article class="lp-prog reveal" data-d="1" onclick="openProgram('books')">
+          <div class="lp-prog-img"><img src="assets/img/biblioteca.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">Disponible</span></div>
+          <h3>Biblioteca 7ST: emprende con método</h3>
+          <div class="lp-prog-meta"><b>2 libros</b><span>27 capítulos · evaluación</span></div>
+          <p>Redes sociales, marca, finanzas y propósito, con cuadernos de trabajo que se responden dentro del libro y un coach con IA que analiza tus respuestas.</p>
+          <div class="lp-prog-modes"><span>Online</span><span>Cuadernos</span><span>Coach IA</span></div>
         </article>
-        <article class="lp-course is-soon reveal" data-d="2">
-          <div class="lp-course-img"><img src="assets/img/curso-marketing.webp" alt="" loading="lazy" width="900" height="600"><span class="chip chip--dark">Próximamente</span></div>
-          <div class="lp-course-body">
-            <div class="lp-course-kicker">Marketing digital</div>
-            <h3>Marketing digital</h3>
-            <p>SEO, redes sociales, campañas pagadas y analítica para atraer clientes y escalar tu negocio en línea.</p>
-            <div class="lp-course-foot"><span>En preparación</span></div>
-          </div>
+        <article class="lp-prog is-soon reveal" data-d="2">
+          <div class="lp-prog-img"><img src="assets/img/curso-ia.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">Próximamente</span></div>
+          <h3>IA aplicada a los negocios</h3>
+          <div class="lp-prog-meta"><b>En preparación</b><span>Inteligencia artificial</span></div>
+          <p>Automatización, productividad y análisis con IA para emprendedores y equipos que quieren trabajar mejor y vender más.</p>
+          <div class="lp-prog-modes"><span>Online</span><span>A tu ritmo</span></div>
+        </article>
+        <article class="lp-prog is-soon reveal" data-d="3">
+          <div class="lp-prog-img"><img src="assets/img/curso-marketing.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">Próximamente</span></div>
+          <h3>Marketing digital</h3>
+          <div class="lp-prog-meta"><b>En preparación</b><span>Redes · SEO · campañas</span></div>
+          <p>SEO, redes sociales, campañas pagadas y analítica para atraer clientes y hacer crecer tu negocio en línea.</p>
+          <div class="lp-prog-modes"><span>Online</span><span>A tu ritmo</span></div>
         </article>
       </div>
     </div>
@@ -425,6 +440,46 @@
     </div>
   </section>
 
+  <!-- SOBRE NOSOTROS -->
+  <section class="lp-section lp-about" id="lp-nosotros">
+    <div class="lp-wrap">
+      <div class="lp-about-top">
+        <div>
+          <span class="eyebrow eyebrow--light reveal">Sobre nosotros</span>
+          <h2 class="lp-h2 reveal" data-d="1">La escuela de <em class="serif">DGP Global Group</em>.</h2>
+        </div>
+        <div class="lp-about-copy">
+          <p class="reveal" data-d="2">DGP Academy es la división educativa de DGP Global Group. Nació de una idea sencilla: enseñar exactamente lo que hacemos todos los días para nuestros clientes —sitios web, marcas, contenido y automatización con IA— para que más emprendedores latinos puedan construir su negocio digital con sus propias manos.</p>
+          <p class="reveal" data-d="3">Aquí no hay teoría de relleno. Cada lección termina en algo que publicas, cada libro trae un cuaderno de trabajo y cada estudiante tiene acompañamiento real de nuestro equipo.</p>
+        </div>
+      </div>
+
+      <div class="lp-about-pillars">
+        <article class="reveal"><span class="lp-about-num">01</span><h3>Aprender haciendo</h3><p>Proyectos reales desde la primera semana: lo que aprendes hoy lo publicas mañana.</p></article>
+        <article class="reveal" data-d="1"><span class="lp-about-num">02</span><h3>Mentores que ejercen</h3><p>Te enseña el mismo equipo que diseña, programa y hace crecer negocios en Estados Unidos y Latinoamérica.</p></article>
+        <article class="reveal" data-d="2"><span class="lp-about-num">03</span><h3>IA como compañera</h3><p>Usamos la inteligencia artificial para que avances más rápido, con un coach que analiza tus respuestas.</p></article>
+        <article class="reveal" data-d="3"><span class="lp-about-num">04</span><h3>En tu idioma</h3><p>Plataforma, libros y asesorías en español e inglés, desde cualquier dispositivo.</p></article>
+      </div>
+
+      <div class="lp-alliance reveal">
+        <div class="lp-alliance-logos" aria-hidden="true">
+          <span class="lp-alliance-logo lp-alliance-logo--dgp"><svg style="--logo-ink:#0a1430"><use href="#dgp-mark"/></svg></span>
+          <span class="lp-alliance-x">×</span>
+          <span class="lp-alliance-logo"><img src="assets/img/moya-mark.png" alt="" width="64" height="47" loading="lazy"></span>
+        </div>
+        <div class="lp-alliance-copy">
+          <span class="lp-alliance-kicker">Alianza comercial</span>
+          <h3>DGP Global Group <span>×</span> Moya &amp; Company</h3>
+          <p>Somos aliados comerciales de <b>Moya &amp; Company</b>, “Your Digital Right Hand”, una empresa de soporte digital bilingüe que conecta a negocios de Estados Unidos con profesionales remotos. Juntos cerramos el círculo: en DGP Academy aprendes a construir tu presencia digital y, cuando tu negocio crece, Moya &amp; Company te ayuda a operarlo.</p>
+          <ul class="lp-alliance-services">
+            <li>Call center</li><li>Redes sociales</li><li>Asistencia virtual</li><li>Customer service</li><li>Estructura de CRM</li><li>Procesos (SOPs)</li>
+          </ul>
+          <a class="lp-alliance-link" href="https://moyacompany.com" target="_blank" rel="noopener">Conocer Moya &amp; Company <svg><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- FAQ -->
   <section class="lp-section" id="lp-faq">
     <div class="lp-wrap lp-faq">
@@ -466,9 +521,9 @@
       <div class="lp-footer-col"><h4>Programa</h4><a href="#lp-programa" data-scroll="lp-programa">Temario</a><a href="#lp-biblioteca" data-scroll="lp-biblioteca">Biblioteca</a><a href="#lp-certificado" data-scroll="lp-certificado">Certificado</a><a href="#lp-acceso" data-scroll="lp-acceso">Precio</a></div>
       <div class="lp-footer-col"><h4>Plataforma</h4><a href="#" onclick="goToAuth();return false">Iniciar sesión</a><a href="#" onclick="goToRegister();return false">Crear cuenta</a><a href="#lp-faq" data-scroll="lp-faq">Preguntas frecuentes</a></div>
       <div class="lp-footer-col"><h4>Certificados</h4><a href="#" onclick="openVerify();return false">Verificar un certificado</a></div>
-      <div class="lp-footer-col"><h4>Contacto</h4><a href="mailto:info@dgpglobalgroup.com">info@dgpglobalgroup.com</a><a href="https://dgpglobalgroup.com" target="_blank" rel="noopener">dgpglobalgroup.com</a></div>
+      <div class="lp-footer-col"><h4>Contacto</h4><a href="mailto:info@dgpglobalgroup.com">info@dgpglobalgroup.com</a><a href="https://dgpglobalgroup.com" target="_blank" rel="noopener">dgpglobalgroup.com</a><a href="#lp-nosotros" data-scroll="lp-nosotros">Sobre nosotros</a><a href="https://moyacompany.com" target="_blank" rel="noopener">Aliado: Moya &amp; Company</a></div>
     </div>
-    <div class="lp-wrap lp-footer-bottom"><span>© 2026 DGP Global Group. Todos los derechos reservados.</span><span>academy.dgpglobalgroup.com</span></div>
+    <div class="lp-wrap lp-footer-bottom"><span>© 2026 DGP Global Group. Todos los derechos reservados.</span><span class="lp-footer-legal"><a href="legal.html#privacidad">Privacidad</a><a href="legal.html#cookies">Cookies</a><a href="legal.html#terminos">Condiciones de uso</a></span></div>
   </footer>
 
 </div><!-- /landing-screen -->
@@ -550,7 +605,7 @@
           <span id="btn-auth-text">Iniciar sesión</span>
           <span class="btn-auth-loader" id="btn-loader"></span>
         </button>
-        <p class="auth-legal">Al crear tu cuenta aceptas recibir comunicaciones de DGP Academy sobre tu inscripción.</p>
+        <p class="auth-legal">Al crear tu cuenta aceptas las <a href="legal.html#terminos" target="_blank" rel="noopener">Condiciones de uso</a> y la <a href="legal.html#privacidad" target="_blank" rel="noopener">Política de privacidad</a>, y recibir comunicaciones de DGP Academy sobre tu inscripción.</p>
       </form>
     </div>
   </main>
@@ -564,6 +619,7 @@
     <div class="dash-nav-inner">
       <span class="brand"><svg class="brand-mark"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span></span>
       <div class="dash-nav-right">
+        <button class="dash-home-btn" onclick="showLanding()" title="Ver el inicio de DGP Academy"><svg><use href="#i-home"/></svg><span>Inicio</span></button>
         <span data-lang-slot></span>
         <button id="btn-admin-panel" class="dash-admin-btn" style="display:none" onclick="showAdmin()"><svg><use href="#i-shield"/></svg><span class="admin-label">Panel admin</span></button>
         <button class="icon-btn" onclick="showSettings()" title="Configuración de la cuenta" aria-label="Configuración"><svg><use href="#i-settings"/></svg></button>
@@ -626,7 +682,7 @@
       </div>
     </section>
 
-    <section class="dash-block">
+    <section class="dash-block" id="dash-programs">
       <div class="dash-block-head"><h2>Mis programas</h2><span class="dash-block-sub">1 disponible · 2 en preparación</span></div>
       <div class="courses-grid">
 
@@ -669,7 +725,7 @@
       </div>
     </section>
 
-    <section class="dash-block">
+    <section class="dash-block" id="dash-library">
       <div class="dash-block-head"><h2>Biblioteca digital</h2><span class="dash-block-sub">Serie 7ST · DGP Global Group</span></div>
       <div class="books-grid" id="books-grid">
 
@@ -1683,6 +1739,27 @@
   </div>
 </div><!-- /book-screen-2 -->
 
+<div class="idle-warn" id="idle-warn" hidden role="alertdialog" aria-live="assertive" aria-labelledby="idle-warn-title">
+  <div class="idle-warn-card">
+    <div class="idle-warn-ring"><b id="idle-warn-secs">20</b><small>seg</small></div>
+    <div class="idle-warn-copy">
+      <h3 id="idle-warn-title">¿Sigues ahí?</h3>
+      <p>Por tu seguridad, tu sesión se cerrará por inactividad.</p>
+      <div class="idle-warn-actions"><button class="ui-btn ui-btn--primary ui-btn--sm" onclick="stayConnected()">Seguir conectado</button><button class="ui-btn ui-btn--ghost ui-btn--sm" onclick="hideIdleWarning();signOut()">Cerrar sesión</button></div>
+    </div>
+    <span class="idle-warn-bar"><i id="idle-warn-bar"></i></span>
+  </div>
+</div>
+<div class="idle-closed" id="idle-closed" hidden role="status">
+  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+  <p><b>Tu sesión se cerró por inactividad.</b><span>Pasaron 10 minutos sin actividad. Tu progreso quedó guardado.</span></p>
+  <button class="ui-btn ui-btn--primary ui-btn--sm" onclick="dismissIdleClosed();goToAuth()">Iniciar sesión</button>
+  <button class="icon-btn" onclick="dismissIdleClosed()" aria-label="Cerrar aviso"><svg><use href="#i-x"/></svg></button>
+</div>
+<div class="cookie-note" id="cookie-note" hidden role="region" aria-label="Aviso de cookies">
+  <p>Solo usamos almacenamiento esencial para mantener tu sesión y tus preferencias. Sin publicidad ni rastreo. <a href="legal.html#cookies">Ver política de cookies</a></p>
+  <button class="ui-btn ui-btn--primary ui-btn--sm" onclick="acceptCookieNote()">Entendido</button>
+</div>
 <script src="assets/js/i18n-en.js"></script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/data.js"></script>

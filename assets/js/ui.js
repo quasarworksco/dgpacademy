@@ -296,3 +296,15 @@ async function verifyCertificate(e) {
   if (q) setTimeout(() => openVerify(q), 300);
 })();
 
+
+// Aviso informativo de almacenamiento esencial (se muestra una sola vez)
+function acceptCookieNote() {
+  try { localStorage.setItem('dgp-cookie-ok', '1'); } catch (e) {}
+  const n = document.getElementById('cookie-note'); if (n) n.hidden = true;
+}
+document.addEventListener('DOMContentLoaded', () => {
+  let seen = false;
+  try { seen = localStorage.getItem('dgp-cookie-ok') === '1'; } catch (e) {}
+  const n = document.getElementById('cookie-note');
+  if (n && !seen) setTimeout(() => { n.hidden = false; }, 1500);
+});

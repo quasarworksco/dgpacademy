@@ -10,7 +10,22 @@ let orderFilter = 'pending';
 let WEEKLY = [];
 let recWeek = null;
 
+// Permisos del equipo: el dueño ve todo; cada administrador solo las secciones que se le asignaron
+let MY_PERMS = { owner: false, admin: false, perms: [] };
+const TAB_PERM = { resumen: 'pagos', estudiantes: 'estudiantes', pagos: 'pagos', conciliacion: 'pagos', membresias: 'membresias', config: 'configuracion' };
+const PERM_LABELS = [['estudiantes', 'Estudiantes'], ['pagos', 'Pagos, resumen y conciliación'], ['membresias', 'Membresías y cortesías'], ['configuracion', 'Configuración del sitio']];
+async function loadMyPerms() {
+  const { data, error } = await sb.rpc('my_perms');
+  MY_PERMS = (!error && data) ? data : { owner: false, admin: false, perms: [] };
+  document.querySelectorAll('.adm-tab').forEach(b => { b.hidden = !canTab(b.dataset.tab); });
+  return MY_PERMS;
+}
+function canTab(tab) { return !!(MY_PERMS.owner || (MY_PERMS.perms || []).includes(TAB_PERM[tab])); }
+function firstAllowedTab() { return Object.keys(TAB_PERM).find(canTab) || null; }
+
 function adminTab(tab) {
+  if (!canTab(tab)) tab = firstAllowedTab();
+  if (!tab) return;
   ADMIN_TAB = tab;
   document.querySelectorAll('.adm-tab').forEach(b => {
     const on = b.dataset.tab === tab;

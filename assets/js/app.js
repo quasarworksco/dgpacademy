@@ -24,7 +24,23 @@ function hideSplash() {
   const splash = document.getElementById('splash-screen');
   if (splash) { splash.classList.remove('active'); setTimeout(() => { splash.style.display = 'none'; }, 400); }
 }
-function showLanding() { showScreen('landing-screen'); hideSplash(); }
+function showLanding() { showScreen('landing-screen'); hideSplash(); fillLandingWelcome(); const ls = document.getElementById('landing-screen'); if (ls) ls.scrollTo({ top: 0, behavior: 'instant' }); }
+// Con sesión iniciada, el inicio sigue visible como portada del campus
+function fillLandingWelcome() {
+  const box = document.getElementById('lp-welcome');
+  if (!box) return;
+  box.hidden = !STATE.user;
+  if (!STATE.user) return;
+  const name = ((STATE.profile && STATE.profile.full_name) || '').trim().split(/\s+/)[0];
+  document.getElementById('lp-welcome-name').textContent = name ? t('Hola') + ', ' + name : t('Hola');
+}
+// Tarjetas de programas: con sesión llevan al campus; sin sesión, a crear la cuenta
+function openProgram(kind) {
+  if (!STATE.user) { goToRegister(); return; }
+  showDashboard();
+  const el = document.getElementById(kind === 'books' ? 'dash-library' : 'dash-programs');
+  if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+}
 function withSplash(fn) {
   const splash = document.getElementById('splash-screen');
   if (!splash) return fn();
@@ -32,12 +48,16 @@ function withSplash(fn) {
   requestAnimationFrame(() => splash.classList.add('active'));
   setTimeout(fn, 650);
 }
-function goToAuth()     { withSplash(() => { showAuth(); switchTab('login'); }); }
-function goToRegister() { withSplash(() => { showAuth(); switchTab('register'); }); }
+function goToAuth()     { if (STATE.user) { showDashboard(); return; } withSplash(() => { showAuth(); switchTab('login'); }); }
+function goToRegister() { if (STATE.user) { showDashboard(); return; } withSplash(() => { showAuth(); switchTab('register'); }); }
 function showAuth()      { showScreen('auth-screen', 'flex'); hideSplash(); }
 function showDashboard() { showScreen('dash-screen'); updateDashStats(); hideSplash(); }
 function showCourse()    { showScreen('course-screen'); }
-function showAdmin()     { showScreen('admin-screen'); adminTab(ADMIN_TAB); }
+async function showAdmin() {
+  await loadMyPerms();
+  if (!firstAllowedTab()) { toast(t('Todavía no tienes secciones del panel asignadas.')); return; }
+  showScreen('admin-screen'); adminTab(ADMIN_TAB);
+}
 
 // ── Lector de libros ─────────────────────────────────────────────────────────
 // Abre un producto protegido: descarga su contenido y luego muestra la pantalla
@@ -168,12 +188,14 @@ async function onSignedIn(user) {
   if (!sessionUserId && last && Date.now() - last >= 10 * 60 * 1000) {
     try { localStorage.removeItem('dgp-last-activity'); } catch (e) {}
     await sb.auth.signOut();
-    toast(t('Cerramos tu sesión por inactividad. Vuelve a entrar cuando quieras.'));
+    showIdleClosed();
     return;
   }
   try { localStorage.setItem('dgp-last-activity', String(Date.now())); } catch (e) {}
   sessionUserId = user.id;
   STATE.user = user;
+  document.body.classList.add('is-auth');
+  dismissIdleClosed();
   try {
     await loadUserData();
   } catch (e) {
@@ -206,6 +228,7 @@ sb.auth.onAuthStateChange((event, session) => {
     setTimeout(() => onSignedIn(session.user), 0);
   } else if (event === 'SIGNED_OUT' || event === 'INITIAL_SESSION') {
     sessionUserId = null;
+    document.body.classList.remove('is-auth');
     resetState();
     clearContent();
     completed = [];
@@ -514,7 +537,7 @@ function renderAdminUsers(users) {
     return '<div class="admin-user-card">' +
       '<div class="admin-user-avatar">' + escapeHtml(initial) + '</div>' +
       '<div class="admin-user-info">' +
-        '<div class="admin-user-name">' + escapeHtml(u.full_name || '—') + (u.is_admin ? ' <span class="chip chip--accent">Admin</span>' : '') + (u.courtesy ? ' <span class="chip chip--gold">Cortesía</span>' : '') + (u.suspended ? ' <span class="chip chip--danger">Suspendida</span>' : '') + (u.member_plan ? ' <span class="chip chip--light">' + escapeHtml(((SITE_CFG.plans || {})[u.member_plan] || {}).name || u.member_plan) + '</span>' : '') + '</div>' +
+        '<div class="admin-user-name">' + escapeHtml(u.full_name || '—') + (u.is_owner ? ' <span class="chip chip--accent">' + escapeHtml(t('Dueño')) + '</span>' : u.is_admin ? ' <span class="chip chip--accent">Admin</span>' : '') + (u.courtesy ? ' <span class="chip chip--gold">Cortesía</span>' : '') + (u.suspended ? ' <span class="chip chip--danger">Suspendida</span>' : '') + (u.member_plan ? ' <span class="chip chip--light">' + escapeHtml(((SITE_CFG.plans || {})[u.member_plan] || {}).name || u.member_plan) + '</span>' : '') + '</div>' +
         '<div class="admin-user-email">' + escapeHtml(u.email || '—') + '</div>' +
         '<div class="admin-user-phone">' + escapeHtml(u.phone || 'Sin teléfono') + ' · Registro: ' + escapeHtml(fmtDate(u.created_at)) + ' · Última visita: ' + escapeHtml(fmtDate(u.last_seen_at)) + '</div>' +
         '<div class="admin-user-prog"><div class="admin-user-prog-label"><span>Web Dev</span><span>' + prog + ' / 16' + (done ? ' · completado' : '') + '</span></div>' +
@@ -527,6 +550,8 @@ function renderAdminUsers(users) {
         adminToggle('Semilla', { cls: bs.active ? 'active is-green' : '', on: bs.active, action: "setAccess('" + uid + "','semilla','active'," + !bs.active + ")", title: bs.active ? 'Quitar De la semilla al árbol' : 'Dar acceso a De la semilla al árbol' }) +
         adminToggle('IA', { disabled: true, title: 'Próximamente' }) +
         adminToggle('Marketing', { disabled: true, title: 'Próximamente' }) +
+        (u.is_admin || !canTab('membresias') ? '' : memberControl(u, uid)) +
+        (MY_PERMS.owner && !u.is_owner ? '<button class="admin-toggle' + (u.is_admin ? ' active' : '') + '" onclick="openStaffPerms(\'' + uid + '\')" title="' + escapeHtml(t('Dar o quitar acceso al panel de administración')) + '">' + escapeHtml(u.is_admin ? t('Equipo') + ' · ' + (u.admin_perms || []).length : t('Hacer administrador')) + '</button>' : '') +
         (u.is_admin ? '' :
           '<span class="admin-acct">' +
           adminToggle(u.suspended ? 'Reactivar' : 'Suspender', { cls: u.suspended ? 'unpaid' : '', action: "suspendUser('" + uid + "'," + !u.suspended + ")", title: u.suspended ? 'Permitir de nuevo el acceso' : 'Bloquear el inicio de sesión' }) +
@@ -535,6 +560,84 @@ function renderAdminUsers(users) {
       '</div>' +
     '</div>';
   }).join('');
+}
+
+// Membresía desde la ficha: plan pagado a mano (1 mes, se renueva sumando meses) o cortesía total
+function memberControl(u, uid) {
+  const plans = (SITE_CFG.planList || []).slice().sort((a, b) => Number(a.price_usd) - Number(b.price_usd));
+  const top = plans[plans.length - 1];
+  const sub = u.subscription;
+  const cur = u.courtesy ? 'courtesy' : (sub ? sub.plan_id : '');
+  const opt = (v, label) => '<option value="' + v + '"' + (v === cur ? ' selected' : '') + '>' + escapeHtml(label) + '</option>';
+  const until = sub && !u.courtesy ? ' · ' + t('hasta') + ' ' + fmtDate(sub.period_end) : '';
+  return '<span class="admin-member">' +
+    '<select class="admin-member-select" aria-label="' + escapeHtml(t('Membresía')) + '" onchange="setMembership(\'' + uid + '\', this)">' +
+      opt('', t('Sin membresía')) +
+      plans.map(p => opt(p.id, t('Membresía') + ' ' + p.name + ' · $' + Number(p.price_usd))).join('') +
+      (top ? opt('courtesy', t('Cortesía: acceso total')) : '') +
+    '</select>' +
+    (sub && !u.courtesy ? '<button class="admin-toggle" onclick="renewMembership(\'' + uid + '\')" title="' + escapeHtml(t('Sumar un mes a la membresía')) + '">+1 ' + escapeHtml(t('mes')) + '</button>' : '') +
+    (until ? '<small class="admin-member-until">' + escapeHtml(until.slice(3)) + '</small>' : '') +
+  '</span>';
+}
+async function setMembership(uid, sel) {
+  const u = allAdminUsers.find(x => x.id === uid);
+  if (!u) return;
+  const v = sel.value, who = u.full_name || u.email;
+  const plans = (SITE_CFG.planList || []).slice().sort((a, b) => Number(b.price_usd) - Number(a.price_usd));
+  const msg = v === 'courtesy' ? t('¿Dar acceso total de cortesía a') + ' ' + who + '?'
+    : v === '' ? t('¿Quitar la membresía de') + ' ' + who + '?'
+    : t('¿Activar un mes de membresía') + ' ' + ((SITE_CFG.plans || {})[v] || {}).name + ' ' + t('para') + ' ' + who + '? ' + t('Úsalo cuando el pago se recibió por fuera de la plataforma.');
+  if (!confirm(msg)) { refreshAdminList(); return; }
+  sel.disabled = true;
+  try {
+    if (v === 'courtesy') {
+      const { error } = await sb.rpc('admin_set_courtesy', { email: u.email, plan: plans[0].id, note: t('Desde la ficha del estudiante'), enabled: true });
+      if (error) throw error;
+    } else {
+      if (u.courtesy) { const { error } = await sb.rpc('admin_set_courtesy', { email: u.email, plan: '', note: '', enabled: false }); if (error) throw error; }
+      const { error } = await sb.rpc('admin_set_membership', { uid, plan: v });
+      if (error) throw error;
+    }
+    toast(t('Membresía actualizada'));
+  } catch (e) { toast(e.message); }
+  loadAdminData();
+}
+async function renewMembership(uid) {
+  const u = allAdminUsers.find(x => x.id === uid);
+  if (!u || !u.subscription) return;
+  if (!confirm(t('¿Sumar un mes a la membresía de') + ' ' + (u.full_name || u.email) + '?')) return;
+  const { error } = await sb.rpc('admin_set_membership', { uid, plan: u.subscription.plan_id });
+  if (error) { toast(error.message); return; }
+  toast(t('Se sumó un mes'));
+  loadAdminData();
+}
+
+// Permisos del equipo (solo el dueño): qué secciones del panel puede usar cada administrador
+function openStaffPerms(uid) {
+  const u = allAdminUsers.find(x => x.id === uid);
+  if (!u) return;
+  const cur = u.admin_perms || [];
+  let ov = document.getElementById('staff-overlay');
+  if (!ov) { ov = document.createElement('div'); ov.id = 'staff-overlay'; ov.className = 'modal-overlay'; document.body.appendChild(ov); }
+  ov.innerHTML = '<div class="modal staff-modal" role="dialog" aria-modal="true">' +
+    '<div class="modal-head"><h2>' + escapeHtml(t('Permisos del panel')) + '</h2><button class="icon-btn" onclick="closeStaffPerms()" aria-label="' + escapeHtml(t('Cerrar')) + '"><svg><use href="#i-x"/></svg></button></div>' +
+    '<div class="modal-section"><p class="modal-hint"><b>' + escapeHtml(u.full_name || u.email) + '</b> · ' + escapeHtml(u.email) + '<br>' + escapeHtml(t('Marca las secciones del panel de administración que podrá usar. Sin ninguna marcada, vuelve a ser estudiante.')) + '</p>' +
+    '<div class="staff-perms">' + PERM_LABELS.map(([k, label]) => '<label class="staff-perm"><input type="checkbox" value="' + k + '"' + (cur.includes(k) ? ' checked' : '') + '><span>' + escapeHtml(t(label)) + '</span></label>').join('') + '</div>' +
+    '<div class="sv-actions"><button class="ui-btn ui-btn--ghost" onclick="closeStaffPerms()">' + escapeHtml(t('Cancelar')) + '</button><button class="ui-btn ui-btn--primary" id="staff-save" onclick="saveStaffPerms(\'' + uid + '\')">' + escapeHtml(t('Guardar permisos')) + '</button></div></div></div>';
+  ov.style.display = 'flex';
+  ov.onclick = e => { if (e.target === ov) closeStaffPerms(); };
+}
+function closeStaffPerms() { const ov = document.getElementById('staff-overlay'); if (ov) ov.style.display = 'none'; }
+async function saveStaffPerms(uid) {
+  const perms = [...document.querySelectorAll('#staff-overlay input:checked')].map(i => i.value);
+  const btn = document.getElementById('staff-save'); btn.disabled = true;
+  const { error } = await sb.rpc('owner_set_staff', { uid, perms });
+  btn.disabled = false;
+  if (error) { toast(error.message); return; }
+  closeStaffPerms();
+  toast(t(perms.length ? 'Permisos guardados' : 'Ya no es administrador'));
+  loadAdminData();
 }
 
 // Activa / quita un acceso o marca un pago
@@ -839,23 +942,72 @@ function markActivity() {
 function lastActivity() {
   try { return Number(localStorage.getItem(IDLE_KEY)) || Date.now(); } catch (e) { return Date.now(); }
 }
+// 20 segundos antes del cierre aparece una cuenta regresiva en pantalla;
+// al cerrarse queda un aviso fijo hasta que la persona lo descarta.
+const IDLE_WARN = 20 * 1000;
+let idleCountdown = null;
+function showIdleWarning() {
+  const box = document.getElementById('idle-warn');
+  if (!box || !box.hidden) return;
+  box.hidden = false;
+  const tick = () => {
+    const left = Math.max(0, Math.ceil((IDLE_LIMIT - (Date.now() - lastActivity())) / 1000));
+    document.getElementById('idle-warn-secs').textContent = left;
+    document.getElementById('idle-warn-bar').style.transform = 'scaleX(' + Math.min(1, left / (IDLE_WARN / 1000)) + ')';
+    if (left <= 0) checkIdle();
+  };
+  tick();
+  clearInterval(idleCountdown);
+  idleCountdown = setInterval(tick, 250);
+}
+function hideIdleWarning() {
+  clearInterval(idleCountdown);
+  const box = document.getElementById('idle-warn');
+  if (box) box.hidden = true;
+}
+function stayConnected() { lastMark = Date.now(); markActivity(); hideIdleWarning(); }
+function showIdleClosed() {
+  try { sessionStorage.setItem('dgp-idle-closed', '1'); } catch (e) {}
+  const n = document.getElementById('idle-closed');
+  if (n) n.hidden = false;
+}
+function dismissIdleClosed() {
+  try { sessionStorage.removeItem('dgp-idle-closed'); } catch (e) {}
+  const n = document.getElementById('idle-closed');
+  if (n) n.hidden = true;
+}
+let idleClosing = false;
 async function checkIdle() {
-  if (!STATE.user) return;
+  if (!STATE.user || idleClosing) return;
   const idle = Date.now() - lastActivity();
   if (idle >= IDLE_LIMIT) {
+    idleClosing = true;
+    hideIdleWarning();
     try { localStorage.removeItem(IDLE_KEY); } catch (e) {}
     await signOut();
-    toast(t('Cerramos tu sesión por inactividad. Vuelve a entrar cuando quieras.'));
-  } else if (idle >= IDLE_LIMIT - 60 * 1000 && !idleWarned) {
-    idleWarned = true;
-    toast(t('Tu sesión se cerrará en 1 minuto por inactividad.'));
+    showIdleClosed();
+    idleClosing = false;
+  } else if (idle >= IDLE_LIMIT - IDLE_WARN) {
+    showIdleWarning();
+  } else {
+    hideIdleWarning();
   }
 }
 let lastMark = 0;
 ['pointerdown', 'keydown', 'scroll', 'touchstart', 'mousemove', 'wheel'].forEach(ev =>
-  window.addEventListener(ev, () => { const n = Date.now(); if (n - lastMark > 15000) { lastMark = n; markActivity(); } }, { passive: true, capture: true }));
+  window.addEventListener(ev, e => {
+    // Con la cuenta regresiva visible solo cuenta una acción clara (clic, tecla o toque), no mover el ratón
+    const warn = document.getElementById('idle-warn');
+    if (warn && !warn.hidden) { if (ev === 'pointerdown' || ev === 'keydown' || ev === 'touchstart') { if (!warn.contains(e.target)) stayConnected(); } return; }
+    const n = Date.now(); if (n - lastMark > 15000) { lastMark = n; markActivity(); }
+  }, { passive: true, capture: true }));
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkIdle(); });
-idleTimer = setInterval(checkIdle, 20000);
+idleTimer = setInterval(checkIdle, 2000);
+document.addEventListener('DOMContentLoaded', () => {
+  let flag = false;
+  try { flag = sessionStorage.getItem('dgp-idle-closed') === '1'; } catch (e) {}
+  if (flag) { const n = document.getElementById('idle-closed'); if (n) n.hidden = false; }
+});
 
 // ── Entrar al curso ────────────────────────────────────────────────────────────
 function enterCourse(lessonId) {

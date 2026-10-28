@@ -38,7 +38,7 @@ function renderLandingPlans() {
   const box = document.getElementById('lp-plans');
   if (!box) return;
   box.innerHTML = planCardsHTML('landing');
-  box.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+  box.querySelectorAll('.reveal').forEach(el => el.classList.add('is-in'));
 }
 
 // Elegir plan: sesión → encuesta → pago
@@ -93,7 +93,7 @@ function renderMember() {
       (pendingOrder ? '<div class="dash-pending-pay"><svg><use href="#i-clock"/></svg><span>' + escapeHtml(t('Recibimos tu pago de la membresía y lo estamos verificando. Te avisaremos por correo.')) + '</span></div>' : '') +
       (lapsed && !pendingOrder ? '<div class="dash-pending-pay is-error"><span>' + escapeHtml(t('Tu membresía venció. Renueva para seguir recibiendo tus flyers y asesorías.')) + '</span></div>' : '') +
       '<div class="mb-plans mb-plans--dash">' + planCardsHTML('dash') + '</div>';
-    root.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    root.querySelectorAll('.reveal').forEach(el => el.classList.add('is-in'));
     return;
   }
   const plan = (SITE_CFG.plans || {})[m.plan_id] || {};

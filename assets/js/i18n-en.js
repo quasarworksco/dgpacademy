@@ -1121,6 +1121,8 @@ window.I18N_EN_PATTERNS = [
   [/^Error cargando usuarios: (.*)$/, 'Error loading users: $1'],
   [/^No se pudo completar \((.*)\)\. Intenta de nuevo\.$/, 'Something went wrong ($1). Please try again.'],
   [/^Esta cuenta está desactivada\. Escríbenos a (.+)\.$/, 'This account is disabled. Email us at $1.'],
+  [/^Esta cuenta está suspendida\. Escríbenos a (.+)\.$/, 'This account is suspended. Email us at $1.'],
+  [/^Esta cuenta está suspendida\. Escríbenos a (.+)\.$/, 'This account is suspended. Email us at $1.'],
   [/^Evaluación final aprobada con (\d+)\/10\.$/, 'Final quiz passed with $1/10.'],
   [/^Emitido el (.+)$/, 'Issued on $1'],
   [/^No existe un certificado con el número (.+)\.$/, 'There is no certificate with number $1.'],

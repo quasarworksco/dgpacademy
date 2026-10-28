@@ -781,10 +781,12 @@ function mapAuthError(err) {
     email_address_invalid:      'El correo no es válido.',
     validation_failed:          'Revisa el correo y la contraseña.',
     signup_disabled:            'Los registros están cerrados por el momento.',
-    user_banned:                'Esta cuenta está desactivada. Escríbenos a ' + CONTACT.email + '.'
+    user_banned:                'Esta cuenta está suspendida. Escríbenos a ' + CONTACT.email + '.'
   };
   if (map[code]) return map[code];
   if (/invalid login credentials/i.test(msg)) return map.invalid_credentials;
+  // Cuenta suspendida desde el panel admin (Supabase la marca como bloqueada)
+  if (/banned|querying schema/i.test(msg)) return map.user_banned;
   if (/email not confirmed/i.test(msg)) return map.email_not_confirmed;
   if (/fetch|network/i.test(msg)) return 'Sin conexión con el servidor. Revisa tu internet e intenta de nuevo.';
   return 'No se pudo completar (' + (code || msg || 'error desconocido') + '). Intenta de nuevo.';

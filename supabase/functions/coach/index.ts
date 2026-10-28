@@ -58,8 +58,8 @@ const CHAT = {
   en: `You are the DGP Academy AI Coach, the member's personal advisor: an expert in digital marketing, sales, social media, AI for business, finances for entrepreneurs, personal growth and emotional intelligence. You know their business from the survey we give you. Reply in English, warm and practical: concrete ideas they can apply today, sample captions or posts when useful, and numbered steps. Maximum 300 words unless they ask for something long. If they ask for something the DGP team does (flyers, websites, advisory sessions), remind them they can request it from their membership. No specific legal, medical or tax advice.`,
 };
 
-// Cuenta un uso del mes y comprueba el límite del plan
-async function useQuota(userId: string, isAdmin: boolean) {
+// Comprueba el límite del mes (el uso se cuenta solo si la IA respondió)
+async function checkQuota(userId: string, isAdmin: boolean) {
   const [q] = await sql`
     select coalesce((select pl.ai_monthly from public.plans pl where pl.id = public.member_plan(${userId})),
                     (select (value->>'free_monthly')::int from public.settings where key = 'ai'), 3) as lim,
@@ -67,6 +67,8 @@ async function useQuota(userId: string, isAdmin: boolean) {
   if (!isAdmin && Number(q.used) >= Number(q.lim)) {
     throw new Error("Usaste todas las consultas de IA de este mes. Sube de plan o vuelve el próximo mes.");
   }
+}
+async function addUse(userId: string) {
   await sql`insert into private.ai_usage (user_id, day, n) values (${userId}, current_date, 1)
     on conflict (user_id, day) do update set n = private.ai_usage.n + 1`;
 }
@@ -105,7 +107,7 @@ Deno.serve(async (req) => {
       if (cfg?.value?.enabled === false) return json({ error: "El coach con IA está desactivado" }, 400);
       const [row] = await sql`select * from public.exercise_answers where user_id = ${user.id} and product_id = ${body.product_id} and exercise_id = ${body.exercise_id}`;
       if (!row) return json({ error: "Guarda primero tus respuestas" }, 404);
-      await useQuota(user.id, !!prof?.is_admin);
+      await checkQuota(user.id, !!prof?.is_admin);
 
       const lang = body.lang === "en" || prof?.lang === "en" ? "en" : "es";
       const [bp] = await sql`select kind, business_name, industry, description, stage, goals from public.business_profiles where user_id = ${user.id}`;
@@ -119,6 +121,7 @@ Deno.serve(async (req) => {
         { role: "system", content: SYSTEM[lang] },
         { role: "user", content: `${context}\n\nRespuestas del estudiante:\n${answers}` },
       ]);
+      await addUse(user.id);
       await sql`update public.exercise_answers set feedback = ${reply}, feedback_at = now()
         where user_id = ${user.id} and product_id = ${body.product_id} and exercise_id = ${body.exercise_id}`;
       return json({ ok: true, feedback: reply });
@@ -130,17 +133,19 @@ Deno.serve(async (req) => {
       if (!mp.plan && !prof?.is_admin) return json({ error: "El Coach IA de negocio es parte de la membresía" }, 403);
       const text = String(body.message || "").trim().slice(0, 2000);
       if (text.length < 2) return json({ error: "Escribe tu pregunta" }, 400);
-      await useQuota(user.id, !!prof?.is_admin);
+      await checkQuota(user.id, !!prof?.is_admin);
       const lang = body.lang === "en" || prof?.lang === "en" ? "en" : "es";
       const history = await sql`select role, content from public.coach_messages where user_id = ${user.id} order by created_at desc limit 10`;
       const ctx = await profileContext(user.id);
-      await sql`insert into public.coach_messages (user_id, role, content) values (${user.id}, 'user', ${text})`;
       const reply = await groq([
         { role: "system", content: CHAT[lang] + (ctx ? `\n\nDatos del negocio del miembro:\n${ctx}` : "") },
         ...history.reverse().map((m: any) => ({ role: m.role, content: m.content })),
         { role: "user", content: text },
       ], 800);
-      await sql`insert into public.coach_messages (user_id, role, content) values (${user.id}, 'assistant', ${reply})`;
+      await addUse(user.id);
+      // La pregunta y la respuesta se guardan juntas: si la IA falla, no queda una pregunta suelta
+      await sql`insert into public.coach_messages (user_id, role, content, created_at) values
+        (${user.id}, 'user', ${text}, now()), (${user.id}, 'assistant', ${reply}, now() + interval '1 millisecond')`;
       return json({ ok: true, reply });
     }
     return json({ error: "Acción no válida" }, 400);

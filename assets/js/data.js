@@ -104,11 +104,29 @@ async function loadContent(product, rootSelector) {
   const root = document.querySelector(rootSelector);
   data.forEach(row => {
     const el = root.querySelector('#' + CSS.escape(row.item_id));
-    if (el) el.innerHTML = row.html;
+    if (el) { el.innerHTML = row.html; useRealLogos(el); }
   });
   _contentLoaded[product] = LANG;
   return true;
 }
+// Logos oficiales de las herramientas (en lugar de los dibujos genéricos del contenido)
+const TOOL_LOGOS = {
+  'claude code': 'claude.svg', 'claude': 'claude.svg', 'github': 'github.svg', 'github pages': 'github.svg', 'firebase': 'firebase.svg',
+  'supabase': 'supabase.svg', 'godaddy': 'godaddy.svg', 'cloudinary': 'cloudinary.svg', 'formspree': 'formspree.svg', 'emailjs': 'emailjs.png',
+  'databuddy': 'databuddy.png', 'canva': 'canva.png', 'unsplash': 'unsplash.svg', 'gemini': 'googlegemini.svg', 'gemini pro': 'googlegemini.svg',
+  'reactbits': 'reactbits.png', 'react bits': 'reactbits.png'
+};
+function useRealLogos(root) {
+  root.querySelectorAll('svg.pill-logo').forEach(svg => {
+    const name = (svg.parentElement.textContent || '').trim().toLowerCase();
+    const file = TOOL_LOGOS[name];
+    if (!file) return;
+    const img = document.createElement('img');
+    img.className = 'pill-logo'; img.src = 'assets/img/tools/' + file; img.alt = ''; img.width = 22; img.height = 22;
+    svg.replaceWith(img);
+  });
+}
+
 function clearContent() {
   Object.keys(_contentLoaded).forEach(k => delete _contentLoaded[k]);
   document.querySelectorAll('#course-screen .lesson, .book-chapter').forEach(el => { el.innerHTML = ''; });

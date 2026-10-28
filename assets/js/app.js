@@ -162,6 +162,16 @@ let sessionUserId = null;
 
 async function onSignedIn(user) {
   if (sessionUserId === user.id && STATE.profile) return;
+  // Sesión guardada pero sin actividad en más de 10 minutos: se cierra
+  let last = 0;
+  try { last = Number(localStorage.getItem('dgp-last-activity')) || 0; } catch (e) {}
+  if (!sessionUserId && last && Date.now() - last >= 10 * 60 * 1000) {
+    try { localStorage.removeItem('dgp-last-activity'); } catch (e) {}
+    await sb.auth.signOut();
+    toast(t('Cerramos tu sesión por inactividad. Vuelve a entrar cuando quieras.'));
+    return;
+  }
+  try { localStorage.setItem('dgp-last-activity', String(Date.now())); } catch (e) {}
   sessionUserId = user.id;
   STATE.user = user;
   try {
@@ -813,6 +823,37 @@ async function signOut() {
   await sb.auth.signOut();
   // onAuthStateChange limpia el estado y muestra la landing
 }
+
+// ── Cierre de sesión por inactividad (10 minutos) ─────────────────────────────
+// La última actividad se guarda en localStorage para que cuente en todas las pestañas
+// y también al volver a abrir la página después de un rato.
+const IDLE_LIMIT = 10 * 60 * 1000, IDLE_KEY = 'dgp-last-activity';
+let idleTimer = null, idleWarned = false;
+function markActivity() {
+  if (!STATE.user) return;
+  try { localStorage.setItem(IDLE_KEY, String(Date.now())); } catch (e) {}
+  idleWarned = false;
+}
+function lastActivity() {
+  try { return Number(localStorage.getItem(IDLE_KEY)) || Date.now(); } catch (e) { return Date.now(); }
+}
+async function checkIdle() {
+  if (!STATE.user) return;
+  const idle = Date.now() - lastActivity();
+  if (idle >= IDLE_LIMIT) {
+    try { localStorage.removeItem(IDLE_KEY); } catch (e) {}
+    await signOut();
+    toast(t('Cerramos tu sesión por inactividad. Vuelve a entrar cuando quieras.'));
+  } else if (idle >= IDLE_LIMIT - 60 * 1000 && !idleWarned) {
+    idleWarned = true;
+    toast(t('Tu sesión se cerrará en 1 minuto por inactividad.'));
+  }
+}
+let lastMark = 0;
+['pointerdown', 'keydown', 'scroll', 'touchstart', 'mousemove', 'wheel'].forEach(ev =>
+  window.addEventListener(ev, () => { const n = Date.now(); if (n - lastMark > 15000) { lastMark = n; markActivity(); } }, { passive: true, capture: true }));
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkIdle(); });
+idleTimer = setInterval(checkIdle, 20000);
 
 // ── Entrar al curso ────────────────────────────────────────────────────────────
 function enterCourse(lessonId) {

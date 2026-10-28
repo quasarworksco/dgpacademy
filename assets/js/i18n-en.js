@@ -1102,7 +1102,9 @@ window.I18N_EN = {
   "El correo no coincide. No se eliminó nada.": "The email doesn’t match. Nothing was deleted.",
   "Cuenta eliminada": "Account deleted",
   "No se puede eliminar a un administrador": "An administrator can’t be deleted",
-  "No se puede suspender a un administrador": "An administrator can’t be suspended"
+  "No se puede suspender a un administrador": "An administrator can’t be suspended",
+  "Cerramos tu sesión por inactividad. Vuelve a entrar cuando quieras.": "We signed you out for inactivity. Log in again whenever you like.",
+  "Tu sesión se cerrará en 1 minuto por inactividad.": "Your session will close in 1 minute due to inactivity."
 };
 
 // Textos con partes variables: [expresión, reemplazo]

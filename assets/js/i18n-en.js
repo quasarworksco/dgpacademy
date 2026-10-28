@@ -1121,6 +1121,8 @@ window.I18N_EN = {
   "Incluye cuaderno de trabajo": "Includes a workbook",
   "Cuaderno de trabajo": "Workbook",
   "Ideas clave": "Key ideas",
+  "Acceso total (todo + membresía": "Full access (everything + membership",
+  "Acceso gratis a todo: programas, libros y membresía (flyers, asesorías, Coach IA y sorteos). Si la persona aún no tiene cuenta, se activa sola al registrarse con ese correo.": "Free access to everything: programs, books and membership (flyers, advisory, AI Coach and raffles). If the person has no account yet, it activates when they sign up with that email.",
   "Membresía DGP": "DGP Membership",
   "Flyers para tu negocio, asesorías 1 a 1, Coach IA y sorteos cada mes.": "Flyers for your business, 1-on-1 advisory, AI Coach and monthly raffles.",
   "Comparar planes": "Compare plans",

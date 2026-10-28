@@ -293,11 +293,14 @@ async function setupSquarePlans(btn) {
 
 // ── Cortesía: acceso gratis a todo para empleados e invitados ──
 function mkCourtesy() {
-  const opts = '<option value="">' + escapeHtml(t('Sin membresía (solo programas y libros)')) + '</option>' +
-    MK.plans.map(p => '<option value="' + p.id + '">' + escapeHtml(t('Todo + membresía') + ' ' + p.name) + '</option>').join('');
+  // Por defecto, acceso total: programas, libros y la membresía más completa
+  const plans = MK.plans.slice().sort((a, b) => Number(b.price_usd) - Number(a.price_usd));
+  const opts = plans.map((p, i) => '<option value="' + p.id + '"' + (i === 0 ? ' selected' : '') + '>' +
+      escapeHtml(i === 0 ? t('Acceso total (todo + membresía') + ' ' + p.name + ')' : t('Todo + membresía') + ' ' + p.name) + '</option>').join('') +
+    '<option value="">' + escapeHtml(t('Sin membresía (solo programas y libros)')) + '</option>';
   const known = email => allAdminUsers.find(u => (u.email || '').toLowerCase() === email);
   return '<form class="adm-card" onsubmit="event.preventDefault();addCourtesy()">' +
-      '<div class="adm-card-head"><h2>' + escapeHtml(t('Dar acceso de cortesía')) + '</h2><span class="adm-card-sub">' + escapeHtml(t('Acceso gratis a todos los programas y libros. Si la persona aún no tiene cuenta, se activa sola al registrarse con ese correo.')) + '</span></div>' +
+      '<div class="adm-card-head"><h2>' + escapeHtml(t('Dar acceso de cortesía')) + '</h2><span class="adm-card-sub">' + escapeHtml(t('Acceso gratis a todo: programas, libros y membresía (flyers, asesorías, Coach IA y sorteos). Si la persona aún no tiene cuenta, se activa sola al registrarse con ese correo.')) + '</span></div>' +
       '<div class="adm-form-grid">' +
         '<label class="adm-field"><span>' + escapeHtml(t('Correo')) + '</span><input class="form-input" id="ct-email" type="email" list="mp-user-list" required placeholder="nombre@correo.com"></label>' +
         '<label class="adm-field"><span>' + escapeHtml(t('Incluye')) + '</span><select class="form-input" id="ct-plan">' + opts + '</select></label>' +

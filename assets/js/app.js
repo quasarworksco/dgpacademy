@@ -51,7 +51,7 @@ function withSplash(fn) {
 function goToAuth()     { if (STATE.user) { showDashboard(); return; } withSplash(() => { showAuth(); switchTab('login'); }); }
 function goToRegister() { if (STATE.user) { showDashboard(); return; } withSplash(() => { showAuth(); switchTab('register'); }); }
 function showAuth()      { showScreen('auth-screen', 'flex'); hideSplash(); }
-function showDashboard() { showScreen('dash-screen'); updateDashStats(); hideSplash(); }
+function showDashboard() { if (!STATE.user) { showLanding(); return; } showScreen('dash-screen'); updateDashStats(); hideSplash(); if (typeof renderBadges === 'function') renderBadges(); if (typeof syncTryFree === 'function') syncTryFree(); }
 function showCourse()    { showScreen('course-screen'); }
 async function showAdmin() {
   await loadMyPerms();
@@ -62,7 +62,7 @@ async function showAdmin() {
 // ── Lector de libros ─────────────────────────────────────────────────────────
 // Abre un producto protegido: descarga su contenido y luego muestra la pantalla
 async function openProtected(product, rootSelector, onReady) {
-  if (!hasAccess(product)) { toast('Aún no tienes acceso a este contenido.'); return; }
+  // Sin acceso se abre en vista previa: lección gratis completa y el resto con aviso para desbloquear
   const splash = document.getElementById('splash-screen');
   if (splash) { splash.style.display = 'flex'; splash.classList.add('active'); }
   try {

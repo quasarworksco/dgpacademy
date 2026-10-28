@@ -288,6 +288,7 @@
           <div class="lp-prog-meta"><b>16 lecciones</b><span>5 módulos · certificado</span></div>
           <p>Aprende HTML, CSS, JavaScript, GitHub Pages, Firebase y Claude Code construyendo y publicando un sitio profesional real.</p>
           <div class="lp-prog-modes"><span>Online</span><span>A tu ritmo</span><span>Asesorías</span></div>
+          <button type="button" class="lp-prog-free" onclick="event.stopPropagation();tryFree('web-dev')">Ver la lección gratis<svg><use href="#i-arrow"/></svg></button>
         </article>
         <article class="lp-prog reveal" data-d="1" onclick="openProgram('books')">
           <div class="lp-prog-img"><img src="assets/img/biblioteca.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">Disponible</span></div>
@@ -295,6 +296,7 @@
           <div class="lp-prog-meta"><b>2 libros</b><span>27 capítulos · evaluación</span></div>
           <p>Redes sociales, marca, finanzas y propósito, con cuadernos de trabajo que se responden dentro del libro y un coach con IA que analiza tus respuestas.</p>
           <div class="lp-prog-modes"><span>Online</span><span>Cuadernos</span><span>Coach IA</span></div>
+          <button type="button" class="lp-prog-free" onclick="event.stopPropagation();tryFree('7st')">Leer un capítulo gratis<svg><use href="#i-arrow"/></svg></button>
         </article>
         <article class="lp-prog reveal" data-d="2" onclick="openProgram('ia')">
           <div class="lp-prog-img"><img src="assets/img/curso-ia.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">Nuevo</span></div>
@@ -302,6 +304,7 @@
           <div class="lp-prog-meta"><b>16 lecciones</b><span>Vibe coding · certificado</span></div>
           <p>Gana dinero con IA: automatiza empresas, construye sistemas a medida y chatbots, y aprende a conseguir tus primeros clientes.</p>
           <div class="lp-prog-modes"><span>Online</span><span>Prompts listos</span><span>Coach IA</span></div>
+          <button type="button" class="lp-prog-free" onclick="event.stopPropagation();tryFree('ia')">Ver la lección gratis<svg><use href="#i-arrow"/></svg></button>
         </article>
         <article class="lp-prog is-soon reveal" data-d="3">
           <div class="lp-prog-img"><img src="assets/img/curso-marketing.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">Próximamente</span></div>
@@ -676,6 +679,7 @@
       <button type="button" data-t="dash-programs"><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>Programas</button>
       <button type="button" data-t="dash-library"><svg viewBox="0 0 24 24"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg>Biblioteca</button>
       <button type="button" data-t="dash-advisory"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Asesorías</button>
+      <button type="button" data-t="dash-badges"><svg viewBox="0 0 24 24"><path d="M12 22c4 0 7-2.8 7-7 0-4-3-6-4-10-2 2-3 4-3 6-1-1-2-2-2-4-3 2-5 5-5 8 0 4.2 3 7 7 7z"/></svg>Logros</button>
       <button type="button" data-t="dash-certificates"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M8.5 14.2 7 22l5-3 5 3-1.5-7.8"/></svg>Certificados</button>
       <button type="button" data-t="dash-member"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>Membresía</button>
       <button type="button" data-t="dash-blog"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Blog</button>
@@ -817,6 +821,11 @@
     <section class="dash-block" id="dash-advisory">
       <div class="dash-block-head"><h2>Asesorías 1 a 1</h2><span class="dash-block-sub">Agenda una videollamada con el equipo de DGP</span></div>
       <div id="adv-root"><div class="admin-empty">Cargando…</div></div>
+    </section>
+
+    <section class="dash-block" id="dash-badges">
+      <div class="dash-block-head"><h2>Mis logros</h2><span class="dash-block-sub">Tu racha de estudio e insignias por cada módulo</span></div>
+      <div id="badges-root"><div class="admin-empty">Cargando…</div></div>
     </section>
 
     <section class="dash-block" id="dash-certificates">
@@ -1846,6 +1855,8 @@
 <script src="assets/js/ai-course.js"></script>
 <script src="assets/js/assistant.js"></script>
 <script src="assets/js/booking.js"></script>
+<script src="assets/js/preview.js"></script>
+<script src="assets/js/badges.js"></script>
 <script src="assets/js/admin-members.js"></script>
 </body>
 </html>

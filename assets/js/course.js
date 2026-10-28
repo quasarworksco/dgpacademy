@@ -68,7 +68,8 @@ function markDone() {
 }
 
 function markDoneAndNext(curr, next) {
-  if (!completed.includes(curr)) { completed.push(curr); save(); }
+  // En la vista previa (sin acceso) solo se avanza, no se guarda avance
+  if (hasAccess('web-dev') && !completed.includes(curr)) { completed.push(curr); save(); }
   updateProgress();
   goTo(next);
 }

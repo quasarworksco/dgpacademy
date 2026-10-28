@@ -59,6 +59,14 @@ function buildWorkbook(wb, product, row) {
     '<button type="button" class="ui-btn ui-btn--primary ui-btn--sm wb-analyze"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg><span>' + escapeHtml(t('Analizar con el coach IA')) + '</span></button></div>' +
     '<div class="wb-feedback" hidden></div>');
   wb.querySelector('.wb-analyze').addEventListener('click', () => wbAnalyze(wb, product));
+  // Vista previa: se puede leer y escribir, pero guardar y analizar requiere el programa
+  if (!STATE.user || !hasAccess(product)) {
+    wb.dataset.preview = '1';
+    const b = wb.querySelector('.wb-analyze');
+    b.innerHTML = '<span>' + escapeHtml(t('Desbloquea para guardar y analizar')) + priceTag(product) + '</span>';
+    b.replaceWith(b.cloneNode(true));
+    wb.querySelector('.wb-analyze').addEventListener('click', () => previewBuy(product));
+  }
   if (row && row.feedback) wbShowFeedback(wb, row.feedback);
   wbUpdate(wb, row ? 'saved' : '');
 }
@@ -77,9 +85,11 @@ function wbUpdate(wb, state) {
   wb.querySelector('.wb-status').textContent = done + ' ' + t('de') + ' ' + total + ' ' + t('respondidas') + (st ? ' · ' + st : '');
   wb.classList.toggle('is-complete', done === total && total > 0);
   // Pide al menos la mitad de las respuestas antes de analizar
-  wb.querySelector('.wb-analyze').disabled = done < Math.ceil(total / 2);
+  wb.querySelector('.wb-analyze').disabled = !wb.dataset.preview && done < Math.ceil(total / 2);
+  if (wb.dataset.preview) wb.querySelector('.wb-status').textContent = t('Vista previa: tus respuestas no se guardan');
 }
 function wbQueueSave(wb, product) {
+  if (wb.dataset.preview) { wbUpdate(wb, ''); return; }
   wbUpdate(wb, 'saving');
   clearTimeout(_wbTimers[wb.dataset.ex]);
   _wbTimers[wb.dataset.ex] = setTimeout(() => wbSave(wb, product), 900);

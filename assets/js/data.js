@@ -96,7 +96,9 @@ function savePosition(product, item) {
 // Se descarga en el idioma activo; si aún no existe la traducción, en español
 const _contentLoaded = {};
 async function loadContent(product, rootSelector) {
-  if (_contentLoaded[product] === LANG) return true;
+  // Sin acceso solo llegan las lecciones gratis (vista previa); al comprar se vuelve a cargar todo
+  const key = LANG + (hasAccess(product) ? '' : ':preview');
+  if (_contentLoaded[product] === key) return true;
   let { data, error } = await sb.from('content').select('item_id, html').eq('product_id', product).eq('lang', LANG).order('position');
   if (!error && (!data || !data.length) && LANG !== 'es') {
     ({ data, error } = await sb.from('content').select('item_id, html').eq('product_id', product).eq('lang', 'es').order('position'));
@@ -112,7 +114,8 @@ async function loadContent(product, rootSelector) {
       if (typeof initWorkbooks === 'function') initWorkbooks(el, product).catch(e => console.warn('cuaderno', e.message));
     }
   });
-  _contentLoaded[product] = LANG;
+  _contentLoaded[product] = key;
+  if (typeof applyPreview === 'function') applyPreview(product, root);
   return true;
 }
 // Logos oficiales de las herramientas (en lugar de los dibujos genéricos del contenido)

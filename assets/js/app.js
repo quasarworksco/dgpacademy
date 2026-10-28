@@ -772,6 +772,9 @@ function handleAuth(e) {
   const phone    = document.getElementById('input-phone')?.value.trim() || '';
   const fullName = authMode === 'register' ? `${name} ${apellido}`.trim() : name;
 
+  if (!email) { showAuthError('Escribe tu correo electrónico.'); return; }
+  if (!password) { showAuthError('Escribe tu contraseña.'); return; }
+  if (authMode === 'register' && !name) { showAuthError('Escribe tu nombre.'); return; }
   if (authMode === 'register' && !passwordValid(password)) {
     showAuthError('La contraseña debe tener mínimo 8 caracteres, mayúscula, minúscula, número y un carácter especial.');
     return;
@@ -867,15 +870,22 @@ function togglePw() {
 
 function mapAuthError(code) {
   const map = {
-    'auth/user-not-found':    'No existe una cuenta con ese correo.',
-    'auth/wrong-password':    'Contraseña incorrecta.',
-    'auth/invalid-email':     'El correo no es válido.',
-    'auth/email-already-in-use': 'Ya existe una cuenta con ese correo.',
-    'auth/weak-password':     'La contraseña debe tener al menos 6 caracteres.',
-    'auth/too-many-requests': 'Demasiados intentos. Espera unos minutos.',
-    'auth/invalid-credential':'Correo o contraseña incorrectos.',
+    'auth/user-not-found':         'No existe una cuenta con ese correo.',
+    'auth/wrong-password':         'Contraseña incorrecta.',
+    'auth/invalid-credential':     'Correo o contraseña incorrectos. Si no la recuerdas, usa «¿Olvidaste tu contraseña?».',
+    'auth/invalid-login-credentials': 'Correo o contraseña incorrectos. Si no la recuerdas, usa «¿Olvidaste tu contraseña?».',
+    'auth/invalid-email':          'El correo no es válido.',
+    'auth/missing-email':          'Escribe tu correo electrónico.',
+    'auth/missing-password':       'Escribe tu contraseña.',
+    'auth/email-already-in-use':   'Ya existe una cuenta con ese correo. Inicia sesión o recupera tu contraseña.',
+    'auth/weak-password':          'La contraseña es demasiado débil.',
+    'auth/too-many-requests':      'Demasiados intentos. Espera unos minutos o restablece tu contraseña.',
+    'auth/user-disabled':          'Esta cuenta está desactivada. Escríbenos a hola@dgpglobalgroup.com.',
+    'auth/network-request-failed': 'Sin conexión con el servidor. Revisa tu internet e intenta de nuevo.',
+    'auth/operation-not-allowed':  'El inicio de sesión con correo no está habilitado en Firebase.',
+    'auth/internal-error':         'Error temporal del servidor. Intenta de nuevo en un momento.'
   };
-  return map[code] || 'Error al iniciar sesión. Intenta de nuevo.';
+  return map[code] || ('No se pudo iniciar sesión (' + (code || 'error desconocido') + '). Intenta de nuevo.');
 }
 
 function forgotPassword() {

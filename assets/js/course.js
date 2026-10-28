@@ -46,7 +46,7 @@ function goTo(id) {
     l11:'Módulo 4',l12:'Módulo 4',l13:'Módulo 4',
     l14:'Módulo 5',l15:'Módulo 5',l16:'Módulo 5'};
   const bc = document.getElementById('breadcrumb');
-  if (id === 'home') bc.innerHTML = 'Inicio → <span>Bienvenida</span>';
+  if (id === 'home') bc.innerHTML = 'Inicio → <span>Introducción</span>';
   else bc.innerHTML = (mods[id]||'Inicio') + ' → <span>' + (labels[id]||id) + '</span>';
 
   // close sidebar on mobile
@@ -111,6 +111,8 @@ function showSettings() {
   document.getElementById('settings-name').value = parts[0] || '';
   document.getElementById('settings-apellido').value = parts.slice(1).join(' ');
   document.getElementById('settings-phone').value = (STATE.profile && STATE.profile.phone) || '';
+  const g = (STATE.profile && STATE.profile.gender) || 'x';
+  document.querySelectorAll('input[name="settings-gender"]').forEach(r => { r.checked = r.value === g; });
 }
 
 function closeSettings() {

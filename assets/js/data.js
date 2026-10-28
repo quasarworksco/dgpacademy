@@ -27,7 +27,9 @@ function resetState() {
 }
 
 function hasAccess(product) {
-  return !!(STATE.profile && STATE.profile.is_admin) || STATE.courtesy || !!(STATE.access[product] && STATE.access[product].active);
+  const own = p => !!(STATE.access[p] && STATE.access[p].active);
+  // El pase completo desbloquea todos los programas y libros
+  return !!(STATE.profile && STATE.profile.is_admin) || STATE.courtesy || own(product) || own('pase');
 }
 
 function displayName() {
@@ -40,7 +42,7 @@ function displayName() {
 async function loadUserData() {
   const uid = STATE.user.id;
   const [prof, acc, prog, read, certs, court] = await Promise.all([
-    sb.from('profiles').select('email, full_name, phone, is_admin, lang').eq('id', uid).maybeSingle(),
+    sb.from('profiles').select('email, full_name, phone, is_admin, lang, gender').eq('id', uid).maybeSingle(),
     sb.from('access').select('product_id, active, paid').eq('user_id', uid),
     sb.from('progress').select('product_id, item_id').eq('user_id', uid),
     sb.from('reading_state').select('product_id, last_item, quiz_score, quiz_passed').eq('user_id', uid),
@@ -151,13 +153,17 @@ function isEligible(product) {
     const s = STATE.progress['web-dev'] || new Set();
     return hasAccess('web-dev') && [...s].filter(i => /^l\d+$/.test(i)).length >= 16;
   }
+  if (product === 'ia') {
+    const s = STATE.progress['ia'] || new Set();
+    return hasAccess('ia') && [...s].filter(i => /^ai[1-9]\d*$/.test(i)).length >= 16;
+  }
   if (product === '7st') return !!(STATE.reading['7st'] && STATE.reading['7st'].quiz_passed);
   return false;
 }
 
 // Emite en silencio los certificados que ya se ganaron
 async function syncCertificates() {
-  for (const p of ['web-dev', '7st']) {
+  for (const p of ['web-dev', 'ia', '7st']) {
     if (!STATE.certificates[p] && isEligible(p)) {
       try { await issueCertificate(p); } catch (e) { /* se reintenta al abrirlo */ }
     }

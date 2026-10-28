@@ -189,7 +189,30 @@ function coachCard() {
 }
 // Texto de la IA: escapado, con negritas y saltos de línea
 function coachFormat(txt) {
-  return escapeHtml(txt).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/^#+\s*(.+)$/gm, '<b>$1</b>').replace(/\n/g, '<br>');
+  // Markdown sencillo de la IA: títulos, negritas, código, listas y tablas (las tablas se muestran como filas legibles)
+  const lines = String(txt || '').replace(/\r/g, '').split('\n');
+  const out = []; let table = null;
+  const inline = t => escapeHtml(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code>$1</code>');
+  const flush = () => {
+    if (!table) return;
+    const [head, ...rows] = table;
+    out.push('<div class="ai-md-table">' + rows.map(r => '<div class="ai-md-row">' + r.map((c, i) => c ? '<span>' + (head[i] ? '<em>' + inline(head[i]) + '</em>' : '') + inline(c) + '</span>' : '').join('') + '</div>').join('') + '</div>');
+    table = null;
+  };
+  lines.forEach(raw => {
+    const l = raw.trim();
+    if (/^\|.*\|$/.test(l)) {
+      if (/^\|[\s:|-]+\|$/.test(l)) return;
+      const cells = l.slice(1, -1).split('|').map(c => c.trim());
+      (table = table || []).push(cells); return;
+    }
+    flush();
+    if (/^(-{3,}|\*{3,}|_{3,})$/.test(l)) return;
+    if (/^#{1,6}\s+/.test(l)) { out.push('<b class="ai-md-h">' + inline(l.replace(/^#+\s+/, '')) + '</b>'); return; }
+    out.push(inline(raw));
+  });
+  flush();
+  return out.join('<br>').replace(/(<br>){3,}/g, '<br><br>').replace(/<br>(<div class="ai-md-table">)/g, '$1').replace(/(<\/div>)<br>/g, '$1');
 }
 async function coachAsk(preset) {
   const input = document.getElementById('coach-input');

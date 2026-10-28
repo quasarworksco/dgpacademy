@@ -215,6 +215,7 @@ function applyUserData() {
   updateCourseAccess();
   updateBookAccess();
   updateBookAccess2();
+  if (typeof updateAIAccess === 'function') updateAIAccess();
   updateBookReadProgress();
   updateBook2ReadProgress();
   updateProgress();
@@ -259,11 +260,11 @@ function updateCourseAccess() {
     btn.onclick = function() { continueCourse(); };
     if (status) { status.textContent = 'Activo'; status.className = 'chip chip--light course-status is-active'; }
   } else {
-    btn.innerHTML = ICON.lock + 'Acceso pendiente de activación';
-    btn.className = 'ui-btn ui-btn--block btn-course is-locked';
-    btn.disabled = true;
-    btn.onclick = null;
-    if (status) { status.textContent = 'Sin activar'; status.className = 'chip chip--light course-status'; }
+    btn.innerHTML = ICON.lock + escapeHtml(t('Desbloquear programa')) + priceTag('web-dev');
+    btn.className = 'ui-btn ui-btn--block btn-course is-buy';
+    btn.disabled = false;
+    btn.onclick = () => openCheckout('web-dev');
+    if (status) { status.textContent = t('Disponible'); status.className = 'chip chip--light course-status'; }
   }
   renderActivation();
 }
@@ -272,7 +273,9 @@ function updateCourseAccess() {
 function renderActivation() {
   const box = document.getElementById('dash-activate');
   if (!box) return;
-  const anyAccess = ['web-dev', '7st', 'semilla'].some(hasAccess);
+  const passBtn = document.getElementById('dash-activate-pay');
+  if (passBtn) passBtn.innerHTML = '<svg><use href="#i-lock"/></svg>' + escapeHtml(t('Pase completo')) + priceTag('pase');
+  const anyAccess = ['web-dev', 'ia', '7st', 'semilla'].some(hasAccess);
   box.style.display = (STATE.user && !anyAccess) ? 'grid' : 'none';
   const email = STATE.user ? STATE.user.email : '';
   const who = displayName();
@@ -288,6 +291,12 @@ function renderActivation() {
   }
 }
 
+// Precio corto para los botones de compra: " · $40"
+function priceTag(product) {
+  const pr = (SITE_CFG.products || {})[product];
+  return pr && pr.price_usd != null ? ' · ' + fmtMoney(pr.price_usd) : '';
+}
+
 function setBookButton(btnId, progressId, product, open, extraCls) {
   const btn = document.getElementById(btnId);
   const progressWrap = document.getElementById(progressId);
@@ -299,10 +308,10 @@ function setBookButton(btnId, progressId, product, open, extraCls) {
     btn.onclick = open;
     if (progressWrap) progressWrap.style.display = 'block';
   } else {
-    btn.innerHTML = ICON.lock + 'Sin acceso';
-    btn.className = 'ui-btn ui-btn--block btn-book is-locked';
-    btn.disabled = true;
-    btn.onclick = null;
+    btn.innerHTML = ICON.lock + escapeHtml(t('Desbloquear libro')) + priceTag(product);
+    btn.className = 'ui-btn ui-btn--block btn-book is-buy';
+    btn.disabled = false;
+    btn.onclick = () => openCheckout(product);
     if (progressWrap) progressWrap.style.display = 'none';
   }
 }
@@ -548,7 +557,8 @@ function renderAdminUsers(users) {
         adminToggle(web.paid ? 'Pagó Web Dev' : 'Pago pendiente', { cls: web.paid ? 'paid' : 'unpaid', on: web.paid, action: "setAccess('" + uid + "','web-dev','paid'," + !web.paid + ")", title: web.paid ? 'Marcar como pendiente' : 'Marcar como pagado' }) +
         adminToggle('7ST', { cls: b7.active ? 'active' : '', on: b7.active, action: "setAccess('" + uid + "','7st','active'," + !b7.active + ")", title: b7.active ? 'Quitar libro 7ST' : 'Dar acceso al libro 7ST' }) +
         adminToggle('Semilla', { cls: bs.active ? 'active is-green' : '', on: bs.active, action: "setAccess('" + uid + "','semilla','active'," + !bs.active + ")", title: bs.active ? 'Quitar De la semilla al árbol' : 'Dar acceso a De la semilla al árbol' }) +
-        adminToggle('IA', { disabled: true, title: 'Próximamente' }) +
+        adminToggle('IA', { cls: acc(u, 'ia').active ? 'active' : '', on: acc(u, 'ia').active, action: "setAccess('" + uid + "','ia','active'," + !acc(u, 'ia').active + ")", title: acc(u, 'ia').active ? 'Quitar IA aplicada a los negocios' : 'Dar acceso a IA aplicada a los negocios' }) +
+        adminToggle(t('Pase completo'), { cls: acc(u, 'pase').active ? 'active is-gold' : '', on: acc(u, 'pase').active, action: "setAccess('" + uid + "','pase','active'," + !acc(u, 'pase').active + ")", title: 'Acceso a todos los programas y libros' }) +
         adminToggle('Marketing', { disabled: true, title: 'Próximamente' }) +
         (u.is_admin || !canTab('membresias') ? '' : memberControl(u, uid)) +
         (MY_PERMS.owner && !u.is_owner ? '<button class="admin-toggle' + (u.is_admin ? ' active' : '') + '" onclick="openStaffPerms(\'' + uid + '\')" title="' + escapeHtml(t('Dar o quitar acceso al panel de administración')) + '">' + escapeHtml(u.is_admin ? t('Equipo') + ' · ' + (u.admin_perms || []).length : t('Hacer administrador')) + '</button>' : '') +
@@ -750,7 +760,28 @@ function fillUserUI() {
   document.getElementById('dash-welcome-name').textContent = name.split(' ')[0];
   const h = new Date().getHours();
   const g = document.getElementById('dash-greeting');
-  if (g) g.textContent = h < 12 ? 'Buenos días' : (h < 19 ? 'Buenas tardes' : 'Buenas noches');
+  if (g) g.textContent = (h < 12 ? t('Buenos días') : (h < 19 ? t('Buenas tardes') : t('Buenas noches'))) + ' · ' + welcomeBack();
+}
+
+// Saludo según cómo prefiere que le llamemos (perfil): Bienvenido / Bienvenida / Te damos la bienvenida
+function userGender() { return (STATE.profile && STATE.profile.gender) || 'x'; }
+function welcomeWord() {
+  const g = userGender();
+  if (LANG === 'en') return 'Welcome';
+  return g === 'm' ? 'Bienvenido' : g === 'f' ? 'Bienvenida' : 'Te damos la bienvenida';
+}
+function welcomeBack() {
+  const g = userGender();
+  if (LANG === 'en') return 'Welcome back';
+  return g === 'm' ? 'Bienvenido de nuevo' : g === 'f' ? 'Bienvenida de nuevo' : 'Qué bueno verte';
+}
+async function saveSettingsGender(g) {
+  if (!STATE.user || !['m', 'f', 'x'].includes(g)) return;
+  const { error } = await sb.from('profiles').update({ gender: g }).eq('id', STATE.user.id);
+  if (error) { toast(t('No se pudo guardar') + ': ' + error.message); return; }
+  STATE.profile.gender = g;
+  fillUserUI();
+  flashMsg('settings-gender-msg');
 }
 
 // ── Tabs login / registro ──────────────────────────────────────────────────────
@@ -760,8 +791,9 @@ function switchTab(mode) {
   document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', (i===0&&mode==='login')||(i===1&&mode==='register')));
   document.getElementById('field-name').style.display    = mode==='register' ? 'flex'  : 'none';
   document.getElementById('field-phone').style.display   = mode==='register' ? 'block' : 'none';
+  document.getElementById('field-gender').style.display  = mode==='register' ? 'block' : 'none';
   document.getElementById('forgot-link').style.display   = mode==='login'    ? 'block' : 'none';
-  document.getElementById('auth-title').textContent      = mode==='login' ? 'Bienvenido de vuelta' : 'Crea tu cuenta';
+  document.getElementById('auth-title').textContent      = mode==='login' ? 'Qué bueno verte de nuevo' : 'Crea tu cuenta';
   document.getElementById('auth-sub').textContent        = mode==='login' ? 'Ingresa para continuar con tus programas.' : 'Es gratis y toma un minuto. Después activamos tu acceso.';
   const pw = document.getElementById('input-password');
   if (pw) pw.setAttribute('autocomplete', mode==='login' ? 'current-password' : 'new-password');
@@ -829,7 +861,7 @@ async function handleAuth(e) {
 
   const { data, error } = await sb.auth.signUp({
     email, password,
-    options: { data: { full_name: fullName, phone, lang: LANG }, emailRedirectTo: SITE_URL }
+    options: { data: { full_name: fullName, phone, lang: LANG, gender: (document.querySelector('input[name="gender"]:checked') || {}).value || 'x' }, emailRedirectTo: SITE_URL }
   });
   setAuthLoading(false);
   if (error) { showAuthError(mapAuthError(error)); return; }
@@ -1020,7 +1052,7 @@ function enterCourse(lessonId) {
 
 // ── Stats del dashboard ────────────────────────────────────────────────────────
 const LESSON_TITLES = {
-  home:'Bienvenida al curso', l1:'¿Cómo funciona la web?', l2:'HTML desde cero', l3:'CSS — estilo y diseño',
+  home:'Introducción al curso', l1:'¿Cómo funciona la web?', l2:'HTML desde cero', l3:'CSS — estilo y diseño',
   l4:'JavaScript — interactividad', l5:'GitHub y control de versiones', l6:'IA: Claude y Gemini Pro',
   l7:'GitHub Pages y publicación', l8:'Servicios y herramientas extra', l9:'APIs — cómo todo se conecta',
   l10:'Flujo completo de un proyecto', l11:'Diseño y tipografía', l12:'CSS avanzado y animaciones',
@@ -1130,6 +1162,8 @@ function onLangChange() {
   if (document.getElementById('admin-screen').style.display === 'block') adminRefresh();
   if (typeof previewCertificate === 'function') previewCertificate();
   renderLandingPlans(); renderBlog();
+  if (typeof aiOnLangChange === 'function') aiOnLangChange();
+  if (typeof updateAIAccess === 'function' && STATE.user) updateAIAccess();
   const course = document.getElementById('course-screen');
   if (course && course.style.display === 'block') {
     loadContent('web-dev', '#course-screen').then(() => { goTo(current); updateFinishBtn(); }).catch(() => {});

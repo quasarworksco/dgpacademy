@@ -1330,3 +1330,41 @@ body.is-auth .guest-only { display: none !important; }
   .idle-closed { flex-wrap: wrap; top: 72px; }
   .idle-closed .ui-btn { order: 3; flex: 1; justify-content: center; }
 }
+
+/* ───────── Precios: programa, pase completo y libro ───────── */
+.lp-prices { display: grid; grid-template-columns: 1fr 1.12fr 1fr; gap: 18px; align-items: stretch; margin-top: 8px; }
+.lp-pcard { position: relative; display: flex; flex-direction: column; padding: 30px 26px 26px; border-radius: 26px; background: #fff; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+.lp-pcard.is-featured { background: radial-gradient(120% 90% at 100% 0%, #1d3a9a 0%, var(--ink) 60%); color: #fff; border-color: transparent; box-shadow: 0 40px 80px -40px rgba(26,86,232,.65); transform: translateY(-10px); }
+.lp-pcard.is-featured .lp-price, .lp-pcard.is-featured .lp-pcard-label { color: #fff; }
+.lp-pcard.is-featured .lp-price .per, .lp-pcard.is-featured .lp-price-old { color: rgba(255,255,255,.65); }
+.lp-pcard.is-featured .lp-price-list li { color: rgba(255,255,255,.85); }
+.lp-pcard.is-featured .lp-price-list svg { stroke: #7fe3ff; }
+.lp-pcard.is-featured .lp-cupos-row { color: rgba(255,255,255,.75); }
+.lp-pcard.is-featured .lp-cupos-row strong { color: #fff; }
+.lp-pcard.is-featured .lp-cupos-bar { background: rgba(255,255,255,.14); }
+.lp-pcard-label { font: 650 13px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.lp-pcard .lp-price { font-size: 60px; }
+.lp-pcard-sub { font-size: 14.5px; line-height: 1.55; color: var(--text3); margin: 4px 0 18px; }
+.lp-pcard .lp-price-list { margin: 18px 0 24px; flex: 1; }
+.lp-pcard-btns { display: grid; gap: 8px; }
+.lp-pcard .mb-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); }
+.lp-guarantee--center { margin: 36px auto 0; }
+@media (max-width: 980px) {
+  .lp-prices { grid-template-columns: 1fr; max-width: 520px; margin-left: auto; margin-right: auto; }
+  .lp-pcard.is-featured { transform: none; order: -1; }
+}
+.lp-pcard.is-featured .lp-cupos { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.12); }
+.btn-book.is-buy { --b-bg: var(--accent); --b-fg: #fff; }
+.btn-book.is-buy:hover { --b-bg: var(--ink); }
+.co-upsell { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; padding: 12px 14px; border-radius: 14px; background: linear-gradient(90deg, #eef0ff, #f5f8ff); border: 1px solid rgba(79,70,229,.2); }
+.co-upsell[hidden] { display: none; }
+.co-upsell div { flex: 1; min-width: 0; font-size: 13.5px; line-height: 1.45; color: var(--text2); }
+.co-upsell b { display: block; color: var(--ink); font-size: 14px; }
+@media (max-width: 480px) { .co-upsell { flex-direction: column; align-items: stretch; } }
+.admin-toggle.active.is-gold { background: var(--gold); border-color: var(--gold); color: #fff; }
+.gender-pick { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.gender-pick label { position: relative; cursor: pointer; }
+.gender-pick input { position: absolute; opacity: 0; pointer-events: none; }
+.gender-pick span { display: inline-flex; align-items: center; height: 40px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--border); background: #fff; font: 600 13.5px var(--font); color: var(--text2); transition: all .15s; }
+.gender-pick input:checked + span { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
+.gender-pick input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }

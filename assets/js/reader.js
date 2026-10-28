@@ -19,6 +19,7 @@ function initReaderUX() {
     { scroller: '#book-content', bar: '#book-screen .book-topbar' },
     { scroller: '#book-content-2', bar: '#book-screen-2 .book-topbar' },
     { scroller: null, bar: '.main > .topbar' },
+    { scroller: '#ai-content', bar: '#ai-screen .book-topbar' },
   ].forEach(({ scroller, bar }) => {
     const b = document.querySelector(bar);
     if (!b || b.querySelector('.read-progress')) return;

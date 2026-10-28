@@ -440,12 +440,12 @@ async function loadConfig() {
   const [st, sec, pr] = await Promise.all([
     sb.from('settings').select('key, value'),
     sb.rpc('admin_secret_status'),
-    sb.from('products').select('id, price_usd, regular_price_usd').eq('id', 'web-dev').maybeSingle()
+    sb.from('products').select('id, price_usd, regular_price_usd')
   ]);
   CFG = {};
   (st.data || []).forEach(r => { CFG[r.key] = r.value; });
   const pay = CFG.payments || {}, z = pay.zelle || {}, sq = pay.square || {}, em = CFG.email || {}, bi = CFG.billing || {}, co = CFG.contact || {}, an = CFG.announcement || {}, cu = CFG.cupos || {};
-  setVal('cf-price', pr.data && pr.data.price_usd); setVal('cf-regular', pr.data && pr.data.regular_price_usd);
+  (pr.data || []).forEach(x => { setVal('cf-price-' + x.id, x.price_usd); if (x.id === 'pase') setVal('cf-regular-pase', x.regular_price_usd); });
   setVal('cf-cupos-total', cu.total || 20);
   loadCuposPublic().then(v => setVal('cf-cupos-taken', v.taken + ' / ' + v.total));
   setChk('cf-zelle-on', z.enabled !== false); setVal('cf-zelle-email', z.email); setVal('cf-zelle-phone', z.phone); setVal('cf-zelle-holder', z.holder);
@@ -479,17 +479,20 @@ async function saveSetting(key, value) {
 
 async function savePrices() {
   try {
-    const price = Number(val('cf-price')), regular = val('cf-regular') ? Number(val('cf-regular')) : null;
-    if (!(price > 0)) throw new Error(t('Escribe un precio válido'));
-    const { error } = await sb.rpc('admin_set_price', { p: 'web-dev', price, regular });
-    if (error) throw error;
+    for (const id of ['pase', 'web-dev', 'ia', '7st', 'semilla']) {
+      const price = Number(val('cf-price-' + id));
+      if (!(price > 0)) throw new Error(t('Escribe un precio válido'));
+      const regular = id === 'pase' && val('cf-regular-pase') ? Number(val('cf-regular-pase')) : null;
+      const { error } = await sb.rpc('admin_set_price', { p: id, price, regular });
+      if (error) throw error;
+      SITE_CFG.products[id] = Object.assign({}, SITE_CFG.products[id], { price_usd: price, regular_price_usd: regular });
+    }
     const total = Math.max(1, parseInt(val('cf-cupos-total')) || 20);
     await saveSetting('cupos', { total });
     const v = await loadCuposPublic();
     cuposTotal = v.total;
     updateLpCupos(v.disponibles, v.total);
     setVal('cf-cupos-taken', v.taken + ' / ' + v.total);
-    SITE_CFG.products['web-dev'] = Object.assign({}, SITE_CFG.products['web-dev'], { price_usd: price, regular_price_usd: regular });
     renderLandingPrice();
     flash('cf-prices-msg', 'Guardado');
   } catch (e) { flash('cf-prices-msg', rpcError(e), true); }

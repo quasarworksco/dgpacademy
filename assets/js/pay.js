@@ -42,11 +42,21 @@ function productTitle(p) {
 
 // Precio en la landing (si el admin lo cambia, se ve sin tocar el código)
 function renderLandingPrice() {
-  const pr = SITE_CFG.products['web-dev'];
-  if (!pr || pr.price_usd == null) return;
   const num = v => Number(v).toLocaleString('en-US', { maximumFractionDigits: 2 });
-  document.querySelectorAll('[data-price-num="web-dev"]').forEach(el => { el.textContent = num(pr.price_usd); });
-  if (pr.regular_price_usd) document.querySelectorAll('[data-price-regular-num="web-dev"]').forEach(el => { el.textContent = num(pr.regular_price_usd); });
+  document.querySelectorAll('[data-price-num]').forEach(el => { const pr = SITE_CFG.products[el.dataset.priceNum]; if (pr && pr.price_usd != null) el.textContent = num(pr.price_usd); });
+  document.querySelectorAll('[data-price-regular-num]').forEach(el => { const pr = SITE_CFG.products[el.dataset.priceRegularNum]; if (pr && pr.regular_price_usd) el.textContent = num(pr.regular_price_usd); });
+}
+
+// Comprar desde la portada: sin sesión, se guarda la intención y se abre el pago al entrar
+function buyProduct(product) {
+  if (STATE.user) { showDashboard(); setTimeout(() => openCheckout(product), 300); return; }
+  try { sessionStorage.setItem('dgp-buy', product); } catch (e) {}
+  goToRegister();
+}
+function resumePendingBuy() {
+  let p = null;
+  try { p = sessionStorage.getItem('dgp-buy'); sessionStorage.removeItem('dgp-buy'); } catch (e) {}
+  if (p && SITE_CFG.products[p] && !hasAccess(p)) setTimeout(() => openCheckout(p), 900);
 }
 
 // ── Panel del estudiante ─────────────────────────────────────────────────────
@@ -64,6 +74,7 @@ async function paymentsOnUser() {
   renderMyPayments();
   renderPendingNotice();
   if (typeof loadMembership === 'function') loadMembership().catch(() => {});
+  resumePendingBuy();
 }
 
 function renderAnnouncement() {
@@ -146,7 +157,17 @@ function openCheckout(product) {
   document.getElementById('co-product').textContent = plan ? planTitle(coPlan) : productTitle(coProduct);
   document.getElementById('co-price').textContent = plan ? price + t('/mes') : price;
   document.getElementById('co-kicker').textContent = t(plan ? 'Membresía mensual · cancela cuando quieras' : 'Pago único · acceso de por vida');
-  document.getElementById('co-img').src = plan ? 'assets/img/perfil-emprendedores.webp' : 'assets/img/curso-web.webp';
+  const IMG = { 'web-dev': 'curso-web.webp', ia: 'curso-ia.webp', '7st': 'biblioteca.webp', semilla: 'biblioteca.webp', pase: 'plataforma.webp' };
+  document.getElementById('co-img').src = 'assets/img/' + (plan ? 'perfil-emprendedores.webp' : (IMG[coProduct] || 'curso-web.webp'));
+  // Sugerencia del pase completo cuando se compra una sola cosa
+  const pase = SITE_CFG.products.pase;
+  const up = document.getElementById('co-upsell');
+  if (up) {
+    const show = !plan && coProduct !== 'pase' && pase && pase.price_usd != null && !hasAccess('pase');
+    up.hidden = !show;
+    if (show) up.innerHTML = '<div><b>' + escapeHtml(t('¿Y si te llevas todo?')) + '</b><span>' + escapeHtml(t('El pase completo incluye todos los programas y libros por')) + ' ' + fmtMoney(pase.price_usd) + '.</span></div>' +
+      '<button type="button" class="ui-btn ui-btn--dark ui-btn--sm" onclick="openCheckout(\'pase\')">' + escapeHtml(t('Ver pase completo')) + '</button>';
+  }
   document.getElementById('co-regular').textContent = pr.regular_price_usd ? fmtMoney(pr.regular_price_usd) : '';
   document.getElementById('co-zelle-amount').textContent = price;
   document.getElementById('co-zelle-email').textContent = z.email || CONTACT.email;
@@ -285,7 +306,7 @@ async function submitSquare() {
     if (!data || !data.ok) throw new Error((data && data.error) || 'El pago fue rechazado');
     await loadUserData();
     applyUserData();
-    if (coPlan) { await loadMembership(); coDone('¡Bienvenido a la membresía!', 'Tu membresía ya está activa. Ya puedes pedir tus flyers y agendar tus asesorías.'); }
+    if (coPlan) { await loadMembership(); coDone('¡' + welcomeWord() + ' ' + t('a la membresía') + '!', 'Tu membresía ya está activa. Ya puedes pedir tus flyers y agendar tus asesorías.'); }
     else coDone('¡Pago aprobado!', 'Tu programa ya está activo. Te enviamos la factura por correo.');
   } catch (e) {
     coError(friendlyPayError(e));

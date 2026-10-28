@@ -35,6 +35,7 @@
 <link rel="stylesheet" href="assets/css/course.css">
 <link rel="stylesheet" href="assets/css/reader.css">
 <link rel="stylesheet" href="assets/css/app.css">
+<link rel="stylesheet" href="assets/css/ai.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 </head>
 <body>
@@ -295,12 +296,12 @@
           <p>Redes sociales, marca, finanzas y propósito, con cuadernos de trabajo que se responden dentro del libro y un coach con IA que analiza tus respuestas.</p>
           <div class="lp-prog-modes"><span>Online</span><span>Cuadernos</span><span>Coach IA</span></div>
         </article>
-        <article class="lp-prog is-soon reveal" data-d="2">
-          <div class="lp-prog-img"><img src="assets/img/curso-ia.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">Próximamente</span></div>
+        <article class="lp-prog reveal" data-d="2" onclick="openProgram('ia')">
+          <div class="lp-prog-img"><img src="assets/img/curso-ia.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">Nuevo</span></div>
           <h3>IA aplicada a los negocios</h3>
-          <div class="lp-prog-meta"><b>En preparación</b><span>Inteligencia artificial</span></div>
-          <p>Automatización, productividad y análisis con IA para emprendedores y equipos que quieren trabajar mejor y vender más.</p>
-          <div class="lp-prog-modes"><span>Online</span><span>A tu ritmo</span></div>
+          <div class="lp-prog-meta"><b>16 lecciones</b><span>Vibe coding · certificado</span></div>
+          <p>Gana dinero con IA: automatiza empresas, construye sistemas a medida y chatbots, y aprende a conseguir tus primeros clientes.</p>
+          <div class="lp-prog-modes"><span>Online</span><span>Prompts listos</span><span>Coach IA</span></div>
         </article>
         <article class="lp-prog is-soon reveal" data-d="3">
           <div class="lp-prog-img"><img src="assets/img/curso-marketing.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">Próximamente</span></div>
@@ -383,32 +384,57 @@
 
   <!-- PRECIO -->
   <section class="lp-section lp-paper" id="lp-acceso">
-    <div class="lp-wrap lp-pricing">
-      <div class="lp-pricing-copy">
+    <div class="lp-wrap">
+      <div class="lp-section-head lp-section-head--center">
         <span class="eyebrow reveal">Inscripción</span>
-        <h2 class="lp-h2 reveal" data-d="1">Precio de lanzamiento para la <em class="serif">próxima generación</em>.</h2>
-        <p class="lp-lead reveal" data-d="2">Los primeros 20 estudiantes acceden a $97 USD. Después, el precio del programa sube a $147 USD.</p>
-        <div class="lp-guarantee reveal" data-d="3"><svg><use href="#i-shield"/></svg><p><strong>Así funciona la inscripción:</strong> creas tu cuenta y pagas desde tu panel con Zelle o tarjeta. En cuanto se confirma el pago, el programa se activa y es tuyo para siempre.</p></div>
+        <h2 class="lp-h2 reveal" data-d="1">Elige cómo <em class="serif">empezar</em>.</h2>
+        <p class="lp-lead reveal" data-d="2">Paga una sola vez y es tuyo para siempre. Llévate todo con el pase completo o desbloquea solo el programa o el libro que necesitas.</p>
       </div>
-      <div class="lp-price-card reveal" data-d="2">
-        <div class="lp-price-top">
-          <div><div class="lp-price-label">Diseño y Desarrollo Web con IA</div><div class="lp-price"><span class="cur">$</span><span data-price-num="web-dev">97</span><span class="per">USD · pago único</span></div><div class="lp-price-old">Precio regular <s>$<span data-price-regular-num="web-dev">147</span> USD</s></div></div>
-          <span class="chip chip--gold">Lanzamiento</span>
-        </div>
-        <div id="lp-cupos-wrap" class="lp-cupos">
-          <div class="lp-cupos-row"><span>Cupos disponibles</span><strong><span id="lp-cupos-num">—</span> <span class="lp-cupos-of">de</span> <span id="lp-cupos-total">20</span></strong></div>
-          <div class="lp-cupos-bar"><span id="lp-cupos-bar" style="width:100%"></span></div>
-        </div>
-        <ul class="lp-price-list">
-          <li><svg><use href="#i-check"/></svg>16 lecciones interactivas en 5 módulos</li>
-          <li><svg><use href="#i-check"/></svg>2 sesiones de asesoría privada</li>
-          <li><svg><use href="#i-check"/></svg>Certificado digital de finalización</li>
-          <li><svg><use href="#i-check"/></svg>Acceso de por vida y actualizaciones</li>
-          <li><svg><use href="#i-check"/></svg>Progreso guardado en tu cuenta</li>
-        </ul>
-        <button class="ui-btn ui-btn--primary ui-btn--lg ui-btn--block" onclick="goToRegister()">Reservar mi lugar <svg><use href="#i-arrow"/></svg></button>
-        <div class="lp-price-note">Sin suscripción · Acceso de por vida</div>
+      <div class="lp-prices">
+        <article class="lp-pcard reveal">
+          <div class="lp-pcard-label">Un programa</div>
+          <div class="lp-price"><span class="cur">$</span><span data-price-num="web-dev">40</span><span class="per">USD · pago único</span></div>
+          <p class="lp-pcard-sub">Elige Desarrollo Web con IA o IA aplicada a los negocios.</p>
+          <ul class="lp-price-list">
+            <li><svg><use href="#i-check"/></svg>16 lecciones con prompts y ejercicios</li>
+            <li><svg><use href="#i-check"/></svg>Asistente IA y coach para tus respuestas</li>
+            <li><svg><use href="#i-check"/></svg>Certificado de finalización</li>
+            <li><svg><use href="#i-check"/></svg>Acceso de por vida</li>
+          </ul>
+          <div class="lp-pcard-btns"><button class="ui-btn ui-btn--dark ui-btn--block" onclick="buyProduct('web-dev')">Desarrollo Web con IA</button><button class="ui-btn ui-btn--ghost ui-btn--block" onclick="buyProduct('ia')">IA aplicada a los negocios</button></div>
+        </article>
+        <article class="lp-pcard is-featured reveal" data-d="1">
+          <span class="mb-badge">Mejor valor</span>
+          <div class="lp-pcard-label">Pase completo</div>
+          <div class="lp-price"><span class="cur">$</span><span data-price-num="pase">97</span><span class="per">USD · pago único</span></div>
+          <div class="lp-price-old">Por separado <s>$<span data-price-regular-num="pase">130</span> USD</s></div>
+          <div id="lp-cupos-wrap" class="lp-cupos">
+            <div class="lp-cupos-row"><span>Cupos de lanzamiento</span><strong><span id="lp-cupos-num">—</span> <span class="lp-cupos-of">de</span> <span id="lp-cupos-total">20</span></strong></div>
+            <div class="lp-cupos-bar"><span id="lp-cupos-bar" style="width:100%"></span></div>
+          </div>
+          <ul class="lp-price-list">
+            <li><svg><use href="#i-check"/></svg>Todos los programas y libros</li>
+            <li><svg><use href="#i-check"/></svg>Incluye los programas nuevos que publiquemos</li>
+            <li><svg><use href="#i-check"/></svg>2 sesiones de asesoría privada</li>
+            <li><svg><use href="#i-check"/></svg>Asistente IA, coach y todos los certificados</li>
+            <li><svg><use href="#i-check"/></svg>Acceso de por vida</li>
+          </ul>
+          <button class="ui-btn ui-btn--primary ui-btn--lg ui-btn--block" onclick="buyProduct('pase')">Quiero el pase completo <svg><use href="#i-arrow"/></svg></button>
+        </article>
+        <article class="lp-pcard reveal" data-d="2">
+          <div class="lp-pcard-label">Un libro</div>
+          <div class="lp-price"><span class="cur">$</span><span data-price-num="7st">25</span><span class="per">USD · pago único</span></div>
+          <p class="lp-pcard-sub">Serie 7ST: léelo en la plataforma, con cuadernos de trabajo.</p>
+          <ul class="lp-price-list">
+            <li><svg><use href="#i-check"/></svg>Lectura con índice y progreso</li>
+            <li><svg><use href="#i-check"/></svg>Cuadernos de trabajo con coach IA</li>
+            <li><svg><use href="#i-check"/></svg>Evaluación y certificado de lectura</li>
+            <li><svg><use href="#i-check"/></svg>Acceso de por vida</li>
+          </ul>
+          <div class="lp-pcard-btns"><button class="ui-btn ui-btn--dark ui-btn--block" onclick="buyProduct('7st')">7ST · Redes y emprendimiento</button><button class="ui-btn ui-btn--ghost ui-btn--block" onclick="buyProduct('semilla')">De la semilla al árbol</button></div>
+        </article>
       </div>
+      <div class="lp-guarantee lp-guarantee--center reveal"><svg><use href="#i-shield"/></svg><p><strong>Así funciona:</strong> creas tu cuenta, pagas con Zelle o tarjeta y en cuanto se confirma el pago se desbloquea lo que compraste. Sin suscripciones.</p></div>
     </div>
   </section>
 
@@ -558,7 +584,7 @@
       <button class="auth-back" onclick="showLanding()"><svg><use href="#i-back"/></svg>Volver al inicio</button>
     </div>
     <div class="auth-form-wrap">
-      <h2 class="auth-form-title" id="auth-title">Bienvenido de vuelta</h2>
+      <h2 class="auth-form-title" id="auth-title">Qué bueno verte de nuevo</h2>
       <p class="auth-form-sub" id="auth-sub">Ingresa con tu cuenta para acceder a tus cursos</p>
 
       <div class="auth-tabs" role="tablist">
@@ -582,6 +608,14 @@
         <div class="form-group" id="field-phone" style="display:none">
           <label class="form-label" for="input-phone">Teléfono / WhatsApp</label>
           <input type="tel" class="form-input" id="input-phone" placeholder="+51 999 999 999" autocomplete="tel">
+        </div>
+        <div class="form-group" id="field-gender" style="display:none">
+          <span class="form-label" id="gender-label">¿Cómo te saludamos?</span>
+          <div class="gender-pick" role="radiogroup" aria-labelledby="gender-label">
+            <label><input type="radio" name="gender" value="m"><span>Hombre</span></label>
+            <label><input type="radio" name="gender" value="f"><span>Mujer</span></label>
+            <label><input type="radio" name="gender" value="x" checked><span>Prefiero no decirlo</span></label>
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label" for="input-email">Correo electrónico</label>
@@ -647,7 +681,7 @@
       </div>
       <div class="dash-continue" id="dash-continue">
         <div class="dash-continue-kicker" id="dash-continue-kicker">Tu siguiente lección</div>
-        <div class="dash-continue-title" id="dash-continue-title">Bienvenida al curso</div>
+        <div class="dash-continue-title" id="dash-continue-title">Introducción al curso</div>
         <div class="dash-continue-meta" id="dash-continue-meta">Diseño y Desarrollo Web con IA</div>
         <button class="ui-btn ui-btn--light" id="dash-continue-btn" onclick="continueCourse()"><svg><use href="#i-play"/></svg>Continuar</button>
       </div>
@@ -670,20 +704,21 @@
     <section class="dash-activate" id="dash-activate" style="display:none">
       <div class="dash-activate-ic"><svg><use href="#i-lock"/></svg></div>
       <div class="dash-activate-copy">
-        <h2>Tu cuenta está lista. Falta activar tu acceso.</h2>
-        <p id="dash-activate-text">Paga una sola vez con Zelle o tarjeta. En cuanto se confirme el pago, el programa aparece activo aquí mismo y te llega la factura por correo.</p>
+        <h2>Tu cuenta está lista. Elige qué quieres desbloquear.</h2>
+        <p id="dash-activate-text">Llévate todos los programas y libros con el pase completo, o desbloquea solo el programa ($40) o el libro ($25) que necesitas. Pagas una sola vez con Zelle o tarjeta y te llega la factura por correo.</p>
         <div class="dash-pending-pay" id="dash-pending-pay" hidden></div>
         <ol class="dash-activate-steps"><li class="done">Cuenta creada</li><li>Pago confirmado</li><li>Programa activo</li></ol>
       </div>
       <div class="dash-activate-actions">
-        <button class="ui-btn ui-btn--primary" id="dash-activate-pay" onclick="openCheckout('web-dev')"><svg><use href="#i-lock"/></svg>Activar ahora</button>
+        <button class="ui-btn ui-btn--primary" id="dash-activate-pay" onclick="openCheckout('pase')"><svg><use href="#i-lock"/></svg>Pase completo · $97</button>
+        <button class="ui-btn ui-btn--ghost" onclick="document.getElementById('dash-programs').scrollIntoView({behavior:'smooth'})">Ver programas y libros</button>
         <a class="ui-btn ui-btn--ghost" id="dash-activate-wa" href="#" target="_blank" rel="noopener" style="display:none"><svg><use href="#i-whatsapp"/></svg>Escribir por WhatsApp</a>
         <a class="ui-btn ui-btn--ghost" id="dash-activate-mail" href="mailto:info@dgpglobalgroup.com"><svg><use href="#i-mail"/></svg>Escribir por correo</a>
       </div>
     </section>
 
     <section class="dash-block" id="dash-programs">
-      <div class="dash-block-head"><h2>Mis programas</h2><span class="dash-block-sub">1 disponible · 2 en preparación</span></div>
+      <div class="dash-block-head"><h2>Mis programas</h2><span class="dash-block-sub">2 disponibles · 1 en preparación</span></div>
       <div class="courses-grid">
 
         <article class="course-card" id="card-web-dev">
@@ -701,14 +736,18 @@
           </div>
         </article>
 
-        <article class="course-card is-soon">
-          <div class="course-thumb"><img src="assets/img/curso-ia.webp" alt="" width="900" height="600" loading="lazy"><span class="chip chip--light course-status">Próximamente</span></div>
+        <article class="course-card" id="card-ia">
+          <div class="course-thumb"><img src="assets/img/curso-ia.webp" alt="" width="900" height="600" loading="lazy"><span class="chip chip--light course-status" id="ia-status">Disponible</span></div>
           <div class="course-body">
-            <div class="course-kicker">Inteligencia artificial</div>
+            <div class="course-kicker">Inteligencia artificial · Vibe coding</div>
             <h3 class="course-title">IA aplicada a los negocios</h3>
-            <p class="course-desc">Automatización, productividad y análisis de datos con IA para potenciar tu empresa.</p>
-            <div class="course-meta"><span><svg><use href="#i-clock"/></svg>En preparación</span></div>
-            <button class="ui-btn ui-btn--block btn-course is-locked" disabled>Disponible pronto</button>
+            <p class="course-desc">Gana dinero con IA: automatiza empresas, crea sistemas a medida y chatbots, y consigue tus primeros clientes.</p>
+            <div class="course-meta"><span><svg><use href="#i-book"/></svg>16 lecciones</span><span><svg><use href="#i-layers"/></svg>5 módulos</span></div>
+            <div class="course-progress" id="ia-progress" hidden>
+              <div class="course-progress-label"><span><b id="ia-prog-text">0 / 16</b> lecciones</span><span id="ia-prog-pct">0%</span></div>
+              <div class="course-progress-bar"><div class="course-progress-fill" id="ia-prog-fill" style="width:0%"></div></div>
+            </div>
+            <button id="btn-ia" class="ui-btn ui-btn--block btn-course is-locked" disabled><svg><use href="#i-lock"/></svg>Cargando…</button>
           </div>
         </article>
 
@@ -814,7 +853,7 @@
   <div class="nav-section">
     <div class="nav-section-title">Inicio</div>
     <button class="nav-item active" onclick="goTo('home')" data-id="home">
-      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/></svg></span> Bienvenida al curso
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/></svg></span> Introducción al curso
       <span class="nav-check">✓</span>
     </button>
   </div>
@@ -919,7 +958,7 @@
       <button class="menu-btn" onclick="toggleMenu()" aria-label="Menú">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
-      <div class="topbar-breadcrumb" id="breadcrumb">Inicio → <span>Bienvenida</span></div>
+      <div class="topbar-breadcrumb" id="breadcrumb">Inicio → <span>Introducción</span></div>
     </div>
     <div class="topbar-actions">
       <button class="btn btn-ghost" onclick="markDone()">
@@ -1191,10 +1230,14 @@
       <div class="adm-config">
 
         <form class="adm-card" onsubmit="event.preventDefault();savePrices()">
-          <div class="adm-card-head"><h2>Precios y cupos</h2><span class="adm-card-sub">Lo que ve el estudiante al pagar</span></div>
+          <div class="adm-card-head"><h2>Precios y cupos</h2><span class="adm-card-sub">Pago único en USD. El precio regular se muestra tachado (opcional).</span></div>
           <div class="adm-form-grid">
-            <label class="adm-field"><span>Precio Web Dev (USD)</span><input class="form-input" id="cf-price" type="number" min="0" step="0.01"></label>
-            <label class="adm-field"><span>Precio regular (tachado)</span><input class="form-input" id="cf-regular" type="number" min="0" step="0.01"></label>
+            <label class="adm-field"><span>Pase completo (todo incluido)</span><input class="form-input" id="cf-price-pase" type="number" min="0" step="0.01"></label>
+            <label class="adm-field"><span>Pase · precio regular</span><input class="form-input" id="cf-regular-pase" type="number" min="0" step="0.01"></label>
+            <label class="adm-field"><span>Desarrollo Web con IA</span><input class="form-input" id="cf-price-web-dev" type="number" min="0" step="0.01"></label>
+            <label class="adm-field"><span>IA aplicada a los negocios</span><input class="form-input" id="cf-price-ia" type="number" min="0" step="0.01"></label>
+            <label class="adm-field"><span>Libro 7ST</span><input class="form-input" id="cf-price-7st" type="number" min="0" step="0.01"></label>
+            <label class="adm-field"><span>Libro De la semilla al árbol</span><input class="form-input" id="cf-price-semilla" type="number" min="0" step="0.01"></label>
             <label class="adm-field"><span>Cupos ocupados (ya pagaron)</span><input class="form-input" id="cf-cupos-taken" type="text" readonly tabindex="-1"></label>
             <label class="adm-field"><span>Cupos totales</span><input class="form-input" id="cf-cupos-total" type="number" min="1" max="999"></label>
           </div>
@@ -1437,6 +1480,7 @@
       </div>
     </div>
 
+    <div class="co-upsell" id="co-upsell" hidden></div>
     <div class="co-body" id="co-body">
       <div class="co-methods" role="tablist" id="co-methods">
         <button class="co-method is-active" data-m="zelle" onclick="coMethod('zelle')"><span class="adm-brand adm-brand--zelle">Z</span>Zelle</button>
@@ -1499,6 +1543,16 @@
       </div>
       <button onclick="saveSettingsName()" class="ui-btn ui-btn--primary ui-btn--sm">Guardar nombre</button>
       <span id="settings-name-msg" class="modal-ok" style="display:none">Nombre actualizado</span>
+    </div>
+
+    <div class="modal-section">
+      <h3>¿Cómo te saludamos?</h3>
+      <div class="gender-pick" role="radiogroup" id="settings-gender">
+        <label><input type="radio" name="settings-gender" value="m" onchange="saveSettingsGender(this.value)"><span>Hombre</span></label>
+        <label><input type="radio" name="settings-gender" value="f" onchange="saveSettingsGender(this.value)"><span>Mujer</span></label>
+        <label><input type="radio" name="settings-gender" value="x" onchange="saveSettingsGender(this.value)"><span>Prefiero no decirlo</span></label>
+      </div>
+      <span id="settings-gender-msg" class="modal-ok" style="display:none">Guardado</span>
     </div>
 
     <div class="modal-section">
@@ -1771,6 +1825,8 @@
 <script src="assets/js/member.js"></script>
 <script src="assets/js/exercises.js"></script>
 <script src="assets/js/reader.js"></script>
+<script src="assets/js/ai-course.js"></script>
+<script src="assets/js/assistant.js"></script>
 <script src="assets/js/admin-members.js"></script>
 </body>
 </html>

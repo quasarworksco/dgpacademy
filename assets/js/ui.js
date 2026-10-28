@@ -70,6 +70,15 @@ const CERT_TYPES = {
     detail: 'Diez capítulos sobre entorno digital, identidad de marca, contenido, comunidad, analítica, aspectos legales y mentalidad emprendedora.',
     label: 'Libro digital · Serie 7ST',
     book: true
+  },
+  'ia': {
+    code: 'IA',
+    title: 'Certificado',
+    sub: 'de finalización',
+    lead: 'por haber completado satisfactoriamente el programa',
+    course: 'IA aplicada a los negocios',
+    detail: '16 lecciones en 5 módulos: fundamentos de IA, productividad y ventas, vibe coding y sistemas a medida, automatización y datos, y modelos de negocio con IA.',
+    label: 'Programa · 16 lecciones'
   }
 };
 const MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
@@ -183,7 +192,7 @@ function certHTML(data) {
 
 // Certificados emitidos (o ya ganados y pendientes de emitir)
 function earnedCertificates() {
-  return ['web-dev', '7st'].filter(k => STATE.certificates[k] || isEligible(k));
+  return ['web-dev', 'ia', '7st'].filter(k => STATE.certificates[k] || isEligible(k));
 }
 
 function certData(kind) {

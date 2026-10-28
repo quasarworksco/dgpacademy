@@ -4,7 +4,7 @@
 // en marketing, IA, negocios y desarrollo personal / inteligencia emocional.
 // La API key de Groq se guarda en Configuración → IA y nunca llega al navegador.
 //   analyze → analiza un ejercicio guardado (todos; sin membresía hay pocos al mes)
-//   chat    → coach de negocio adaptado a la encuesta del miembro (solo membresía)
+//   chat    → asistente IA del campus (todos, con cupo mensual; adaptado a la encuesta si existe)
 //   test    → (admin) comprueba que la API key funciona
 // Límite mensual: el del plan (plans.ai_monthly) o settings.ai.free_monthly sin membresía.
 // =========================================================
@@ -78,8 +78,8 @@ Maximum 350 words. Don't invent facts that aren't in their answers. Don't give m
 };
 
 const CHAT = {
-  es: `Eres el Coach IA de DGP Academy, asesor personal del miembro: experto en marketing digital, ventas, redes sociales, IA aplicada a negocios, finanzas para emprendedores, desarrollo personal e inteligencia emocional. Conoces su negocio por la encuesta que te damos. Responde en español, cálido y práctico: ideas concretas que pueda aplicar hoy en su negocio, ejemplos de textos o publicaciones cuando ayuden, y pasos numerados. Máximo 300 palabras salvo que pida algo largo. Si pide algo que el equipo de DGP hace (flyers, páginas web, asesorías), recuérdale que puede pedirlo desde su membresía. No des asesoría legal, médica ni fiscal específica.`,
-  en: `You are the DGP Academy AI Coach, the member's personal advisor: an expert in digital marketing, sales, social media, AI for business, finances for entrepreneurs, personal growth and emotional intelligence. You know their business from the survey we give you. Reply in English, warm and practical: concrete ideas they can apply today, sample captions or posts when useful, and numbered steps. Maximum 300 words unless they ask for something long. If they ask for something the DGP team does (flyers, websites, advisory sessions), remind them they can request it from their membership. No specific legal, medical or tax advice.`,
+  es: `Eres el Asistente IA de DGP Academy: un mentor experto en inteligencia artificial aplicada a negocios, vibe coding (crear software con IA usando Claude Code, Lovable, Bolt, Cursor y Supabase), automatización (Zapier, Make), desarrollo web, marketing digital, ventas, finanzas para emprendedores, desarrollo personal e inteligencia emocional. Ayudas a estudiantes que empiezan como vibecoders y a emprendedores que quieren hacer crecer su negocio. Responde en español, cálido, claro y práctico: pasos numerados, ejemplos concretos y prompts listos para copiar cuando ayuden. Máximo 300 palabras salvo que pida algo largo. Si conoces los datos de su negocio, adapta la respuesta. Si pide algo que el equipo de DGP hace (flyers, páginas web, sistemas a medida, asesorías), menciónale que puede pedirlo desde su membresía o agendar una asesoría. No des asesoría legal, médica ni fiscal específica.`,
+  en: `You are the DGP Academy AI Assistant: a mentor who is an expert in AI for business, vibe coding (building software with AI using Claude Code, Lovable, Bolt, Cursor and Supabase), automation (Zapier, Make), web development, digital marketing, sales, finances for entrepreneurs, personal growth and emotional intelligence. You help students starting out as vibecoders and entrepreneurs who want to grow their business. Reply in English, warm, clear and practical: numbered steps, concrete examples and copy-ready prompts when useful. Maximum 300 words unless they ask for something long. If you know their business details, tailor the answer. If they ask for something the DGP team does (flyers, websites, custom systems, advisory sessions), mention they can request it from their membership or book an advisory session. No specific legal, medical or tax advice.`,
 };
 
 // Comprueba el límite del mes (el uso se cuenta solo si la IA respondió)
@@ -122,7 +122,7 @@ Deno.serve(async (req) => {
 
     if (body.action === "test") {
       if (!prof?.is_admin) return json({ error: "Solo administradores" }, 403);
-      const out = await groq([{ role: "user", content: "Responde solo: OK" }], 5);
+      const out = await groq([{ role: "user", content: "Responde solo: OK" }], 60);
       return json({ ok: true, reply: out.text, model: out.model });
     }
 
@@ -153,8 +153,7 @@ Deno.serve(async (req) => {
     if (body.action === "chat") {
       const [cfg] = await sql`select value from public.settings where key = 'ai'`;
       if (cfg?.value?.enabled === false) return json({ error: "El coach con IA está desactivado" }, 400);
-      const [mp] = await sql`select public.member_plan(${user.id}) as plan`;
-      if (!mp.plan && !prof?.is_admin) return json({ error: "El Coach IA de negocio es parte de la membresía" }, 403);
+      // Todos los estudiantes pueden usar el asistente; el cupo del mes depende de su plan
       const text = String(body.message || "").trim().slice(0, 2000);
       if (text.length < 2) return json({ error: "Escribe tu pregunta" }, 400);
       await checkQuota(user.id, !!prof?.is_admin);
@@ -162,7 +161,8 @@ Deno.serve(async (req) => {
       const history = await sql`select role, content from public.coach_messages where user_id = ${user.id} order by created_at desc limit 10`;
       const ctx = await profileContext(user.id);
       const reply = (await groq([
-        { role: "system", content: CHAT[lang] + (ctx ? `\n\nDatos del negocio del miembro:\n${ctx}` : "") },
+        { role: "system", content: CHAT[lang] + (ctx ? `\n\nDatos del negocio del miembro:\n${ctx}` : "") +
+            (body.context ? `\n\nEl estudiante está viendo: ${String(body.context).slice(0, 300)}. Si la pregunta tiene que ver con eso, conecta tu respuesta con la lección.` : "") },
         ...history.reverse().map((m: any) => ({ role: m.role, content: m.content })),
         { role: "user", content: text },
       ], 800)).text;

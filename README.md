@@ -2,7 +2,7 @@
 
 Plataforma educativa de DGP Global Group — [academy.dgp-link.com](https://academy.dgp-link.com).
 
-Sitio estático (GitHub Pages) con Firebase Authentication + Firestore. Sin build: se publica tal cual.
+Sitio estático (GitHub Pages) con **Supabase** (autenticación + base de datos). Sin build: se publica tal cual.
 
 ## Estructura
 
@@ -12,44 +12,56 @@ assets/css/base.css   Sistema de diseño: tokens, tipografías, botones, formula
 assets/css/app.css    Landing, acceso, panel, admin, modales y certificado (incluye impresión)
 assets/css/course.css Lector del curso (lecciones, tarjetas, código, quizzes)
 assets/css/reader.css Lector de libros (7ST Vol. 1 y Vol. 2)
-assets/js/app.js      Firebase, pantallas, accesos, panel, admin, cupos, cuenta
+assets/js/data.js     Conexión con Supabase y estado del usuario
+assets/js/app.js      Pantallas, acceso, panel, libros, evaluación, admin, cupos
 assets/js/course.js   Navegación del curso, progreso y configuración de la cuenta
-assets/js/ui.js       Interacciones de la landing, avisos y certificados
+assets/js/ui.js       Landing, avisos, certificados y verificación pública
 assets/fonts/         Inter Tight, Instrument Serif y JetBrains Mono (alojadas aquí)
 assets/img/           Fotografías (Unsplash, licencia libre) en WebP
-firestore.rules       Reglas de seguridad de Firestore
+supabase/README.md    Tablas, seguridad y funciones de la base de datos
 og-image.jpg          Imagen para compartir en redes (1200×630)
 ```
 
 ## Oferta educativa actual
 
-| Producto | Tipo | ID en Firestore | Estado |
+| Producto | Tipo | ID | Estado |
 |---|---|---|---|
-| Diseño y Desarrollo Web con IA | Programa · 16 lecciones · 5 módulos | `courses: 'web-dev'` | Disponible ($97 lanzamiento / $147 regular) |
-| 7ST Vol. 1 — Redes Sociales y Emprendimiento | Libro · 10 capítulos + evaluación | `books: '7st'` | Disponible (se activa por usuario) |
-| De la Semilla al Árbol (7ST Vol. 2) | Libro · 11 capítulos + recursos | `books: 'semilla'` | Disponible (se activa por usuario) |
-| IA aplicada a los negocios | Programa | — | Próximamente |
-| Marketing digital | Programa | — | Próximamente |
+| Diseño y Desarrollo Web con IA | Programa · 16 lecciones · 5 módulos | `web-dev` | Disponible ($97 lanzamiento / $147 regular) |
+| 7ST Vol. 1 — Redes Sociales y Emprendimiento | Libro · 10 capítulos + evaluación | `7st` | Disponible |
+| De la Semilla al Árbol (7ST Vol. 2) | Libro · 11 capítulos + recursos | `semilla` | Disponible |
+| IA aplicada a los negocios | Programa | `ia` | Próximamente |
+| Marketing digital | Programa | `marketing` | Próximamente |
+
+El contenido de las lecciones y los libros vive en la tabla `content` de Supabase y solo se descarga
+para usuarios con acceso activo. No está en el código público del sitio.
 
 ## Registro y permisos
 
-1. **Registro**: el estudiante crea su cuenta (nombre, apellido, teléfono, correo, contraseña segura).
-   Se crea `users/{uid}` en Firestore, se avisa al equipo por Formspree y se envía bienvenida por EmailJS.
+1. **Registro**: el estudiante crea su cuenta y confirma su correo (los correos salen de info@dgpglobalgroup.com
+   vía SMTP de Google Workspace). Se crea su perfil automáticamente y se avisa al equipo por Formspree.
 2. **Sin acceso**: el panel muestra "Tu cuenta está lista. Falta activar tu acceso" con botón para escribir
    al equipo (correo; WhatsApp si se configura `CONTACT.whatsapp` en `assets/js/app.js`).
 3. **Activación**: el admin entra a *Panel admin* y activa `Web Dev`, `7ST` o `Semilla`, y marca el pago.
-   Esto escribe `courses`, `books` y `payments` en el documento del estudiante.
-4. **Progreso**: se guarda en `progress`, `completedLessons`, `completedCourses` y `bookProgress`.
-5. **Certificados**: al completar las 16 lecciones (o aprobar la evaluación de 7ST con 7/10) se emite el
-   certificado con número único; la fecha de emisión queda en `certificates.<programa>`.
+4. **Progreso**: lecciones y capítulos se guardan en la tabla `progress`; la posición de lectura en `reading_state`.
+5. **Evaluación 7ST**: se califica en el servidor (las respuestas no están en el navegador). Aprueba con 7/10.
+6. **Certificados**: los emite el servidor solo si el estudiante completó las 16 lecciones o aprobó la evaluación.
+   Cada uno tiene un número único verificable en la landing ("Verificar un certificado" o `?verificar=NÚMERO`).
 
-El admin se identifica por `ADMIN_UID` en `assets/js/app.js` y en `firestore.rules`.
+La seguridad está en la base de datos (políticas RLS): un estudiante no puede darse acceso, hacerse admin,
+aprobar la evaluación a mano ni leer contenido que no tiene activado. Detalle en `supabase/README.md`.
 
-### Importante: publicar las reglas
+### Nombrar administrador
 
-`firestore.rules` impide que un estudiante se otorgue acceso a sí mismo (solo el admin puede cambiar
-`courses`, `books` y `payments`). Publícalas en **Firebase Console → Firestore Database → Reglas**
-pegando el contenido del archivo.
+La persona crea su cuenta en la academia y luego, en Supabase → SQL Editor:
+
+```sql
+update public.profiles set is_admin = true where email = 'correo@del-admin.com';
+```
+
+### Configuración en Supabase
+
+- Authentication → URL Configuration: Site URL `https://academy.dgp-link.com` y Redirect URL `https://academy.dgp-link.com/**`.
+- Authentication → Emails → SMTP: `smtp.gmail.com:587` con info@dgpglobalgroup.com y contraseña de aplicación.
 
 ## Fotografías
 

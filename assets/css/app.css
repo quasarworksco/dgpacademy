@@ -649,3 +649,15 @@
   .cert-actions-btns .ui-btn { flex: 1; }
   .modal-section .form-row { gap: 0; }
 }
+
+/* Verificación de certificados y mensajes de modales */
+.modal-error { font-size: 13.5px; color: var(--coral); margin-top: 10px; }
+#recovery-msg:empty, #verify-result:empty { display: none; }
+#verify-result { margin-top: 14px; }
+.verify-card { display: grid; gap: 4px; padding: 16px 18px; border-radius: 14px; font-size: 14.5px; color: var(--text2); }
+.verify-card strong { font-size: 15px; margin-bottom: 4px; }
+.verify-card.is-ok { background: #ecf7f0; border: 1px solid rgba(21,128,61,.25); }
+.verify-card.is-ok strong { color: var(--green); }
+.verify-card.is-bad { background: var(--coral-bg); border: 1px solid rgba(194,38,29,.2); }
+.verify-card.is-bad strong { color: var(--coral); }
+.lp-checks a { color: var(--accent); text-underline-offset: 3px; }

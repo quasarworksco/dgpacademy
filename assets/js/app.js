@@ -1,37 +1,7 @@
-// ── Firebase Config ──────────────────────────────────────────────────────────
-// Reemplaza estos valores con los de tu proyecto en console.firebase.google.com
-// Proyecto → Configuración → Tus apps → Configuración del SDK
-const firebaseConfig = {
-  apiKey:            "AIzaSyC0B2yyVFLKRIuslI7sHMHjp4XLlrHzieY",
-  authDomain:        "dgp-academy.firebaseapp.com",
-  projectId:         "dgp-academy",
-  storageBucket:     "dgp-academy.firebasestorage.app",
-  messagingSenderId: "556603875596",
-  appId:             "1:556603875596:web:e65f527733c7bbdc44a929",
-  measurementId:     "G-2S5RJ9P6D1"
-};
-// ─────────────────────────────────────────────────────────────────────────────
-
-// ── Admin UID ─────────────────────────────────────────────────────────────────
-// Reemplaza este string con tu UID de Firebase (Firebase Console → Auth → Users → tu correo → User UID)
-const ADMIN_UID = 'xbrwtQPEmdPXUOqYabkZQPWG32C3';
-
-// ── Reglas de Firestore: ver firestore.rules en la raíz del repositorio ─────────
-
-let firebaseReady = false;
-let auth = null;
-let db   = null;
-
-try {
-  firebase.initializeApp(firebaseConfig);
-  auth = firebase.auth();
-  db   = firebase.firestore();
-  firebaseReady = true;
-  // Carga cupos en el landing apenas Firebase esté listo
-  setTimeout(loadCupos, 0);
-} catch(e) {
-  console.warn('Firebase no configurado. Modo demo activo.');
-}
+// =========================================================
+// DGP Academy — aplicación (pantallas, acceso, panel, libros, admin)
+// Los datos viven en Supabase: ver assets/js/data.js
+// =========================================================
 
 // ── Contacto para activar accesos ───────────────────────────────────────────
 // Número de WhatsApp en formato internacional sin "+" ni espacios (ej. '5215512345678').
@@ -69,12 +39,28 @@ function showDashboard() { showScreen('dash-screen'); updateDashStats(); hideSpl
 function showCourse()    { showScreen('course-screen'); }
 function showAdmin()     { showScreen('admin-screen'); loadAdminData(); }
 
-// ── Book reader ───────────────────────────────────────────────────────────────
-function showBook(bookId) {
-  showScreen('book-screen');
-  // Resume from last saved chapter (Firestore)
-  const startChapter = window._bookLastChapter || 'ch-intro';
-  goToChapter(startChapter);
+// ── Lector de libros ─────────────────────────────────────────────────────────
+// Abre un producto protegido: descarga su contenido y luego muestra la pantalla
+async function openProtected(product, rootSelector, onReady) {
+  if (!hasAccess(product)) { toast('Aún no tienes acceso a este contenido.'); return; }
+  const splash = document.getElementById('splash-screen');
+  if (splash) { splash.style.display = 'flex'; splash.classList.add('active'); }
+  try {
+    const ok = await loadContent(product, rootSelector);
+    if (!ok) throw new Error('El contenido no está disponible.');
+    onReady();
+  } catch (e) {
+    toast('No se pudo cargar el contenido: ' + (e.message || e));
+  } finally {
+    hideSplash();
+  }
+}
+
+function showBook() {
+  openProtected('7st', '#book-screen', () => {
+    showScreen('book-screen');
+    goToChapter((STATE.reading['7st'] && STATE.reading['7st'].last_item) || 'ch-intro');
+  });
 }
 
 function closeBook() {
@@ -83,53 +69,37 @@ function closeBook() {
 }
 
 let currentChapter = 'ch-intro';
-window._bookReadChapters = window._bookReadChapters || new Set();
 const BOOK_CHAPTERS = ['ch-intro','ch-1','ch-2','ch-3','ch-4','ch-5','ch-6','ch-7','ch-8','ch-9','ch-10','ch-conclusion'];
 
+function readSet(product) { return STATE.progress[product] || new Set(); }
+
 function markChapterRead(id) {
-  if (!BOOK_CHAPTERS.includes(id)) return;
-  if (window._bookReadChapters.has(id)) return; // already marked
-  window._bookReadChapters.add(id);
-  // Update TOC checkmark
-  const tocEl = document.querySelector('[data-ch="' + id + '"]');
+  if (!BOOK_CHAPTERS.includes(id) || readSet('7st').has(id)) return;
+  saveProgress('7st', id);
+  const tocEl = document.querySelector('#book-screen [data-ch="' + id + '"]');
   if (tocEl) tocEl.classList.add('read');
-  // Update library card progress bar
   updateBookReadProgress();
-  // Save to Firestore
-  if (db && auth && auth.currentUser) {
-    db.collection('users').doc(auth.currentUser.uid).update({
-      'bookProgress.7st-read': Array.from(window._bookReadChapters)
-    }).catch(() => {});
-  }
 }
 
 function updateBookReadProgress() {
   const total = BOOK_CHAPTERS.length;
-  const done = BOOK_CHAPTERS.filter(c => window._bookReadChapters.has(c)).length;
-  const pct = Math.round((done / total) * 100);
+  const done = BOOK_CHAPTERS.filter(c => readSet('7st').has(c)).length;
   const fill = document.getElementById('book-read-bar-fill');
   const lbl  = document.getElementById('book-read-label');
-  if (fill) fill.style.width = pct + '%';
+  if (fill) fill.style.width = Math.round(done / total * 100) + '%';
   if (lbl)  lbl.textContent = done + ' / ' + total + ' capítulos leídos';
-}
-
-function loadBookReadChapters(arr) {
-  window._bookReadChapters = new Set(arr || []);
   BOOK_CHAPTERS.forEach(id => {
-    if (window._bookReadChapters.has(id)) {
-      const tocEl = document.querySelector('[data-ch="' + id + '"]');
-      if (tocEl) tocEl.classList.add('read');
-    }
+    const tocEl = document.querySelector('#book-screen [data-ch="' + id + '"]');
+    if (tocEl) tocEl.classList.toggle('read', readSet('7st').has(id));
   });
-  updateBookReadProgress();
 }
 
 function goToChapter(id) {
-  document.querySelectorAll('.book-chapter').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.book-toc-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('#book-screen .book-chapter').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('#book-screen .book-toc-item').forEach(el => el.classList.remove('active'));
   const ch = document.getElementById(id);
   if (ch) { ch.classList.add('active'); document.getElementById('book-content').scrollTop = 0; }
-  const tocItem = document.querySelector('[data-ch="' + id + '"]');
+  const tocItem = document.querySelector('#book-screen [data-ch="' + id + '"]');
   if (tocItem) {
     tocItem.classList.add('active');
     const labels = {
@@ -151,15 +121,9 @@ function goToChapter(id) {
     if (lbl) lbl.textContent = labels[id] || id;
   }
   currentChapter = id;
-  // Mark chapter as read
   markChapterRead(id);
-  // Save chapter position to Firestore per user
-  window._bookLastChapter = id;
-  if (db && auth && auth.currentUser) {
-    db.collection('users').doc(auth.currentUser.uid).update({
-      'bookProgress.7st': id
-    }).catch(() => {});
-  }
+  savePosition('7st', id);
+  if (id === 'ch-quiz') restoreQuizState();
   document.getElementById('book-nav').classList.remove('open');
   const bd = document.getElementById('book-backdrop');
   if (bd) bd.style.display = 'none';
@@ -193,70 +157,54 @@ function lpScrollTo(id) {
   ls.scrollTo({ top: offset, behavior: 'smooth' });
 }
 
-// ── Auth State ───────────────────────────────────────────────────────────────
-if (firebaseReady) {
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      fillUserUI(user);
-      // Show admin button if this is the admin account
-      const adminBtn = document.getElementById('btn-admin-panel');
-      if (adminBtn) adminBtn.style.display = (user.uid === ADMIN_UID) ? 'flex' : 'none';
-      // Save/update user doc and load their course access
-      if (db) {
-        db.collection('users').doc(user.uid).set({
-          email: user.email,
-          name: user.displayName || user.email.split('@')[0],
-          lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true })
-        .then(() => db.collection('users').doc(user.uid).get())
-        .then(doc => {
-          const docData = doc.exists ? doc.data() : {};
-          window._userDoc = docData;
-          const courses = docData.courses || [];
-          updateCourseAccess(courses);
-          const books = docData.books || [];
-          updateBookAccess(books);
-          // ── Load course progress from Firestore (not localStorage) ──
-          const savedLessons = (docData.completedLessons && docData.completedLessons['web-dev']) || null;
-          if (savedLessons && savedLessons.length > 0) {
-            completed = savedLessons;
-          } else {
-            // Fallback: reconstruct from count if completedLessons not stored yet
-            const count = (docData.progress && docData.progress['web-dev']) || 0;
-            if (count > 0) {
-              completed = lessons.filter(l => l !== 'home').slice(0, count);
-            } else {
-              completed = [];
-            }
-          }
-          // Ensure completedCourses flag is reflected
-          if (docData.completedCourses && docData.completedCourses.includes('web-dev') && !completed.includes('l16')) {
-            completed.push('l16');
-          }
-          // ── Load book chapter position ──
-          window._bookLastChapter = (docData.bookProgress && docData.bookProgress['7st']) || 'ch-intro';
-          window._book2LastChapter = (docData.bookProgress && docData.bookProgress['semilla']) || 's2-nota';
-          // ── Load read chapters ──
-          loadBookReadChapters((docData.bookProgress && docData.bookProgress['7st-read']) || []);
-          loadBook2ReadChapters((docData.bookProgress && docData.bookProgress['semilla-read']) || []);
-          updateBookAccess2(docData.books || []);
-          // Sync to localStorage as cache
-          localStorage.setItem('curso_done_' + user.uid, JSON.stringify(completed));
-          updateDashStats();
-        })
-        .catch(() => { updateCourseAccess([]); updateBookAccess([]); updateBookAccess2([]); });
-      }
-      showDashboard();
-    } else {
-      showLanding();
-    }
-  });
-} else {
-  // Modo demo: muestra landing con acceso completo
-  showLanding();
+// ── Sesión ───────────────────────────────────────────────────────────────────
+let sessionUserId = null;
+
+async function onSignedIn(user) {
+  if (sessionUserId === user.id && STATE.profile) return;
+  sessionUserId = user.id;
+  STATE.user = user;
+  try {
+    await loadUserData();
+  } catch (e) {
+    console.warn(e);
+    toast('No se pudieron cargar tus datos. Recarga la página.');
+  }
+  await syncCertificates();
+  applyUserData();
+  showDashboard();
 }
 
-// ── Course access control ─────────────────────────────────────────────────────
+function applyUserData() {
+  fillUserUI();
+  const adminBtn = document.getElementById('btn-admin-panel');
+  if (adminBtn) adminBtn.style.display = STATE.profile && STATE.profile.is_admin ? 'flex' : 'none';
+  completed = [...readSet('web-dev')].filter(i => lessons.includes(i));
+  updateCourseAccess();
+  updateBookAccess();
+  updateBookAccess2();
+  updateBookReadProgress();
+  updateBook2ReadProgress();
+  updateProgress();
+  updateDashStats();
+}
+
+sb.auth.onAuthStateChange((event, session) => {
+  if (event === 'PASSWORD_RECOVERY') { setTimeout(showRecovery, 50); }
+  if (session && session.user) {
+    setTimeout(() => onSignedIn(session.user), 0);
+  } else if (event === 'SIGNED_OUT' || event === 'INITIAL_SESSION') {
+    sessionUserId = null;
+    resetState();
+    clearContent();
+    completed = [];
+    showLanding();
+  }
+});
+
+loadCuposPublic().then(v => updateLpCupos(v.disponibles, v.total)).catch(() => {});
+
+// ── Acceso a programas y libros ───────────────────────────────────────────────
 const ICON = {
   play: '<svg><use href="#i-play"/></svg>',
   lock: '<svg><use href="#i-lock"/></svg>',
@@ -266,16 +214,15 @@ const ICON = {
 };
 let hasWebAccess = false;
 
-function updateCourseAccess(courses) {
-  // courses = IDs de programas habilitados por el admin, ej. ['web-dev']
+function updateCourseAccess() {
   const btn = document.getElementById('btn-web-dev');
   if (!btn) return;
-  hasWebAccess = courses.includes('web-dev');
+  hasWebAccess = hasAccess('web-dev');
   const status = document.getElementById('web-dev-status');
   if (hasWebAccess) {
     btn.className = 'ui-btn ui-btn--block btn-course is-active';
     btn.disabled = false;
-    btn.onclick = function() { enterCourse(); };
+    btn.onclick = function() { continueCourse(); };
     if (status) { status.textContent = 'Activo'; status.className = 'chip chip--light course-status is-active'; }
   } else {
     btn.innerHTML = ICON.lock + 'Acceso pendiente de activación';
@@ -285,18 +232,17 @@ function updateCourseAccess(courses) {
     if (status) { status.textContent = 'Sin activar'; status.className = 'chip chip--light course-status'; }
   }
   renderActivation();
-  updateDashStats();
 }
 
-// Panel "Activa tu acceso" para cuentas sin programa habilitado
+// Panel "Activa tu acceso" para cuentas sin ningún producto habilitado
 function renderActivation() {
   const box = document.getElementById('dash-activate');
   if (!box) return;
-  const books = (window._userDoc && window._userDoc.books) || [];
-  box.style.display = (!hasWebAccess && !books.length) ? 'grid' : 'none';
-  const user = auth && auth.currentUser;
-  const who = user ? (user.displayName || user.email) : '';
-  const msg = 'Hola, quiero activar mi acceso a DGP Academy (Diseño y Desarrollo Web con IA). Mi cuenta: ' + (user ? user.email : '') + (who && user && who !== user.email ? ' — ' + who : '');
+  const anyAccess = ['web-dev', '7st', 'semilla'].some(hasAccess);
+  box.style.display = (STATE.user && !anyAccess) ? 'grid' : 'none';
+  const email = STATE.user ? STATE.user.email : '';
+  const who = displayName();
+  const msg = 'Hola, quiero activar mi acceso a DGP Academy (Diseño y Desarrollo Web con IA). Mi cuenta: ' + email + (who && who !== email ? ' — ' + who : '');
   const mail = document.getElementById('dash-activate-mail');
   if (mail) mail.href = 'mailto:' + CONTACT.email + '?subject=' + encodeURIComponent('Activar acceso — DGP Academy') + '&body=' + encodeURIComponent(msg);
   const wa = document.getElementById('dash-activate-wa');
@@ -306,17 +252,16 @@ function renderActivation() {
   }
 }
 
-function updateBookAccess(books) {
-  const btn = document.getElementById('btn-7st');
-  const progressWrap = document.getElementById('book-7st-progress');
+function setBookButton(btnId, progressId, product, open, extraCls) {
+  const btn = document.getElementById(btnId);
+  const progressWrap = document.getElementById(progressId);
   if (!btn) return;
-  if (books.includes('7st')) {
-    btn.innerHTML = ICON.book + 'Leer libro';
-    btn.className = 'ui-btn ui-btn--block btn-book is-active';
+  if (hasAccess(product)) {
+    btn.innerHTML = ICON.book + (readSet(product).size ? 'Continuar leyendo' : 'Leer libro');
+    btn.className = 'ui-btn ui-btn--block btn-book is-active' + (extraCls ? ' ' + extraCls : '');
     btn.disabled = false;
-    btn.onclick = function() { showBook('7st'); };
+    btn.onclick = open;
     if (progressWrap) progressWrap.style.display = 'block';
-    updateBookReadProgress();
   } else {
     btn.innerHTML = ICON.lock + 'Sin acceso';
     btn.className = 'ui-btn ui-btn--block btn-book is-locked';
@@ -324,101 +269,110 @@ function updateBookAccess(books) {
     btn.onclick = null;
     if (progressWrap) progressWrap.style.display = 'none';
   }
-  renderActivation();
 }
+function updateBookAccess()  { setBookButton('btn-7st', 'book-7st-progress', '7st', showBook); }
+function updateBookAccess2() { setBookButton('btn-semilla', 'book2-progress', 'semilla', showBook2, 'is-green'); }
 
-// ── Book Quiz ────────────────────────────────────────────────────────────────
-const QUIZ_ANSWERS = [1, 2, 1, 1, 1, 1, 1, 2, 2, 1]; // correct index per question (0-based)
+// ── Evaluación final 7ST (se califica en el servidor) ───────────────────────────
 const quizSelected = new Array(10).fill(-1);
 
 function selectOpt(btn) {
   const q = parseInt(btn.getAttribute('data-q'));
   const i = parseInt(btn.getAttribute('data-i'));
-  // Clear previous selection for this question
   document.querySelectorAll('[data-q="' + q + '"].quiz-opt').forEach(el => el.classList.remove('selected'));
   btn.classList.add('selected');
   quizSelected[q] = i;
-  // Enable submit if all answered
-  const allAnswered = quizSelected.every(v => v !== -1);
   const sub = document.getElementById('btn-submit-quiz');
-  if (sub) sub.disabled = !allAnswered;
+  if (sub) sub.disabled = !quizSelected.every(v => v !== -1);
 }
 
-function submitQuiz() {
-  // Disable all options
-  document.querySelectorAll('.quiz-opt').forEach(btn => {
+async function submitQuiz() {
+  const sub = document.getElementById('btn-submit-quiz');
+  if (sub) { sub.disabled = true; sub.textContent = 'Calificando…'; }
+  const { data, error } = await sb.rpc('submit_quiz', { p: '7st', answers: quizSelected });
+  if (error) {
+    toast('No se pudo enviar la evaluación: ' + error.message);
+    if (sub) { sub.disabled = false; sub.textContent = 'Ver resultados →'; }
+    return;
+  }
+  const key = data.key || [];
+  document.querySelectorAll('#book-screen .quiz-opt').forEach(btn => {
     btn.disabled = true;
     const q = parseInt(btn.getAttribute('data-q'));
     const i = parseInt(btn.getAttribute('data-i'));
-    if (i === QUIZ_ANSWERS[q]) btn.classList.add('reveal-correct');
-    else if (btn.classList.contains('selected') && i !== QUIZ_ANSWERS[q]) btn.classList.add('wrong');
+    if (i === key[q]) btn.classList.add('reveal-correct');
+    else if (btn.classList.contains('selected')) btn.classList.add('wrong');
     btn.classList.remove('selected');
   });
-  // Score
-  let score = 0;
-  for (let q = 0; q < 10; q++) {
-    if (quizSelected[q] === QUIZ_ANSWERS[q]) score++;
-  }
-  const pass = score >= 7;
-  const pct = Math.round((score / 10) * 100);
-  const sub = document.getElementById('btn-submit-quiz');
+  STATE.reading['7st'] = Object.assign({}, STATE.reading['7st'], {
+    quiz_score: Math.max(data.score, (STATE.reading['7st'] && STATE.reading['7st'].quiz_score) || 0),
+    quiz_passed: data.passed || !!(STATE.reading['7st'] && STATE.reading['7st'].quiz_passed)
+  });
   if (sub) sub.style.display = 'none';
+  showQuizResult(data.score, data.total, data.passed);
+  if (data.passed) {
+    markChapterRead('ch-conclusion');
+    try { await issueCertificate('7st'); } catch (e) { /* se emite al abrir el certificado */ }
+    renderCertificates();
+  }
+}
+
+function showQuizResult(score, total, pass) {
   const resultEl = document.getElementById('quiz-result');
+  if (!resultEl) return;
   resultEl.style.display = 'block';
   if (pass) {
     resultEl.innerHTML = '<div class="quiz-result-banner pass">' +
-      '<div class="quiz-score-big">' + score + '/10</div>' +
+      '<div class="quiz-score-big">' + score + '/' + total + '</div>' +
       '<div class="quiz-score-lbl">Has aprobado la evaluación</div>' +
-      '<div class="quiz-cert-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg> Certificado de Lectura 7ST Vol. 1</div>' +
-      '<p style="color:rgba(255,255,255,0.8);font-size:14px;margin-top:8px;">¡Felicitaciones! Completaste el 7ST Vol. 1 con ' + pct + '% de precisión.<br>Eres parte de la comunidad DGP Global Group.</p>' +
+      '<p style="color:rgba(255,255,255,0.8);font-size:15px;margin-top:12px;">¡Felicitaciones! Completaste 7ST Vol. 1. Tu certificado de lectura ya está disponible.</p>' +
       '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px;">' +
       '<button class="ui-btn ui-btn--light" onclick="openCertificate(\'7st\')">' + ICON.award + 'Ver certificado de lectura</button>' +
       '<button class="ui-btn ui-btn--ghost-light" onclick="closeBook()">Volver a mis cursos</button></div>' +
       '</div>';
-    // Save completion to Firestore
-    if (db && auth && auth.currentUser) {
-      db.collection('users').doc(auth.currentUser.uid).update({
-        'bookProgress.7st-quiz-score': score,
-        'bookProgress.7st-completed': true
-      }).catch(() => {});
-    }
-    window._userDoc = window._userDoc || {};
-    window._userDoc.bookProgress = Object.assign({}, window._userDoc.bookProgress, { '7st-quiz-score': score, '7st-completed': true });
-    // Mark quiz chapter read
-    markChapterRead('ch-conclusion');
   } else {
     resultEl.innerHTML = '<div class="quiz-result-banner fail">' +
-      '<div class="quiz-score-big">' + score + '/10</div>' +
+      '<div class="quiz-score-big">' + score + '/' + total + '</div>' +
       '<div class="quiz-score-lbl">Necesitas 7 o más para aprobar</div>' +
-      '<p style="color:rgba(255,255,255,0.7);font-size:14px;margin-top:10px;">¡Casi! Revisa los capítulos donde fallaste y vuelve a intentarlo.</p>' +
-      '<button class="btn btn-primary" style="margin-top:14px;background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.3);color:#fff;" onclick="retryQuiz()">Reintentar evaluación</button>' +
+      '<p style="color:rgba(255,255,255,0.7);font-size:15px;margin-top:10px;">¡Casi! Revisa los capítulos donde fallaste y vuelve a intentarlo.</p>' +
+      '<button class="ui-btn ui-btn--ghost-light" style="margin-top:16px;" onclick="retryQuiz()">Reintentar evaluación</button>' +
       '</div>';
   }
   resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
+// Si ya aprobó antes, lo muestra al entrar a la evaluación
+function restoreQuizState() {
+  const r = STATE.reading['7st'];
+  if (r && r.quiz_passed && document.getElementById('quiz-result') && !document.querySelector('#quiz-result .quiz-result-banner')) {
+    const sub = document.getElementById('btn-submit-quiz');
+    if (sub) sub.style.display = 'none';
+    showQuizResult(r.quiz_score || 7, 10, true);
+  }
+}
+
 function retryQuiz() {
   for (let i = 0; i < 10; i++) quizSelected[i] = -1;
-  document.querySelectorAll('.quiz-opt').forEach(btn => {
+  document.querySelectorAll('#book-screen .quiz-opt').forEach(btn => {
     btn.disabled = false;
     btn.classList.remove('selected','correct','wrong','reveal-correct');
   });
   const sub = document.getElementById('btn-submit-quiz');
-  if (sub) { sub.style.display = ''; sub.disabled = true; }
+  if (sub) { sub.style.display = ''; sub.disabled = true; sub.textContent = 'Ver resultados →'; }
   const resultEl = document.getElementById('quiz-result');
-  if (resultEl) resultEl.style.display = 'none';
+  if (resultEl) { resultEl.style.display = 'none'; resultEl.innerHTML = ''; }
   document.getElementById('book-content').scrollTop = 0;
 }
 
-// ── Book 2 (De la Semilla al Árbol) ──────────────────────────────────────────
+// ── Libro 2 (De la Semilla al Árbol) ─────────────────────────────────────────
 const BOOK2_CHAPTERS = ['s2-nota','s2-1','s2-2','s2-3','s2-4','s2-5','s2-6','s2-7','s2-8','s2-9','s2-10','s2-11','s2-recursos','s2-conclusion'];
-window._book2ReadChapters = window._book2ReadChapters || new Set();
 let currentChapter2 = 's2-nota';
 
 function showBook2() {
-  showScreen('book-screen-2');
-  const startChapter = window._book2LastChapter || 's2-nota';
-  goToChapter2(startChapter);
+  openProtected('semilla', '#book-screen-2', () => {
+    showScreen('book-screen-2');
+    goToChapter2((STATE.reading['semilla'] && STATE.reading['semilla'].last_item) || 's2-nota');
+  });
 }
 
 function closeBook2() {
@@ -456,10 +410,7 @@ function goToChapter2(id) {
   }
   currentChapter2 = id;
   markChapter2Read(id);
-  window._book2LastChapter = id;
-  if (db && auth && auth.currentUser) {
-    db.collection('users').doc(auth.currentUser.uid).update({ 'bookProgress.semilla': id }).catch(() => {});
-  }
+  savePosition('semilla', id);
   const nav = document.getElementById('book-nav-2');
   if (nav) nav.classList.remove('open');
   const bd = document.getElementById('book-backdrop-2');
@@ -467,61 +418,25 @@ function goToChapter2(id) {
 }
 
 function markChapter2Read(id) {
-  if (!BOOK2_CHAPTERS.includes(id)) return;
-  if (window._book2ReadChapters.has(id)) return;
-  window._book2ReadChapters.add(id);
-  const tocEl = document.querySelector('#book-screen-2 [data-ch="' + id + '"]');
-  if (tocEl) tocEl.classList.add('read');
+  if (!BOOK2_CHAPTERS.includes(id) || readSet('semilla').has(id)) return;
+  saveProgress('semilla', id);
   updateBook2ReadProgress();
-  if (db && auth && auth.currentUser) {
-    db.collection('users').doc(auth.currentUser.uid).update({
-      'bookProgress.semilla-read': Array.from(window._book2ReadChapters)
-    }).catch(() => {});
-  }
 }
 
 function updateBook2ReadProgress() {
   const total = BOOK2_CHAPTERS.length;
-  const done = BOOK2_CHAPTERS.filter(c => window._book2ReadChapters.has(c)).length;
-  const pct = Math.round((done / total) * 100);
+  const done = BOOK2_CHAPTERS.filter(c => readSet('semilla').has(c)).length;
   const fill = document.getElementById('book2-read-bar-fill');
   const lbl = document.getElementById('book2-read-label');
-  if (fill) fill.style.width = pct + '%';
+  if (fill) fill.style.width = Math.round(done / total * 100) + '%';
   if (lbl) lbl.textContent = done + ' / ' + total + ' capítulos leídos';
-}
-
-function loadBook2ReadChapters(arr) {
-  window._book2ReadChapters = new Set(arr || []);
   BOOK2_CHAPTERS.forEach(id => {
-    if (window._book2ReadChapters.has(id)) {
-      const tocEl = document.querySelector('#book-screen-2 [data-ch="' + id + '"]');
-      if (tocEl) tocEl.classList.add('read');
-    }
+    const tocEl = document.querySelector('#book-screen-2 [data-ch="' + id + '"]');
+    if (tocEl) tocEl.classList.toggle('read', readSet('semilla').has(id));
   });
-  updateBook2ReadProgress();
 }
 
-function updateBookAccess2(books) {
-  const btn = document.getElementById('btn-semilla');
-  const progressWrap = document.getElementById('book2-progress');
-  if (!btn) return;
-  if (books.includes('semilla')) {
-    btn.innerHTML = ICON.book + 'Leer libro';
-    btn.className = 'ui-btn ui-btn--block btn-book is-active is-green';
-    btn.disabled = false;
-    btn.onclick = function() { showBook2(); };
-    if (progressWrap) progressWrap.style.display = 'block';
-    updateBook2ReadProgress();
-  } else {
-    btn.innerHTML = ICON.lock + 'Sin acceso';
-    btn.className = 'ui-btn ui-btn--block btn-book is-locked';
-    btn.disabled = true;
-    btn.onclick = null;
-    if (progressWrap) progressWrap.style.display = 'none';
-  }
-}
-
-// ── Admin panel ───────────────────────────────────────────────────────────────
+// ── Panel admin ──────────────────────────────────────────────────────────────
 let allAdminUsers = [];
 
 // Escapa texto que viene de los usuarios antes de insertarlo como HTML
@@ -534,30 +449,29 @@ function adminMessage(text, isError) {
     '<div class="admin-empty' + (isError ? ' is-error' : '') + '">' + escapeHtml(text) + '</div>';
 }
 
-function loadAdminData() {
+async function loadAdminData() {
   loadCupos();
-  if (!db) { adminMessage('Firestore no disponible en modo demo.', true); return; }
   adminMessage('Cargando usuarios…');
-  db.collection('users').orderBy('lastLogin', 'desc').get()
-    .then(snapshot => {
-      allAdminUsers = [];
-      snapshot.forEach(doc => allAdminUsers.push({ uid: doc.id, ...doc.data() }));
-      renderAdminStats();
-      refreshAdminList();
-    })
-    .catch(err => adminMessage('Error cargando usuarios: ' + err.message, true));
+  const { data, error } = await sb.rpc('admin_students');
+  if (error) { adminMessage('Error cargando usuarios: ' + error.message, true); return; }
+  allAdminUsers = data || [];
+  renderAdminStats();
+  refreshAdminList();
 }
+
+const acc = (u, p) => (u.access && u.access[p]) || { active: false, paid: false };
 
 function renderAdminStats() {
   const now = Date.now();
   const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-  set('admin-stat-total', allAdminUsers.length);
-  set('admin-stat-active', allAdminUsers.filter(u => u.courses && u.courses.length > 0).length);
-  set('admin-stat-completed', allAdminUsers.filter(u => u.completedCourses && u.completedCourses.includes('web-dev')).length);
-  set('admin-stat-paid', allAdminUsers.filter(u => u.payments && u.payments['web-dev']).length);
-  set('admin-stat-inactive', allAdminUsers.filter(u => {
-    const t = u.lastActivity || u.lastLogin;
-    return t && (now - t.seconds * 1000) / 86400000 >= 7;
+  const students = allAdminUsers.filter(u => !u.is_admin);
+  set('admin-stat-total', students.length);
+  set('admin-stat-active', students.filter(u => Object.values(u.access || {}).some(a => a.active)).length);
+  set('admin-stat-completed', students.filter(u => (u.certificates || []).includes('web-dev') || u.web_progress >= 16).length);
+  set('admin-stat-paid', students.filter(u => acc(u, 'web-dev').paid).length);
+  set('admin-stat-inactive', students.filter(u => {
+    const t = u.last_seen_at || u.created_at;
+    return t && (now - new Date(t).getTime()) / 86400000 >= 7;
   }).length);
 }
 
@@ -572,34 +486,33 @@ function adminToggle(label, opts) {
     (opts.on ? ICON.check : '') + escapeHtml(label) + '</button>';
 }
 
+function fmtDate(t) {
+  return t ? new Date(t).toLocaleDateString('es', { day:'2-digit', month:'short', year:'numeric' }) : '—';
+}
+
 function renderAdminUsers(users) {
   const list = document.getElementById('admin-user-list');
-  if (!users.length) { list.innerHTML = '<div class="admin-empty">No se encontraron usuarios.</div>'; return; }
+  if (!users.length) { list.innerHTML = '<div class="admin-empty">' + (allAdminUsers.length ? 'No se encontraron usuarios.' : 'Todavía no hay estudiantes registrados.') + '</div>'; return; }
   list.innerHTML = users.map(u => {
-    const uid = String(u.uid).replace(/[^A-Za-z0-9_-]/g, '');
-    const courses  = u.courses || [];
-    const books    = u.books || [];
-    const initial  = (u.name || u.email || '?').trim().charAt(0).toUpperCase();
-    const date     = u.lastLogin ? new Date(u.lastLogin.seconds * 1000).toLocaleDateString('es', { day:'2-digit', month:'short', year:'numeric' }) : '—';
-    const webActive = courses.includes('web-dev');
-    const webPaid = !!(u.payments && u.payments['web-dev']);
-    const webProgress = (u.progress && u.progress['web-dev']) || 0;
-    const webCompleted = !!(u.completedCourses && u.completedCourses.includes('web-dev'));
-    const has7 = books.includes('7st'), hasSem = books.includes('semilla');
-    return '<div class="admin-user-card" id="auc-' + uid + '">' +
+    const uid = String(u.id).replace(/[^A-Za-z0-9-]/g, '');
+    const initial = (u.full_name || u.email || '?').trim().charAt(0).toUpperCase();
+    const web = acc(u, 'web-dev'), b7 = acc(u, '7st'), bs = acc(u, 'semilla');
+    const prog = u.web_progress || 0;
+    const done = (u.certificates || []).includes('web-dev') || prog >= 16;
+    return '<div class="admin-user-card">' +
       '<div class="admin-user-avatar">' + escapeHtml(initial) + '</div>' +
       '<div class="admin-user-info">' +
-        '<div class="admin-user-name">' + escapeHtml(u.name || '—') + '</div>' +
+        '<div class="admin-user-name">' + escapeHtml(u.full_name || '—') + (u.is_admin ? ' <span class="chip chip--accent">Admin</span>' : '') + '</div>' +
         '<div class="admin-user-email">' + escapeHtml(u.email || '—') + '</div>' +
-        '<div class="admin-user-phone">' + escapeHtml(u.phone || 'Sin teléfono') + ' · Último acceso: ' + escapeHtml(date) + '</div>' +
-        '<div class="admin-user-prog"><div class="admin-user-prog-label"><span>Web Dev</span><span>' + webProgress + ' / 16' + (webCompleted ? ' · completado' : '') + '</span></div>' +
-        '<div class="admin-user-prog-bar"><span class="' + (webCompleted ? 'is-done' : '') + '" style="width:' + Math.min(100, Math.round(webProgress / 16 * 100)) + '%"></span></div></div>' +
+        '<div class="admin-user-phone">' + escapeHtml(u.phone || 'Sin teléfono') + ' · Registro: ' + escapeHtml(fmtDate(u.created_at)) + ' · Última visita: ' + escapeHtml(fmtDate(u.last_seen_at)) + '</div>' +
+        '<div class="admin-user-prog"><div class="admin-user-prog-label"><span>Web Dev</span><span>' + prog + ' / 16' + (done ? ' · completado' : '') + '</span></div>' +
+        '<div class="admin-user-prog-bar"><span class="' + (done ? 'is-done' : '') + '" style="width:' + Math.min(100, Math.round(prog / 16 * 100)) + '%"></span></div></div>' +
       '</div>' +
       '<div class="admin-course-toggles">' +
-        adminToggle('Web Dev', { cls: webActive ? 'active' : '', on: webActive, action: "toggleCourse('" + uid + "','web-dev'," + webActive + ")", title: webActive ? 'Quitar acceso a Desarrollo Web' : 'Dar acceso a Desarrollo Web' }) +
-        adminToggle(webPaid ? 'Pagó Web Dev' : 'Pago pendiente', { cls: webPaid ? 'paid' : 'unpaid', on: webPaid, action: "togglePaid('" + uid + "','web-dev'," + webPaid + ")", title: webPaid ? 'Marcar como pendiente' : 'Marcar como pagado' }) +
-        adminToggle('7ST', { cls: has7 ? 'active' : '', on: has7, action: "toggleBook('" + uid + "','7st'," + has7 + ")", title: has7 ? 'Quitar libro 7ST' : 'Dar acceso al libro 7ST' }) +
-        adminToggle('Semilla', { cls: hasSem ? 'active is-green' : '', on: hasSem, action: "toggleBook('" + uid + "','semilla'," + hasSem + ")", title: hasSem ? 'Quitar De la semilla al árbol' : 'Dar acceso a De la semilla al árbol' }) +
+        adminToggle('Web Dev', { cls: web.active ? 'active' : '', on: web.active, action: "setAccess('" + uid + "','web-dev','active'," + !web.active + ")", title: web.active ? 'Quitar acceso a Desarrollo Web' : 'Dar acceso a Desarrollo Web' }) +
+        adminToggle(web.paid ? 'Pagó Web Dev' : 'Pago pendiente', { cls: web.paid ? 'paid' : 'unpaid', on: web.paid, action: "setAccess('" + uid + "','web-dev','paid'," + !web.paid + ")", title: web.paid ? 'Marcar como pendiente' : 'Marcar como pagado' }) +
+        adminToggle('7ST', { cls: b7.active ? 'active' : '', on: b7.active, action: "setAccess('" + uid + "','7st','active'," + !b7.active + ")", title: b7.active ? 'Quitar libro 7ST' : 'Dar acceso al libro 7ST' }) +
+        adminToggle('Semilla', { cls: bs.active ? 'active is-green' : '', on: bs.active, action: "setAccess('" + uid + "','semilla','active'," + !bs.active + ")", title: bs.active ? 'Quitar De la semilla al árbol' : 'Dar acceso a De la semilla al árbol' }) +
         adminToggle('IA', { disabled: true, title: 'Próximamente' }) +
         adminToggle('Marketing', { disabled: true, title: 'Próximamente' }) +
       '</div>' +
@@ -607,48 +520,31 @@ function renderAdminUsers(users) {
   }).join('');
 }
 
-function updateAdminUser(uid, update, mutate) {
-  if (!db) return;
-  const u = allAdminUsers.find(x => x.uid === uid);
-  const backup = u ? JSON.parse(JSON.stringify(u)) : null;
-  if (u) mutate(u);
+// Activa / quita un acceso o marca un pago
+async function setAccess(uid, product, field, value) {
+  const u = allAdminUsers.find(x => x.id === uid);
+  if (!u) return;
+  const prev = Object.assign({}, acc(u, product));
+  const next = Object.assign({}, prev, { [field]: value });
+  u.access = Object.assign({}, u.access, { [product]: next });
   renderAdminStats(); refreshAdminList();
-  db.collection('users').doc(uid).update(update)
-    .then(() => toast('Cambios guardados'))
-    .catch(err => {
-      if (u && backup) Object.assign(u, backup);
-      renderAdminStats(); refreshAdminList();
-      toast('No se pudo guardar: ' + err.message);
-    });
-}
-
-function toggleCourse(uid, courseId, hasAccess) {
-  const FV = firebase.firestore.FieldValue;
-  updateAdminUser(uid, { courses: hasAccess ? FV.arrayRemove(courseId) : FV.arrayUnion(courseId) }, u => {
-    u.courses = (u.courses || []).filter(c => c !== courseId);
-    if (!hasAccess) u.courses.push(courseId);
-  });
-}
-
-function toggleBook(uid, bookId, hasAccess) {
-  const FV = firebase.firestore.FieldValue;
-  updateAdminUser(uid, { books: hasAccess ? FV.arrayRemove(bookId) : FV.arrayUnion(bookId) }, u => {
-    u.books = (u.books || []).filter(b => b !== bookId);
-    if (!hasAccess) u.books.push(bookId);
-  });
-}
-
-function togglePaid(uid, courseId, isPaid) {
-  updateAdminUser(uid, { ['payments.' + courseId]: !isPaid }, u => {
-    u.payments = u.payments || {};
-    u.payments[courseId] = !isPaid;
-  });
+  const { error } = await sb.from('access').upsert(
+    { user_id: uid, product_id: product, active: next.active, paid: next.paid, updated_at: new Date().toISOString() },
+    { onConflict: 'user_id,product_id' }
+  );
+  if (error) {
+    u.access[product] = prev;
+    renderAdminStats(); refreshAdminList();
+    toast('No se pudo guardar: ' + error.message);
+  } else {
+    toast('Cambios guardados');
+  }
 }
 
 function filterAdminUsers(q) {
   const lq = (q || '').toLowerCase().trim();
   const filtered = lq
-    ? allAdminUsers.filter(u => (u.email||'').toLowerCase().includes(lq) || (u.name||'').toLowerCase().includes(lq))
+    ? allAdminUsers.filter(u => (u.email||'').toLowerCase().includes(lq) || (u.full_name||'').toLowerCase().includes(lq) || (u.phone||'').includes(lq))
     : allAdminUsers;
   renderAdminUsers(filtered);
 }
@@ -660,57 +556,58 @@ function exportCSV() {
     if (/^[=+\-@]/.test(t)) t = "'" + t; // evita fórmulas al abrir en Excel
     return '"' + t.replace(/"/g, '""') + '"';
   };
-  const headers = ['Nombre', 'Email', 'Teléfono', 'Cursos', 'Libros', 'Pagó Web Dev', 'Progreso Web Dev', 'Fecha registro'];
+  const yes = b => b ? 'Sí' : 'No';
+  const headers = ['Nombre', 'Email', 'Teléfono', 'Web Dev activo', 'Pagó Web Dev', 'Progreso Web Dev', '7ST', 'Semilla', 'Certificados', 'Registro', 'Última visita'];
   const rows = allAdminUsers.map(u => [
-    u.name, u.email, u.phone, (u.courses || []).join(', '), (u.books || []).join(', '),
-    (u.payments && u.payments['web-dev']) ? 'Sí' : 'No',
-    ((u.progress && u.progress['web-dev']) || 0) + '/16',
-    u.createdAt ? new Date(u.createdAt.seconds * 1000).toLocaleDateString('es') : ''
+    u.full_name, u.email, u.phone, yes(acc(u, 'web-dev').active), yes(acc(u, 'web-dev').paid),
+    (u.web_progress || 0) + '/16', yes(acc(u, '7st').active), yes(acc(u, 'semilla').active),
+    (u.certificates || []).join(' '), fmtDate(u.created_at), fmtDate(u.last_seen_at)
   ].map(cell));
   const csv = [headers.map(cell).join(','), ...rows.map(r => r.join(','))].join('\n');
   const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'dgp-academy-usuarios.csv';
+  const a = document.createElement('a'); a.href = url; a.download = 'dgp-academy-estudiantes.csv';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
 
-function loadCupos() {
-  if (!db) return;
-  db.collection('config').doc('cupos').get().then(doc => {
-    const n = doc.exists ? (doc.data().disponibles ?? 20) : 20;
+let cuposTotal = 20;
+async function loadCupos() {
+  try {
+    const v = await loadCuposPublic();
+    cuposTotal = v.total || 20;
     const input = document.getElementById('admin-cupos-input');
-    if (input) input.value = n;
-    updateLpCupos(n);
-  }).catch(() => {});
+    if (input) input.value = v.disponibles;
+    updateLpCupos(v.disponibles, cuposTotal);
+  } catch (e) { /* sin cupos */ }
 }
 
-function updateLpCupos(n) {
+function updateLpCupos(n, total) {
+  total = total || cuposTotal;
   const lpNum = document.getElementById('lp-cupos-num');
   if (lpNum) lpNum.textContent = n;
   const bar = document.getElementById('lp-cupos-bar');
-  if (bar) bar.style.width = Math.max(0, Math.min(100, n / 20 * 100)) + '%';
+  if (bar) bar.style.width = Math.max(0, Math.min(100, n / total * 100)) + '%';
   const wrap = document.getElementById('lp-cupos-wrap');
   if (wrap) wrap.classList.toggle('is-low', n <= 5);
 }
 
-function saveCupos() {
-  if (!db) return;
-  const val = parseInt(document.getElementById('admin-cupos-input').value) || 0;
-  db.collection('config').doc('cupos').set({ disponibles: val }).then(() => {
-    const msg = document.getElementById('admin-cupos-msg');
-    if (msg) { msg.textContent = 'Guardado'; setTimeout(() => msg.textContent = '', 2000); }
-    updateLpCupos(val);
-  }).catch(err => toast('Error: ' + err.message));
+async function saveCupos() {
+  const val = Math.max(0, parseInt(document.getElementById('admin-cupos-input').value) || 0);
+  const { error } = await sb.from('settings').update({ value: { disponibles: val, total: Math.max(cuposTotal, val) } }).eq('key', 'cupos');
+  if (error) { toast('Error: ' + error.message); return; }
+  const msg = document.getElementById('admin-cupos-msg');
+  if (msg) { msg.textContent = 'Guardado'; setTimeout(() => msg.textContent = '', 2000); }
+  updateLpCupos(val);
 }
 
 // ── UI de usuario ─────────────────────────────────────────────────────────────
-function fillUserUI(user) {
-  const name    = user.displayName || user.email.split('@')[0];
-  const initial = name.charAt(0).toUpperCase();
-  document.getElementById('dash-avatar').textContent       = initial;
+function fillUserUI() {
+  if (!STATE.user) return;
+  const name    = displayName();
+  document.getElementById('dash-avatar').textContent       = name.charAt(0).toUpperCase();
   document.getElementById('dash-username').textContent     = name;
-  document.getElementById('dash-useremail').textContent    = user.email;
+  document.getElementById('dash-useremail').textContent    = STATE.user.email;
   document.getElementById('dash-welcome-name').textContent = name.split(' ')[0];
   const h = new Date().getHours();
   const g = document.getElementById('dash-greeting');
@@ -763,14 +660,14 @@ function passwordValid(val) {
   return val.length >= 8 && /[A-Z]/.test(val) && /[a-z]/.test(val) && /[0-9]/.test(val) && /[^A-Za-z0-9]/.test(val);
 }
 
-function handleAuth(e) {
+async function handleAuth(e) {
   e.preventDefault();
   const email    = document.getElementById('input-email').value.trim();
   const password = document.getElementById('input-password').value;
   const name     = document.getElementById('input-name').value.trim();
   const apellido = document.getElementById('input-apellido')?.value.trim() || '';
   const phone    = document.getElementById('input-phone')?.value.trim() || '';
-  const fullName = authMode === 'register' ? `${name} ${apellido}`.trim() : name;
+  const fullName = `${name} ${apellido}`.trim();
 
   if (!email) { showAuthError('Escribe tu correo electrónico.'); return; }
   if (!password) { showAuthError('Escribe tu contraseña.'); return; }
@@ -783,63 +680,46 @@ function handleAuth(e) {
   setAuthLoading(true);
   showAuthError('');
 
-  if (!firebaseReady) {
-    // Modo demo sin Firebase configurado
-    setTimeout(() => {
-      setAuthLoading(false);
-      fillUserUI({ displayName: fullName || 'Usuario Demo', email });
-      showDashboard();
-    }, 900);
+  if (authMode === 'login') {
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    setAuthLoading(false);
+    if (error) showAuthError(mapAuthError(error));
+    // La sesión la recoge onAuthStateChange
     return;
   }
 
-  if (authMode === 'login') {
-    auth.signInWithEmailAndPassword(email, password)
-      .then(cred => {
-        if (db) db.collection('users').doc(cred.user.uid).update({ lastActivity: firebase.firestore.FieldValue.serverTimestamp() }).catch(() => {});
-        fillUserUI(cred.user); showDashboard();
-      })
-      .catch(err => { setAuthLoading(false); showAuthError(mapAuthError(err.code)); });
-  } else {
-    auth.createUserWithEmailAndPassword(email, password)
-      .then(cred => {
-        const user = cred.user;
-        return user.updateProfile({ displayName: fullName }).then(() => {
-          if (db) {
-            db.collection('users').doc(user.uid).set({
-              email: user.email,
-              name: fullName,
-              phone: phone,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }, { merge: true });
-          }
-          // Notificación al admin via Formspree
-          fetch('https://formspree.io/f/xpqnajzo', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({
-              _subject: 'Nuevo registro — DGP Academy',
-              Nombre: fullName,
-              Email: user.email,
-              Telefono: phone || 'No proporcionado',
-              Fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }),
-              UID: user.uid
-            })
-          }).catch(() => {});
-          // Email de bienvenida al nuevo estudiante via EmailJS
-          // Requiere: crear cuenta en emailjs.com, configurar template y reemplazar IDs abajo
-          if (window.emailjs && typeof emailjs.send === 'function') {
-            emailjs.send('service_o1k4wpe', 'template_3sbztj9', {
-              to_name:  fullName,
-              to_email: user.email,
-              reply_to: 'hola@dgpglobalgroup.com'
-            }).catch(() => {});
-          }
-          fillUserUI({ ...user, displayName: fullName });
-          showDashboard();
-        });
-      })
-      .catch(err => { setAuthLoading(false); showAuthError(mapAuthError(err.code)); });
+  const { data, error } = await sb.auth.signUp({
+    email, password,
+    options: { data: { full_name: fullName, phone }, emailRedirectTo: SITE_URL }
+  });
+  setAuthLoading(false);
+  if (error) { showAuthError(mapAuthError(error)); return; }
+  // Si el correo ya existía, Supabase devuelve un usuario sin identidades
+  if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+    showAuthError('Ya existe una cuenta con ese correo. Inicia sesión o recupera tu contraseña.');
+    return;
+  }
+  notifyNewSignup(fullName, email, phone);
+  if (!data.session) {
+    switchTab('login');
+    document.getElementById('input-email').value = email;
+    showAuthError('✓ Te enviamos un correo a ' + email + '. Ábrelo y confirma tu cuenta para entrar.');
+  }
+}
+
+// Aviso al equipo y correo de bienvenida
+function notifyNewSignup(fullName, email, phone) {
+  fetch('https://formspree.io/f/xpqnajzo', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      _subject: 'Nuevo registro — DGP Academy',
+      Nombre: fullName, Email: email, Telefono: phone || 'No proporcionado',
+      Fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })
+    })
+  }).catch(() => {});
+  if (window.emailjs && typeof emailjs.send === 'function') {
+    emailjs.send('service_o1k4wpe', 'template_3sbztj9', { to_name: fullName, to_email: email, reply_to: CONTACT.email }).catch(() => {});
   }
 }
 
@@ -868,46 +748,70 @@ function togglePw() {
   if (btn) { btn.textContent = show ? 'Ocultar' : 'Mostrar'; btn.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña'); }
 }
 
-function mapAuthError(code) {
+function mapAuthError(err) {
+  const code = (err && (err.code || err.error_code)) || '';
+  const msg = (err && err.message) || '';
   const map = {
-    'auth/user-not-found':         'No existe una cuenta con ese correo.',
-    'auth/wrong-password':         'Contraseña incorrecta.',
-    'auth/invalid-credential':     'Correo o contraseña incorrectos. Si no la recuerdas, usa «¿Olvidaste tu contraseña?».',
-    'auth/invalid-login-credentials': 'Correo o contraseña incorrectos. Si no la recuerdas, usa «¿Olvidaste tu contraseña?».',
-    'auth/invalid-email':          'El correo no es válido.',
-    'auth/missing-email':          'Escribe tu correo electrónico.',
-    'auth/missing-password':       'Escribe tu contraseña.',
-    'auth/email-already-in-use':   'Ya existe una cuenta con ese correo. Inicia sesión o recupera tu contraseña.',
-    'auth/weak-password':          'La contraseña es demasiado débil.',
-    'auth/too-many-requests':      'Demasiados intentos. Espera unos minutos o restablece tu contraseña.',
-    'auth/user-disabled':          'Esta cuenta está desactivada. Escríbenos a hola@dgpglobalgroup.com.',
-    'auth/network-request-failed': 'Sin conexión con el servidor. Revisa tu internet e intenta de nuevo.',
-    'auth/operation-not-allowed':  'El inicio de sesión con correo no está habilitado en Firebase.',
-    'auth/internal-error':         'Error temporal del servidor. Intenta de nuevo en un momento.'
+    invalid_credentials:        'Correo o contraseña incorrectos. Si no la recuerdas, usa «¿Olvidaste tu contraseña?».',
+    email_not_confirmed:        'Primero confirma tu cuenta con el enlace que te enviamos por correo.',
+    user_already_exists:        'Ya existe una cuenta con ese correo. Inicia sesión o recupera tu contraseña.',
+    email_exists:               'Ya existe una cuenta con ese correo. Inicia sesión o recupera tu contraseña.',
+    weak_password:              'La contraseña es demasiado débil.',
+    over_request_rate_limit:    'Demasiados intentos. Espera unos minutos e intenta de nuevo.',
+    over_email_send_rate_limit: 'Ya enviamos varios correos. Espera unos minutos antes de pedir otro.',
+    email_address_invalid:      'El correo no es válido.',
+    validation_failed:          'Revisa el correo y la contraseña.',
+    signup_disabled:            'Los registros están cerrados por el momento.',
+    user_banned:                'Esta cuenta está desactivada. Escríbenos a ' + CONTACT.email + '.'
   };
-  return map[code] || ('No se pudo iniciar sesión (' + (code || 'error desconocido') + '). Intenta de nuevo.');
+  if (map[code]) return map[code];
+  if (/invalid login credentials/i.test(msg)) return map.invalid_credentials;
+  if (/email not confirmed/i.test(msg)) return map.email_not_confirmed;
+  if (/fetch|network/i.test(msg)) return 'Sin conexión con el servidor. Revisa tu internet e intenta de nuevo.';
+  return 'No se pudo completar (' + (code || msg || 'error desconocido') + '). Intenta de nuevo.';
 }
 
-function forgotPassword() {
+const SITE_URL = location.origin + location.pathname;
+
+async function forgotPassword() {
   const email = document.getElementById('input-email').value.trim();
   if (!email) { showAuthError('Escribe tu correo primero para recuperar la contraseña.'); return; }
-  if (!firebaseReady) { showAuthError('Firebase no configurado.'); return; }
-  auth.sendPasswordResetEmail(email)
-    .then(() => showAuthError('✓ Revisa tu correo para restablecer la contraseña.'))
-    .catch(() => showAuthError('No se pudo enviar el correo. Verifica la dirección.'));
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: SITE_URL });
+  if (error) showAuthError(mapAuthError(error));
+  else showAuthError('✓ Si existe una cuenta con ese correo, te llegará un enlace para crear una nueva contraseña.');
 }
 
-// ── Sign out ──────────────────────────────────────────────────────────────────
-function signOut() {
-  window._userDoc = null;
-  if (firebaseReady) auth.signOut().then(showLanding);
-  else showLanding();
+// Nueva contraseña desde el enlace del correo
+function showRecovery() {
+  const o = document.getElementById('recovery-overlay');
+  if (o) { o.style.display = 'flex'; document.getElementById('recovery-password').focus(); }
+}
+async function saveNewPassword() {
+  const pw = document.getElementById('recovery-password').value;
+  const msg = document.getElementById('recovery-msg');
+  if (!passwordValid(pw)) {
+    msg.textContent = 'Mínimo 8 caracteres, con mayúscula, minúscula, número y un carácter especial.';
+    msg.className = 'modal-error'; return;
+  }
+  const { error } = await sb.auth.updateUser({ password: pw });
+  if (error) { msg.textContent = mapAuthError(error); msg.className = 'modal-error'; return; }
+  document.getElementById('recovery-overlay').style.display = 'none';
+  toast('Contraseña actualizada');
+}
+
+// ── Cerrar sesión ──────────────────────────────────────────────────────────────
+async function signOut() {
+  await sb.auth.signOut();
+  // onAuthStateChange limpia el estado y muestra la landing
 }
 
 // ── Entrar al curso ────────────────────────────────────────────────────────────
-function enterCourse() {
-  showCourse();
-  updateProgress();
+function enterCourse(lessonId) {
+  openProtected('web-dev', '#course-screen', () => {
+    showCourse();
+    updateProgress();
+    goTo(lessonId || current || 'home');
+  });
 }
 
 // ── Stats del dashboard ────────────────────────────────────────────────────────
@@ -980,8 +884,7 @@ function continueCourse() {
   }
   const n = completed.filter(l => l !== 'home').length;
   if (n >= 16) { openCertificate('web-dev'); return; }
-  enterCourse();
-  goTo(n === 0 ? 'home' : nextLessonId());
+  enterCourse(n === 0 ? 'home' : nextLessonId());
 }
 
 function updateCourseBtn(done) {

@@ -3,16 +3,10 @@ const TOTAL = 16;
 let current = 'home';
 let completed = [];
 
+// Guarda en Supabase las lecciones completadas que aún no estaban registradas
 function save() {
-  const uid = auth && auth.currentUser ? auth.currentUser.uid : null;
-  if (uid) localStorage.setItem('curso_done_' + uid, JSON.stringify(completed));
-  if (db && uid) {
-    db.collection('users').doc(uid).update({
-      'progress.web-dev': completed.filter(l => l !== 'home').length,
-      'completedLessons.web-dev': completed,
-      lastActivity: firebase.firestore.FieldValue.serverTimestamp()
-    }).catch(() => {});
-  }
+  const saved = STATE.progress['web-dev'] || new Set();
+  completed.filter(id => id !== 'home' && !saved.has(id)).forEach(id => saveProgress('web-dev', id));
 }
 
 function updateProgress() {
@@ -30,7 +24,9 @@ function updateProgress() {
 function goTo(id) {
   document.querySelectorAll('.lesson').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const lessonEl = document.getElementById(id);
+  if (!lessonEl) return;
+  lessonEl.classList.add('active');
   const btn = document.querySelector('[data-id="' + id + '"]');
   if (btn) btn.classList.add('active');
   current = id;
@@ -77,18 +73,13 @@ function markDoneAndNext(curr, next) {
   goTo(next);
 }
 
-function markDoneAndFinish() {
+async function markDoneAndFinish() {
   if (!completed.includes('l16')) { completed.push('l16'); save(); }
   updateProgress();
-  if (db && auth && auth.currentUser) {
-    db.collection('users').doc(auth.currentUser.uid).update({
-      completedCourses: firebase.firestore.FieldValue.arrayUnion('web-dev')
-    }).catch(() => {});
-  }
-  window._userDoc = window._userDoc || {};
-  window._userDoc.completedCourses = Array.from(new Set([...(window._userDoc.completedCourses || []), 'web-dev']));
   updateFinishBtn();
-  showCertificate();
+  // Espera a que se guarden las lecciones y pide el certificado al servidor
+  await new Promise(r => setTimeout(r, 800));
+  openCertificate('web-dev');
 }
 
 function updateFinishBtn() {
@@ -116,62 +107,51 @@ function updateFinishBtn() {
 function showSettings() {
   const overlay = document.getElementById('settings-overlay');
   overlay.style.display = 'flex';
-  const user = auth ? auth.currentUser : null;
-  if (user && user.displayName) {
-    const parts = user.displayName.split(' ');
-    document.getElementById('settings-name').value = parts[0] || '';
-    document.getElementById('settings-apellido').value = parts.slice(1).join(' ') || '';
-  }
-  if (db && user) {
-    db.collection('users').doc(user.uid).get().then(doc => {
-      if (doc.exists && doc.data().phone) {
-        document.getElementById('settings-phone').value = doc.data().phone;
-      }
-    }).catch(() => {});
-  }
+  const parts = ((STATE.profile && STATE.profile.full_name) || '').split(' ');
+  document.getElementById('settings-name').value = parts[0] || '';
+  document.getElementById('settings-apellido').value = parts.slice(1).join(' ');
+  document.getElementById('settings-phone').value = (STATE.profile && STATE.profile.phone) || '';
 }
 
 function closeSettings() {
   document.getElementById('settings-overlay').style.display = 'none';
 }
 
-function saveSettingsName() {
+function flashMsg(id, ms) {
+  const msg = document.getElementById(id);
+  msg.style.display = 'inline-block';
+  setTimeout(() => { msg.style.display = 'none'; }, ms || 3000);
+}
+
+async function saveSettingsName() {
   const name     = document.getElementById('settings-name').value.trim();
   const apellido = document.getElementById('settings-apellido').value.trim();
-  if (!name) return;
+  if (!name || !STATE.user) return;
   const fullName = `${name} ${apellido}`.trim();
-  const user = auth ? auth.currentUser : null;
-  if (!user) return;
-  user.updateProfile({ displayName: fullName }).then(() => {
-    if (db) db.collection('users').doc(user.uid).update({ name: fullName });
-    fillUserUI(user);
-    renderCertificates();
-    const msg = document.getElementById('settings-name-msg');
-    msg.style.display = 'inline-block';
-    setTimeout(() => { msg.style.display = 'none'; }, 3000);
-  });
+  const { error } = await sb.from('profiles').update({ full_name: fullName }).eq('id', STATE.user.id);
+  if (error) { toast('No se pudo guardar: ' + error.message); return; }
+  STATE.profile.full_name = fullName;
+  Object.values(STATE.certificates).forEach(c => { c.full_name = fullName; });
+  sb.auth.updateUser({ data: { full_name: fullName } }).then(() => {}, () => {});
+  fillUserUI();
+  renderCertificates();
+  flashMsg('settings-name-msg');
 }
 
-function saveSettingsPhone() {
+async function saveSettingsPhone() {
   const phone = document.getElementById('settings-phone').value.trim();
-  if (!phone) return;
-  const user = auth ? auth.currentUser : null;
-  if (!user || !db) return;
-  db.collection('users').doc(user.uid).update({ phone }).then(() => {
-    const msg = document.getElementById('settings-phone-msg');
-    msg.style.display = 'inline-block';
-    setTimeout(() => { msg.style.display = 'none'; }, 3000);
-  });
+  if (!STATE.user) return;
+  const { error } = await sb.from('profiles').update({ phone }).eq('id', STATE.user.id);
+  if (error) { toast('No se pudo guardar: ' + error.message); return; }
+  STATE.profile.phone = phone;
+  flashMsg('settings-phone-msg');
 }
 
-function sendPasswordReset() {
-  const user = auth ? auth.currentUser : null;
-  if (!user) return;
-  auth.sendPasswordResetEmail(user.email).then(() => {
-    const msg = document.getElementById('settings-pass-msg');
-    msg.style.display = 'inline-block';
-    setTimeout(() => { msg.style.display = 'none'; }, 4000);
-  });
+async function sendPasswordReset() {
+  if (!STATE.user) return;
+  const { error } = await sb.auth.resetPasswordForEmail(STATE.user.email, { redirectTo: SITE_URL });
+  if (error) { toast(mapAuthError(error)); return; }
+  flashMsg('settings-pass-msg', 4000);
 }
 
 function nextLesson() {
@@ -196,17 +176,12 @@ function closeSidebar() {
   if (bd) bd.classList.remove('show');
 }
 
-function resetProgress() {
-  if (!confirm('¿Reiniciar todo el progreso? Esto borrará las lecciones completadas.')) return;
+async function resetProgress() {
+  if (!confirm('¿Reiniciar todo el progreso? Esto borrará las lecciones completadas (tu certificado se conserva).')) return;
   completed = [];
-  save();
-  if (db && auth && auth.currentUser) {
-    db.collection('users').doc(auth.currentUser.uid).update({
-      'completedCourses': firebase.firestore.FieldValue.arrayRemove('web-dev'),
-      'completedLessons.web-dev': []
-    }).catch(() => {});
-  }
+  await clearProgress('web-dev');
   updateProgress();
+  updateDashStats();
   const btn = document.querySelector('.reset-btn');
   btn.textContent = '✓ Reiniciado';
   setTimeout(() => { btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg> Reiniciar progreso'; }, 2000);

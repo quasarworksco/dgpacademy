@@ -76,15 +76,6 @@ const MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto
 
 function formatDate(d) { return d.getDate() + ' de ' + MONTHS[d.getMonth()] + ' de ' + d.getFullYear(); }
 
-// Número de certificado estable para cada estudiante y programa
-function certNumber(uid, kind, year) {
-  let h = 2166136261;
-  const str = String(uid) + '|' + kind;
-  for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
-  const code = (h >>> 0).toString(36).toUpperCase().padStart(7, '0').slice(-7);
-  return 'DGP-' + CERT_TYPES[kind].code + '-' + year + '-' + code;
-}
-
 // Curva guilloché (hipotrocoide), como en papel de seguridad
 function guilloche(cx, cy, R, r, d, steps) {
   let p = '';
@@ -179,58 +170,43 @@ function certHTML(data) {
       '<div class="c-bottom">' +
         '<div class="c-sig">' + art.signature + '<div class="c-sig-line">Dirección Académica</div><div class="c-sig-role">DGP Global Group</div></div>' +
         art.seal +
-        '<div class="c-sig"><div class="c-date">' + escapeHtml(data.date) + '</div><div class="c-sig-line">Fecha de emisión</div><div class="c-sig-role">academy.dgp-link.com</div></div>' +
+        '<div class="c-sig"><div class="c-date">' + escapeHtml(data.date) + '</div><div class="c-sig-line">Fecha de emisión</div><div class="c-sig-role">Verifícalo en academy.dgp-link.com</div></div>' +
       '</div>' +
     '</div>' +
   '</div>';
 }
 
-// Certificados que el estudiante ya ganó
+// Certificados emitidos (o ya ganados y pendientes de emitir)
 function earnedCertificates() {
-  const doc = window._userDoc || {};
-  const list = [];
-  const webDone = (typeof completed !== 'undefined' && completed.filter(l => l !== 'home').length >= 16) ||
-    (doc.completedCourses || []).includes('web-dev');
-  if (webDone) list.push('web-dev');
-  if (doc.bookProgress && doc.bookProgress['7st-completed']) list.push('7st');
-  return list;
+  return ['web-dev', '7st'].filter(k => STATE.certificates[k] || isEligible(k));
 }
 
 function certData(kind) {
-  const user = auth && auth.currentUser;
-  const doc = window._userDoc || {};
-  const stored = doc.certificates && doc.certificates[kind];
-  const issued = stored && stored.issuedAt && stored.issuedAt.seconds ? new Date(stored.issuedAt.seconds * 1000) : new Date();
-  const name = user ? (user.displayName || user.email.split('@')[0]) : '';
+  const c = STATE.certificates[kind];
+  const issued = c ? new Date(c.issued_at) : new Date();
   let detail = '';
-  if (kind === '7st' && doc.bookProgress && doc.bookProgress['7st-quiz-score'] != null) {
-    detail = CERT_TYPES['7st'].detail + ' Evaluación final aprobada con ' + doc.bookProgress['7st-quiz-score'] + '/10.';
+  const r = STATE.reading['7st'];
+  if (kind === '7st' && r && r.quiz_score != null) {
+    detail = CERT_TYPES['7st'].detail + ' Evaluación final aprobada con ' + r.quiz_score + '/10.';
   }
   return {
     kind,
-    name,
+    name: c ? c.full_name : displayName(),
     date: formatDate(issued),
-    number: certNumber(user ? user.uid : 'demo', kind, issued.getFullYear()),
-    detail,
-    stored: !!stored
+    number: c ? c.number : 'Pendiente de emisión',
+    detail
   };
 }
 
-// Guarda la fecha de emisión la primera vez que se genera el certificado
-function persistCertificate(kind, data) {
-  if (data.stored || !db || !auth || !auth.currentUser) return;
-  const payload = {};
-  payload['certificates.' + kind] = { number: data.number, issuedAt: firebase.firestore.FieldValue.serverTimestamp() };
-  db.collection('users').doc(auth.currentUser.uid).update(payload).catch(() => {});
-  window._userDoc = window._userDoc || {};
-  window._userDoc.certificates = Object.assign({}, window._userDoc.certificates, { [kind]: { number: data.number, issuedAt: { seconds: Math.floor(Date.now() / 1000) } } });
-}
-
-function openCertificate(kind) {
+async function openCertificate(kind) {
   kind = kind || 'web-dev';
-  const data = certData(kind);
-  persistCertificate(kind, data);
-  document.getElementById('cert-stage').innerHTML = certHTML(data);
+  try {
+    await issueCertificate(kind);
+  } catch (e) {
+    toast(e.message || 'Aún no puedes obtener este certificado.');
+    return;
+  }
+  document.getElementById('cert-stage').innerHTML = certHTML(certData(kind));
   document.getElementById('cert-modal-title').textContent = CERT_TYPES[kind].course;
   document.getElementById('cert-overlay').classList.add('show');
   renderCertificates();
@@ -239,8 +215,7 @@ function showCertificate() { openCertificate('web-dev'); }
 function closeCert() { document.getElementById('cert-overlay').classList.remove('show'); }
 function printCertificate() {
   const prev = document.title;
-  const user = auth && auth.currentUser;
-  document.title = 'Certificado DGP Academy' + (user && user.displayName ? ' — ' + user.displayName : '');
+  document.title = 'Certificado DGP Academy' + (STATE.user ? ' — ' + displayName() : '');
   window.print();
   setTimeout(() => { document.title = prev; }, 500);
 }
@@ -278,3 +253,40 @@ function renderCertificates() {
   if (!el) return;
   el.innerHTML = certHTML({ kind: 'web-dev', name: 'Tu nombre aquí', date: formatDate(new Date()), number: 'DGP-WEB-' + new Date().getFullYear() + '-0000000' });
 })();
+
+// ── Verificación pública de certificados ─────────────────────────────────────
+function openVerify(prefill) {
+  const o = document.getElementById('verify-overlay');
+  if (!o) return;
+  o.style.display = 'flex';
+  const input = document.getElementById('verify-input');
+  if (prefill) input.value = prefill;
+  document.getElementById('verify-result').innerHTML = '';
+  if (prefill) verifyCertificate(); else input.focus();
+}
+function closeVerify() { const o = document.getElementById('verify-overlay'); if (o) o.style.display = 'none'; }
+
+async function verifyCertificate(e) {
+  if (e) e.preventDefault();
+  const num = document.getElementById('verify-input').value.trim().toUpperCase();
+  const box = document.getElementById('verify-result');
+  if (!num) { box.innerHTML = '<p class="modal-error">Escribe el número del certificado.</p>'; return; }
+  box.innerHTML = '<p class="modal-hint">Buscando…</p>';
+  const { data, error } = await sb.rpc('verify_certificate', { num });
+  if (error) { box.innerHTML = '<p class="modal-error">No se pudo verificar. Intenta de nuevo.</p>'; return; }
+  if (!data || !data.length) {
+    box.innerHTML = '<div class="verify-card is-bad"><strong>No encontrado</strong><span>No existe un certificado con el número ' + escapeHtml(num) + '.</span></div>';
+    return;
+  }
+  const c = data[0];
+  box.innerHTML = '<div class="verify-card is-ok"><strong>Certificado válido</strong>' +
+    '<span>' + escapeHtml(c.full_name) + '</span>' +
+    '<span>' + escapeHtml(c.product_title) + '</span>' +
+    '<span>Emitido el ' + escapeHtml(formatDate(new Date(c.issued_at))) + '</span></div>';
+}
+
+(function verifyFromUrl() {
+  const q = new URLSearchParams(location.search).get('verificar');
+  if (q) setTimeout(() => openVerify(q), 300);
+})();
+

@@ -177,7 +177,7 @@ function closeSidebar() {
 }
 
 async function resetProgress() {
-  if (!confirm('¿Reiniciar todo el progreso? Esto borrará las lecciones completadas (tu certificado se conserva).')) return;
+  if (!confirm(t('¿Reiniciar todo el progreso? Esto borrará las lecciones completadas (tu certificado se conserva).'))) return;
   completed = [];
   await clearProgress('web-dev');
   updateProgress();

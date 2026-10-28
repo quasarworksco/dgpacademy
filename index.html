@@ -29,17 +29,11 @@
 <meta name="theme-color" content="#0a1430">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/course.css">
 <link rel="stylesheet" href="assets/css/reader.css">
 <link rel="stylesheet" href="assets/css/app.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
-<script>
-  // EmailJS: Public Key desde emailjs.com → Account → API Keys
-  (function(){ if(window.emailjs) emailjs.init({ publicKey: 'dM6Ej0oNNiVVj-4tB' }); })();
-</script>
 </head>
 <body>
 
@@ -93,6 +87,7 @@
         <a href="#lp-faq" data-scroll="lp-faq">Preguntas</a>
       </nav>
       <div class="lp-nav-cta">
+        <span data-lang-slot></span>
         <button class="lp-nav-login" onclick="goToAuth()">Iniciar sesión</button>
         <button class="ui-btn ui-btn--primary ui-btn--sm" onclick="goToRegister()">Inscribirme</button>
         <button class="icon-btn lp-nav-toggle" onclick="toggleLpMenu()" aria-label="Abrir menú" aria-expanded="false" id="lp-nav-toggle"><svg><use href="#i-menu"/></svg></button>
@@ -106,6 +101,7 @@
       <a href="#lp-acceso" data-scroll="lp-acceso">Precio</a>
       <a href="#lp-faq" data-scroll="lp-faq">Preguntas frecuentes</a>
       <div class="lp-mobile-actions">
+        <span data-lang-slot="lang-switch--block"></span>
         <button class="ui-btn ui-btn--ghost ui-btn--block" onclick="goToAuth()">Iniciar sesión</button>
         <button class="ui-btn ui-btn--primary ui-btn--block" onclick="goToRegister()">Crear mi cuenta</button>
       </div>
@@ -405,7 +401,7 @@
       <div>
         <span class="eyebrow reveal">Preguntas frecuentes</span>
         <h2 class="lp-h2 reveal" data-d="1">Lo que necesitas <em class="serif">saber</em>.</h2>
-        <p class="lp-lead reveal" data-d="2">¿Otra duda? Escríbenos a <a href="mailto:hola@dgpglobalgroup.com">hola@dgpglobalgroup.com</a>.</p>
+        <p class="lp-lead reveal" data-d="2">¿Otra duda? Escríbenos a <a href="mailto:info@dgpglobalgroup.com">info@dgpglobalgroup.com</a>.</p>
       </div>
       <div class="lp-faq-list">
         <details class="reveal"><summary>¿Cómo obtengo acceso después de inscribirme?<svg><use href="#i-plus"/></svg></summary><p>Creas tu cuenta gratis en la plataforma. El equipo de DGP te contacta para coordinar el pago único y activa el programa en tu cuenta. Al volver a entrar verás el curso desbloqueado en tu panel.</p></details>
@@ -440,7 +436,7 @@
       <div class="lp-footer-col"><h4>Programa</h4><a href="#lp-programa" data-scroll="lp-programa">Temario</a><a href="#lp-biblioteca" data-scroll="lp-biblioteca">Biblioteca</a><a href="#lp-certificado" data-scroll="lp-certificado">Certificado</a><a href="#lp-acceso" data-scroll="lp-acceso">Precio</a></div>
       <div class="lp-footer-col"><h4>Plataforma</h4><a href="#" onclick="goToAuth();return false">Iniciar sesión</a><a href="#" onclick="goToRegister();return false">Crear cuenta</a><a href="#lp-faq" data-scroll="lp-faq">Preguntas frecuentes</a></div>
       <div class="lp-footer-col"><h4>Certificados</h4><a href="#" onclick="openVerify();return false">Verificar un certificado</a></div>
-      <div class="lp-footer-col"><h4>Contacto</h4><a href="mailto:hola@dgpglobalgroup.com">hola@dgpglobalgroup.com</a><a href="https://dgpglobalgroup.com" target="_blank" rel="noopener">dgpglobalgroup.com</a></div>
+      <div class="lp-footer-col"><h4>Contacto</h4><a href="mailto:info@dgpglobalgroup.com">info@dgpglobalgroup.com</a><a href="https://dgpglobalgroup.com" target="_blank" rel="noopener">dgpglobalgroup.com</a></div>
     </div>
     <div class="lp-wrap lp-footer-bottom"><span>© 2026 DGP Global Group. Todos los derechos reservados.</span><span>academy.dgp-link.com</span></div>
   </footer>
@@ -473,6 +469,7 @@
   <main class="auth-right">
     <div class="auth-top">
       <button class="brand auth-mobile-brand" onclick="showLanding()"><svg class="brand-mark"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span></button>
+      <span data-lang-slot></span>
       <button class="auth-back" onclick="showLanding()"><svg><use href="#i-back"/></svg>Volver al inicio</button>
     </div>
     <div class="auth-form-wrap">
@@ -537,6 +534,7 @@
     <div class="dash-nav-inner">
       <span class="brand"><svg class="brand-mark"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span></span>
       <div class="dash-nav-right">
+        <span data-lang-slot></span>
         <button id="btn-admin-panel" class="dash-admin-btn" style="display:none" onclick="showAdmin()"><svg><use href="#i-shield"/></svg><span class="admin-label">Panel admin</span></button>
         <button class="icon-btn" onclick="showSettings()" title="Configuración de la cuenta" aria-label="Configuración"><svg><use href="#i-settings"/></svg></button>
         <div class="dash-user">
@@ -590,7 +588,7 @@
       </div>
       <div class="dash-activate-actions">
         <a class="ui-btn ui-btn--primary" id="dash-activate-wa" href="#" target="_blank" rel="noopener" style="display:none"><svg><use href="#i-whatsapp"/></svg>Escribir por WhatsApp</a>
-        <a class="ui-btn ui-btn--ghost" id="dash-activate-mail" href="mailto:hola@dgpglobalgroup.com"><svg><use href="#i-mail"/></svg>Escribir por correo</a>
+        <a class="ui-btn ui-btn--ghost" id="dash-activate-mail" href="mailto:info@dgpglobalgroup.com"><svg><use href="#i-mail"/></svg>Escribir por correo</a>
       </div>
     </section>
 
@@ -691,7 +689,7 @@
 <!-- ──── SIDEBAR ──── -->
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <button class="sidebar-back" onclick="showDashboard()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>Mis cursos</button>
+    <div class="sidebar-top"><button class="sidebar-back" onclick="showDashboard()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>Mis cursos</button><span data-lang-slot="lang-switch--sm"></span></div>
     <div class="logo-badge">Programa · 5 módulos</div>
     <h1>Diseño y Desarrollo Web con IA</h1>
     <p>16 lecciones prácticas, de cero a publicar.</p>
@@ -910,7 +908,7 @@
   <nav class="dash-nav">
     <div class="dash-nav-inner">
       <span class="brand"><svg class="brand-mark"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span><span class="chip chip--accent admin-badge">Administración</span></span>
-      <button class="ui-btn ui-btn--ghost ui-btn--sm" onclick="showDashboard()"><svg><use href="#i-back"/></svg>Volver al panel</button>
+      <div class="dash-nav-right"><span data-lang-slot></span><button class="ui-btn ui-btn--ghost ui-btn--sm" onclick="showDashboard()"><svg><use href="#i-back"/></svg>Volver al panel</button></div>
     </div>
   </nav>
 
@@ -1079,6 +1077,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         <span class="book-topbar-title" id="book-chapter-label">Introducción</span>
+        <span data-lang-slot="lang-switch--sm book-lang"></span>
       </div>
 
       <div class="book-content" id="book-content">
@@ -1173,6 +1172,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         <span class="book-topbar-title" id="book-chapter-label-2">Nota Inicial</span>
+        <span data-lang-slot="lang-switch--sm book-lang"></span>
       </div>
 
       <div class="book-content" id="book-content-2">
@@ -1225,6 +1225,8 @@
   </div>
 </div><!-- /book-screen-2 -->
 
+<script src="assets/js/i18n-en.js"></script>
+<script src="assets/js/i18n.js"></script>
 <script src="assets/js/data.js"></script>
 <script src="assets/js/app.js"></script>
 <script src="assets/js/course.js"></script>

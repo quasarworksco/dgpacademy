@@ -12,6 +12,8 @@ assets/css/base.css   Sistema de diseño: tokens, tipografías, botones, formula
 assets/css/app.css    Landing, acceso, panel, admin, modales y certificado (incluye impresión)
 assets/css/course.css Lector del curso (lecciones, tarjetas, código, quizzes)
 assets/css/reader.css Lector de libros (7ST Vol. 1 y Vol. 2)
+assets/js/i18n.js     Idiomas ES/EN: selector y traducción automática de la interfaz
+assets/js/i18n-en.js  Diccionario de la interfaz al inglés
 assets/js/data.js     Conexión con Supabase y estado del usuario
 assets/js/app.js      Pantallas, acceso, panel, libros, evaluación, admin, cupos
 assets/js/course.js   Navegación del curso, progreso y configuración de la cuenta
@@ -32,13 +34,19 @@ og-image.jpg          Imagen para compartir en redes (1200×630)
 | IA aplicada a los negocios | Programa | `ia` | Próximamente |
 | Marketing digital | Programa | `marketing` | Próximamente |
 
-El contenido de las lecciones y los libros vive en la tabla `content` de Supabase y solo se descarga
-para usuarios con acceso activo. No está en el código público del sitio.
+El contenido de las lecciones y los libros vive en la tabla `content` de Supabase (una versión por idioma,
+columna `lang`) y solo se descarga para usuarios con acceso activo. No está en el código público del sitio.
+
+## Idiomas
+
+Todo el sitio está en español e inglés (selector ES / EN en cada pantalla). El idioma se detecta del navegador,
+se recuerda en el dispositivo y se guarda en el perfil del estudiante (`profiles.lang`).
+Para traducir un texto nuevo de la interfaz, agrega la línea en `assets/js/i18n-en.js`.
 
 ## Registro y permisos
 
 1. **Registro**: el estudiante crea su cuenta y confirma su correo (los correos salen de info@dgpglobalgroup.com
-   vía SMTP de Google Workspace). Se crea su perfil automáticamente y se avisa al equipo por Formspree.
+   vía SMTP de Google Workspace). Se crea su perfil automáticamente y aparece en el panel admin.
 2. **Sin acceso**: el panel muestra "Tu cuenta está lista. Falta activar tu acceso" con botón para escribir
    al equipo (correo; WhatsApp si se configura `CONTACT.whatsapp` en `assets/js/app.js`).
 3. **Activación**: el admin entra a *Panel admin* y activa `Web Dev`, `7ST` o `Semilla`, y marca el pago.
@@ -50,9 +58,10 @@ para usuarios con acceso activo. No está en el código público del sitio.
 La seguridad está en la base de datos (políticas RLS): un estudiante no puede darse acceso, hacerse admin,
 aprobar la evaluación a mano ni leer contenido que no tiene activado. Detalle en `supabase/README.md`.
 
-### Nombrar administrador
+### Administrador
 
-La persona crea su cuenta en la academia y luego, en Supabase → SQL Editor:
+info@dgpglobalgroup.com es administrador permanente (la base de datos lo asigna al crear la cuenta).
+Para nombrar a otra persona, que cree su cuenta y luego, en Supabase → SQL Editor:
 
 ```sql
 update public.profiles set is_admin = true where email = 'correo@del-admin.com';

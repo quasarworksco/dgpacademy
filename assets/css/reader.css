@@ -223,9 +223,9 @@
 .book-ch-num, .book-ch-eyebrow { font-family: var(--font-mono); letter-spacing: .06em; }
 .book-ch-title { font-size: clamp(32px, 4.6vw, 50px); line-height: 1.04; letter-spacing: -.035em; font-weight: 700; color: var(--ink); }
 .book-chapter h2 { font-size: clamp(22px, 2.6vw, 27px); line-height: 1.2; letter-spacing: -.025em; font-weight: 700; margin: 48px 0 16px; }
-.book-lead { font-family: var(--serif); font-size: clamp(21px, 2.3vw, 25px); line-height: 1.45; color: var(--ink-2); letter-spacing: -.005em; }
+.book-lead { font-family: var(--font); font-size: clamp(19px, 2vw, 22px); line-height: 1.55; color: var(--ink-2); letter-spacing: -.012em; }
 .book-chapter p { font-size: 17px; line-height: 1.8; color: #2c3850; }
-.book-quote { font-family: var(--serif); font-size: 22px; line-height: 1.45; border-left-width: 2px; background: none; padding: 6px 0 6px 22px; border-radius: 0; color: var(--ink); }
+.book-quote { font-family: var(--font); font-weight: 500; font-size: 19px; line-height: 1.55; letter-spacing: -.012em; border-left-width: 2px; background: none; padding: 6px 0 6px 22px; border-radius: 0; color: var(--ink); }
 .book-callout { border-radius: 14px; }
 .book-cover-hero { border-radius: 24px; margin: 0 0 48px; padding: 72px 40px 64px; background: radial-gradient(120% 90% at 85% 0%, rgba(168,192,255,.28), transparent 55%), linear-gradient(160deg, #0a1430 0%, #13224a 55%, #1a56e8 140%); }
 .book-cover-logo { font-weight: 800; letter-spacing: -.05em; }

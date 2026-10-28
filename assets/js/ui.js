@@ -73,8 +73,13 @@ const CERT_TYPES = {
   }
 };
 const MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const MONTHS_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-function formatDate(d) { return d.getDate() + ' de ' + MONTHS[d.getMonth()] + ' de ' + d.getFullYear(); }
+function formatDate(d) {
+  return LANG === 'en'
+    ? MONTHS_EN[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear()
+    : d.getDate() + ' de ' + MONTHS[d.getMonth()] + ' de ' + d.getFullYear();
+}
 
 // Curva guilloché (hipotrocoide), como en papel de seguridad
 function guilloche(cx, cy, R, r, d, steps) {
@@ -166,7 +171,7 @@ function certHTML(data) {
       '<div class="c-name" style="font-size:' + size + 'cqw">' + escapeHtml(name) + '</div>' +
       '<div class="c-for">' + t.lead + '</div>' +
       '<div class="c-course">' + escapeHtml(t.course) + '</div>' +
-      '<div class="c-detail">' + escapeHtml(data.detail || t.detail) + '</div>' +
+      '<div class="c-detail"><span>' + escapeHtml(t.detail) + '</span>' + (data.detail ? ' <span>' + escapeHtml(data.detail) + '</span>' : '') + '</div>' +
       '<div class="c-bottom">' +
         '<div class="c-sig">' + art.signature + '<div class="c-sig-line">Dirección Académica</div><div class="c-sig-role">DGP Global Group</div></div>' +
         art.seal +
@@ -187,7 +192,7 @@ function certData(kind) {
   let detail = '';
   const r = STATE.reading['7st'];
   if (kind === '7st' && r && r.quiz_score != null) {
-    detail = CERT_TYPES['7st'].detail + ' Evaluación final aprobada con ' + r.quiz_score + '/10.';
+    detail = 'Evaluación final aprobada con ' + r.quiz_score + '/10.';
   }
   return {
     kind,
@@ -215,7 +220,7 @@ function showCertificate() { openCertificate('web-dev'); }
 function closeCert() { document.getElementById('cert-overlay').classList.remove('show'); }
 function printCertificate() {
   const prev = document.title;
-  document.title = 'Certificado DGP Academy' + (STATE.user ? ' — ' + displayName() : '');
+  document.title = t('Certificado DGP Academy') + (STATE.user ? ' — ' + displayName() : '');
   window.print();
   setTimeout(() => { document.title = prev; }, 500);
 }
@@ -248,11 +253,12 @@ function renderCertificates() {
 }
 
 // Vista previa en la landing
-(function previewCertificate() {
+function previewCertificate() {
   const el = document.getElementById('lp-cert-preview');
   if (!el) return;
-  el.innerHTML = certHTML({ kind: 'web-dev', name: 'Tu nombre aquí', date: formatDate(new Date()), number: 'DGP-WEB-' + new Date().getFullYear() + '-0000000' });
-})();
+  el.innerHTML = certHTML({ kind: 'web-dev', name: t('Tu nombre aquí'), date: formatDate(new Date()), number: 'DGP-WEB-' + new Date().getFullYear() + '-0000000' });
+}
+previewCertificate();
 
 // ── Verificación pública de certificados ─────────────────────────────────────
 function openVerify(prefill) {
@@ -281,7 +287,7 @@ async function verifyCertificate(e) {
   const c = data[0];
   box.innerHTML = '<div class="verify-card is-ok"><strong>Certificado válido</strong>' +
     '<span>' + escapeHtml(c.full_name) + '</span>' +
-    '<span>' + escapeHtml(c.product_title) + '</span>' +
+    '<span>' + escapeHtml(LANG === 'en' && c.product_title_en ? c.product_title_en : c.product_title) + '</span>' +
     '<span>Emitido el ' + escapeHtml(formatDate(new Date(c.issued_at))) + '</span></div>';
 }
 

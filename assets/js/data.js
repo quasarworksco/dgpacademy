@@ -39,7 +39,7 @@ function displayName() {
 async function loadUserData() {
   const uid = STATE.user.id;
   const [prof, acc, prog, read, certs] = await Promise.all([
-    sb.from('profiles').select('email, full_name, phone, is_admin').eq('id', uid).maybeSingle(),
+    sb.from('profiles').select('email, full_name, phone, is_admin, lang').eq('id', uid).maybeSingle(),
     sb.from('access').select('product_id, active, paid').eq('user_id', uid),
     sb.from('progress').select('product_id, item_id').eq('user_id', uid),
     sb.from('reading_state').select('product_id, last_item, quiz_score, quiz_passed').eq('user_id', uid),
@@ -88,10 +88,14 @@ function savePosition(product, item) {
 }
 
 // Contenido protegido: solo se descarga si el usuario tiene acceso
+// Se descarga en el idioma activo; si aún no existe la traducción, en español
 const _contentLoaded = {};
 async function loadContent(product, rootSelector) {
-  if (_contentLoaded[product]) return true;
-  const { data, error } = await sb.from('content').select('item_id, html').eq('product_id', product).order('position');
+  if (_contentLoaded[product] === LANG) return true;
+  let { data, error } = await sb.from('content').select('item_id, html').eq('product_id', product).eq('lang', LANG).order('position');
+  if (!error && (!data || !data.length) && LANG !== 'es') {
+    ({ data, error } = await sb.from('content').select('item_id, html').eq('product_id', product).eq('lang', 'es').order('position'));
+  }
   if (error) throw error;
   if (!data || !data.length) return false;
   const root = document.querySelector(rootSelector);
@@ -99,7 +103,7 @@ async function loadContent(product, rootSelector) {
     const el = root.querySelector('#' + CSS.escape(row.item_id));
     if (el) el.innerHTML = row.html;
   });
-  _contentLoaded[product] = true;
+  _contentLoaded[product] = LANG;
   return true;
 }
 function clearContent() {

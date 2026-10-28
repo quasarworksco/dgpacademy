@@ -7,7 +7,7 @@
 // Número de WhatsApp en formato internacional sin "+" ni espacios (ej. '5215512345678').
 // Si se deja vacío, el panel de activación solo muestra el botón de correo.
 const CONTACT = {
-  email: 'hola@dgpglobalgroup.com',
+  email: 'info@dgpglobalgroup.com',
   whatsapp: ''
 };
 
@@ -242,9 +242,11 @@ function renderActivation() {
   box.style.display = (STATE.user && !anyAccess) ? 'grid' : 'none';
   const email = STATE.user ? STATE.user.email : '';
   const who = displayName();
-  const msg = 'Hola, quiero activar mi acceso a DGP Academy (Diseño y Desarrollo Web con IA). Mi cuenta: ' + email + (who && who !== email ? ' — ' + who : '');
+  const msg = (LANG === 'en'
+      ? 'Hi, I would like to activate my access to DGP Academy (Web Design & Development with AI). My account: '
+      : 'Hola, quiero activar mi acceso a DGP Academy (Diseño y Desarrollo Web con IA). Mi cuenta: ') + email + (who && who !== email ? ' — ' + who : '');
   const mail = document.getElementById('dash-activate-mail');
-  if (mail) mail.href = 'mailto:' + CONTACT.email + '?subject=' + encodeURIComponent('Activar acceso — DGP Academy') + '&body=' + encodeURIComponent(msg);
+  if (mail) mail.href = 'mailto:' + CONTACT.email + '?subject=' + encodeURIComponent(t('Activar acceso — DGP Academy')) + '&body=' + encodeURIComponent(msg);
   const wa = document.getElementById('dash-activate-wa');
   if (wa) {
     wa.style.display = CONTACT.whatsapp ? '' : 'none';
@@ -487,7 +489,7 @@ function adminToggle(label, opts) {
 }
 
 function fmtDate(t) {
-  return t ? new Date(t).toLocaleDateString('es', { day:'2-digit', month:'short', year:'numeric' }) : '—';
+  return t ? new Date(t).toLocaleDateString(locale(), { day:'2-digit', month:'short', year:'numeric' }) : '—';
 }
 
 function renderAdminUsers(users) {
@@ -556,8 +558,11 @@ function exportCSV() {
     if (/^[=+\-@]/.test(t)) t = "'" + t; // evita fórmulas al abrir en Excel
     return '"' + t.replace(/"/g, '""') + '"';
   };
-  const yes = b => b ? 'Sí' : 'No';
-  const headers = ['Nombre', 'Email', 'Teléfono', 'Web Dev activo', 'Pagó Web Dev', 'Progreso Web Dev', '7ST', 'Semilla', 'Certificados', 'Registro', 'Última visita'];
+  const en = LANG === 'en';
+  const yes = b => b ? (en ? 'Yes' : 'Sí') : 'No';
+  const headers = en
+    ? ['Name', 'Email', 'Phone', 'Web Dev active', 'Paid Web Dev', 'Web Dev progress', '7ST', 'Seed', 'Certificates', 'Joined', 'Last visit']
+    : ['Nombre', 'Email', 'Teléfono', 'Web Dev activo', 'Pagó Web Dev', 'Progreso Web Dev', '7ST', 'Semilla', 'Certificados', 'Registro', 'Última visita'];
   const rows = allAdminUsers.map(u => [
     u.full_name, u.email, u.phone, yes(acc(u, 'web-dev').active), yes(acc(u, 'web-dev').paid),
     (u.web_progress || 0) + '/16', yes(acc(u, '7st').active), yes(acc(u, 'semilla').active),
@@ -690,7 +695,7 @@ async function handleAuth(e) {
 
   const { data, error } = await sb.auth.signUp({
     email, password,
-    options: { data: { full_name: fullName, phone }, emailRedirectTo: SITE_URL }
+    options: { data: { full_name: fullName, phone, lang: LANG }, emailRedirectTo: SITE_URL }
   });
   setAuthLoading(false);
   if (error) { showAuthError(mapAuthError(error)); return; }
@@ -699,27 +704,10 @@ async function handleAuth(e) {
     showAuthError('Ya existe una cuenta con ese correo. Inicia sesión o recupera tu contraseña.');
     return;
   }
-  notifyNewSignup(fullName, email, phone);
   if (!data.session) {
     switchTab('login');
     document.getElementById('input-email').value = email;
     showAuthError('✓ Te enviamos un correo a ' + email + '. Ábrelo y confirma tu cuenta para entrar.');
-  }
-}
-
-// Aviso al equipo y correo de bienvenida
-function notifyNewSignup(fullName, email, phone) {
-  fetch('https://formspree.io/f/xpqnajzo', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({
-      _subject: 'Nuevo registro — DGP Academy',
-      Nombre: fullName, Email: email, Telefono: phone || 'No proporcionado',
-      Fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })
-    })
-  }).catch(() => {});
-  if (window.emailjs && typeof emailjs.send === 'function') {
-    emailjs.send('service_o1k4wpe', 'template_3sbztj9', { to_name: fullName, to_email: email, reply_to: CONTACT.email }).catch(() => {});
   }
 }
 
@@ -913,3 +901,23 @@ document.addEventListener('DOMContentLoaded', () => {
     topbar.insertBefore(backBtn, topbar.firstChild);
   }
 });
+
+// ── Cambio de idioma ──────────────────────────────────────────────────────────
+// Los textos fijos los traduce i18n.js; aquí se recarga lo que depende del idioma
+function onLangChange() {
+  if (STATE.user) {
+    renderActivation(); renderCertificates();
+    if (STATE.profile) STATE.profile.lang = LANG;
+    sb.from('profiles').update({ lang: LANG }).eq('id', STATE.user.id).then(() => {}, () => {});
+  }
+  if (document.getElementById('admin-screen').style.display === 'block') refreshAdminList();
+  if (typeof previewCertificate === 'function') previewCertificate();
+  const course = document.getElementById('course-screen');
+  if (course && course.style.display === 'block') {
+    loadContent('web-dev', '#course-screen').then(() => { goTo(current); updateFinishBtn(); }).catch(() => {});
+  }
+  const b1 = document.getElementById('book-screen');
+  if (b1 && b1.style.display === 'block') loadContent('7st', '#book-screen').then(() => goToChapter(currentChapter)).catch(() => {});
+  const b2 = document.getElementById('book-screen-2');
+  if (b2 && b2.style.display === 'block') loadContent('semilla', '#book-screen-2').then(() => goToChapter2(currentChapter2)).catch(() => {});
+}

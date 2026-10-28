@@ -81,7 +81,13 @@ body {
 img { display: block; max-width: 100%; }
 button, input, select, textarea { font: inherit; color: inherit; }
 a { color: inherit; }
-em.serif, .serif { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -.005em; }
+/* Acento de titulares: misma tipografía, en degradado azul */
+em.serif, .serif {
+  font-family: inherit; font-style: normal; font-weight: inherit; letter-spacing: inherit;
+  background: linear-gradient(100deg, var(--accent) 10%, #4d7cff 90%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--accent);
+  padding-right: .02em;
+}
 ::selection { background: var(--accent); color: #fff; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }

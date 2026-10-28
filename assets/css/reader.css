@@ -242,3 +242,99 @@
   .book-chapter { padding: 32px 18px 88px; }
   .book-chapter p { font-size: 16.5px; }
 }
+
+/* ───────── Experiencia de lectura ───────── */
+.book-topbar, .main > .topbar { position: sticky; }
+.read-progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; pointer-events: none; overflow: hidden; }
+.read-progress span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), #4d7cff); transform: scaleX(0); transform-origin: 0 50%; transition: transform .12s linear; }
+#book-screen-2 .read-progress span { background: linear-gradient(90deg, #059669, #34d399); }
+.read-size-btn { display: inline-flex; align-items: baseline; gap: 1px; height: 34px; min-width: 40px; padding: 0 10px; border-radius: 99px; border: 1px solid var(--border); background: #fff; color: var(--ink); cursor: pointer; font: 700 13px/1 var(--font); flex-shrink: 0; transition: border-color .15s, background .15s; }
+.read-size-btn:hover { border-color: var(--accent-border); background: var(--accent-bg); }
+.read-size-btn .a2 { font-size: 17px; }
+.read-size-btn[data-size="lg"] .a2, .read-size-btn[data-size="xl"] .a2 { color: var(--accent); }
+.read-size-btn[data-size="xl"] .a1 { color: var(--accent); }
+.book-topbar .read-size-btn { margin-left: auto; }
+html[data-read-size="lg"] .book-chapter p, html[data-read-size="lg"] .book-chapter li,
+html[data-read-size="lg"] .lesson p, html[data-read-size="lg"] .lesson li { font-size: 19px; }
+html[data-read-size="xl"] .book-chapter p, html[data-read-size="xl"] .book-chapter li,
+html[data-read-size="xl"] .lesson p, html[data-read-size="xl"] .lesson li { font-size: 21px; line-height: 1.75; }
+html[data-read-size="lg"] .book-lead, html[data-read-size="lg"] .lesson-intro { font-size: 23px; }
+html[data-read-size="xl"] .book-lead, html[data-read-size="xl"] .lesson-intro { font-size: 25px; }
+
+.read-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: -8px 0 28px; }
+.lesson-header .read-meta { margin: 18px 0 0; }
+.read-meta span { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 99px; background: var(--bg2); border: 1px solid var(--border); font: 500 12px/1 var(--font-mono); color: var(--text3); }
+.read-meta svg { flex-shrink: 0; }
+
+/* Ideas clave */
+.kp { position: relative; margin: 48px 0 28px; padding: 26px 26px 22px; border-radius: 20px; background: linear-gradient(160deg, #0a1430 0%, #13224a 70%, #1a3a8f 140%); color: #fff; overflow: hidden; }
+.kp::after { content: ""; position: absolute; right: -60px; top: -60px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(168,192,255,.28), transparent 70%); pointer-events: none; }
+#book-screen-2 .kp { background: linear-gradient(160deg, #06281f 0%, #0b3b2e 70%, #0f766e 140%); }
+.kp-title { font: 500 11.5px/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: #a8c0ff; margin-bottom: 16px; }
+#book-screen-2 .kp-title { color: #6ee7b7; }
+.kp ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; position: relative; z-index: 1; }
+.book-chapter .kp li, .lesson .kp li { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 1.6; color: rgba(255,255,255,.92); margin: 0; padding: 0; border: 0; }
+.kp li::before { content: ""; flex-shrink: 0; width: 8px; height: 8px; margin-top: .62em; border-radius: 50%; background: #4d7cff; box-shadow: 0 0 0 4px rgba(77,124,255,.22); }
+#book-screen-2 .kp li::before { background: #34d399; box-shadow: 0 0 0 4px rgba(52,211,153,.2); }
+
+/* Cuaderno de trabajo */
+.wb { margin: 28px 0 40px; padding: 26px; border-radius: 22px; background: #fff; border: 1px solid var(--border); box-shadow: 0 1px 2px rgba(10,20,48,.04), 0 18px 40px -24px rgba(26,86,232,.28); position: relative; }
+.wb::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; border-radius: 22px 22px 0 0; background: linear-gradient(90deg, var(--accent), #4d7cff, #a8c0ff); }
+#book-screen-2 .wb::before { background: linear-gradient(90deg, #059669, #34d399, #a7f3d0); }
+.wb-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); font: 500 11px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+#book-screen-2 .wb-badge { background: #e7f6ef; color: #047857; }
+.book-chapter .wb h3, .lesson .wb h3 { font-family: var(--font-display); font-size: clamp(21px, 2.4vw, 25px); font-weight: 700; letter-spacing: -.025em; color: var(--ink); margin: 14px 0 6px; line-height: 1.2; }
+.book-chapter .wb-head p, .lesson .wb-head p { font-size: 15.5px; line-height: 1.65; color: var(--text2); margin: 0; }
+.wb-list { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 18px; counter-reset: none; }
+.book-chapter .wb-list > li, .lesson .wb-list > li { display: block; margin: 0; padding: 0; border: 0; font-size: 16px; }
+.wb-list > li::before { display: none !important; }
+.wb-q { display: flex; gap: 12px; align-items: flex-start; font-weight: 600; font-size: 15.5px; line-height: 1.5; color: var(--ink); margin-bottom: 10px; cursor: text; }
+.wb-n { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: #fff; font: 500 12px/1 var(--font-mono); margin-top: -1px; }
+.wb-a { display: block; width: 100%; box-sizing: border-box; min-height: 84px; resize: none; padding: 13px 15px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg2); font: 400 15.5px/1.6 var(--font); color: var(--ink); transition: border-color .15s, background .15s, box-shadow .15s; }
+.wb-a::placeholder { color: #8a94a8; }
+.wb-a:focus { outline: none; background: #fff; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-bg); }
+#book-screen-2 .wb-a:focus { border-color: #059669; box-shadow: 0 0 0 4px rgba(5,150,105,.12); }
+.wb-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 22px; padding-top: 18px; border-top: 1px dashed var(--border); }
+.wb-progress { flex: 1 1 200px; min-width: 0; }
+.wb-bar { height: 6px; border-radius: 6px; background: var(--bg3); overflow: hidden; margin-bottom: 8px; }
+.wb-bar span { display: block; height: 100%; width: 0; border-radius: 6px; background: linear-gradient(90deg, var(--accent), #4d7cff); transition: width .4s var(--ease, ease); }
+#book-screen-2 .wb-bar span { background: linear-gradient(90deg, #059669, #34d399); }
+.wb.is-complete .wb-bar span { background: linear-gradient(90deg, #15803d, #22c55e); }
+.wb-status { font: 500 12px/1.4 var(--font-mono); color: var(--text3); }
+.wb-analyze { gap: 8px; }
+.wb-analyze:disabled { opacity: .45; cursor: not-allowed; }
+.wb-feedback { margin-top: 20px; padding: 20px; border-radius: 18px; background: linear-gradient(180deg, #f5f8ff, #fff); border: 1px solid var(--accent-border); animation: fadeIn .35s ease; }
+#book-screen-2 .wb-feedback { background: linear-gradient(180deg, #f0fbf6, #fff); border-color: rgba(5,150,105,.25); }
+.wb-fb-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 14.5px; color: var(--ink); }
+.wb-fb-ic { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; background: linear-gradient(135deg, var(--accent), #7c4dff); color: #fff; font: 700 11px/1 var(--font-mono); }
+.wb-fb-body { font-size: 15.5px; line-height: 1.75; color: #2c3850; overflow-wrap: anywhere; }
+.wb-fb-body b { color: var(--ink); }
+.book-chapter .wb-fb-note, .lesson .wb-fb-note { margin: 14px 0 0; font-size: 13px; color: var(--text3); }
+.wb-feedback .mb-msg { max-width: 100%; }
+
+/* Listas que se pueden marcar */
+ul.is-interactive > li { cursor: pointer; user-select: none; border-radius: 10px; transition: background .15s, color .15s; -webkit-tap-highlight-color: transparent; }
+ul.is-interactive > li:hover { background: var(--bg2); }
+ul.is-interactive > li:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.book-checklist.is-interactive > li { padding: 6px 8px; margin: 0 -8px; }
+.book-checklist.is-interactive > li::before { background-color: #fff; background-image: none; border: 2px solid var(--accent-border); width: 20px; height: 20px; border-radius: 7px; box-sizing: border-box; transition: all .15s; }
+.book-checklist.is-interactive > li.is-checked::before, .checklist.is-interactive > li.is-checked::before { background-color: var(--accent); border-color: var(--accent); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-size: 12px; background-repeat: no-repeat; background-position: center; }
+#book-screen-2 .book-checklist.is-interactive > li.is-checked::before { background-color: #059669; border-color: #059669; }
+.checklist.is-interactive > li::before { background: #fff; border: 2px solid var(--accent-border); width: 20px; height: 20px; border-radius: 7px; box-sizing: border-box; margin-top: 2px; }
+ul.is-interactive > li.is-checked { color: var(--text3); }
+
+@media (max-width: 640px) {
+  .kp { padding: 22px 18px 18px; border-radius: 18px; margin: 36px 0 22px; }
+  .wb { padding: 22px 16px 18px; border-radius: 18px; margin: 24px 0 32px; }
+  .wb-foot { flex-direction: column; align-items: stretch; }
+  .wb-analyze { width: 100%; justify-content: center; }
+  .wb-a { font-size: 16px; } /* evita el zoom automático en iOS */
+  .read-size-btn { height: 32px; min-width: 36px; padding: 0 8px; }
+}
+@media (max-width: 480px) {
+  .main > .topbar > div:first-child { min-width: 0; flex: 1 1 auto; }
+  .main > .topbar { gap: 6px; }
+  .topbar-breadcrumb { max-width: none; }
+  .topbar-actions .read-size-btn { min-width: 34px; height: 34px; padding: 0 6px; }
+  .topbar-actions .btn { padding: 8px 9px; }
+}

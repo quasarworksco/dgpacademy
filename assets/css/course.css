@@ -144,7 +144,7 @@
   flex: 1;
   min-height: 100vh;
   min-width: 0;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .topbar {
@@ -957,7 +957,7 @@ h2.section-title::before { animation: barGrow 0.5s cubic-bezier(0.34, 1.56, 0.64
   .btn-admin span.admin-label { display: none; }
 }
 
-#course-screen { overflow-x: hidden; }
+#course-screen { overflow-x: clip; }
 
 
 .pill-logo { width: 20px; height: 20px; flex-shrink: 0; border-radius: 4px; object-fit: contain; }

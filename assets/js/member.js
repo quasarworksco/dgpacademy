@@ -82,6 +82,30 @@ function fmtDay(d) {
 }
 
 // ── Panel del miembro ────────────────────────────────────────────────────────
+// Planes en formato compacto dentro del panel (la comparación completa se abre a pedido)
+function memberMiniHTML() {
+  const plans = planList();
+  return '<div class="mb-mini">' +
+    '<div class="mb-mini-ic"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg></div>' +
+    '<div class="mb-mini-txt"><b>' + escapeHtml(t('Membresía DGP')) + '</b><span>' + escapeHtml(t('Flyers para tu negocio, asesorías 1 a 1, Coach IA y sorteos cada mes.')) + '</span></div>' +
+    '<div class="mb-mini-plans">' + plans.map(p => '<button type="button" class="mb-mini-plan" onclick="choosePlan(\'' + p.id + '\')"><span>' + escapeHtml(pick(p.name, p.name_en)) + '</span><b>$' + Number(p.price_usd).toLocaleString('en-US') + '<small>' + escapeHtml(t('/mes')) + '</small></b></button>').join('') + '</div>' +
+    '<button type="button" class="mb-mini-more" onclick="toggleMemberPlans(this)" aria-expanded="false">' + escapeHtml(t('Comparar planes')) + '<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>' +
+  '</div>' +
+  '<div class="mb-plans mb-plans--dash" id="mb-compare" hidden>' + planCardsHTML('dash') + '</div>';
+}
+function toggleMemberPlans(btn) {
+  const box = document.getElementById('mb-compare');
+  if (!box) return;
+  box.hidden = !box.hidden;
+  btn.setAttribute('aria-expanded', String(!box.hidden));
+  box.querySelectorAll('.reveal').forEach(el => el.classList.add('is-in'));
+}
+function memberTab(tab) {
+  MEMBER.tab = tab;
+  document.querySelectorAll('#member-root .mb-tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
+  document.querySelectorAll('#member-root .mb-pane').forEach(p => { p.hidden = p.dataset.tab !== tab; });
+}
+
 function renderMember() {
   const root = document.getElementById('member-root');
   if (!root) return;
@@ -92,58 +116,55 @@ function renderMember() {
     root.innerHTML =
       (pendingOrder ? '<div class="dash-pending-pay"><svg><use href="#i-clock"/></svg><span>' + escapeHtml(t('Recibimos tu pago de la membresía y lo estamos verificando. Te avisaremos por correo.')) + '</span></div>' : '') +
       (lapsed && !pendingOrder ? '<div class="dash-pending-pay is-error"><span>' + escapeHtml(t('Tu membresía venció. Renueva para seguir recibiendo tus flyers y asesorías.')) + '</span></div>' : '') +
-      '<div class="mb-plans mb-plans--dash">' + planCardsHTML('dash') + '</div>';
-    root.querySelectorAll('.reveal').forEach(el => el.classList.add('is-in'));
+      memberMiniHTML();
     return;
   }
   const plan = (SITE_CFG.plans || {})[m.plan_id] || {};
   const fLeft = Math.max(0, m.flyers_total - m.flyers_used), mLeft = Math.max(0, m.meetings_total - m.meetings_used);
   const statusTxt = m.courtesy ? t('Cortesía de DGP') : m.status === 'past_due' ? t('Pago pendiente') : (m.cancel_at_period_end ? t('No se renovará') : t('Activa'));
   const renewTxt = m.courtesy ? t('Tus flyers y asesorías se renuevan el') : m.cancel_at_period_end ? t('Activa hasta el') : (m.method === 'square' ? t('Se renueva el') : t('Vence el'));
-  const methodTxt = m.courtesy ? 'Acceso de cortesía' : (m.method === 'square' ? 'Tarjeta (automático)' : 'Zelle (mes a mes)');
-  const pct = (u, tot) => Math.min(100, Math.round(u / Math.max(1, tot) * 100));
+  const q = MEMBER.quota || { used: 0, limit: 0 };
   const raffle = MEMBER.raffle;
-  const ring = (u, tot, color) => '<div class="mb-ring" style="--p:' + pct(u, tot) + ';--c:' + color + '"><span>' + u + '<small>/' + tot + '</small></span></div>';
+  const tab = MEMBER.tab || 'flyers';
+  const meter = (label, used, total) => '<div class="mb-meter"><span>' + escapeHtml(label) + '</span><b>' + Math.max(0, total - used) + '<small>/' + total + '</small></b>' +
+    '<i><em style="width:' + Math.min(100, Math.round((total - used) / Math.max(1, total) * 100)) + '%"></em></i></div>';
+  const tabs = [['flyers', t('Flyers')], ['meetings', t('Asesorías')], ['coach', t('Coach IA')], ['raffle', t('Sorteo')], ['posts', t('Exclusivo')]];
 
   root.innerHTML =
-    '<div class="mb-hero">' +
-      '<div class="mb-hero-main">' +
+    '<div class="mb-bar">' +
+      '<div class="mb-bar-main">' +
         '<div class="mb-hero-kicker"><span class="mb-dot' + (m.status === 'past_due' ? ' is-warn' : '') + '"></span>' + escapeHtml(statusTxt) + '</div>' +
         '<h3>' + escapeHtml(t('Membresía')) + ' ' + escapeHtml(pick(plan.name, plan.name_en)) + '</h3>' +
-        '<p>' + escapeHtml(renewTxt) + ' <b>' + escapeHtml(fmtDay(m.period_end)) + '</b> · ' + escapeHtml(t(m.method === 'square' ? 'Tarjeta (automático)' : 'Zelle (mes a mes)')) + '</p>' +
-        '<div class="mb-hero-actions">' +
-          (!m.courtesy && (m.method !== 'square' || m.cancel_at_period_end) ? '<button class="ui-btn ui-btn--light ui-btn--sm" onclick="openPlanCheckout(\'' + m.plan_id + '\')">' + escapeHtml(t('Renovar un mes')) + '</button>' : '') +
-          '<button class="ui-btn ui-btn--glass ui-btn--sm" onclick="openSurvey()">' + escapeHtml(t('Editar datos de mi negocio')) + '</button>' +
-          (!m.courtesy && !m.cancel_at_period_end && m.method === 'square' ? '<button class="ui-btn ui-btn--glass ui-btn--sm" onclick="cancelMembership()">' + escapeHtml(t('Cancelar renovación')) + '</button>' : '') +
-        '</div>' +
+        '<p>' + escapeHtml(renewTxt) + ' <b>' + escapeHtml(fmtDay(m.period_end)) + '</b>' + (m.courtesy ? '' : ' · ' + escapeHtml(t(m.method === 'square' ? 'Tarjeta (automático)' : 'Zelle (mes a mes)'))) + '</p>' +
       '</div>' +
-      '<div class="mb-hero-stats">' +
-        '<div class="mb-stat">' + ring(m.flyers_used, m.flyers_total, '#7fe3ff') + '<div><b>' + escapeHtml(t('Flyers del mes')) + '</b><span>' + fLeft + ' ' + escapeHtml(t('disponibles')) + '</span></div></div>' +
-        '<div class="mb-stat">' + ring(m.meetings_used, m.meetings_total, '#ffd27a') + '<div><b>' + escapeHtml(t('Asesorías del mes')) + '</b><span>' + mLeft + ' ' + escapeHtml(t('disponibles')) + '</span></div></div>' +
+      '<div class="mb-meters">' + meter(t('Flyers'), m.flyers_used, m.flyers_total) + meter(t('Asesorías'), m.meetings_used, m.meetings_total) + meter(t('Coach IA'), q.used, q.limit) + '</div>' +
+      '<div class="mb-bar-actions">' +
+        (!m.courtesy && (m.method !== 'square' || m.cancel_at_period_end) ? '<button class="ui-btn ui-btn--light ui-btn--sm" onclick="openPlanCheckout(\'' + m.plan_id + '\')">' + escapeHtml(t('Renovar un mes')) + '</button>' : '') +
+        '<button class="ui-btn ui-btn--glass ui-btn--sm" onclick="openSurvey()">' + escapeHtml(t('Datos de mi negocio')) + '</button>' +
+        (!m.courtesy && !m.cancel_at_period_end && m.method === 'square' ? '<button class="ui-btn ui-btn--glass ui-btn--sm" onclick="cancelMembership()">' + escapeHtml(t('Cancelar renovación')) + '</button>' : '') +
       '</div>' +
     '</div>' +
     (!MEMBER.survey ? '<div class="dash-pending-pay"><svg><use href="#i-clock"/></svg><span>' + escapeHtml(t('Completa la encuesta de tu negocio para que podamos diseñar tus flyers.')) + '</span><button class="ui-btn ui-btn--primary ui-btn--sm" onclick="openSurvey()">' + escapeHtml(t('Completar ahora')) + '</button></div>' : '') +
-    '<div class="mb-grid">' +
-      '<div class="mb-card">' +
-        '<div class="mb-card-head"><h4>' + escapeHtml(t('Mis flyers')) + '</h4><button class="ui-btn ui-btn--primary ui-btn--sm" ' + (fLeft ? '' : 'disabled ') + 'onclick="openRequest(\'flyer\')"><svg><use href="#i-plus"/></svg>' + escapeHtml(t('Pedir flyer')) + '</button></div>' +
-        (MEMBER.flyers.length ? '<ul class="mb-list">' + MEMBER.flyers.map(flyerItem).join('') + '</ul>' : '<p class="mb-empty">' + escapeHtml(t('Aún no has pedido flyers este mes. Cuéntanos qué necesitas y nuestro equipo lo diseña.')) + '</p>') +
-      '</div>' +
-      '<div class="mb-card">' +
-        '<div class="mb-card-head"><h4>' + escapeHtml(t('Mis asesorías')) + '</h4><button class="ui-btn ui-btn--primary ui-btn--sm" ' + (mLeft ? '' : 'disabled ') + 'onclick="openRequest(\'meeting\')"><svg><use href="#i-plus"/></svg>' + escapeHtml(t('Agendar')) + '</button></div>' +
-        (MEMBER.meetings.length ? '<ul class="mb-list">' + MEMBER.meetings.map(meetingItem).join('') + '</ul>' : '<p class="mb-empty">' + escapeHtml(t('Agenda tu primera sesión de seguimiento con el equipo de DGP.')) + '</p>') +
-      '</div>' +
-      '<div class="mb-card mb-card--raffle">' +
-        '<div class="mb-card-head"><h4>' + escapeHtml(t('Sorteo del mes')) + '</h4><span class="chip chip--gold">' + escapeHtml(t('Participas automáticamente')) + '</span></div>' +
-        (raffle ? '<div class="mb-raffle"><svg><use href="#i-award"/></svg><div><b>' + escapeHtml(pick(raffle.prize, raffle.prize_en)) + '</b><span>' +
-          escapeHtml(raffle.winner_name ? t('Ganador') + ': ' + raffle.winner_name : new Date(raffle.month + 'T12:00:00').toLocaleDateString(locale(), { month: 'long', year: 'numeric' })) + '</span></div></div>'
-          : '<p class="mb-empty">' + escapeHtml(t('Muy pronto anunciamos el premio de este mes.')) + '</p>') +
-      '</div>' +
-      coachCard() +
-      '<div class="mb-card mb-card--wide">' +
-        '<div class="mb-card-head"><h4>' + escapeHtml(t('Contenido exclusivo')) + '</h4><span class="mb-card-sub">' + escapeHtml(t('Los miembros lo ven primero')) + '</span></div>' +
-        (MEMBER.posts.length ? '<div class="mb-posts">' + MEMBER.posts.map(postItem).join('') + '</div>' : '<p class="mb-empty">' + escapeHtml(t('Pronto publicaremos aquí plantillas, clases y guías exclusivas para miembros.')) + '</p>') +
-      '</div>' +
-    '</div>';
+    '<div class="mb-tabs" role="tablist">' + tabs.map(([id, label]) => '<button type="button" role="tab" class="mb-tab" data-tab="' + id + '" aria-selected="' + (id === tab) + '" onclick="memberTab(\'' + id + '\')">' + escapeHtml(label) + '</button>').join('') + '</div>' +
+    '<div class="mb-pane" data-tab="flyers"' + (tab === 'flyers' ? '' : ' hidden') + '><div class="mb-card">' +
+      '<div class="mb-card-head"><h4>' + escapeHtml(t('Mis flyers')) + '</h4><button class="ui-btn ui-btn--primary ui-btn--sm" ' + (fLeft ? '' : 'disabled ') + 'onclick="openRequest(\'flyer\')"><svg><use href="#i-plus"/></svg>' + escapeHtml(t('Pedir flyer')) + '</button></div>' +
+      (MEMBER.flyers.length ? '<ul class="mb-list">' + MEMBER.flyers.map(flyerItem).join('') + '</ul>' : '<p class="mb-empty">' + escapeHtml(t('Aún no has pedido flyers este mes. Cuéntanos qué necesitas y nuestro equipo lo diseña.')) + '</p>') +
+    '</div></div>' +
+    '<div class="mb-pane" data-tab="meetings"' + (tab === 'meetings' ? '' : ' hidden') + '><div class="mb-card">' +
+      '<div class="mb-card-head"><h4>' + escapeHtml(t('Mis asesorías')) + '</h4><button class="ui-btn ui-btn--primary ui-btn--sm" ' + (mLeft ? '' : 'disabled ') + 'onclick="openRequest(\'meeting\')"><svg><use href="#i-plus"/></svg>' + escapeHtml(t('Agendar')) + '</button></div>' +
+      (MEMBER.meetings.length ? '<ul class="mb-list">' + MEMBER.meetings.map(meetingItem).join('') + '</ul>' : '<p class="mb-empty">' + escapeHtml(t('Agenda tu primera sesión de seguimiento con el equipo de DGP.')) + '</p>') +
+    '</div></div>' +
+    '<div class="mb-pane" data-tab="coach"' + (tab === 'coach' ? '' : ' hidden') + '>' + coachCard() + '</div>' +
+    '<div class="mb-pane" data-tab="raffle"' + (tab === 'raffle' ? '' : ' hidden') + '><div class="mb-card mb-card--raffle">' +
+      '<div class="mb-card-head"><h4>' + escapeHtml(t('Sorteo del mes')) + '</h4><span class="chip chip--gold">' + escapeHtml(t('Participas automáticamente')) + '</span></div>' +
+      (raffle ? '<div class="mb-raffle"><svg><use href="#i-award"/></svg><div><b>' + escapeHtml(pick(raffle.prize, raffle.prize_en)) + '</b><span>' +
+        escapeHtml(raffle.winner_name ? t('Ganador') + ': ' + raffle.winner_name : new Date(raffle.month + 'T12:00:00').toLocaleDateString(locale(), { month: 'long', year: 'numeric' })) + '</span></div></div>'
+        : '<p class="mb-empty">' + escapeHtml(t('Muy pronto anunciamos el premio de este mes.')) + '</p>') +
+    '</div></div>' +
+    '<div class="mb-pane" data-tab="posts"' + (tab === 'posts' ? '' : ' hidden') + '><div class="mb-card">' +
+      '<div class="mb-card-head"><h4>' + escapeHtml(t('Contenido exclusivo')) + '</h4><span class="mb-card-sub">' + escapeHtml(t('Los miembros lo ven primero')) + '</span></div>' +
+      (MEMBER.posts.length ? '<div class="mb-posts">' + MEMBER.posts.map(postItem).join('') + '</div>' : '<p class="mb-empty">' + escapeHtml(t('Pronto publicaremos aquí plantillas, clases y guías exclusivas para miembros.')) + '</p>') +
+    '</div></div>';
 }
 
 // ── Coach IA de negocio ──

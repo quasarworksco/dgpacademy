@@ -1079,6 +1079,8 @@ window.I18N_EN = {
   "API key de Groq": "Groq API key",
   "Modelo": "Model",
   "Llama 3.3 70B (recomendado)": "Llama 3.3 70B (recommended)",
+  "GPT-OSS 120B (recomendado)": "GPT-OSS 120B (recommended)",
+  "GPT-OSS 20B (rápido)": "GPT-OSS 20B (fast)",
   "Llama 3.1 8B (rápido y económico)": "Llama 3.1 8B (fast and cheap)",
   "Consultas al mes sin membresía": "Monthly questions without membership",
   "Las consultas de cada membresía se ajustan en Membresías → Planes.": "Each membership’s questions are set in Memberships → Plans.",
@@ -1104,7 +1106,27 @@ window.I18N_EN = {
   "No se puede eliminar a un administrador": "An administrator can’t be deleted",
   "No se puede suspender a un administrador": "An administrator can’t be suspended",
   "Cerramos tu sesión por inactividad. Vuelve a entrar cuando quieras.": "We signed you out for inactivity. Log in again whenever you like.",
-  "Tu sesión se cerrará en 1 minuto por inactividad.": "Your session will close in 1 minute due to inactivity."
+  "Tu sesión se cerrará en 1 minuto por inactividad.": "Your session will close in 1 minute due to inactivity.",
+  "Guardado": "Saved",
+  "No se pudo guardar": "Couldn’t save",
+  "Escribe tu respuesta…": "Write your answer…",
+  "Analizar con el coach IA": "Analyze with the AI coach",
+  "Guardando…": "Saving…",
+  "respondidas": "answered",
+  "El coach está leyendo tus respuestas…": "The coach is reading your answers…",
+  "Análisis de tu coach": "Your coach’s analysis",
+  "Puedes editar tus respuestas y volver a analizarlas cuando quieras.": "You can edit your answers and analyze them again any time.",
+  "Tamaño de letra": "Text size",
+  "min de lectura": "min read",
+  "Incluye cuaderno de trabajo": "Includes a workbook",
+  "Cuaderno de trabajo": "Workbook",
+  "Ideas clave": "Key ideas",
+  "Membresía DGP": "DGP Membership",
+  "Flyers para tu negocio, asesorías 1 a 1, Coach IA y sorteos cada mes.": "Flyers for your business, 1-on-1 advisory, AI Coach and monthly raffles.",
+  "Comparar planes": "Compare plans",
+  "Sorteo": "Raffle",
+  "Exclusivo": "Exclusive",
+  "Datos de mi negocio": "My business details"
 };
 
 // Textos con partes variables: [expresión, reemplazo]

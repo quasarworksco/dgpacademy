@@ -104,7 +104,11 @@ async function loadContent(product, rootSelector) {
   const root = document.querySelector(rootSelector);
   data.forEach(row => {
     const el = root.querySelector('#' + CSS.escape(row.item_id));
-    if (el) { el.innerHTML = row.html; useRealLogos(el); }
+    if (el) {
+      el.innerHTML = row.html; useRealLogos(el);
+      if (typeof addReadingTime === 'function') addReadingTime(el);
+      if (typeof initWorkbooks === 'function') initWorkbooks(el, product).catch(e => console.warn('cuaderno', e.message));
+    }
   });
   _contentLoaded[product] = LANG;
   return true;
@@ -129,6 +133,7 @@ function useRealLogos(root) {
 
 function clearContent() {
   Object.keys(_contentLoaded).forEach(k => delete _contentLoaded[k]);
+  if (typeof clearExerciseCache === 'function') clearExerciseCache();
   document.querySelectorAll('#course-screen .lesson, .book-chapter').forEach(el => { el.innerHTML = ''; });
 }
 

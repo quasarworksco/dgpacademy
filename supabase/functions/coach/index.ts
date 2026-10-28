@@ -19,19 +19,43 @@ const CORS = {
 };
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...CORS, "Content-Type": "application/json" } });
 
+// Modelos preferidos en orden; si el configurado ya no existe en Groq, se usa el primero disponible
+const PREFERRED = ["llama-3.3-70b-versatile", "openai/gpt-oss-120b", "meta-llama/llama-4-maverick-17b-128e-instruct",
+  "qwen/qwen3-32b", "openai/gpt-oss-20b", "llama-3.1-8b-instant"];
+
+async function pickModel(key: string, failed: string) {
+  const res = await fetch("https://api.groq.com/openai/v1/models", { headers: { Authorization: `Bearer ${key}` } });
+  const data = await res.json().catch(() => ({}));
+  const ids: string[] = (data.data || []).filter((m: any) => m.active !== false).map((m: any) => m.id);
+  const model = PREFERRED.find((m) => m !== failed && ids.includes(m)) ||
+    ids.find((m) => m !== failed && !/whisper|guard|tts|playai|orpheus|compound/i.test(m));
+  if (!model) return null;
+  await sql`update public.settings set value = jsonb_set(value, '{model}', to_jsonb(${model}::text)) where key = 'ai'`;
+  return model;
+}
+
 async function groq(messages: { role: string; content: string }[], maxTokens = 900) {
   const [k] = await sql`select value from private.secrets where key = 'groq_api_key'`;
   if (!k?.value) throw new Error("Falta la API key de Groq en Configuración → IA");
   const [cfg] = await sql`select value from public.settings where key = 'ai'`;
-  const model = cfg?.value?.model || "llama-3.3-70b-versatile";
-  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${k.value}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ model, messages, temperature: 0.6, max_tokens: maxTokens }),
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error?.message || `Groq respondió ${res.status}`);
-  return (data.choices?.[0]?.message?.content || "").trim();
+  let model = cfg?.value?.model || PREFERRED[0];
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${k.value}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ model, messages, temperature: 0.6, max_tokens: maxTokens }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) return { text: String(data.choices?.[0]?.message?.content || "").replace(/<think>[\s\S]*?<\/think>/g, "").trim(), model };
+    const msg = data.error?.message || `Groq respondió ${res.status}`;
+    const gone = data.error?.code === "model_not_found" || data.error?.code === "model_decommissioned" || /does not exist|decommissioned|not have access/i.test(msg);
+    if (attempt === 0 && gone) {
+      const next = await pickModel(k.value, model);
+      if (next) { model = next; continue; }
+    }
+    throw new Error(msg);
+  }
+  throw new Error("Groq no respondió");
 }
 
 const SYSTEM = {
@@ -99,7 +123,7 @@ Deno.serve(async (req) => {
     if (body.action === "test") {
       if (!prof?.is_admin) return json({ error: "Solo administradores" }, 403);
       const out = await groq([{ role: "user", content: "Responde solo: OK" }], 5);
-      return json({ ok: true, reply: out });
+      return json({ ok: true, reply: out.text, model: out.model });
     }
 
     if (body.action === "analyze") {
@@ -117,10 +141,10 @@ Deno.serve(async (req) => {
         prof?.full_name ? `Nombre: ${String(prof.full_name).split(" ")[0]}` : "",
         bp ? `Perfil: ${bp.kind === "business" ? "negocio" : "personal"} · ${bp.business_name || ""} · ${bp.industry || ""} · ${bp.description || ""} · etapa ${bp.stage || ""}` : "",
       ].filter(Boolean).join("\n");
-      const reply = await groq([
+      const reply = (await groq([
         { role: "system", content: SYSTEM[lang] },
         { role: "user", content: `${context}\n\nRespuestas del estudiante:\n${answers}` },
-      ]);
+      ])).text;
       await addUse(user.id);
       await sql`update public.exercise_answers set feedback = ${reply}, feedback_at = now()
         where user_id = ${user.id} and product_id = ${body.product_id} and exercise_id = ${body.exercise_id}`;
@@ -137,11 +161,11 @@ Deno.serve(async (req) => {
       const lang = body.lang === "en" || prof?.lang === "en" ? "en" : "es";
       const history = await sql`select role, content from public.coach_messages where user_id = ${user.id} order by created_at desc limit 10`;
       const ctx = await profileContext(user.id);
-      const reply = await groq([
+      const reply = (await groq([
         { role: "system", content: CHAT[lang] + (ctx ? `\n\nDatos del negocio del miembro:\n${ctx}` : "") },
         ...history.reverse().map((m: any) => ({ role: m.role, content: m.content })),
         { role: "user", content: text },
-      ], 800);
+      ], 800)).text;
       await addUse(user.id);
       // La pregunta y la respuesta se guardan juntas: si la IA falla, no queda una pregunta suelta
       await sql`insert into public.coach_messages (user_id, role, content, created_at) values

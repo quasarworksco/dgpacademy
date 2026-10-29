@@ -1053,7 +1053,7 @@ function enterCourse(lessonId) {
 // ── Stats del dashboard ────────────────────────────────────────────────────────
 const LESSON_TITLES = {
   home:'Introducción al curso', l1:'¿Cómo funciona la web?', l2:'HTML desde cero', l3:'CSS — estilo y diseño',
-  l4:'JavaScript — interactividad', l5:'GitHub y control de versiones', l6:'IA: Claude y Gemini Pro',
+  l4:'JavaScript — interactividad', l5:'GitHub y control de versiones', l6:'IA: Claude Code y GitHub',
   l7:'GitHub Pages y publicación', l8:'Servicios y herramientas extra', l9:'APIs — cómo todo se conecta',
   l10:'Flujo completo de un proyecto', l11:'Diseño y tipografía', l12:'CSS avanzado y animaciones',
   l13:'Responsive design', l14:'SEO y posicionamiento', l15:'Analítica y métricas', l16:'Portafolio y primeros clientes'
@@ -1115,10 +1115,17 @@ function updateDashStats() {
     const cur = ri.last_item && ri.last_item !== 'ai0' ? ri.last_item : (doneIA ? nextIA : 'ai0');
     const l = AI_COURSE.lessons.find(x => x.id === cur) || AI_COURSE.lessons[0];
     card.classList.remove('is-locked');
-    document.getElementById('dash-continue-kicker').textContent = cur === 'ai0' ? t('Empieza aquí') : t('Tu siguiente lección') + ' · ' + t('Lección') + ' ' + AI_LESSONS.indexOf(cur);
-    document.getElementById('dash-continue-title').textContent = aiTitle(l);
-    document.getElementById('dash-continue-meta').textContent = t('IA aplicada a los negocios') + ' · ' + doneIA + ' ' + t('de') + ' 16 ' + t('completadas');
-    document.getElementById('dash-continue-btn').innerHTML = ICON.play + (doneIA ? t('Continuar') : t('Comenzar'));
+    if (aiCourseDone()) {
+      document.getElementById('dash-continue-kicker').textContent = t('Programa completado');
+      document.getElementById('dash-continue-title').textContent = t('¡Felicitaciones! Terminaste IA aplicada a los negocios');
+      document.getElementById('dash-continue-meta').textContent = t('Tu certificado ya está disponible.');
+      document.getElementById('dash-continue-btn').innerHTML = ICON.award + t('Ver certificado');
+    } else {
+      document.getElementById('dash-continue-kicker').textContent = cur === 'ai0' ? t('Empieza aquí') : t('Tu siguiente lección') + ' · ' + t('Lección') + ' ' + AI_LESSONS.indexOf(cur);
+      document.getElementById('dash-continue-title').textContent = aiTitle(l);
+      document.getElementById('dash-continue-meta').textContent = t('IA aplicada a los negocios') + ' · ' + doneIA + ' ' + t('de') + ' 16 ' + t('completadas');
+      document.getElementById('dash-continue-btn').innerHTML = ICON.play + (doneIA ? t('Continuar') : t('Comenzar'));
+    }
   }
   updateCourseBtn(done);
   renderCertificates();
@@ -1136,7 +1143,7 @@ function preferAICourse() {
 }
 
 function continueCourse() {
-  if (preferAICourse()) { showAICourse(); return; }
+  if (preferAICourse()) { if (aiCourseDone()) openCertificate('ia'); else showAICourse(); return; }
   if (!hasWebAccess) {
     const box = document.getElementById('dash-activate');
     if (box) { box.style.display = 'grid'; box.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
@@ -1149,7 +1156,8 @@ function continueCourse() {
 
 function updateCourseBtn(done) {
   const btn = document.getElementById('btn-web-dev');
-  if (!btn || btn.disabled) return;
+  // Sin acceso el botón es de compra (lo pone updateAccessUI); no se reemplaza
+  if (!btn || btn.disabled || !hasWebAccess) return;
   if (done) {
     btn.innerHTML = ICON.award + 'Completado · Ver certificado';
     btn.className = 'ui-btn ui-btn--block btn-course is-done';

@@ -82,7 +82,14 @@ async function aiFinish() {
   const missing = AI_COUNTED.filter(id => !readSet('ia').has(id));
   if (missing.length) { toast(t('Te faltan lecciones por completar:') + ' ' + missing.map(id => AI_LESSONS.indexOf(id)).join(', ')); goToAI(missing[0]); return; }
   await new Promise(r => setTimeout(r, 800));
-  openCertificate('ia');
+  await openCertificate('ia');
+  updateAIAccess();
+  if (typeof renderBadges === 'function') renderBadges();
+}
+
+// Terminado: las 16 lecciones completadas o el certificado ya emitido
+function aiCourseDone() {
+  return AI_COUNTED.every(id => readSet('ia').has(id)) || !!(STATE.certificates && STATE.certificates['ia']);
 }
 
 function updateAIProgress() {
@@ -103,7 +110,14 @@ function updateAIAccess() {
   if (!btn) return;
   const status = document.getElementById('ia-status');
   const prog = document.getElementById('ia-progress');
-  if (hasAccess('ia')) {
+  if (hasAccess('ia') && aiCourseDone()) {
+    // Programa terminado: se marca como completado y el botón abre el certificado
+    btn.innerHTML = '<svg><use href="#i-award"/></svg>' + escapeHtml(t('Completado · Ver certificado'));
+    btn.className = 'ui-btn ui-btn--block btn-course is-done';
+    btn.disabled = false; btn.onclick = () => openCertificate('ia');
+    if (status) { status.textContent = t('Completado'); status.className = 'chip chip--green course-status'; }
+    if (prog) prog.hidden = false;
+  } else if (hasAccess('ia')) {
     const started = readSet('ia').size > 0;
     btn.innerHTML = '<svg><use href="#i-play"/></svg>' + escapeHtml(t(started ? 'Continuar' : 'Empezar el programa'));
     btn.className = 'ui-btn ui-btn--block btn-course is-active';

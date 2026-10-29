@@ -35,7 +35,7 @@ function goTo(id) {
 
   const labels = {
     home:'Inicio',l1:'Cómo funciona la web',l2:'HTML desde cero',
-    l3:'CSS',l4:'JavaScript',l5:'GitHub',l6:'Claude y Gemini',
+    l3:'CSS',l4:'JavaScript',l5:'GitHub',l6:'Claude Code y GitHub',
     l7:'Firebase',l8:'Herramientas extra',l9:'APIs',l10:'Flujo completo',
     l11:'Diseño y tipografía',l12:'CSS avanzado y animaciones',l13:'Responsive design',
     l14:'SEO y posicionamiento',l15:'Analítica y métricas',l16:'Portafolio y primeros clientes'

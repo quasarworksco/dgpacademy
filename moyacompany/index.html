@@ -1,11 +1,12 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Guía DGP Empresas · Moya & Company</title>
 <meta name="description" content="Guía para usar la plataforma de capacitación de empleados de DGP Academy con Moya & Company.">
 <meta name="robots" content="noindex, nofollow">
+<script>(function(){var l;try{l=localStorage.getItem('dgp-lang')}catch(e){}var q=new URLSearchParams(location.search).get('lang');if(q==='es'||q==='en')l=q;if(l!=='es'){document.documentElement.classList.add('i18n-wait');setTimeout(function(){document.documentElement.classList.remove('i18n-wait')},2000)}})();</script>
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
 <style>
 @font-face { font-family: "Inter Tight"; src: url("../assets/fonts/inter-tight-latin.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
@@ -28,6 +29,11 @@ a { color: var(--accent); }
 .brand i { font-style: normal; color: var(--text3); font-weight: 400; }
 .brand span { font-weight: 400; color: var(--text3); }
 .btn { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 18px; border-radius: 99px; background: var(--accent); color: #fff; font: 650 14.5px/1 var(--font); text-decoration: none; white-space: nowrap; }
+.top-r { display: flex; align-items: center; gap: 10px; }
+.lang { display: inline-flex; padding: 3px; border-radius: 99px; background: var(--bg); border: 1px solid var(--border); }
+.lang button { border: 0; background: none; padding: 6px 11px; border-radius: 99px; font: 600 12.5px var(--font); color: var(--text3); cursor: pointer; }
+.lang button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(10,20,48,.12); }
+.i18n-wait body { visibility: hidden; }
 .btn--ghost { background: #fff; color: var(--ink); border: 1px solid var(--border); }
 /* Portada */
 .hero { background: linear-gradient(180deg, #0a1430, #13224a); color: #fff; padding: clamp(48px, 8vw, 88px) 0 clamp(40px, 6vw, 64px); }
@@ -91,7 +97,7 @@ details p { margin: 0 0 14px; color: var(--text2); font-size: 15px; }
 footer { padding: 34px 0 50px; color: var(--text3); font-size: 14px; border-top: 1px solid var(--border); }
 footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 @media (max-width: 900px) { .grid3 { grid-template-columns: 1fr; } .grid2 { grid-template-columns: 1fr; } .status { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 560px) { .brand span, .brand-moya { display: none; } .steps > li { padding: 16px 16px 16px 58px; } .steps > li::before { left: 14px; width: 30px; height: 30px; font-size: 14px; } .status { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .brand span, .brand-moya { display: none; } .top .btn { padding: 0 12px; height: 36px; font-size: 13px; } .steps > li { padding: 16px 16px 16px 58px; } .steps > li::before { left: 14px; width: 30px; height: 30px; font-size: 14px; } .status { grid-template-columns: 1fr; } }
 @media print { .top, .toc { display: none; } section { break-inside: avoid; } }
 </style>
 </head>
@@ -100,7 +106,8 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
 <header class="top">
   <div class="wrap">
     <a class="brand" href="../"><img src="../assets/img/isotipo.svg" alt="">DGP <span>Academy</span> <i>×</i> <img src="../assets/img/moya-mark-sm.png" alt="Moya & Company"><span class="brand-moya">Moya &amp; Company</span></a>
-    <a class="btn" href="../">Ir a la plataforma</a>
+    <div class="top-r"><div class="lang" role="group" aria-label="Language / Idioma"><button type="button" data-set="en">EN</button><button type="button" data-set="es">ES</button></div>
+    <a class="btn" href="../">Ir a la plataforma</a></div>
   </div>
 </header>
 
@@ -165,7 +172,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
       <li><h3>Escribir los SOPs y capacitaciones</h3>
         <span class="path">Pestaña SOPs y capacitaciones → + Nuevo documento</span>
         <ul><li>Elige el tipo: <b>SOP</b> (procedimiento) o <b>Capacitación</b>.</li>
-          <li>Escribe el título y pulsa <b>Generar borrador</b>: la IA redacta el documento con objetivo, pasos, errores comunes y cómo saber que se hizo bien. Si agregas notas del cliente (cómo lo hacen hoy, herramientas, horarios), el borrador sale más exacto.</li>
+          <li>Escribe el título y pulsa <b>Generar borrador</b>: la IA redacta el documento con objetivo, pasos, errores comunes y cómo saber que se hizo bien. Elige si el borrador sale en inglés o en español. Si agregas notas del cliente (cómo lo hacen hoy, herramientas, horarios), el borrador sale más exacto.</li>
           <li>Revisa el texto y completa lo que esté entre [corchetes].</li>
           <li>Marca a qué <b>niveles</b> o <b>cargos</b> se asigna, si es <b>obligatorio</b> y si está <b>publicado</b>.</li></ul>
         <p class="tip">Formato del contenido: <b># </b>título de sección · <b>1. </b>paso numerado · <b>- </b>punto de lista · <b>&gt; </b>nota importante (sale resaltada) · línea en blanco para separar párrafos.</p></li>
@@ -173,7 +180,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
         <span class="path">Pestaña Equipo → + Agregar empleado</span>
         <p>Escribe su correo, nombre, rol (<b>Empleado</b> o <b>Gerente</b>), nivel, cargo y área. Cada empresa tiene un número de cupos; cuando se llenan, el botón se desactiva.</p></li>
       <li><h3>Enviar la invitación</h3>
-        <p>En la tabla del equipo, junto a cada persona que aún no se registró, pulsa <b>Enviar invitación</b>. Le llega un correo con el botón <b>Crear mi cuenta</b>, que abre el registro con su correo ya escrito.</p>
+        <p>En la tabla del equipo, junto a cada persona que aún no se registró, pulsa <b>Enviar invitación</b>. Le llega un correo (en inglés y español) con el botón <b>Crear mi cuenta</b>, que abre el registro con su correo ya escrito.</p>
         <p class="warn">Revisa bien el correo antes de enviar: la invitación se envía <b>una sola vez por clic</b> y no se reintenta. Si alguien no la recibe, revisa el correo y usa <b>Reenviar invitación</b>.</p></li>
       <li><h3>Crear certificaciones</h3>
         <span class="path">Pestaña Certificaciones → + Nueva certificación</span>
@@ -296,7 +303,41 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
   <div class="wrap"><span>DGP Academy · División educativa de DGP Global Group, en alianza con Moya &amp; Company.</span><a href="../">academy.dgpglobalgroup.com</a></div>
 </footer>
 
+<script src="en.js"></script>
 <script>
+// Idiomas: inglés principal, español segundo. El HTML está en español y se traduce con GUIDE_EN.
+(function () {
+  var dict = window.GUIDE_EN || {};
+  var meta = {
+    es: { title: 'Guía DGP Empresas · Moya & Company', desc: 'Guía para usar la plataforma de capacitación de empleados de DGP Academy con Moya & Company.' },
+    en: { title: 'DGP Business guide · Moya & Company', desc: 'Guide to the DGP Academy employee training platform with Moya & Company.' }
+  };
+  var nodes = [];
+  var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  var n;
+  while ((n = w.nextNode())) {
+    if (n.parentElement.closest('script, style')) continue;
+    var key = n.nodeValue.replace(/\s+/g, ' ').trim();
+    if (dict.hasOwnProperty(key)) nodes.push({ node: n, es: n.nodeValue, en: n.nodeValue.replace(key, dict[key]) });
+  }
+  function setLang(l) {
+    nodes.forEach(function (x) { x.node.nodeValue = l === 'en' ? x.en : x.es; });
+    document.documentElement.lang = l;
+    document.title = meta[l].title;
+    document.querySelector('meta[name="description"]').setAttribute('content', meta[l].desc);
+    document.querySelectorAll('[data-set]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === l)); });
+    document.documentElement.classList.remove('i18n-wait');
+  }
+  var lang;
+  try { lang = localStorage.getItem('dgp-lang'); } catch (e) {}
+  var q = new URLSearchParams(location.search).get('lang');
+  if (q === 'es' || q === 'en') lang = q;
+  setLang(lang === 'es' ? 'es' : 'en');
+  document.querySelectorAll('[data-set]').forEach(function (b) {
+    b.addEventListener('click', function () { try { localStorage.setItem('dgp-lang', b.dataset.set); } catch (e) {} setLang(b.dataset.set); });
+  });
+})();
+
 // Guarda el avance del checklist en este navegador
 (function () {
   var key = 'dgp-moya-checklist';

@@ -332,7 +332,8 @@ function oaDocForm(id) {
       oaField('Título', oaInput('oa-d-title', d.title, 'required maxlength="160"'), true) +
       oaField('Resumen (qué aprende o para qué sirve)', oaArea('oa-d-summary', d.summary, 2), true) +
       '<div class="oa-ai adm-field--wide"><b>✦ ' + escapeHtml(t('Borrador con IA')) + '</b><span>' + escapeHtml(t('Escribe el título y, si quieres, notas del cliente (cómo lo hacen hoy, herramientas, horarios). La IA redacta el documento y tú lo revisas antes de guardar.')) + '</span>' +
-        oaArea('oa-d-notes', '', 3, 'Notas del cliente (opcional)') + '<button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" id="oa-ai-btn" onclick="oaDraftDoc()">' + escapeHtml(t('Generar borrador')) + '</button></div>' +
+        oaArea('oa-d-notes', '', 3, 'Notas del cliente (opcional)') + '<div class="oa-ai-row"><select class="form-input" id="oa-d-lang" aria-label="' + escapeHtml(t('Idioma del borrador')) + '"><option value="en"' + (LANG === 'en' ? ' selected' : '') + '>English</option><option value="es"' + (LANG === 'es' ? ' selected' : '') + '>Español</option></select>' +
+        '<button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" id="oa-ai-btn" onclick="oaDraftDoc()">' + escapeHtml(t('Generar borrador')) + '</button></div></div>' +
       oaField('Contenido', oaArea('oa-d-body', d.body, 12, '# Título de sección\nTexto normal en párrafos.\n1. Paso numerado\n- Punto de lista\n> Nota importante'), true) +
       '<p class="oa-help adm-field--wide">' + escapeHtml(t('Formato: "# " título de sección · "1. " paso numerado · "- " punto · "> " nota importante · línea en blanco para separar párrafos.')) + '</p>' +
       '<div class="adm-field adm-field--wide"><span>' + escapeHtml(t('Asignar a niveles')) + '</span>' + checks(OA.levels, d.level_ids, 'name', 'lv') + '</div>' +
@@ -396,7 +397,7 @@ async function oaDraftDoc() {
   if (body.value.trim() && !confirm(t('El contenido actual se reemplazará por el borrador. ¿Continuar?'))) return;
   const btn = document.getElementById('oa-ai-btn'); btn.disabled = true; btn.textContent = t('Redactando…');
   try {
-    const { data, error } = await sb.functions.invoke('orgs', { body: { action: 'sop_draft', org_id: OA.cur, title, kind: oaVal('oa-d-kind'), area: oaVal('oa-d-area'), notes: oaVal('oa-d-notes') } });
+    const { data, error } = await sb.functions.invoke('orgs', { body: { action: 'sop_draft', org_id: OA.cur, title, kind: oaVal('oa-d-kind'), area: oaVal('oa-d-area'), notes: oaVal('oa-d-notes'), lang: oaVal('oa-d-lang') || LANG } });
     if (error) { let msg = error.message; try { const j = await error.context.json(); if (j.error) msg = j.error; } catch (x) {} throw new Error(msg); }
     if (data && data.error) throw new Error(data.error);
     body.value = data.body; body.style.height = 'auto'; body.style.height = Math.min(body.scrollHeight + 4, 600) + 'px';

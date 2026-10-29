@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía DGP Empresas · Moya & Company</title>
+<meta name="description" content="Guía para usar la plataforma de capacitación de empleados de DGP Academy con Moya & Company.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<style>
+@font-face { font-family: "Inter Tight"; src: url("../assets/fonts/inter-tight-latin.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("../assets/fonts/jetbrains-mono-latin.woff2") format("woff2"); font-weight: 100 800; font-display: swap; }
+:root {
+  --ink: #0a1430; --ink-2: #13224a; --accent: #1a56e8; --text: #1f2a44; --text2: #45526e; --text3: #6b7690;
+  --border: #e3e8f2; --bg: #f6f8fc; --card: #fff; --green: #15803d; --amber: #b45309; --violet: #6d28d9;
+  --font: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif; --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 var(--font); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+.wrap { width: min(1080px, 100% - 32px); margin: 0 auto; }
+/* Barra */
+.top { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 64px; }
+.brand { display: flex; align-items: center; gap: 8px; font: 700 16px/1 var(--font); color: var(--ink); text-decoration: none; white-space: nowrap; }
+.brand img { height: 26px; width: auto; }
+.brand i { font-style: normal; color: var(--text3); font-weight: 400; }
+.brand span { font-weight: 400; color: var(--text3); }
+.btn { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 18px; border-radius: 99px; background: var(--accent); color: #fff; font: 650 14.5px/1 var(--font); text-decoration: none; white-space: nowrap; }
+.btn--ghost { background: #fff; color: var(--ink); border: 1px solid var(--border); }
+/* Portada */
+.hero { background: linear-gradient(180deg, #0a1430, #13224a); color: #fff; padding: clamp(48px, 8vw, 88px) 0 clamp(40px, 6vw, 64px); }
+.kicker { font: 600 12px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #93c5fd; }
+.hero h1 { font: 700 clamp(32px, 5vw, 56px)/1.05 var(--font); letter-spacing: -.035em; margin: 14px 0 16px; max-width: 820px; }
+.hero p { font-size: clamp(16px, 1.7vw, 19px); color: #c7d2fe; max-width: 720px; margin: 0 0 26px; }
+.status { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 30px; }
+.status div { padding: 14px 16px; border-radius: 16px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); }
+.status b { display: block; font: 700 18px/1.25 var(--font); color: #fff; }
+.status span { font-size: 13px; color: #a5b4fc; }
+/* Índice */
+.toc { display: flex; flex-wrap: wrap; gap: 8px; padding: 18px 0; }
+.toc a { padding: 7px 13px; border-radius: 99px; background: #fff; border: 1px solid var(--border); color: var(--text2); text-decoration: none; font: 600 13.5px/1.2 var(--font); }
+.toc a:hover { border-color: var(--accent); color: var(--accent); }
+/* Secciones */
+section { padding: clamp(36px, 5vw, 56px) 0; border-top: 1px solid var(--border); }
+h2 { font: 700 clamp(25px, 3.2vw, 34px)/1.15 var(--font); letter-spacing: -.025em; color: var(--ink); margin: 0 0 10px; }
+h2 small { display: block; font: 600 12px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.lead { font-size: 17px; color: var(--text2); max-width: 760px; margin: 0 0 24px; }
+h3 { font: 700 18px/1.3 var(--font); color: var(--ink); margin: 0 0 6px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px 22px; }
+.card p, .card li { font-size: 15px; color: var(--text2); }
+.card p { margin: 0 0 8px; }
+.card ul { margin: 6px 0 0; padding-left: 20px; }
+.card li { margin-bottom: 4px; }
+.role-ic { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; font-size: 22px; margin-bottom: 12px; }
+.r1 { background: #e0ecff; } .r2 { background: #fef3c7; } .r3 { background: #dcfce7; }
+/* Pasos */
+.steps { counter-reset: s; display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.steps > li { counter-increment: s; position: relative; background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 18px 20px 18px 70px; }
+.steps > li::before { content: counter(s); position: absolute; left: 20px; top: 18px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; font: 700 15px/1 var(--font); }
+.steps h3 { margin-bottom: 4px; }
+.steps p { margin: 0 0 6px; color: var(--text2); font-size: 15px; }
+.steps ul { margin: 6px 0 0; padding-left: 20px; color: var(--text2); font-size: 15px; }
+.path { display: inline-block; font: 600 12.5px/1.4 var(--mono); color: var(--ink-2); background: #eef2ff; padding: 3px 9px; border-radius: 8px; margin: 2px 0 6px; }
+.tip { margin: 10px 0 0; padding: 10px 14px; border-radius: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #14532d; font-size: 14.5px; }
+.warn { margin: 10px 0 0; padding: 10px 14px; border-radius: 12px; background: #fffbeb; border: 1px solid #fde68a; color: #78350f; font-size: 14.5px; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 99px; font: 700 11px/1.5 var(--font); letter-spacing: .04em; text-transform: uppercase; margin-right: 4px; }
+.t-ok { background: #dcfce7; color: var(--green); } .t-p { background: #fef3c7; color: var(--amber); } .t-u { background: #ffedd5; color: #c2410c; }
+/* Tabla */
+table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; font-size: 15px; }
+th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { background: #f8fafd; font: 600 12px/1.3 var(--font); letter-spacing: .06em; text-transform: uppercase; color: var(--text3); }
+tr:last-child td { border-bottom: 0; }
+td b { color: var(--ink); }
+.tbl { overflow-x: auto; }
+/* Checklist */
+.check { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.check li { display: flex; gap: 12px; align-items: flex-start; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px; font-size: 15px; color: var(--text2); }
+.check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--green); flex: none; }
+.check b { color: var(--ink); }
+/* Preguntas */
+details { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 0 18px; margin-bottom: 8px; }
+summary { cursor: pointer; padding: 14px 0; font: 650 15.5px/1.4 var(--font); color: var(--ink); list-style: none; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; float: right; color: var(--accent); font-weight: 700; }
+details[open] summary::after { content: "–"; }
+details p { margin: 0 0 14px; color: var(--text2); font-size: 15px; }
+footer { padding: 34px 0 50px; color: var(--text3); font-size: 14px; border-top: 1px solid var(--border); }
+footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+@media (max-width: 900px) { .grid3 { grid-template-columns: 1fr; } .grid2 { grid-template-columns: 1fr; } .status { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .brand span, .brand-moya { display: none; } .steps > li { padding: 16px 16px 16px 58px; } .steps > li::before { left: 14px; width: 30px; height: 30px; font-size: 14px; } .status { grid-template-columns: 1fr; } }
+@media print { .top, .toc { display: none; } section { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><img src="../assets/img/isotipo.svg" alt="">DGP <span>Academy</span> <i>×</i> <img src="../assets/img/moya-mark-sm.png" alt="Moya & Company"><span class="brand-moya">Moya &amp; Company</span></a>
+    <a class="btn" href="../">Ir a la plataforma</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">Guía de uso · DGP Empresas · Prueba piloto</div>
+    <h1>Cómo funciona la plataforma de capacitación de empleados</h1>
+    <p>Esta guía explica, paso a paso, cómo el equipo de DGP organiza una empresa en la plataforma, qué ve el gerente y qué hace cada empleado. Está pensada para la primera prueba con Moya &amp; Company.</p>
+    <a class="btn" href="#piloto">Ver el checklist de la prueba</a>
+    <div class="status">
+      <div><b>Moya &amp; Company</b><span>Empresa creada y activa</span></div>
+      <div><b>Verónica Moya</b><span>Gerente de la empresa</span></div>
+      <div><b>10 cupos</b><span>Empleados disponibles</span></div>
+      <div><b>4 niveles</b><span>Dirección · Líderes · Administrativo · Operativo</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Contenido">
+    <a href="#roles">Quién hace qué</a><a href="#dgp">Equipo DGP: paso a paso</a><a href="#gerente">Gerente</a><a href="#empleado">Empleado</a>
+    <a href="#puntos">Puntos y premios</a><a href="#estados">Estados</a><a href="#piloto">Checklist de la prueba</a><a href="#faq">Preguntas frecuentes</a>
+  </nav>
+</div>
+
+<!-- ── Roles ── -->
+<section id="roles">
+  <div class="wrap">
+    <h2><small>1 · En un minuto</small>Quién hace qué</h2>
+    <p class="lead">Hay tres tipos de usuario. Todo el contenido (cargos, procedimientos, capacitaciones y exámenes) lo crea y mantiene el equipo de DGP; la empresa solo lo usa y mide los resultados.</p>
+    <div class="grid3">
+      <div class="card"><div class="role-ic r1">🛠️</div><h3>Equipo DGP</h3>
+        <p>Administra todo desde <b>Panel admin → Empresas</b>.</p>
+        <ul><li>Crea la empresa, sus niveles y cargos</li><li>Escribe los SOPs y capacitaciones (con ayuda de IA)</li><li>Agrega e invita a los empleados</li><li>Arma certificaciones, premios y asesorías</li><li>Revisa el cumplimiento</li></ul></div>
+      <div class="card"><div class="role-ic r2">👩‍💼</div><h3>Gerente (Verónica)</h3>
+        <p>Entra a su campus → <b>Mi empresa</b>.</p>
+        <ul><li>Ve el avance de todo su equipo</li><li>Aprueba los canjes de premios</li><li>Da puntos de reconocimiento</li><li>Exporta el cumplimiento a Excel</li><li>También tiene su propia capacitación</li></ul></div>
+      <div class="card"><div class="role-ic r3">🧑‍💻</div><h3>Empleado</h3>
+        <p>Entra a su campus → <b>Mi empresa</b>.</p>
+        <ul><li>Lee su descripción de cargo</li><li>Lee y confirma sus SOPs y capacitaciones</li><li>Presenta exámenes y obtiene certificados</li><li>Gana puntos y canjea premios</li><li>Asiste a sus asesorías y marca sus tareas</li></ul></div>
+    </div>
+    <p class="tip"><b>Niveles:</b> cada empleado tiene un nivel (por ejemplo Líderes u Operativo) y un cargo. Cada documento o certificación se asigna a niveles o cargos, así cada persona ve <b>solo</b> lo que le corresponde. Si un documento no tiene niveles ni cargos marcados, es para toda la empresa.</p>
+  </div>
+</section>
+
+<!-- ── Equipo DGP ── -->
+<section id="dgp">
+  <div class="wrap">
+    <h2><small>2 · Equipo DGP</small>Cómo preparar a Moya &amp; Company, paso a paso</h2>
+    <p class="lead">Entra con la cuenta de administrador (info@dgpglobalgroup.com) y sigue este orden. Puedes guardar y volver cuando quieras.</p>
+    <ol class="steps">
+      <li><h3>Abrir la empresa</h3>
+        <span class="path">Inicio de sesión → Panel admin → pestaña Empresas → Moya &amp; Company</span>
+        <p>Verás sus datos arriba y las pestañas: Equipo, Niveles, Cargos, SOPs y capacitaciones, Certificaciones, Puntos y premios, Asesorías y Cumplimiento. Con <b>Editar empresa</b> cambias el nombre, logo, cupos, contacto o la pausas.</p></li>
+      <li><h3>Revisar los niveles</h3>
+        <span class="path">Pestaña Niveles</span>
+        <p>Ya vienen 4: Dirección, Líderes y supervisores, Administrativo y Operativo. Puedes renombrarlos, cambiar el orden o agregar otros (por ejemplo "Ventas").</p></li>
+      <li><h3>Crear los cargos (manual de descripción de cargos)</h3>
+        <span class="path">Pestaña Cargos → + Nuevo cargo</span>
+        <p>Para cada puesto completa: nombre, nivel, área, a quién reporta, propósito, funciones, responsabilidades, indicadores (KPIs) y competencias. En las listas, escribe un punto por línea.</p>
+        <p class="warn">Si editas un cargo después, la plataforma sube su versión y le pide al empleado que lo vuelva a confirmar.</p></li>
+      <li><h3>Escribir los SOPs y capacitaciones</h3>
+        <span class="path">Pestaña SOPs y capacitaciones → + Nuevo documento</span>
+        <ul><li>Elige el tipo: <b>SOP</b> (procedimiento) o <b>Capacitación</b>.</li>
+          <li>Escribe el título y pulsa <b>Generar borrador</b>: la IA redacta el documento con objetivo, pasos, errores comunes y cómo saber que se hizo bien. Si agregas notas del cliente (cómo lo hacen hoy, herramientas, horarios), el borrador sale más exacto.</li>
+          <li>Revisa el texto y completa lo que esté entre [corchetes].</li>
+          <li>Marca a qué <b>niveles</b> o <b>cargos</b> se asigna, si es <b>obligatorio</b> y si está <b>publicado</b>.</li></ul>
+        <p class="tip">Formato del contenido: <b># </b>título de sección · <b>1. </b>paso numerado · <b>- </b>punto de lista · <b>&gt; </b>nota importante (sale resaltada) · línea en blanco para separar párrafos.</p></li>
+      <li><h3>Agregar a los empleados</h3>
+        <span class="path">Pestaña Equipo → + Agregar empleado</span>
+        <p>Escribe su correo, nombre, rol (<b>Empleado</b> o <b>Gerente</b>), nivel, cargo y área. Cada empresa tiene un número de cupos; cuando se llenan, el botón se desactiva.</p></li>
+      <li><h3>Enviar la invitación</h3>
+        <p>En la tabla del equipo, junto a cada persona que aún no se registró, pulsa <b>Enviar invitación</b>. Le llega un correo con el botón <b>Crear mi cuenta</b>, que abre el registro con su correo ya escrito.</p>
+        <p class="warn">Revisa bien el correo antes de enviar: la invitación se envía <b>una sola vez por clic</b> y no se reintenta. Si alguien no la recibe, revisa el correo y usa <b>Reenviar invitación</b>.</p></li>
+      <li><h3>Crear certificaciones</h3>
+        <span class="path">Pestaña Certificaciones → + Nueva certificación</span>
+        <ul><li>Nombre (ej.: "Asistente virtual certificada"), a qué niveles o cargos aplica.</li>
+          <li><b>Documentos previos</b>: los SOPs que deben leer y confirmar antes de poder hacer el examen.</li>
+          <li><b>Examen</b>: preguntas de opción múltiple; marca el círculo verde de la respuesta correcta.</li>
+          <li><b>Aprueba con</b> (por defecto 80 %), <b>vigencia</b> en meses (vacío = no vence) y <b>puntos</b> al aprobar.</li></ul>
+        <p class="tip">El examen se califica en el servidor: el empleado nunca ve las respuestas correctas. Tiene un máximo de 3 intentos por día.</p></li>
+      <li><h3>Definir premios</h3>
+        <span class="path">Pestaña Puntos y premios → + Nuevo premio</span>
+        <p>Ej.: "Café o almuerzo pagado – 100 pts", "Medio día libre – 500 pts". Aquí también ves el ranking, los canjes y puedes dar puntos extra (positivos o negativos) con un motivo.</p></li>
+      <li><h3>Agendar asesorías</h3>
+        <span class="path">Pestaña Asesorías → + Agendar asesoría</span>
+        <p>Elige con quién (un empleado o "Empresa / gerencia"), tema, fecha, duración y pega el enlace de Google Meet, Zoom o Teams. Después de la sesión vuelve a abrirla y escribe las <b>notas</b> y las <b>tareas</b> (una por línea); la persona las verá y marcará como hechas.</p></li>
+      <li><h3>Medir el cumplimiento</h3>
+        <span class="path">Pestaña Cumplimiento → Exportar a Excel</span>
+        <p>Por persona: documentos confirmados, cargo confirmado, certificaciones vigentes y su vencimiento, puntos y % de cumplimiento.</p></li>
+    </ol>
+    <p class="tip"><b>Solicitudes nuevas:</b> en la portada de la academia hay una sección <b>Para empresas</b> con el formulario "Diagnóstico gratis". Las solicitudes llegan a Panel admin → Empresas (con un número en la pestaña) y desde ahí puedes convertirlas en empresa con un clic.</p>
+  </div>
+</section>
+
+<!-- ── Gerente ── -->
+<section id="gerente">
+  <div class="wrap">
+    <h2><small>3 · Gerente</small>Lo que ve Verónica</h2>
+    <p class="lead">Verónica ya tiene cuenta y ya es gerente de Moya &amp; Company. Al entrar a su campus aparece la sección <b>Mi empresa</b> (también en la barra superior del campus).</p>
+    <div class="grid2">
+      <div class="card"><h3>📋 Capacitación, Certificaciones, Puntos y Asesorías</h3><p>Lo mismo que cualquier empleado: su cargo, sus documentos, sus exámenes, sus puntos y sus sesiones con DGP.</p></div>
+      <div class="card"><h3>👥 Mi equipo</h3><p>Tabla con el avance de cada persona: documentos, cargo, certificaciones, puntos y % de cumplimiento. Arriba: personas activas, cumplimiento promedio, quién tiene pendientes y quién no se ha registrado. Botón <b>Exportar a Excel</b>.</p></div>
+      <div class="card"><h3>🎁 Aprobar canjes</h3><p>En la pestaña <b>Puntos</b> aparece "Gerente: canjes por aprobar". Puede <b>Aprobar</b>, <b>Rechazar</b> y después <b>Marcar entregado</b>.</p></div>
+      <div class="card"><h3>⭐ Reconocer a alguien</h3><p>En la misma pestaña puede dar de 1 a 500 puntos a una persona de su equipo escribiendo el motivo (ej.: "Excelente atención al cliente").</p></div>
+    </div>
+    <p class="warn">El gerente <b>no edita</b> contenido: no crea cargos, documentos ni exámenes. Si necesita un cambio, se lo pide al equipo de DGP.</p>
+  </div>
+</section>
+
+<!-- ── Empleado ── -->
+<section id="empleado">
+  <div class="wrap">
+    <h2><small>4 · Empleado</small>Lo que hace cada persona del equipo</h2>
+    <ol class="steps">
+      <li><h3>Crear su cuenta</h3><p>Abre el correo de invitación y pulsa <b>Crear mi cuenta</b>. Debe registrarse con <b>el mismo correo</b> con el que lo agregó DGP; luego confirma su correo y entra.</p></li>
+      <li><h3>Abrir "Mi empresa"</h3><p>En su campus verá el logo de la empresa, su nivel y cargo, su % de avance y sus puntos, con cinco pestañas: <b>Capacitación</b>, <b>Certificaciones</b>, <b>Puntos</b> y <b>Asesorías</b> (y <b>Mi equipo</b> si es gerente). Los números naranjas indican pendientes.</p></li>
+      <li><h3>Leer y confirmar</h3><p>Abre su cargo y cada documento, los lee y pulsa <b>He leído y entiendo este documento</b>. Queda registrada la fecha y gana 10 puntos por cada uno.</p></li>
+      <li><h3>Certificarse</h3><p>En <b>Certificaciones</b> ve qué documentos le faltan; cuando los confirma se activa <b>Presentar examen</b>. Si aprueba, recibe sus puntos y su certificado con los logos de la empresa, DGP Academy y Moya &amp; Company, que puede <b>imprimir o guardar en PDF</b>.</p></li>
+      <li><h3>Canjear premios</h3><p>En <b>Puntos</b> ve su saldo, el ranking del equipo y los premios. Al canjear, el gerente lo aprueba.</p></li>
+      <li><h3>Asistir a sus asesorías</h3><p>En <b>Asesorías</b> aparece el botón <b>Entrar a la videollamada</b> cuando está próxima, y después las notas y tareas, que marca como hechas.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ── Puntos ── -->
+<section id="puntos">
+  <div class="wrap">
+    <h2><small>5 · Reglas</small>Cómo se ganan los puntos</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Acción</th><th>Puntos</th><th>Notas</th></tr></thead>
+      <tbody>
+        <tr><td><b>Confirmar un documento</b> (SOP o capacitación)</td><td>10</td><td>Una vez por documento.</td></tr>
+        <tr><td><b>Confirmar su descripción de cargo</b></td><td>10</td><td>Una vez.</td></tr>
+        <tr><td><b>Aprobar una certificación</b></td><td>Los que defina DGP</td><td>Por defecto 50. Si vence y se recertifica, vuelve a sumar.</td></tr>
+        <tr><td><b>Reconocimiento</b> del gerente o de DGP</td><td>Variable</td><td>El gerente da de 1 a 500; DGP también puede restar.</td></tr>
+        <tr><td><b>Canjear un premio</b></td><td>Se descuentan</td><td>Si se rechaza, los puntos vuelven al saldo.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ── Estados ── -->
+<section id="estados">
+  <div class="wrap">
+    <h2><small>6 · Estados</small>Qué significa cada etiqueta</h2>
+    <div class="grid3">
+      <div class="card"><p><span class="tag t-p">Por leer y confirmar</span></p><p>La persona aún no lo ha confirmado.</p></div>
+      <div class="card"><p><span class="tag t-ok">Confirmado</span></p><p>Lo leyó y confirmó la versión vigente.</p></div>
+      <div class="card"><p><span class="tag t-u">Actualizado: confírmalo otra vez</span></p><p>DGP cambió el documento después de que lo confirmó; debe releerlo.</p></div>
+      <div class="card"><p><span class="tag t-p">Lee los documentos</span> <span class="tag t-p">Listo para el examen</span></p><p>Certificación pendiente: primero documentos, luego examen.</p></div>
+      <div class="card"><p><span class="tag t-ok">Certificado</span> <span class="tag t-u">Vence pronto</span></p><p>Vigente; "vence pronto" aparece 30 días antes del vencimiento.</p></div>
+      <div class="card"><p><span class="tag t-p">Falta registrarse</span></p><p>En el admin: la persona está agregada pero aún no creó su cuenta.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Checklist ── -->
+<section id="piloto">
+  <div class="wrap">
+    <h2><small>7 · Prueba piloto</small>Checklist para la primera prueba con Moya &amp; Company</h2>
+    <p class="lead">Marca cada paso a medida que avanzan (las marcas se quedan solo en tu navegador).</p>
+    <ul class="check" id="check">
+      <li><input type="checkbox" id="c1"><label for="c1"><b>Reunión de diagnóstico con Verónica:</b> listar cargos, empleados (nombre y correo) y los 3 a 5 procesos más importantes.</label></li>
+      <li><input type="checkbox" id="c2"><label for="c2"><b>Crear los cargos</b> en la pestaña Cargos con su nivel.</label></li>
+      <li><input type="checkbox" id="c3"><label for="c3"><b>Escribir 3 a 5 SOPs</b> con "Generar borrador", revisarlos y asignarlos por nivel o cargo.</label></li>
+      <li><input type="checkbox" id="c4"><label for="c4"><b>Crear 1 certificación</b> con 5 a 10 preguntas y vigencia de 12 meses.</label></li>
+      <li><input type="checkbox" id="c5"><label for="c5"><b>Crear 2 o 3 premios</b> acordados con Verónica.</label></li>
+      <li><input type="checkbox" id="c6"><label for="c6"><b>Agregar a los empleados</b> y enviar la invitación a cada uno (revisando el correo).</label></li>
+      <li><input type="checkbox" id="c7"><label for="c7"><b>Verónica entra</b> a Mi empresa, confirma su cargo y revisa "Mi equipo".</label></li>
+      <li><input type="checkbox" id="c8"><label for="c8"><b>Agendar una asesoría</b> de arranque con el equipo (enlace de Meet) y dejar notas y tareas.</label></li>
+      <li><input type="checkbox" id="c9"><label for="c9"><b>A la semana:</b> revisar Cumplimiento, exportar a Excel y recoger comentarios para ajustar.</label></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section id="faq">
+  <div class="wrap">
+    <h2><small>8 · Dudas</small>Preguntas frecuentes</h2>
+    <details><summary>Un empleado no ve "Mi empresa"</summary><p>Revisa que se haya registrado con el mismo correo con el que lo agregaste, que esté como "Activo" y que la empresa no esté pausada. Si el correo estaba mal, quítalo y agrégalo de nuevo con el correcto.</p></details>
+    <details><summary>Alguien olvidó su contraseña</summary><p>En la pantalla de inicio de sesión hay "¿Olvidaste tu contraseña?". Le llega un enlace a su correo para crear una nueva.</p></details>
+    <details><summary>Un empleado dejó la empresa</summary><p>En Equipo → Editar → Estado "Inactivo". Deja de ver la empresa, no ocupa cupo y su historial se conserva. "Quitar de la empresa" lo borra por completo.</p></details>
+    <details><summary>Cambié un procedimiento, ¿qué pasa con quienes ya lo leyeron?</summary><p>Si cambias el título, el resumen o el contenido, sube la versión y les aparece "Actualizado: confírmalo otra vez". Si solo cambias la asignación o si es obligatorio, no se pide reconfirmar.</p></details>
+    <details><summary>¿El empleado puede ver las respuestas del examen?</summary><p>No. Las respuestas solo están en el servidor; el examen se califica allí. Además hay un máximo de 3 intentos por día.</p></details>
+    <details><summary>¿Se envían correos automáticos o recordatorios?</summary><p>Por ahora solo la invitación, y únicamente cuando pulsas el botón. No hay reintentos ni recordatorios automáticos, para evitar correos rebotados.</p></details>
+    <details><summary>¿Se puede usar en el celular?</summary><p>Sí. Todo funciona en el navegador del celular: leer, confirmar, presentar exámenes, ver el certificado, canjear y entrar a las videollamadas.</p></details>
+    <details><summary>¿Quién más del equipo de DGP puede administrar empresas?</summary><p>El dueño de la cuenta puede dar el permiso "Empresas" a otra persona desde Panel admin → Estudiantes → botón "Hacer administrador" junto a su nombre, marcando solo "Empresas". Esa persona solo verá la pestaña Empresas.</p></details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap"><span>DGP Academy · División educativa de DGP Global Group, en alianza con Moya &amp; Company.</span><a href="../">academy.dgpglobalgroup.com</a></div>
+</footer>
+
+<script>
+// Guarda el avance del checklist en este navegador
+(function () {
+  var key = 'dgp-moya-checklist';
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) {}
+  document.querySelectorAll('#check input').forEach(function (box) {
+    box.checked = !!saved[box.id];
+    box.addEventListener('change', function () {
+      saved[box.id] = box.checked;
+      try { localStorage.setItem(key, JSON.stringify(saved)); } catch (e) {}
+    });
+  });
+})();
+</script>
+</body>
+</html>

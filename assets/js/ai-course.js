@@ -99,7 +99,8 @@ function updateAIProgress() {
   const tx = document.getElementById('ai-prog-text'); if (tx) tx.textContent = done + ' / ' + AI_COUNTED.length;
   document.querySelectorAll('#ai-screen .book-toc-item').forEach(el => el.classList.toggle('read', readSet('ia').has(el.dataset.ch)));
   // Tarjeta del programa en el panel
-  const bar = document.getElementById('ia-prog-fill'); if (bar) bar.style.width = pct + '%';
+  // Al completar el programa la barra pasa a verde, igual que en Desarrollo Web
+  const bar = document.getElementById('ia-prog-fill'); if (bar) { bar.style.width = pct + '%'; bar.style.background = aiCourseDone() ? 'var(--green)' : ''; }
   const lbl = document.getElementById('ia-prog-text'); if (lbl) lbl.textContent = done + ' / ' + AI_COUNTED.length;
   const pc = document.getElementById('ia-prog-pct'); if (pc) pc.textContent = pct + '%';
 }

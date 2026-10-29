@@ -418,6 +418,7 @@
           <ul class="lp-price-list">
             <li><svg><use href="#i-check"/></svg>Todos los programas y libros</li>
             <li><svg><use href="#i-check"/></svg>Incluye los programas nuevos que publiquemos</li>
+            <li><svg><use href="#i-check"/></svg>17 plantillas de prompts por tipo de negocio + propuesta y contrato para clientes</li>
             <li><svg><use href="#i-check"/></svg>2 sesiones de asesoría privada</li>
             <li><svg><use href="#i-check"/></svg>Asistente IA, coach y todos los certificados</li>
             <li><svg><use href="#i-check"/></svg>Acceso de por vida</li>
@@ -678,6 +679,7 @@
       <button type="button" data-t="top"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg>Inicio</button>
       <button type="button" data-t="dash-programs"><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>Programas</button>
       <button type="button" data-t="dash-library"><svg viewBox="0 0 24 24"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg>Biblioteca</button>
+      <button type="button" data-t="dash-templates"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Plantillas</button>
       <button type="button" data-t="dash-advisory"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Asesorías</button>
       <button type="button" data-t="dash-badges"><svg viewBox="0 0 24 24"><path d="M12 22c4 0 7-2.8 7-7 0-4-3-6-4-10-2 2-3 4-3 6-1-1-2-2-2-4-3 2-5 5-5 8 0 4.2 3 7 7 7z"/></svg>Logros</button>
       <button type="button" data-t="dash-certificates"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M8.5 14.2 7 22l5-3 5 3-1.5-7.8"/></svg>Certificados</button>
@@ -816,6 +818,11 @@
         </article>
 
       </div>
+    </section>
+
+    <section class="dash-block" id="dash-templates">
+      <div class="dash-block-head"><h2>Plantillas y prompts</h2><span class="dash-block-sub">Copia, cambia los datos y créalo con Claude</span></div>
+      <div id="tpl-root"><div class="admin-empty">Cargando…</div></div>
     </section>
 
     <section class="dash-block" id="dash-advisory">
@@ -1857,6 +1864,7 @@
 <script src="assets/js/booking.js"></script>
 <script src="assets/js/preview.js"></script>
 <script src="assets/js/badges.js"></script>
+<script src="assets/js/templates.js"></script>
 <script src="assets/js/admin-members.js"></script>
 </body>
 </html>

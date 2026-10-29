@@ -51,7 +51,7 @@ function withSplash(fn) {
 function goToAuth()     { if (STATE.user) { showDashboard(); return; } withSplash(() => { showAuth(); switchTab('login'); }); }
 function goToRegister() { if (STATE.user) { showDashboard(); return; } withSplash(() => { showAuth(); switchTab('register'); }); }
 function showAuth()      { showScreen('auth-screen', 'flex'); hideSplash(); }
-function showDashboard() { if (!STATE.user) { showLanding(); return; } showScreen('dash-screen'); updateDashStats(); hideSplash(); if (typeof renderBadges === 'function') renderBadges(); if (typeof syncTryFree === 'function') syncTryFree(); }
+function showDashboard() { if (!STATE.user) { showLanding(); return; } showScreen('dash-screen'); updateDashStats(); hideSplash(); if (typeof renderBadges === 'function') renderBadges(); if (typeof syncTryFree === 'function') syncTryFree(); if (typeof renderTemplates === 'function') renderTemplates(); }
 function showCourse()    { showScreen('course-screen'); }
 async function showAdmin() {
   await loadMyPerms();

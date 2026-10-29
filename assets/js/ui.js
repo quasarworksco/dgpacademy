@@ -348,3 +348,19 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', mark, { passive: true });
   setInterval(mark, 1500);
 });
+
+// Portada: la palabra que rota en "Una plataforma para …"
+(function rotateHeroWords() {
+  const box = document.querySelector('.lp-rot');
+  if (!box || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let i = 0;
+  setInterval(() => {
+    const words = box.querySelectorAll('b');
+    if (!words.length || document.hidden) return;
+    const cur = words[i % words.length], next = words[(i + 1) % words.length];
+    cur.classList.remove('is-on'); cur.classList.add('is-out');
+    next.classList.remove('is-out'); next.classList.add('is-on');
+    setTimeout(() => cur.classList.remove('is-out'), 500);
+    i++;
+  }, 2400);
+})();

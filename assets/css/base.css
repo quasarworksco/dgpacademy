@@ -221,13 +221,13 @@ em.serif, .serif {
 [hidden] { display: none !important; }
 
 /* Alianza: DGP × Moya & Company junto al logo */
-.brand-x { display: inline-flex; align-items: center; gap: 7px; margin-left: 2px; }
+.brand-x { display: inline-flex; align-items: center; gap: 7px; margin-left: 2px; flex-shrink: 0; }
 .brand-x i { font-style: normal; font: 400 15px/1 var(--font); color: var(--text3); }
-.brand-x img { height: 22px; width: auto; display: block; }
+.brand-x img { height: 22px; width: auto; aspect-ratio: 88 / 64; flex-shrink: 0; object-fit: contain; display: block; }
 .brand-x-name { font: 600 13px/1.1 var(--font); color: var(--text2); white-space: nowrap; }
 .brand--light .brand-x i, .brand--light .brand-x-name { color: rgba(255,255,255,.75); }
 @media (max-width: 900px) { .brand-x-name { display: none; } }
-@media (max-width: 380px) { .brand-x { gap: 4px; } .brand-x img { height: 18px; } }
+@media (max-width: 380px) { .brand-x { gap: 4px; } .brand-x img { height: 18px; width: auto; } }
 .brand-name { white-space: nowrap; }
 .lp-nav-login { white-space: nowrap; }
 @media (max-width: 1440px) { .lp-nav .brand-x-name { display: none; } }

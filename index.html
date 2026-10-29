@@ -86,12 +86,11 @@
       </button>
       <nav class="lp-nav-links" aria-label="Secciones">
         <a href="#lp-cursos" data-scroll="lp-cursos">Programas</a>
-        <a href="#lp-membresia" data-scroll="lp-membresia">Membresía</a>
-        <a href="#blog" onclick="openBlogPage();return false">Blog</a>
         <a href="#lp-empresas" data-scroll="lp-empresas">Empresas</a>
+        <a href="#lp-acceso" data-scroll="lp-acceso">Precios</a>
         <a href="#lp-nosotros" data-scroll="lp-nosotros">Nosotros</a>
-        <a href="#lp-acceso" data-scroll="lp-acceso">Precio</a>
-        <a href="#lp-faq" data-scroll="lp-faq">Preguntas</a>
+        <a href="#blog" onclick="openBlogPage();return false" class="lp-nav-opt">Blog</a>
+        <a href="#lp-faq" data-scroll="lp-faq" class="lp-nav-opt">Preguntas</a>
       </nav>
       <div class="lp-nav-cta">
         <span data-lang-slot></span>
@@ -103,11 +102,11 @@
     </div>
     <div class="lp-mobile-menu" id="lp-mobile-menu">
       <a href="#lp-cursos" data-scroll="lp-cursos">Programas</a>
-      <a href="#lp-membresia" data-scroll="lp-membresia">Membresía</a>
-      <a href="#blog" onclick="openBlogPage();return false">Blog</a>
       <a href="#lp-empresas" data-scroll="lp-empresas">Para empresas</a>
+      <a href="#lp-acceso" data-scroll="lp-acceso">Precios</a>
+      <a href="#lp-membresia" data-scroll="lp-membresia">Membresía</a>
       <a href="#lp-nosotros" data-scroll="lp-nosotros">Nosotros</a>
-      <a href="#lp-acceso" data-scroll="lp-acceso">Precio</a>
+      <a href="#blog" onclick="openBlogPage();return false">Blog</a>
       <a href="#lp-faq" data-scroll="lp-faq">Preguntas frecuentes</a>
       <div class="lp-mobile-actions">
         <span data-lang-slot="lang-switch--block"></span>
@@ -127,46 +126,55 @@
     </div>
   </div>
 
-  <section class="lp-hero">
+  <section class="lp-hero lp-hero--v2">
+    <div class="lp-hero-glow" aria-hidden="true"><i></i><i></i><i></i></div>
     <div class="lp-wrap lp-hero-grid">
       <div class="lp-hero-copy">
-        <span class="chip chip--accent reveal"><span class="dot"></span>Inscripciones abiertas · Próxima generación 2026</span>
-        <h1 class="lp-hero-title reveal" data-d="1">Aprende a construir tu <em class="serif">presencia digital</em> con IA como copiloto.</h1>
-        <p class="lp-hero-sub reveal" data-d="2">Programas prácticos de desarrollo web, inteligencia artificial y marketing digital, creados por el equipo de DGP Global Group. Aprendes con las mismas herramientas que usamos en proyectos reales.</p>
-        <div class="lp-hero-ctas reveal" data-d="3">
-          <button class="ui-btn ui-btn--primary ui-btn--lg" onclick="goToRegister()">Reservar mi lugar <svg><use href="#i-arrow"/></svg></button>
-          <a class="ui-btn ui-btn--ghost ui-btn--lg" href="#lp-programa" data-scroll="lp-programa">Ver el programa</a>
+        <span class="chip chip--accent reveal"><span class="dot"></span>DGP Academy × Moya &amp; Company</span>
+        <h1 class="lp-hero-title reveal" data-d="1">Aprende, crece y capacita con <em class="serif">IA</em> como copiloto.</h1>
+        <p class="lp-hero-rotate reveal" data-d="2">Una plataforma para <span class="lp-rot" aria-live="polite"><b class="is-on">emprendedores</b><b>freelancers</b><b>equipos de trabajo</b><b>empresas</b></span></p>
+        <div class="lp-paths reveal" data-d="3">
+          <a class="lp-path" href="#lp-cursos" data-scroll="lp-cursos">
+            <span class="lp-path-ic">🎓</span>
+            <span class="lp-path-txt"><small>Para ti</small><b>Cursos y libros prácticos</b><em>Desarrollo web, IA y emprendimiento. Lección 1 gratis.</em></span>
+            <svg class="lp-path-go"><use href="#i-arrow"/></svg>
+          </a>
+          <a class="lp-path lp-path--biz" href="#lp-empresas" data-scroll="lp-empresas">
+            <span class="lp-path-ic">🏢</span>
+            <span class="lp-path-txt"><small>Para tu empresa</small><b>Capacitación de empleados</b><em>Procesos, cargos y certificaciones por niveles.</em></span>
+            <svg class="lp-path-go"><use href="#i-arrow"/></svg>
+          </a>
         </div>
-        <ul class="lp-hero-facts reveal" data-d="4">
-          <li><strong>16</strong> lecciones</li>
-          <li><strong>5</strong> módulos</li>
-          <li><strong>2</strong> asesorías 1:1</li>
-          <li><strong>Certificado</strong> digital</li>
-        </ul>
+        <div class="lp-hero-ctas reveal" data-d="4">
+          <button class="ui-btn ui-btn--primary ui-btn--lg" onclick="goToRegister()">Crear mi cuenta gratis <svg><use href="#i-arrow"/></svg></button>
+          <a class="ui-btn ui-btn--ghost ui-btn--lg" href="#lp-diagnostico" data-scroll="lp-diagnostico">Diagnóstico para empresas</a>
+        </div>
       </div>
 
-      <div class="lp-hero-visual reveal" data-d="2">
+      <div class="lp-hero-visual lp-stage reveal" data-d="2" aria-hidden="true">
+        <div class="lp-orbit"><span></span><span></span></div>
         <figure class="lp-hero-photo">
-          <img src="assets/img/hero-estudiante.webp" srcset="assets/img/hero-estudiante-800.webp 800w, assets/img/hero-estudiante.webp 1400w" sizes="(max-width: 900px) 92vw, 46vw" alt="Estudiante concentrado frente a su laptop" width="1400" height="933" fetchpriority="high">
+          <img src="assets/img/hero-estudiante.webp" srcset="assets/img/hero-estudiante-800.webp 800w, assets/img/hero-estudiante.webp 1400w" sizes="(max-width: 900px) 92vw, 42vw" alt="" width="1400" height="933" fetchpriority="high">
         </figure>
-        <!-- Tarjeta flotante: progreso -->
         <div class="float-card float-progress">
-          <div class="fc-head"><span class="fc-icon"><svg><use href="#i-layers"/></svg></span><div><div class="fc-kicker">Módulo 3 · Integraciones</div><div class="fc-title">APIs — cómo todo se conecta</div></div></div>
-          <div class="fc-bar"><span style="width:56%"></span></div>
-          <div class="fc-meta"><span>Lección 9 de 16</span><span>56%</span></div>
+          <div class="fc-head"><span class="fc-icon"><svg><use href="#i-layers"/></svg></span><div><div class="fc-kicker">Para ti · IA aplicada a los negocios</div><div class="fc-title">Tu primera app con IA</div></div></div>
+          <div class="fc-bar"><span class="fc-bar-anim" style="--w:68%"></span></div>
+          <div class="fc-meta"><span>Lección 8 de 16</span><span>68%</span></div>
         </div>
-        <!-- Tarjeta flotante: terminal -->
-        <div class="float-card float-code" aria-hidden="true">
-          <div class="fc-dots"><i></i><i></i><i></i></div>
-          <code><span class="c1">$</span> git push origin main</code>
-          <code><span class="c2">✓</span> Publicado en GitHub Pages</code>
-          <code><span class="c3">→</span> tusitio.com</code>
+        <div class="float-card float-team">
+          <div class="fc-kicker">Para tu empresa · Equipo</div>
+          <div class="fc-title">Cumplimiento del equipo</div>
+          <ul class="fc-team">
+            <li><i style="--c:#1a56e8">AM</i><span class="fc-team-bar"><b style="--w:100%"></b></span><em>100%</em></li>
+            <li><i style="--c:#7c3aed">JR</i><span class="fc-team-bar"><b style="--w:82%"></b></span><em>82%</em></li>
+            <li><i style="--c:#0d9488">LP</i><span class="fc-team-bar"><b style="--w:64%"></b></span><em>64%</em></li>
+          </ul>
         </div>
-        <!-- Tarjeta flotante: certificado -->
         <div class="float-card float-cert">
           <span class="fc-seal"><svg><use href="#i-award"/></svg></span>
-          <div><div class="fc-kicker">Certificado emitido</div><div class="fc-title">Desarrollo Web con IA</div></div>
+          <div><div class="fc-kicker">Certificación aprobada</div><div class="fc-title">Atención al cliente</div></div>
         </div>
+        <div class="float-card float-ai"><span>✦</span>¿Cómo automatizo mis citas?</div>
       </div>
     </div>
   </section>
@@ -177,365 +185,172 @@
     <div class="lp-marquee"><div class="lp-marquee-track"><span class="lp-tool"><img src="assets/img/tools/claude.svg" alt="" width="22" height="22" loading="lazy" decoding="async">Claude Code</span><span class="lp-tool"><img src="assets/img/tools/github.svg" alt="" width="22" height="22" loading="lazy" decoding="async">GitHub</span><span class="lp-tool"><img src="assets/img/tools/firebase.svg" alt="" width="22" height="22" loading="lazy" decoding="async">Firebase</span><span class="lp-tool"><img src="assets/img/tools/supabase.svg" alt="" width="22" height="22" loading="lazy" decoding="async">Supabase</span><span class="lp-tool"><img src="assets/img/tools/godaddy.svg" alt="" width="22" height="22" loading="lazy" decoding="async">GoDaddy</span><span class="lp-tool"><img src="assets/img/tools/cloudinary.svg" alt="" width="22" height="22" loading="lazy" decoding="async">Cloudinary</span><span class="lp-tool"><img src="assets/img/tools/formspree.svg" alt="" width="22" height="22" loading="lazy" decoding="async">Formspree</span><span class="lp-tool"><img src="assets/img/tools/emailjs.png" alt="" width="22" height="22" loading="lazy" decoding="async">EmailJS</span><span class="lp-tool"><img src="assets/img/tools/databuddy.png" alt="" width="22" height="22" loading="lazy" decoding="async">Databuddy</span><span class="lp-tool"><img src="assets/img/tools/canva.png" alt="" width="22" height="22" loading="lazy" decoding="async">Canva</span><span class="lp-tool"><img src="assets/img/tools/unsplash.svg" alt="" width="22" height="22" loading="lazy" decoding="async">Unsplash</span><span class="lp-tool"><img src="assets/img/tools/googlegemini.svg" alt="" width="22" height="22" loading="lazy" decoding="async">Gemini</span><span class="lp-tool"><img src="assets/img/tools/reactbits.png" alt="" width="22" height="22" loading="lazy" decoding="async">React Bits</span><span class="lp-marquee-dup" aria-hidden="true"><span class="lp-tool"><img src="assets/img/tools/claude.svg" alt="" width="22" height="22" loading="lazy" decoding="async">Claude Code</span><span class="lp-tool"><img src="assets/img/tools/github.svg" alt="" width="22" height="22" loading="lazy" decoding="async">GitHub</span><span class="lp-tool"><img src="assets/img/tools/firebase.svg" alt="" width="22" height="22" loading="lazy" decoding="async">Firebase</span><span class="lp-tool"><img src="assets/img/tools/supabase.svg" alt="" width="22" height="22" loading="lazy" decoding="async">Supabase</span><span class="lp-tool"><img src="assets/img/tools/godaddy.svg" alt="" width="22" height="22" loading="lazy" decoding="async">GoDaddy</span><span class="lp-tool"><img src="assets/img/tools/cloudinary.svg" alt="" width="22" height="22" loading="lazy" decoding="async">Cloudinary</span><span class="lp-tool"><img src="assets/img/tools/formspree.svg" alt="" width="22" height="22" loading="lazy" decoding="async">Formspree</span><span class="lp-tool"><img src="assets/img/tools/emailjs.png" alt="" width="22" height="22" loading="lazy" decoding="async">EmailJS</span><span class="lp-tool"><img src="assets/img/tools/databuddy.png" alt="" width="22" height="22" loading="lazy" decoding="async">Databuddy</span><span class="lp-tool"><img src="assets/img/tools/canva.png" alt="" width="22" height="22" loading="lazy" decoding="async">Canva</span><span class="lp-tool"><img src="assets/img/tools/unsplash.svg" alt="" width="22" height="22" loading="lazy" decoding="async">Unsplash</span><span class="lp-tool"><img src="assets/img/tools/googlegemini.svg" alt="" width="22" height="22" loading="lazy" decoding="async">Gemini</span><span class="lp-tool"><img src="assets/img/tools/reactbits.png" alt="" width="22" height="22" loading="lazy" decoding="async">React Bits</span></span></div></div>
   </section>
 
-  <!-- PROGRAMA -->
-  <section class="lp-section" id="lp-programa">
-    <div class="lp-wrap lp-program">
-      <div class="lp-program-intro">
-        <span class="eyebrow reveal">Programa insignia</span>
-        <h2 class="lp-h2 reveal" data-d="1">Diseño y Desarrollo Web <em class="serif">con IA</em></h2>
-        <p class="lp-lead reveal" data-d="2">Desde cómo funciona internet hasta publicar tu sitio con dominio propio y conseguir tus primeros clientes. Cada lección termina en algo concreto que puedes mostrar.</p>
-        <figure class="lp-program-photo reveal" data-d="2"><img src="assets/img/curso-web.webp" alt="Laptop con código en pantalla" loading="lazy" width="900" height="600"></figure>
-        <dl class="lp-program-meta reveal" data-d="3">
-          <div><dt>Nivel</dt><dd>Desde cero</dd></div>
-          <div><dt>Formato</dt><dd>Lecciones interactivas a tu ritmo</dd></div>
-          <div><dt>Acceso</dt><dd>De por vida, con actualizaciones</dd></div>
-          <div><dt>Incluye</dt><dd>2 asesorías privadas y certificado</dd></div>
-        </dl>
-      </div>
-
-      <div class="lp-syllabus">
-        <div class="lp-syllabus-head reveal"><span>Temario completo</span><span class="chip">16 lecciones · 5 módulos</span></div>
-        <details class="lp-module reveal" open>
-          <summary><span class="lp-module-num">01</span><span class="lp-module-title">Fundamentos web<small>Cómo funciona internet y los tres lenguajes de la web</small></span><span class="lp-module-count">4 lecciones</span><svg class="lp-module-plus"><use href="#i-plus"/></svg></summary>
-          <ol><li>¿Cómo funciona la web?</li><li>HTML desde cero</li><li>CSS — estilo y diseño</li><li>JavaScript — interactividad</li></ol>
-        </details>
-        <details class="lp-module reveal">
-          <summary><span class="lp-module-num">02</span><span class="lp-module-title">Herramientas del equipo<small>GitHub, IA, publicación y servicios</small></span><span class="lp-module-count">4 lecciones</span><svg class="lp-module-plus"><use href="#i-plus"/></svg></summary>
-          <ol start="5"><li>GitHub y control de versiones</li><li>IA: Claude Code y GitHub</li><li>GitHub Pages, Firebase y dominio propio</li><li>Servicios y herramientas extra</li></ol>
-        </details>
-        <details class="lp-module reveal">
-          <summary><span class="lp-module-num">03</span><span class="lp-module-title">Integraciones<small>APIs y el flujo de un proyecto real</small></span><span class="lp-module-count">2 lecciones</span><svg class="lp-module-plus"><use href="#i-plus"/></svg></summary>
-          <ol start="9"><li>APIs — cómo todo se conecta</li><li>Flujo completo de un proyecto</li></ol>
-        </details>
-        <details class="lp-module reveal">
-          <summary><span class="lp-module-num">04</span><span class="lp-module-title">Diseño<small>Tipografía, animación y responsive</small></span><span class="lp-module-count">3 lecciones</span><svg class="lp-module-plus"><use href="#i-plus"/></svg></summary>
-          <ol start="11"><li>Diseño y tipografía para desarrolladores</li><li>CSS avanzado y animaciones</li><li>Responsive design</li></ol>
-        </details>
-        <details class="lp-module reveal">
-          <summary><span class="lp-module-num">05</span><span class="lp-module-title">Negocio<small>Que te encuentren, medir y vender</small></span><span class="lp-module-count">3 lecciones</span><svg class="lp-module-plus"><use href="#i-plus"/></svg></summary>
-          <ol start="14"><li>SEO y posicionamiento</li><li>Analítica y métricas</li><li>Portafolio y primeros clientes</li></ol>
-        </details>
-        <button class="ui-btn ui-btn--dark ui-btn--block lp-syllabus-cta reveal" onclick="goToRegister()">Quiero empezar este programa <svg><use href="#i-arrow"/></svg></button>
-      </div>
-    </div>
-  </section>
-
-  <!-- CÓMO FUNCIONA + EXPERIENCIA -->
-  <section class="lp-section lp-dark" id="lp-como">
-    <div class="lp-wrap">
-      <div class="lp-section-head lp-section-head--split">
-        <div>
-          <span class="eyebrow eyebrow--light reveal">Cómo funciona</span>
-          <h2 class="lp-h2 reveal" data-d="1">Una plataforma pensada para <em class="serif">terminar</em> lo que empiezas.</h2>
-        </div>
-        <p class="lp-lead reveal" data-d="2">Todo tu aprendizaje vive en un solo lugar: tus programas, tus libros, tu progreso y tus certificados. Entras desde cualquier dispositivo y continúas exactamente donde lo dejaste.</p>
-      </div>
-
-      <ol class="lp-steps">
-        <li class="reveal"><span class="lp-step-n">01</span><h3>Crea tu cuenta</h3><p>Registro gratuito en un minuto con tu correo.</p></li>
-        <li class="reveal" data-d="1"><span class="lp-step-n">02</span><h3>Activa tu acceso</h3><p>Realizas el pago único y el equipo habilita tu programa.</p></li>
-        <li class="reveal" data-d="2"><span class="lp-step-n">03</span><h3>Aprende a tu ritmo</h3><p>Lecciones, ejercicios y evaluaciones. Tu avance se guarda solo.</p></li>
-        <li class="reveal" data-d="3"><span class="lp-step-n">04</span><h3>Certifícate</h3><p>Al completar las 16 lecciones recibes tu certificado con ID único.</p></li>
-      </ol>
-
-      <div class="lp-experience">
-        <div class="lp-mock reveal" aria-hidden="true">
-          <div class="lp-mock-bar"><i></i><i></i><i></i><span>academy.dgpglobalgroup.com</span></div>
-          <div class="lp-mock-body">
-            <aside class="lp-mock-side">
-              <div class="m-title">Desarrollo Web con IA</div>
-              <div class="m-prog"><span style="width:62%"></span></div>
-              <div class="m-sec">Módulo 1 · Fundamentos</div>
-              <div class="m-item done">¿Cómo funciona la web?</div>
-              <div class="m-item done">HTML desde cero</div>
-              <div class="m-item done">CSS — estilo y diseño</div>
-              <div class="m-item done">JavaScript</div>
-              <div class="m-sec">Módulo 2 · Herramientas</div>
-              <div class="m-item done">GitHub</div>
-              <div class="m-item active">IA: Claude Code y GitHub</div>
-              <div class="m-item">GitHub Pages</div>
-            </aside>
-            <div class="lp-mock-main">
-              <div class="m-tag">Lección 6 · Módulo 2</div>
-              <div class="m-h1">IA: Claude Code y GitHub</div>
-              <div class="m-p"></div><div class="m-p"></div><div class="m-p short"></div>
-              <div class="m-code"><span></span><span></span><span class="short"></span></div>
-              <div class="m-quiz"><div class="m-q">¿Qué herramienta actualiza el proyecto?</div><div class="m-opt ok">Claude Code</div><div class="m-opt">Un editor de imágenes</div></div>
-            </div>
-          </div>
-        </div>
-        <ul class="lp-features">
-          <li class="reveal"><span class="lp-feature-ic"><svg><use href="#i-cloud"/></svg></span><div><h3>Progreso en la nube</h3><p>Cada lección completada queda guardada en tu cuenta, no en el navegador.</p></div></li>
-          <li class="reveal" data-d="1"><span class="lp-feature-ic"><svg><use href="#i-quiz"/></svg></span><div><h3>Evaluaciones integradas</h3><p>Preguntas al final de los temas clave para comprobar lo aprendido.</p></div></li>
-          <li class="reveal" data-d="2"><span class="lp-feature-ic"><svg><use href="#i-device"/></svg></span><div><h3>En cualquier dispositivo</h3><p>Diseñada para estudiar cómodo en computadora, tablet o celular.</p></div></li>
-          <li class="reveal" data-d="3"><span class="lp-feature-ic"><svg><use href="#i-chat"/></svg></span><div><h3>Acompañamiento real</h3><p>Dos sesiones privadas por videollamada con el equipo de DGP.</p></div></li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- CATÁLOGO -->
-  <section class="lp-section" id="lp-cursos">
+  <!-- PROGRAMAS -->
+  <section class="lp-section lp-tight" id="lp-cursos">
     <div class="lp-wrap">
       <div class="lp-section-head lp-section-head--split">
         <div>
           <span class="eyebrow reveal">Programas</span>
           <h2 class="lp-h2 reveal" data-d="1">Una escuela que crece <em class="serif">contigo</em></h2>
         </div>
-        <p class="lp-lead reveal" data-d="2">Programas prácticos creados por el equipo de DGP Global Group. Todo vive en tu misma cuenta: cuando se suma un programa nuevo, lo ves en tu campus.</p>
+        <p class="lp-lead reveal" data-d="2">Todo vive en tu misma cuenta. Prueba gratis la primera lección de cada programa antes de comprar.</p>
       </div>
       <div class="lp-programs">
         <article class="lp-prog reveal" onclick="openProgram('web-dev')">
           <div class="lp-prog-img"><img src="assets/img/curso-web.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">Disponible</span></div>
           <h3>Diseño y Desarrollo Web con IA</h3>
-          <div class="lp-prog-meta"><b>16 lecciones</b><span>5 módulos · certificado</span></div>
-          <p>Aprende HTML, CSS, JavaScript, GitHub Pages, Firebase y Claude Code construyendo y publicando un sitio profesional real.</p>
-          <div class="lp-prog-modes"><span>Online</span><span>A tu ritmo</span><span>Asesorías</span></div>
+          <div class="lp-prog-meta"><b>16 lecciones</b><span>Certificado</span></div>
+          <p>Crea y publica un sitio profesional con Claude Code y GitHub, desde cero.</p>
           <button type="button" class="lp-prog-free" onclick="event.stopPropagation();tryFree('web-dev')">Ver la lección gratis<svg><use href="#i-arrow"/></svg></button>
         </article>
-        <article class="lp-prog reveal" data-d="1" onclick="openProgram('books')">
-          <div class="lp-prog-img"><img src="assets/img/biblioteca.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">Disponible</span></div>
-          <h3>Biblioteca 7ST: emprende con método</h3>
-          <div class="lp-prog-meta"><b>2 libros</b><span>27 capítulos · evaluación</span></div>
-          <p>Redes sociales, marca, finanzas y propósito, con cuadernos de trabajo que se responden dentro del libro y un coach con IA que analiza tus respuestas.</p>
-          <div class="lp-prog-modes"><span>Online</span><span>Cuadernos</span><span>Coach IA</span></div>
-          <button type="button" class="lp-prog-free" onclick="event.stopPropagation();tryFree('7st')">Leer un capítulo gratis<svg><use href="#i-arrow"/></svg></button>
-        </article>
-        <article class="lp-prog reveal" data-d="2" onclick="openProgram('ia')">
+        <article class="lp-prog reveal" data-d="1" onclick="openProgram('ia')">
           <div class="lp-prog-img"><img src="assets/img/curso-ia.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">Nuevo</span></div>
           <h3>IA aplicada a los negocios</h3>
-          <div class="lp-prog-meta"><b>16 lecciones</b><span>Vibe coding · certificado</span></div>
-          <p>Gana dinero con IA: automatiza empresas, construye sistemas a medida y chatbots, y aprende a conseguir tus primeros clientes.</p>
-          <div class="lp-prog-modes"><span>Online</span><span>Prompts listos</span><span>Coach IA</span></div>
+          <div class="lp-prog-meta"><b>16 lecciones</b><span>Certificado</span></div>
+          <p>Automatiza, crea sistemas a medida y gana dinero con IA, sin saber programar.</p>
           <button type="button" class="lp-prog-free" onclick="event.stopPropagation();tryFree('ia')">Ver la lección gratis<svg><use href="#i-arrow"/></svg></button>
+        </article>
+        <article class="lp-prog reveal" data-d="2" onclick="openProgram('books')" id="lp-biblioteca">
+          <div class="lp-prog-img"><img src="assets/img/biblioteca.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">2 libros</span></div>
+          <h3>Biblioteca 7ST</h3>
+          <div class="lp-prog-meta"><b>27 capítulos</b><span>Cuadernos + coach IA</span></div>
+          <p>Redes sociales, marca, finanzas y propósito para emprender con método.</p>
+          <button type="button" class="lp-prog-free" onclick="event.stopPropagation();tryFree('7st')">Leer un capítulo gratis<svg><use href="#i-arrow"/></svg></button>
         </article>
         <article class="lp-prog is-soon reveal" data-d="3">
           <div class="lp-prog-img"><img src="assets/img/curso-marketing.webp" alt="" loading="lazy" width="900" height="600"><span class="lp-prog-tag">Próximamente</span></div>
           <h3>Marketing digital</h3>
-          <div class="lp-prog-meta"><b>En preparación</b><span>Redes · SEO · campañas</span></div>
-          <p>SEO, redes sociales, campañas pagadas y analítica para atraer clientes y hacer crecer tu negocio en línea.</p>
-          <div class="lp-prog-modes"><span>Online</span><span>A tu ritmo</span></div>
+          <div class="lp-prog-meta"><b>En preparación</b><span>Redes · SEO</span></div>
+          <p>Atrae clientes con redes sociales, SEO y campañas pagadas.</p>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- BIBLIOTECA -->
-  <section class="lp-section lp-paper" id="lp-biblioteca">
-    <div class="lp-wrap lp-library">
-      <div class="lp-library-copy">
-        <span class="eyebrow reveal">Biblioteca digital</span>
-        <h2 class="lp-h2 reveal" data-d="1">La serie <em class="serif">7ST</em>, para emprender con método.</h2>
-        <p class="lp-lead reveal" data-d="2">Libros digitales escritos por DGP Global Group que se leen dentro de la plataforma, con índice, progreso por capítulo y una evaluación final.</p>
-        <ul class="lp-checks reveal" data-d="3">
-          <li><svg><use href="#i-check"/></svg>Vol. 1 — 7 sistemas para transformar tu negocio: redes sociales y emprendimiento</li>
-          <li><svg><use href="#i-check"/></svg>Vol. 2 — De la semilla al árbol: propósito, finanzas y crecimiento</li>
-          <li><svg><use href="#i-check"/></svg>Evaluación final y certificado de lectura</li>
-        </ul>
-      </div>
-      <div class="lp-shelf reveal" data-d="2" aria-hidden="true">
-        <div class="book3d book3d--blue"><div class="book3d-cover"><span class="b-kicker">DGP Global Group · Vol. 1</span><span class="b-title">7ST</span><span class="b-sub">Redes sociales y emprendimiento</span></div></div>
-        <div class="book3d book3d--green"><div class="book3d-cover"><span class="b-kicker">Serie 7ST · Vol. 2</span><span class="b-title b-title--sm">De la semilla al árbol</span><span class="b-sub">Propósito, finanzas y crecimiento</span></div></div>
-        <div class="book3d book3d--ink"><div class="book3d-cover"><span class="b-kicker">Serie 7ST · Vol. 3</span><span class="b-title b-title--sm">En preparación</span><span class="b-sub">Próximamente</span></div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ASESORÍAS -->
-  <section class="lp-section">
-    <div class="lp-wrap lp-mentor">
-      <figure class="lp-mentor-photo reveal"><img src="assets/img/asesoria.webp" alt="Mentor revisando un proyecto en la laptop junto a un estudiante" loading="lazy" width="1200" height="800"></figure>
-      <div class="lp-mentor-copy">
-        <span class="eyebrow reveal">Acompañamiento</span>
-        <h2 class="lp-h2 reveal" data-d="1">No aprendes <em class="serif">solo</em>.</h2>
-        <p class="lp-lead reveal" data-d="2">Tu inscripción incluye dos sesiones privadas por videollamada con el equipo de DGP Global Group. Las usas cuando más las necesites: para resolver dudas, revisar tu proyecto o planear tu lanzamiento.</p>
-        <div class="lp-quote reveal" data-d="3"><p>“Enseñamos exactamente las herramientas y el flujo de trabajo que usamos todos los días con nuestros clientes.”</p><span>Equipo DGP Global Group</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CERTIFICADO -->
-  <section class="lp-section lp-paper" id="lp-certificado">
-    <div class="lp-wrap lp-certsec">
-      <div class="lp-certsec-copy">
-        <span class="eyebrow reveal">Certificación</span>
-        <h2 class="lp-h2 reveal" data-d="1">Un certificado que <em class="serif">vale la pena</em> mostrar.</h2>
-        <p class="lp-lead reveal" data-d="2">Al completar el programa recibes un certificado digital de finalización emitido por DGP Academy, listo para descargar en PDF y compartir.</p>
-        <ul class="lp-checks reveal" data-d="3">
-          <li><svg><use href="#i-check"/></svg>Tu nombre, el programa y la fecha de emisión</li>
-          <li><svg><use href="#i-check"/></svg>Número único que cualquiera puede <a href="#" onclick="openVerify();return false">verificar aquí</a></li>
-          <li><svg><use href="#i-check"/></svg>Formato A4 horizontal listo para imprimir</li>
-        </ul>
-      </div>
-      <div class="lp-certsec-visual reveal" data-d="2">
-        <div class="cert-stage cert-stage--preview" id="lp-cert-preview"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PARA QUIÉN -->
-  <section class="lp-section">
-    <div class="lp-wrap">
-      <div class="lp-section-head">
-        <span class="eyebrow reveal">Para quién es</span>
-        <h2 class="lp-h2 reveal" data-d="1">Hecho para quienes <em class="serif">construyen</em>.</h2>
-      </div>
-      <div class="lp-audience">
-        <article class="lp-aud reveal"><img src="assets/img/perfil-emprendedores.webp" alt="" loading="lazy" width="900" height="600"><div class="lp-aud-body"><h3>Emprendedores</h3><p>Quieres presencia en línea sin depender de terceros: construye, publica y mantén tu propio sitio.</p></div></article>
-        <article class="lp-aud reveal" data-d="1"><img src="assets/img/perfil-equipos.webp" alt="" loading="lazy" width="900" height="600"><div class="lp-aud-body"><h3>Equipos</h3><p>Publiquen landing pages y micrositios rápido, sin agencias ni esperas.</p></div></article>
-        <article class="lp-aud reveal" data-d="2"><img src="assets/img/perfil-freelancers.webp" alt="" loading="lazy" width="900" height="600"><div class="lp-aud-body"><h3>Freelancers</h3><p>Suma desarrollo web a tus servicios, entrega más rápido y cobra mejor.</p></div></article>
-      </div>
-    </div>
-  </section>
-
-  <!-- PRECIO -->
-  <section class="lp-section lp-paper" id="lp-acceso">
+  <!-- POR QUÉ DGP (resume plataforma, asesorías y certificado) -->
+  <section class="lp-section lp-tight lp-paper" id="lp-como">
     <div class="lp-wrap">
       <div class="lp-section-head lp-section-head--center">
-        <span class="eyebrow reveal">Inscripción</span>
+        <span class="eyebrow reveal">Por qué DGP Academy</span>
+        <h2 class="lp-h2 reveal" data-d="1">Todo lo que necesitas para <em class="serif">terminar</em> lo que empiezas.</h2>
+      </div>
+      <div class="lp-why" id="lp-certificado">
+        <div class="lp-why-item reveal"><span>🎯</span><div><b>Aprendes haciendo</b><p>Cada lección termina en algo que publicas o aplicas en tu negocio.</p></div></div>
+        <div class="lp-why-item reveal" data-d="1"><span>✦</span><div><b>Asistente IA y coach</b><p>Resuelve dudas y analiza tus ejercicios en cualquier momento.</p></div></div>
+        <div class="lp-why-item reveal" data-d="2"><span>🎥</span><div><b>Asesorías 1:1</b><p>Videollamadas con el equipo de DGP para revisar tu proyecto.</p></div></div>
+        <div class="lp-why-item reveal"><span>🏅</span><div><b>Certificado verificable</b><p>Con número único que cualquiera puede <a href="#" onclick="openVerify();return false">verificar aquí</a>.</p></div></div>
+        <div class="lp-why-item reveal" data-d="1"><span>📱</span><div><b>En cualquier dispositivo</b><p>Tu avance se guarda en la nube y sigues donde lo dejaste.</p></div></div>
+        <div class="lp-why-item reveal" data-d="2"><span>🔥</span><div><b>Logros y rachas</b><p>Insignias por módulo y días seguidos para que no pierdas el ritmo.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRECIOS Y MEMBRESÍA -->
+  <section class="lp-section lp-tight" id="lp-acceso">
+    <div class="lp-wrap">
+      <div class="lp-section-head lp-section-head--center">
+        <span class="eyebrow reveal">Precios</span>
         <h2 class="lp-h2 reveal" data-d="1">Elige cómo <em class="serif">empezar</em>.</h2>
-        <p class="lp-lead reveal" data-d="2">Paga una sola vez y es tuyo para siempre. Llévate todo con el pase completo o desbloquea solo el programa o el libro que necesitas.</p>
+        <p class="lp-lead reveal" data-d="2">Pago único, acceso de por vida. Con Zelle o tarjeta; se desbloquea en cuanto se confirma el pago.</p>
       </div>
       <div class="lp-prices">
         <article class="lp-pcard reveal">
           <div class="lp-pcard-label">Un programa</div>
-          <div class="lp-price"><span class="cur">$</span><span data-price-num="web-dev">40</span><span class="per">USD · pago único</span></div>
-          <p class="lp-pcard-sub">Elige Desarrollo Web con IA o IA aplicada a los negocios.</p>
-          <ul class="lp-price-list">
-            <li><svg><use href="#i-check"/></svg>16 lecciones con prompts y ejercicios</li>
-            <li><svg><use href="#i-check"/></svg>Asistente IA y coach para tus respuestas</li>
-            <li><svg><use href="#i-check"/></svg>Certificado de finalización</li>
-            <li><svg><use href="#i-check"/></svg>Acceso de por vida</li>
-          </ul>
-          <div class="lp-pcard-btns"><button class="ui-btn ui-btn--dark ui-btn--block" onclick="buyProduct('web-dev')">Desarrollo Web con IA</button><button class="ui-btn ui-btn--ghost ui-btn--block" onclick="buyProduct('ia')">IA aplicada a los negocios</button></div>
+          <div class="lp-price"><span class="cur">$</span><span data-price-num="web-dev">40</span><span class="per">USD</span></div>
+          <p class="lp-pcard-sub">16 lecciones, asistente IA y certificado.</p>
+          <div class="lp-pcard-btns"><button class="ui-btn ui-btn--dark ui-btn--block ui-btn--sm" onclick="buyProduct('web-dev')">Desarrollo Web con IA</button><button class="ui-btn ui-btn--ghost ui-btn--block ui-btn--sm" onclick="buyProduct('ia')">IA aplicada a los negocios</button></div>
         </article>
         <article class="lp-pcard is-featured reveal" data-d="1">
           <span class="mb-badge">Mejor valor</span>
           <div class="lp-pcard-label">Pase completo</div>
-          <div class="lp-price"><span class="cur">$</span><span data-price-num="pase">97</span><span class="per">USD · pago único</span></div>
-          <div class="lp-price-old">Por separado <s>$<span data-price-regular-num="pase">130</span> USD</s></div>
+          <div class="lp-price"><span class="cur">$</span><span data-price-num="pase">97</span><span class="per">USD</span><span class="lp-price-old">antes <s>$<span data-price-regular-num="pase">130</span></s></span></div>
+          <ul class="lp-price-list">
+            <li><svg><use href="#i-check"/></svg>Todos los programas y libros, y los nuevos</li>
+            <li><svg><use href="#i-check"/></svg>17 plantillas de prompts y documentos</li>
+            <li><svg><use href="#i-check"/></svg>2 asesorías privadas y certificados</li>
+          </ul>
           <div id="lp-cupos-wrap" class="lp-cupos">
             <div class="lp-cupos-row"><span>Cupos de lanzamiento</span><strong><span id="lp-cupos-num">—</span> <span class="lp-cupos-of">de</span> <span id="lp-cupos-total">20</span></strong></div>
             <div class="lp-cupos-bar"><span id="lp-cupos-bar" style="width:100%"></span></div>
           </div>
-          <ul class="lp-price-list">
-            <li><svg><use href="#i-check"/></svg>Todos los programas y libros</li>
-            <li><svg><use href="#i-check"/></svg>Incluye los programas nuevos que publiquemos</li>
-            <li><svg><use href="#i-check"/></svg>17 plantillas de prompts por tipo de negocio + propuesta y contrato para clientes</li>
-            <li><svg><use href="#i-check"/></svg>2 sesiones de asesoría privada</li>
-            <li><svg><use href="#i-check"/></svg>Asistente IA, coach y todos los certificados</li>
-            <li><svg><use href="#i-check"/></svg>Acceso de por vida</li>
-          </ul>
-          <button class="ui-btn ui-btn--primary ui-btn--lg ui-btn--block" onclick="buyProduct('pase')">Quiero el pase completo <svg><use href="#i-arrow"/></svg></button>
+          <button class="ui-btn ui-btn--primary ui-btn--block" onclick="buyProduct('pase')">Quiero el pase completo <svg><use href="#i-arrow"/></svg></button>
         </article>
         <article class="lp-pcard reveal" data-d="2">
           <div class="lp-pcard-label">Un libro</div>
-          <div class="lp-price"><span class="cur">$</span><span data-price-num="7st">25</span><span class="per">USD · pago único</span></div>
-          <p class="lp-pcard-sub">Serie 7ST: léelo en la plataforma, con cuadernos de trabajo.</p>
-          <ul class="lp-price-list">
-            <li><svg><use href="#i-check"/></svg>Lectura con índice y progreso</li>
-            <li><svg><use href="#i-check"/></svg>Cuadernos de trabajo con coach IA</li>
-            <li><svg><use href="#i-check"/></svg>Evaluación y certificado de lectura</li>
-            <li><svg><use href="#i-check"/></svg>Acceso de por vida</li>
-          </ul>
-          <div class="lp-pcard-btns"><button class="ui-btn ui-btn--dark ui-btn--block" onclick="buyProduct('7st')">7ST · Redes y emprendimiento</button><button class="ui-btn ui-btn--ghost ui-btn--block" onclick="buyProduct('semilla')">De la semilla al árbol</button></div>
+          <div class="lp-price"><span class="cur">$</span><span data-price-num="7st">25</span><span class="per">USD</span></div>
+          <p class="lp-pcard-sub">Lectura con cuadernos, coach IA y evaluación.</p>
+          <div class="lp-pcard-btns"><button class="ui-btn ui-btn--dark ui-btn--block ui-btn--sm" onclick="buyProduct('7st')">7ST · Redes y emprendimiento</button><button class="ui-btn ui-btn--ghost ui-btn--block ui-btn--sm" onclick="buyProduct('semilla')">De la semilla al árbol</button></div>
         </article>
       </div>
-      <div class="lp-guarantee lp-guarantee--center reveal"><svg><use href="#i-shield"/></svg><p><strong>Así funciona:</strong> creas tu cuenta, pagas con Zelle o tarjeta y en cuanto se confirma el pago se desbloquea lo que compraste. Sin suscripciones.</p></div>
-    </div>
-  </section>
 
-
-  <!-- MEMBRESÍA -->
-  <section class="lp-section lp-member" id="lp-membresia">
-    <div class="lp-wrap">
-      <div class="lp-section-head lp-section-head--center">
-        <span class="eyebrow reveal">Membresía mensual</span>
-        <h2 class="lp-h2 reveal" data-d="1">Tu equipo creativo y tu asesor, <em class="serif">cada mes</em>.</h2>
-        <p class="lp-lead reveal" data-d="2">Flyers diseñados para tu negocio, sesiones de seguimiento con el equipo de DGP, contenido exclusivo antes que nadie y sorteos mensuales de nuestros servicios.</p>
+      <div class="lp-member-band reveal" id="lp-membresia">
+        <div class="lp-member-band-head">
+          <span class="eyebrow">Membresía mensual</span>
+          <h3>Tu equipo creativo y tu asesor, cada mes</h3>
+          <p>Flyers para tu negocio, asesorías de seguimiento, contenido exclusivo y sorteos. Cancelas cuando quieras.</p>
+        </div>
+        <div class="mb-plans mb-plans--compact" id="lp-plans"></div>
       </div>
-      <div class="mb-plans" id="lp-plans"></div>
-      <p class="mb-foot reveal">Pago mensual con tarjeta (automático) o Zelle · Cancelas cuando quieras · Antes de empezar te pedimos una encuesta corta para conocer tu negocio.</p>
     </div>
   </section>
 
   <!-- BLOG -->
-  <section class="lp-section lp-paper" id="lp-blog" hidden>
+  <section class="lp-section lp-tight lp-paper" id="lp-blog" hidden>
     <div class="lp-wrap">
       <div class="lp-section-head lp-section-head--split">
         <div>
           <span class="eyebrow reveal">Blog y guías</span>
           <h2 class="lp-h2 reveal" data-d="1">Aprende gratis con <em class="serif">nuestras guías</em>.</h2>
         </div>
-        <p class="lp-lead reveal" data-d="2">Artículos prácticos del equipo de DGP Global Group sobre páginas web, Google, ventas y negocios.</p>
+        <div class="blog-more reveal"><button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" onclick="openBlogPage()"><span>Ver todos (<span class="blog-all-n">0</span>)</span><svg><use href="#i-arrow"/></svg></button></div>
       </div>
       <div class="blog-minis" id="lp-blog-grid"></div>
-      <div class="blog-more reveal"><button type="button" class="ui-btn ui-btn--ghost" onclick="openBlogPage()"><span>Ver todos los artículos (<span class="blog-all-n">0</span>)</span><svg><use href="#i-arrow"/></svg></button></div>
     </div>
   </section>
 
-  <!-- SOBRE NOSOTROS -->
-  <section class="lp-section lp-biz" id="lp-empresas">
-    <div class="lp-wrap">
+  <!-- EMPRESAS -->
+  <section class="lp-section lp-tight lp-biz" id="lp-empresas">
+    <div class="lp-wrap lp-biz-split">
       <div class="lp-biz-head reveal">
-        <span class="lp-biz-kicker">DGP Empresas · Consultoría y capacitación de empleados</span>
+        <span class="lp-biz-kicker">DGP Empresas · Capacitación de empleados</span>
         <h2>Pon orden en tu negocio y capacita a tu equipo</h2>
-        <p>Para empresas que hoy funcionan con Excel, de memoria o sin procesos escritos. Documentamos cómo se hace cada cosa, definimos los cargos y capacitamos a tu equipo por niveles en una plataforma donde ves el avance de cada persona.</p>
-        <div class="lp-biz-ctas"><a class="ui-btn ui-btn--primary ui-btn--lg" href="#lp-diagnostico" data-scroll="lp-diagnostico">Agenda un diagnóstico gratis</a><span class="lp-biz-ally">En alianza con <img src="assets/img/moya-mark-sm.png" alt="" width="30" height="22"> Moya &amp; Company</span></div>
+        <p>Para negocios que hoy funcionan con Excel o sin procesos escritos. Nuestro equipo documenta tus procesos y cargos, y capacita a tu personal por niveles en una plataforma donde ves el avance de cada persona.</p>
+        <ul class="lp-biz-list">
+          <li><span>📋</span>Manual de descripción de cargos</li>
+          <li><span>⚙️</span>Procedimientos (SOPs) paso a paso</li>
+          <li><span>🎯</span>Capacitación por niveles y cargos</li>
+          <li><span>🏅</span>Certificaciones con examen y vigencia</li>
+          <li><span>⭐</span>Puntos y premios para el equipo</li>
+          <li><span>📊</span>Panel del gerente y asesorías</li>
+        </ul>
+        <span class="lp-biz-ally">En alianza con <img src="assets/img/moya-mark-sm.png" alt="" width="30" height="22"> Moya &amp; Company</span>
       </div>
-      <div class="lp-biz-grid">
-        <article class="lp-biz-card reveal"><span class="lp-biz-ic">📋</span><h3>Manual de descripción de cargos</h3><p>Propósito, funciones, responsabilidades, indicadores y competencias de cada puesto. Cada empleado lo lee y lo confirma.</p></article>
-        <article class="lp-biz-card reveal" data-d="1"><span class="lp-biz-ic">⚙️</span><h3>Procedimientos (SOPs)</h3><p>Escribimos paso a paso cómo se hace cada proceso para que el trabajo salga igual siempre, lo haga quien lo haga.</p></article>
-        <article class="lp-biz-card reveal" data-d="2"><span class="lp-biz-ic">🎯</span><h3>Capacitación por niveles</h3><p>Los líderes, el personal administrativo y el operativo ven solo el entrenamiento que les corresponde a su nivel y su cargo.</p></article>
-        <article class="lp-biz-card reveal"><span class="lp-biz-ic">📊</span><h3>Panel del gerente</h3><p>Ves en tiempo real quién completó su capacitación, quién tiene pendientes y quién debe releer un procedimiento actualizado.</p></article>
-        <article class="lp-biz-card reveal" data-d="1"><span class="lp-biz-ic">🎥</span><h3>Asesorías por videollamada</h3><p>Sesiones con nuestro equipo para el gerente y para cada colaborador: dudas, seguimiento y mejora continua.</p></article>
-        <article class="lp-biz-card reveal" data-d="2"><span class="lp-biz-ic">🏅</span><h3>Certificaciones y puntos <em>Pronto</em></h3><p>Rutas de certificación por cargo con vencimiento y un sistema de puntos para reconocer a tu mejor equipo.</p></article>
-      </div>
-      <ol class="lp-biz-steps reveal">
-        <li><b>Diagnóstico</b><span>Conocemos tu negocio y cómo trabaja hoy tu equipo.</span></li>
-        <li><b>Documentamos</b><span>Cargos, procesos y SOPs escritos por nuestro equipo.</span></li>
-        <li><b>Capacitamos</b><span>Cada nivel recibe su entrenamiento en la plataforma.</span></li>
-        <li><b>Medimos</b><span>Tú ves el cumplimiento y nosotros te acompañamos.</span></li>
-      </ol>
       <div class="lp-biz-form-wrap" id="lp-diagnostico">
-        <div class="lp-biz-form-copy reveal"><h3>Diagnóstico gratis para tu empresa</h3><p>Cuéntanos de tu negocio y te contactamos para una llamada de 30 minutos. Sin costo y sin compromiso.</p>
-          <ul><li>Revisamos cómo se organiza hoy tu equipo</li><li>Detectamos qué procesos conviene documentar primero</li><li>Te proponemos un plan a la medida</li></ul></div>
-        <form class="lp-biz-form reveal" data-d="1" onsubmit="event.preventDefault();submitOrgLead()">
+        <div class="lp-biz-form-copy"><h3>Diagnóstico gratis</h3><p>Te contactamos para una llamada de 30 minutos, sin costo ni compromiso.</p></div>
+        <form class="lp-biz-form" onsubmit="event.preventDefault();submitOrgLead()">
           <label class="adm-field"><span>Nombre de la empresa</span><input class="form-input" id="lead-company" required maxlength="120"></label>
           <label class="adm-field"><span>Tu nombre</span><input class="form-input" id="lead-name" required maxlength="120"></label>
           <label class="adm-field"><span>Correo</span><input class="form-input" id="lead-email" type="email" required maxlength="160"></label>
           <label class="adm-field"><span>Teléfono / WhatsApp</span><input class="form-input" id="lead-phone" type="tel" maxlength="40"></label>
           <label class="adm-field adm-field--wide"><span>¿Cuántos empleados tienen?</span><select class="form-input" id="lead-employees"><option value="1-5">1 a 5</option><option value="6-15">6 a 15</option><option value="16-50">16 a 50</option><option value="51-200">51 a 200</option><option value="200+">Más de 200</option></select></label>
-          <label class="adm-field adm-field--wide"><span>¿Qué te gustaría ordenar o mejorar?</span><textarea class="form-input" id="lead-need" rows="3" maxlength="1500" placeholder="Ej.: no tenemos procesos escritos, cada empleado hace las cosas a su manera…"></textarea></label>
+          <label class="adm-field adm-field--wide"><span>¿Qué te gustaría ordenar o mejorar?</span><textarea class="form-input" id="lead-need" rows="2" maxlength="1500" placeholder="Ej.: no tenemos procesos escritos, cada empleado hace las cosas a su manera…"></textarea></label>
           <p class="modal-error" id="lead-error" hidden></p>
-          <button class="ui-btn ui-btn--primary ui-btn--lg ui-btn--block" id="lead-btn">Quiero mi diagnóstico gratis</button>
+          <button class="ui-btn ui-btn--primary ui-btn--block" id="lead-btn">Quiero mi diagnóstico gratis</button>
           <p class="lp-biz-ok" id="lead-ok" hidden>¡Gracias! Recibimos tu solicitud y te contactaremos muy pronto.</p>
         </form>
       </div>
     </div>
   </section>
 
-  <section class="lp-section lp-about" id="lp-nosotros">
-    <div class="lp-wrap">
-      <div class="lp-about-top">
-        <div>
-          <span class="eyebrow eyebrow--light reveal">Sobre nosotros</span>
-          <h2 class="lp-h2 reveal" data-d="1">La escuela de <em class="serif">DGP Global Group</em>.</h2>
-        </div>
-        <div class="lp-about-copy">
-          <p class="reveal" data-d="2">DGP Academy es la división educativa de DGP Global Group. Nació de una idea sencilla: enseñar exactamente lo que hacemos todos los días para nuestros clientes —sitios web, marcas, contenido y automatización con IA— para que más emprendedores latinos puedan construir su negocio digital con sus propias manos.</p>
-          <p class="reveal" data-d="3">Aquí no hay teoría de relleno. Cada lección termina en algo que publicas, cada libro trae un cuaderno de trabajo y cada estudiante tiene acompañamiento real de nuestro equipo.</p>
-        </div>
+  <!-- SOBRE NOSOTROS + ALIANZA -->
+  <section class="lp-section lp-tight lp-about" id="lp-nosotros">
+    <div class="lp-wrap lp-about-compact">
+      <div>
+        <span class="eyebrow eyebrow--light reveal">Sobre nosotros</span>
+        <h2 class="lp-h2 reveal" data-d="1">La escuela de <em class="serif">DGP Global Group</em>.</h2>
+        <p class="reveal" data-d="2">DGP Academy es la división educativa de DGP Global Group: enseñamos exactamente lo que hacemos todos los días para nuestros clientes —sitios web, marcas, contenido y automatización con IA—, en español e inglés y con acompañamiento real de nuestro equipo.</p>
       </div>
-
-      <div class="lp-about-pillars">
-        <article class="reveal"><span class="lp-about-num">01</span><h3>Aprender haciendo</h3><p>Proyectos reales desde la primera semana: lo que aprendes hoy lo publicas mañana.</p></article>
-        <article class="reveal" data-d="1"><span class="lp-about-num">02</span><h3>Mentores que ejercen</h3><p>Te enseña el mismo equipo que diseña, programa y hace crecer negocios en Estados Unidos y Latinoamérica.</p></article>
-        <article class="reveal" data-d="2"><span class="lp-about-num">03</span><h3>IA como compañera</h3><p>Usamos la inteligencia artificial para que avances más rápido, con un coach que analiza tus respuestas.</p></article>
-        <article class="reveal" data-d="3"><span class="lp-about-num">04</span><h3>En tu idioma</h3><p>Plataforma, libros y asesorías en español e inglés, desde cualquier dispositivo.</p></article>
-      </div>
-
-      <div class="lp-alliance reveal">
+      <div class="lp-alliance reveal" data-d="1">
         <div class="lp-alliance-logos" aria-hidden="true">
           <span class="lp-alliance-logo lp-alliance-logo--dgp"><svg style="--logo-ink:#0a1430"><use href="#dgp-mark"/></svg></span>
           <span class="lp-alliance-x">×</span>
@@ -544,10 +359,7 @@
         <div class="lp-alliance-copy">
           <span class="lp-alliance-kicker">Alianza comercial</span>
           <h3>DGP Global Group <span>×</span> Moya &amp; Company</h3>
-          <p>Somos aliados comerciales de <b>Moya &amp; Company</b>, “Your Digital Right Hand”, una empresa de soporte digital bilingüe que conecta a negocios de Estados Unidos con profesionales remotos. Juntos cerramos el círculo: en DGP Academy aprendes a construir tu presencia digital y, cuando tu negocio crece, Moya &amp; Company te ayuda a operarlo.</p>
-          <ul class="lp-alliance-services">
-            <li>Call center</li><li>Redes sociales</li><li>Asistencia virtual</li><li>Customer service</li><li>Estructura de CRM</li><li>Procesos (SOPs)</li>
-          </ul>
+          <p>Moya &amp; Company, “Your Digital Right Hand”, conecta negocios de Estados Unidos con profesionales remotos bilingües. Aprendes con nosotros y, cuando tu negocio crece, ellos te ayudan a operarlo.</p>
           <a class="lp-alliance-link" href="https://moyacompany.com" target="_blank" rel="noopener">Conocer Moya &amp; Company <svg><use href="#i-arrow"/></svg></a>
         </div>
       </div>
@@ -555,7 +367,7 @@
   </section>
 
   <!-- FAQ -->
-  <section class="lp-section" id="lp-faq">
+  <section class="lp-section lp-tight" id="lp-faq">
     <div class="lp-wrap lp-faq">
       <div>
         <span class="eyebrow reveal">Preguntas frecuentes</span>
@@ -563,23 +375,20 @@
         <p class="lp-lead reveal" data-d="2">¿Otra duda? Escríbenos a <a href="mailto:info@dgpglobalgroup.com">info@dgpglobalgroup.com</a>.</p>
       </div>
       <div class="lp-faq-list">
-        <details class="reveal"><summary>¿Cómo obtengo acceso después de inscribirme?<svg><use href="#i-plus"/></svg></summary><p>Creas tu cuenta gratis y pagas desde tu panel con Zelle o tarjeta. Con tarjeta el acceso es inmediato; con Zelle lo verificamos en menos de 24 horas. Recibes tu factura por correo.</p></details>
-        <details class="reveal"><summary>¿Necesito experiencia previa?<svg><use href="#i-plus"/></svg></summary><p>No. El programa empieza explicando cómo funciona la web y avanza paso a paso hasta publicar un sitio real con dominio propio.</p></details>
-        <details class="reveal"><summary>¿Por cuánto tiempo tengo acceso?<svg><use href="#i-plus"/></svg></summary><p>De por vida. Las actualizaciones del programa se suman sin costo adicional.</p></details>
-        <details class="reveal"><summary>¿Cómo funcionan las asesorías privadas?<svg><use href="#i-plus"/></svg></summary><p>Son dos sesiones por videollamada con el equipo de DGP Global Group. Las agendas cuando las necesites durante tu avance en el programa.</p></details>
-        <details class="reveal"><summary>¿Cómo recibo mi certificado?<svg><use href="#i-plus"/></svg></summary><p>Al marcar como completadas las 16 lecciones, la plataforma emite tu certificado con un número único. Puedes verlo cuando quieras desde tu panel y descargarlo en PDF.</p></details>
-        <details class="reveal"><summary>¿Puedo estudiar desde el celular?<svg><use href="#i-plus"/></svg></summary><p>Sí. La plataforma está diseñada para computadora, tablet y celular, y tu progreso se sincroniza entre dispositivos.</p></details>
+        <details class="reveal"><summary>¿Cómo obtengo acceso?<svg><use href="#i-plus"/></svg></summary><p>Creas tu cuenta gratis y pagas desde tu panel con Zelle o tarjeta. Con tarjeta el acceso es inmediato; con Zelle lo verificamos en menos de 24 horas.</p></details>
+        <details class="reveal"><summary>¿Necesito saber programar?<svg><use href="#i-plus"/></svg></summary><p>No. Aprendes a crear con IA paso a paso, desde cero, y puedes ver gratis la primera lección de cada programa.</p></details>
+        <details class="reveal"><summary>¿Por cuánto tiempo tengo acceso?<svg><use href="#i-plus"/></svg></summary><p>De por vida, con las actualizaciones incluidas. La membresía mensual es aparte y la cancelas cuando quieras.</p></details>
+        <details class="reveal"><summary>¿Cómo recibo mi certificado?<svg><use href="#i-plus"/></svg></summary><p>Al completar el programa se emite con un número único; lo descargas en PDF desde tu panel y cualquiera puede verificarlo.</p></details>
+        <details class="reveal"><summary>¿Cómo funciona para empresas?<svg><use href="#i-plus"/></svg></summary><p>Pides un diagnóstico gratis, nuestro equipo documenta tus procesos y cargos, y tu personal se capacita y certifica en la plataforma mientras tú ves el avance.</p></details>
       </div>
     </div>
   </section>
 
   <!-- CTA FINAL -->
-  <section class="lp-cta">
-    <img src="assets/img/cta-equipo.webp" alt="" loading="lazy" width="1600" height="1067">
+  <section class="lp-cta lp-cta--compact">
     <div class="lp-wrap lp-cta-inner">
       <h2 class="reveal">Tu próxima habilidad <em class="serif">empieza hoy</em>.</h2>
-      <p class="reveal" data-d="1">Únete a la próxima generación de DGP Academy.</p>
-      <div class="lp-cta-btns reveal" data-d="2">
+      <div class="lp-cta-btns reveal" data-d="1">
         <button class="ui-btn ui-btn--light ui-btn--lg" onclick="goToRegister()">Crear mi cuenta <svg><use href="#i-arrow"/></svg></button>
         <button class="ui-btn ui-btn--ghost-light ui-btn--lg" onclick="goToAuth()">Ya tengo cuenta</button>
       </div>
@@ -592,7 +401,7 @@
         <span class="brand brand--light"><svg class="brand-mark" style="--logo-ink:#fff"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span><span class="brand-x" title="En alianza con Moya &amp; Company"><i aria-hidden="true">×</i><img src="assets/img/moya-mark-sm.png" alt="Moya &amp; Company" width="30" height="22"><span class="brand-x-name">Moya &amp; Company</span></span></span>
         <p>La plataforma educativa de DGP Global Group. Formación práctica en desarrollo web, inteligencia artificial y marketing digital.</p>
       </div>
-      <div class="lp-footer-col"><h4>Programa</h4><a href="#lp-programa" data-scroll="lp-programa">Temario</a><a href="#lp-biblioteca" data-scroll="lp-biblioteca">Biblioteca</a><a href="#lp-certificado" data-scroll="lp-certificado">Certificado</a><a href="#lp-acceso" data-scroll="lp-acceso">Precio</a></div>
+      <div class="lp-footer-col"><h4>Programas</h4><a href="#lp-cursos" data-scroll="lp-cursos">Programas</a><a href="#lp-acceso" data-scroll="lp-acceso">Precios</a><a href="#lp-membresia" data-scroll="lp-membresia">Membresía</a><a href="#lp-empresas" data-scroll="lp-empresas">Para empresas</a></div>
       <div class="lp-footer-col"><h4>Plataforma</h4><a href="#" onclick="goToAuth();return false">Iniciar sesión</a><a href="#" onclick="goToRegister();return false">Crear cuenta</a><a href="#lp-faq" data-scroll="lp-faq">Preguntas frecuentes</a></div>
       <div class="lp-footer-col"><h4>Certificados</h4><a href="#" onclick="openVerify();return false">Verificar un certificado</a></div>
       <div class="lp-footer-col"><h4>Contacto</h4><a href="mailto:info@dgpglobalgroup.com">info@dgpglobalgroup.com</a><a href="https://dgpglobalgroup.com" target="_blank" rel="noopener">dgpglobalgroup.com</a><a href="#lp-nosotros" data-scroll="lp-nosotros">Sobre nosotros</a><a href="https://moyacompany.com" target="_blank" rel="noopener">Aliado: Moya &amp; Company</a></div>

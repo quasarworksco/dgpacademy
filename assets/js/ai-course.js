@@ -89,7 +89,7 @@ async function aiFinish() {
 
 // Terminado: las 16 lecciones completadas o el certificado ya emitido
 function aiCourseDone() {
-  return AI_COUNTED.every(id => readSet('ia').has(id)) || !!(STATE.certificates && STATE.certificates['ia']);
+  return AI_COUNTED.every(id => readSet('ia').has(id));
 }
 
 function updateAIProgress() {
@@ -111,6 +111,7 @@ function updateAIAccess() {
   if (!btn) return;
   const status = document.getElementById('ia-status');
   const prog = document.getElementById('ia-progress');
+  if (typeof setDoneActions === 'function') setDoneActions(btn, hasAccess('ia') && aiCourseDone() ? 'ia' : null);
   if (hasAccess('ia') && aiCourseDone()) {
     // Programa terminado: se marca como completado y el botón abre el certificado
     btn.innerHTML = '<svg><use href="#i-award"/></svg>' + escapeHtml(t('Completado · Ver certificado'));

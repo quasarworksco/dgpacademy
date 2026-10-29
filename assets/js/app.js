@@ -1158,6 +1158,9 @@ function updateCourseBtn(done) {
   const btn = document.getElementById('btn-web-dev');
   // Sin acceso el botón es de compra (lo pone updateAccessUI); no se reemplaza
   if (!btn || btn.disabled || !hasWebAccess) return;
+  setDoneActions(btn, done ? 'web-dev' : null);
+  const st = document.getElementById('web-dev-status');
+  if (st) { st.textContent = t(done ? 'Completado' : 'Activo'); st.className = done ? 'chip chip--green course-status' : 'chip chip--light course-status is-active'; }
   if (done) {
     btn.innerHTML = ICON.award + 'Completado · Ver certificado';
     btn.className = 'ui-btn ui-btn--block btn-course is-done';
@@ -1168,6 +1171,36 @@ function updateCourseBtn(done) {
     btn.className = 'ui-btn ui-btn--block btn-course is-active';
     btn.onclick = function() { continueCourse(); };
   }
+}
+
+// Curso terminado: debajo del botón del certificado se puede repasar o reiniciar
+function setDoneActions(btn, product) {
+  let row = btn.parentElement.querySelector('.course-after');
+  if (!product) { if (row) row.remove(); return; }
+  if (!row) { row = document.createElement('div'); row.className = 'course-after'; btn.insertAdjacentElement('afterend', row); }
+  row.innerHTML = '<button type="button" onclick="reviewCourse(\'' + product + '\')"><svg><use href="#i-book"/></svg>' + escapeHtml(t('Repasar el curso')) + '</button>' +
+    '<button type="button" onclick="restartCourse(\'' + product + '\')"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>' + escapeHtml(t('Reiniciar progreso')) + '</button>';
+}
+
+// Abre el curso desde el inicio sin borrar el avance
+function reviewCourse(product) {
+  if (product === 'ia') { ensureAIScreen(); openProtected('ia', '#ai-screen', () => { showScreen('ai-screen'); goToAI('ai0'); updateAIProgress(); }); }
+  else enterCourse('home');
+}
+
+// Borra las lecciones completadas para empezar de nuevo; el certificado ya emitido se conserva
+async function restartCourse(product) {
+  if (!confirm(t('¿Reiniciar el progreso de este curso? Se desmarcarán las lecciones completadas para que lo hagas otra vez. Tu certificado se conserva.'))) return;
+  try {
+    const { error } = await clearProgress(product);
+    if (error) throw error;
+  } catch (e) { toast(t('No se pudo reiniciar. Inténtalo de nuevo.')); return; }
+  if (product === 'web-dev') { completed = []; current = 'home'; if (typeof updateProgress === 'function') updateProgress(); }
+  savePosition(product, product === 'ia' ? 'ai0' : 'home');
+  updateDashStats();
+  if (typeof updateAIAccess === 'function') updateAIAccess();
+  toast(t('Progreso reiniciado. ¡A empezar de nuevo!'));
+  reviewCourse(product);
 }
 
 // Botón "Volver al dashboard" en el curso — lo agregamos a la topbar

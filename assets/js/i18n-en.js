@@ -1123,6 +1123,8 @@ window.I18N_EN = {
   "Incluye cuaderno de trabajo": "Includes a workbook",
   "Cuaderno de trabajo": "Workbook",
   "Ideas clave": "Key ideas",
+  "Borrador automático": "Automatic draft",
+  "Escribe el título y, si quieres, notas del cliente (cómo lo hacen hoy, herramientas, horarios). Se genera un borrador con la estructura de DGP que revisas antes de guardar.": "Write the title and, if you like, client notes (how they do it today, tools, schedules). A draft is generated with the DGP structure for you to review before saving.",
   "Configurar": "Settings",
   "El gerente configura su empresa": "The manager configures the company",
   "Solo para socios como Moya & Company. Si está apagado, el equipo DGP configura todo y el gerente solo ve resultados.": "Only for partners like Moya & Company. If off, the DGP team configures everything and the manager only sees results.",

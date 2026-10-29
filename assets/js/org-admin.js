@@ -104,7 +104,6 @@ function oaOrgForm(id, leadId) {
       oaField('Logo (enlace de la imagen, opcional)', oaInput('oa-o-logo', v('logo_url'), 'type="url" maxlength="400" placeholder="https://"')) +
       (id ? oaField('Estado', '<select class="form-input" id="oa-o-status"><option value="activo"' + (o.status === 'activo' ? ' selected' : '') + '>' + escapeHtml(t('Activa')) + '</option><option value="pausado"' + (o.status === 'pausado' ? ' selected' : '') + '>' + escapeHtml(t('Pausada (los empleados no la ven)')) + '</option></select>') : '') +
       oaField('Notas internas', oaArea('oa-o-notes', v('notes', 'need'), 3), true) +
-      '<label class="oa-check adm-field--wide"><input type="checkbox" id="oa-o-self"' + (o && o.self_manage ? ' checked' : '') + '><span><b>' + escapeHtml(t('El gerente configura su empresa')) + '</b><small>' + escapeHtml(t('Solo para socios como Moya & Company. Si está apagado, el equipo DGP configura todo y el gerente solo ve resultados.')) + '</small></span></label>' +
     '</div><p class="modal-error" id="oa-err" hidden></p><div class="adm-form-actions">' +
       (id ? '<button type="button" class="ui-btn ui-btn--ghost ui-btn--sm oa-danger" onclick="oaDeleteOrg(\'' + oaId(id) + '\')">' + escapeHtml(t('Eliminar empresa')) + '</button>' : '') +
       '<button class="ui-btn ui-btn--primary ui-btn--sm">' + escapeHtml(t('Guardar')) + '</button></div></form>');
@@ -114,7 +113,7 @@ async function oaSaveOrg(id, leadId) {
   const row = { name: oaVal('oa-o-name'), industry: oaVal('oa-o-industry') || null, seats: parseInt(oaVal('oa-o-seats'), 10) || 10,
     contact_name: oaVal('oa-o-cname') || null, contact_email: oaVal('oa-o-cemail').toLowerCase() || null, contact_phone: oaVal('oa-o-cphone') || null,
     logo_url: /^https:\/\//.test(oaVal('oa-o-logo')) ? oaVal('oa-o-logo') : null, notes: oaVal('oa-o-notes') || null,
-    self_manage: !!(document.getElementById('oa-o-self') || {}).checked };
+  };
   if (id) row.status = oaVal('oa-o-status') || 'activo';
   const q = id ? sb.from('orgs').update(row).eq('id', id).select().single() : sb.from('orgs').insert(row).select().single();
   const { data, error } = await q;
@@ -337,7 +336,7 @@ function oaDocForm(id) {
       oaField('Área', oaInput('oa-d-area', d.area, 'maxlength="80"')) +
       oaField('Título', oaInput('oa-d-title', d.title, 'required maxlength="160"'), true) +
       oaField('Resumen (qué aprende o para qué sirve)', oaArea('oa-d-summary', d.summary, 2), true) +
-      '<div class="oa-ai adm-field--wide"><b>' + icon('spark') + ' ' + escapeHtml(t('Borrador con IA')) + '</b><span>' + escapeHtml(t('Escribe el título y, si quieres, notas del cliente (cómo lo hacen hoy, herramientas, horarios). La IA redacta el documento y tú lo revisas antes de guardar.')) + '</span>' +
+      '<div class="oa-ai adm-field--wide"><b>' + icon('spark') + ' ' + escapeHtml(t('Borrador automático')) + '</b><span>' + escapeHtml(t('Escribe el título y, si quieres, notas del cliente (cómo lo hacen hoy, herramientas, horarios). Se genera un borrador con la estructura de DGP que revisas antes de guardar.')) + '</span>' +
         oaArea('oa-d-notes', '', 3, 'Notas del cliente (opcional)') + '<div class="oa-ai-row"><select class="form-input" id="oa-d-lang" aria-label="' + escapeHtml(t('Idioma del borrador')) + '"><option value="en"' + (LANG === 'en' ? ' selected' : '') + '>English</option><option value="es"' + (LANG === 'es' ? ' selected' : '') + '>Español</option></select>' +
         '<button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" id="oa-ai-btn" onclick="oaDraftDoc()">' + escapeHtml(t('Generar borrador')) + '</button></div></div>' +
       oaField('Contenido', oaArea('oa-d-body', d.body, 12, '# Título de sección\nTexto normal en párrafos.\n1. Paso numerado\n- Punto de lista\n> Nota importante'), true) +

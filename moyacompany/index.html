@@ -138,11 +138,11 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
 <section id="roles">
   <div class="wrap">
     <h2><small>1 · En un minuto</small>Quién hace qué</h2>
-    <p class="lead">Hay tres tipos de usuario. En cada empresa cliente, todo el contenido (cargos, procedimientos, capacitaciones y exámenes) lo crea y mantiene el equipo de DGP; el cliente solo entra a ver resultados. Moya &amp; Company, como socia del servicio, además puede configurar su propia empresa.</p>
+    <p class="lead">Hay tres tipos de usuario. Todo el contenido (cargos, procedimientos, capacitaciones y exámenes) lo crea, configura y mantiene el equipo de DGP. La empresa y sus empleados no tienen que configurar nada: solo entran a leer, estudiar y ver resultados.</p>
     <div class="grid3">
       <div class="card"><div class="role-ic r1"><svg class="ic" aria-hidden="true"><use href="#ic-wrench"/></svg></div><h3>Equipo DGP</h3>
         <p>Administra todo desde <b>Panel admin → Empresas</b>.</p>
-        <ul><li>Crea la empresa, sus niveles y cargos</li><li>Escribe los SOPs y capacitaciones (con ayuda de IA)</li><li>Agrega e invita a los empleados</li><li>Arma certificaciones, premios y asesorías</li><li>Revisa el cumplimiento</li></ul></div>
+        <ul><li>Crea la empresa, sus niveles y cargos a partir de la estructura organizacional de Moya &amp; Company y del manual de cargos que le elaboramos</li><li>Escribe los SOPs y capacitaciones con métodos de ingeniería de procesos</li><li>Agrega e invita a los empleados</li><li>Arma certificaciones, premios y asesorías</li><li>Revisa el cumplimiento</li></ul></div>
       <div class="card"><div class="role-ic r2"><svg class="ic" aria-hidden="true"><use href="#ic-user-tie"/></svg></div><h3>Gerente (Verónica)</h3>
         <p>Entra a su campus → <b>Mi empresa</b>.</p>
         <ul><li>Ve el avance de todo su equipo</li><li>Aprueba los canjes de premios</li><li>Da puntos de reconocimiento</li><li>Exporta el cumplimiento a Excel</li><li>También tiene su propia capacitación</li></ul></div>
@@ -173,7 +173,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
       <li><h3>Escribir los SOPs y capacitaciones</h3>
         <span class="path">Pestaña SOPs y capacitaciones → + Nuevo documento</span>
         <ul><li>Elige el tipo: <b>SOP</b> (procedimiento) o <b>Capacitación</b>.</li>
-          <li>Escribe el título y pulsa <b>Generar borrador</b>: la IA redacta el documento con objetivo, pasos, errores comunes y cómo saber que se hizo bien. Elige si el borrador sale en inglés o en español. Si agregas notas del cliente (cómo lo hacen hoy, herramientas, horarios), el borrador sale más exacto.</li>
+          <li>Redacta el documento con la metodología de DGP: objetivo, alcance, pasos verificables, errores comunes y cómo saber que se hizo bien, a partir de lo levantado con el cliente (cómo lo hacen hoy, herramientas, horarios).</li>
           <li>Revisa el texto y completa lo que esté entre [corchetes].</li>
           <li>Marca a qué <b>niveles</b> o <b>cargos</b> se asigna, si es <b>obligatorio</b> y si está <b>publicado</b>.</li></ul>
         <p class="tip">Formato del contenido: <b># </b>título de sección · <b>1. </b>paso numerado · <b>- </b>punto de lista · <b>&gt; </b>nota importante (sale resaltada) · línea en blanco para separar párrafos.</p></li>
@@ -215,8 +215,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
       <div class="card"><h3 class="h-ic"><svg class="ic" aria-hidden="true"><use href="#ic-gift"/></svg> Aprobar canjes</h3><p>En la pestaña <b>Puntos</b> aparece "Gerente: canjes por aprobar". Puede <b>Aprobar</b>, <b>Rechazar</b> y después <b>Marcar entregado</b>.</p></div>
       <div class="card"><h3 class="h-ic"><svg class="ic" aria-hidden="true"><use href="#ic-star"/></svg> Reconocer a alguien</h3><p>En la misma pestaña puede dar de 1 a 500 puntos a una persona de su equipo escribiendo el motivo (ej.: "Excelente atención al cliente").</p></div>
     </div>
-    <p class="tip"><b>Configurar (solo Moya &amp; Company):</b> como socia, Verónica tiene además la pestaña <b>Configurar</b> en Mi empresa, con el mismo editor que usa DGP: equipo, niveles, cargos, SOPs con IA, certificaciones, premios, asesorías y cumplimiento. No puede cambiar los cupos ni pausar la empresa, ni quitarse a sí misma el rol de gerente.</p>
-    <p class="warn">En las demás empresas cliente el gerente <b>no edita</b> contenido: solo ve resultados. Todo lo configura el equipo de DGP.</p>
+    <p class="warn">El gerente <b>no edita</b> contenido: no crea cargos, documentos ni exámenes, solo ve resultados. Si necesita un cambio, se lo pide al equipo de DGP.</p>
   </div>
 </section>
 
@@ -275,7 +274,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
     <ul class="check" id="check">
       <li><input type="checkbox" id="c1"><label for="c1"><b>Reunión de diagnóstico con Verónica:</b> listar cargos, empleados (nombre y correo) y los 3 a 5 procesos más importantes.</label></li>
       <li><input type="checkbox" id="c2"><label for="c2"><b>Crear los cargos</b> en la pestaña Cargos con su nivel.</label></li>
-      <li><input type="checkbox" id="c3"><label for="c3"><b>Escribir 3 a 5 SOPs</b> con "Generar borrador", revisarlos y asignarlos por nivel o cargo.</label></li>
+      <li><input type="checkbox" id="c3"><label for="c3"><b>Escribir 3 a 5 SOPs</b>, revisarlos y asignarlos por nivel o cargo.</label></li>
       <li><input type="checkbox" id="c4"><label for="c4"><b>Crear 1 certificación</b> con 5 a 10 preguntas y vigencia de 12 meses.</label></li>
       <li><input type="checkbox" id="c5"><label for="c5"><b>Crear 2 o 3 premios</b> acordados con Verónica.</label></li>
       <li><input type="checkbox" id="c6"><label for="c6"><b>Agregar a los empleados</b> y enviar la invitación a cada uno (revisando el correo).</label></li>
@@ -297,7 +296,6 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
     <details><summary>¿El empleado puede ver las respuestas del examen?</summary><p>No. Las respuestas solo están en el servidor; el examen se califica allí. Además hay un máximo de 3 intentos por día.</p></details>
     <details><summary>¿Se envían correos automáticos o recordatorios?</summary><p>Por ahora solo la invitación, y únicamente cuando pulsas el botón. No hay reintentos ni recordatorios automáticos, para evitar correos rebotados.</p></details>
     <details><summary>¿Se puede usar en el celular?</summary><p>Sí. Todo funciona en el navegador del celular: leer, confirmar, presentar exámenes, ver el certificado, canjear y entrar a las videollamadas.</p></details>
-    <details><summary>¿Cómo dejo que un cliente configure su propia empresa?</summary><p>En Panel admin → Empresas → la empresa → Editar empresa, marca "El gerente configura su empresa". Está pensado solo para socios como Moya &amp; Company; para el resto de clientes déjalo apagado.</p></details>
     <details><summary>¿Quién más del equipo de DGP puede administrar empresas?</summary><p>El dueño de la cuenta puede dar el permiso "Empresas" a otra persona desde Panel admin → Estudiantes → botón "Hacer administrador" junto a su nombre, marcando solo "Empresas". Esa persona solo verá la pestaña Empresas.</p></details>
   </div>
 </section>

@@ -113,20 +113,23 @@ function renderBadges() {
   }
   const list = badgeList();
   const earned = list.filter(b => b.ok).length;
+  // Vista compacta: racha a la izquierda e insignias como íconos (toca uno para ver qué es)
+  const sorted = list.filter(x => x.ok).concat(list.filter(x => !x.ok));
+  const name = x => (x.raw ? x.t : t(x.t));
+  const hint = x => (x.ok ? t('¡Conseguida!') : (x.rawH ? x.h : t(x.h)));
   root.innerHTML =
     '<div class="ach">' +
       '<div class="st-card' + (streak ? ' is-hot' : '') + '">' +
-        '<div class="st-flame"><svg viewBox="0 0 24 24">' + BADGE_IC.fire + '</svg></div>' +
-        '<div class="st-main"><b class="st-num">' + streak + '</b><span>' + escapeHtml(t(streak === 1 ? 'día seguido estudiando' : 'días seguidos estudiando')) + '</span>' +
+        '<div class="st-top"><div class="st-flame"><svg viewBox="0 0 24 24">' + BADGE_IC.fire + '</svg></div>' +
+          '<div class="st-main"><div><b class="st-num">' + streak + '</b> <span>' + escapeHtml(t(streak === 1 ? 'día seguido estudiando' : 'días seguidos estudiando')) + '</span></div>' +
           '<small>' + escapeHtml(studiedToday ? t('¡Ya estudiaste hoy! Vuelve mañana para mantener tu racha.') : (streak ? t('Estudia hoy para no perder tu racha.') : t('Abre una lección hoy para empezar tu racha.'))) + '</small></div>' +
+          '<div class="st-best">' + escapeHtml(t('Mejor racha')) + '<b>' + best + '</b></div></div>' +
         '<div class="st-week">' + dots.join('') + '</div>' +
-        '<div class="st-best">' + escapeHtml(t('Mejor racha')) + ': <b>' + best + '</b></div>' +
       '</div>' +
-      '<div class="bd-wrap"><div class="bd-head"><b>' + earned + ' / ' + list.length + '</b> ' + escapeHtml(t('insignias ganadas')) + '</div>' +
-        '<div class="bd-grid">' + list.map(b =>
-          '<div class="bd' + (b.ok ? ' is-on' : '') + ' bd--' + b.g + '" title="' + escapeHtml(b.rawH ? b.h : t(b.h)) + '">' +
-            '<span class="bd-ic"><svg viewBox="0 0 24 24">' + BADGE_IC[b.ic] + '</svg></span>' +
-            '<b>' + escapeHtml(b.raw ? b.t : t(b.t)) + '</b><small>' + escapeHtml(b.ok ? t('¡Conseguida!') : (b.rawH ? b.h : t(b.h))) + '</small></div>').join('') +
+      '<div class="bd-wrap"><div class="bd-head"><b>' + earned + ' / ' + list.length + '</b> ' + escapeHtml(t('insignias ganadas')) + '<span class="bd-hint">' + escapeHtml(t('Toca una insignia para ver cómo ganarla')) + '</span></div>' +
+        '<div class="bd-row">' + sorted.map(x =>
+          '<button type="button" class="bd' + (x.ok ? ' is-on' : '') + ' bd--' + x.g + '" title="' + escapeHtml(name(x) + ' · ' + hint(x)) + '" aria-label="' + escapeHtml(name(x)) + '" onclick="toast(this.title)">' +
+            '<svg viewBox="0 0 24 24">' + BADGE_IC[x.ic] + '</svg></button>').join('') +
         '</div></div>' +
     '</div>';
   announceNewBadges(list);

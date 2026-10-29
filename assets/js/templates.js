@@ -10,7 +10,8 @@ const TPL_CATS = [
   { id: 'sistema', es: 'Sistemas a medida', en: 'Custom systems' },
   { id: 'negocio', es: 'Para tus clientes', en: 'For your clients' }
 ];
-const TPL = { cat: 'all', html: {}, lang: null };
+const TPL = { cat: 'all', html: {}, lang: null, all: false };
+const TPL_SHOW = 6;
 
 const tplL = o => (LANG === 'en' ? o.en : o.es);
 
@@ -30,17 +31,19 @@ async function renderTemplates() {
   try { await loadTemplates(); } catch (e) { /* se muestra el índice igualmente */ }
   const full = hasAccess('plantillas');
   const list = TPL_META.filter(m => TPL.cat === 'all' || m.cat === TPL.cat);
+  const shown = TPL.all ? list : list.slice(0, TPL_SHOW);
+  const lock = '<svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>';
   root.innerHTML =
-    (full ? '' : '<div class="tpl-promo"><div><b>' + escapeHtml(t('Incluidas en el pase completo')) + '</b><span>' + escapeHtml(t('17 prompts listos para crear sitios y sistemas por tipo de negocio, más propuesta, contrato y mensajes para conseguir clientes. Prueba gratis la plantilla de tienda online.')) + '</span></div>' +
-      '<button type="button" class="ui-btn ui-btn--primary ui-btn--sm" onclick="openCheckout(\'pase\')">' + escapeHtml(t('Obtener el pase completo')) + priceTag('pase') + '</button></div>') +
-    '<div class="tpl-cats" role="tablist">' + TPL_CATS.map(c => '<button type="button" class="tpl-cat' + (c.id === TPL.cat ? ' is-on' : '') + '" onclick="TPL.cat=\'' + c.id + '\';renderTemplates()">' + escapeHtml(tplL(c)) + '</button>').join('') + '</div>' +
-    '<div class="tpl-grid">' + list.map(m => {
+    '<div class="tpl-bar"><div class="tpl-cats" role="tablist">' + TPL_CATS.map(c => '<button type="button" class="tpl-cat' + (c.id === TPL.cat ? ' is-on' : '') + '" onclick="TPL.cat=\'' + c.id + '\';TPL.all=false;renderTemplates()">' + escapeHtml(tplL(c)) + '</button>').join('') + '</div>' +
+      (full ? '' : '<button type="button" class="tpl-unlock" onclick="openCheckout(\'pase\')">' + lock + escapeHtml(t('Incluidas en el pase completo')) + priceTag('pase') + '</button>') + '</div>' +
+    '<div class="tpl-grid">' + shown.map(m => {
       const open = !!TPL.html[m.id];
-      return '<button type="button" class="tpl-card' + (open ? '' : ' is-locked') + '" onclick="openTemplate(\'' + m.id + '\')">' +
+      return '<button type="button" class="tpl-card' + (open ? '' : ' is-locked') + '" onclick="openTemplate(\'' + m.id + '\')" title="' + escapeHtml(tplL(m.d)) + '">' +
         '<span class="tpl-ic">' + m.ic + '</span>' +
-        '<b>' + escapeHtml(tplL(m.t)) + '</b><small>' + escapeHtml(tplL(m.d)) + '</small>' +
-        '<span class="tpl-go">' + (open ? (m.free && !full ? escapeHtml(t('Muestra gratis')) + ' →' : escapeHtml(t('Abrir plantilla')) + ' →') : '<svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>' + escapeHtml(t('Pase completo'))) + '</span></button>';
-    }).join('') + '</div>';
+        '<span class="tpl-txt"><b>' + escapeHtml(tplL(m.t)) + '</b><small>' + escapeHtml(tplL(m.d)) + '</small></span>' +
+        (open ? (m.free && !full ? '<span class="tpl-tag">' + escapeHtml(t('Gratis')) + '</span>' : '<span class="tpl-arrow">→</span>') : '<span class="tpl-lockic">' + lock + '</span>') + '</button>';
+    }).join('') + '</div>' +
+    (list.length > TPL_SHOW ? '<button type="button" class="tpl-more" onclick="TPL.all=!TPL.all;renderTemplates()">' + escapeHtml(TPL.all ? t('Ver menos') : t('Ver todas') + ' (' + list.length + ')') + '</button>' : '');
 }
 
 function ensureTplModal() {

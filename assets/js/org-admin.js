@@ -2,7 +2,7 @@
 // DGP Empresas — panel admin (permiso 'empresas')
 // El equipo DGP administra todo: empresas, empleados, niveles, cargos, SOPs y capacitaciones.
 // El gerente de cada empresa solo ve resultados desde su campus, salvo las empresas
-// marcadas como "se configura sola" (socio piloto): ahí su gerente usa este mismo editor
+// marcadas como "se configura sola" (socio): ahí su gerente usa este mismo editor
 // para su propia empresa, desde la pestaña Configurar del campus.
 // =========================================================
 const OA = { rootId: 'oa-root', self: false, orgs: [], leads: [], counts: {}, cur: null, view: 'equipo', levels: [], positions: [], members: [], docs: [], comp: [], certs: [], awards: [], rewards: [], redemptions: [], sessions: [], points: [], board: [] };

@@ -1,5 +1,14 @@
 // Guía DGP Empresas — textos en inglés (la página está escrita en español)
 window.GUIDE_EN = {
+  "Guía de uso · DGP Empresas": "User guide · DGP Business",
+  "Esta guía explica, paso a paso, cómo el equipo de DGP organiza una empresa en la plataforma, qué ve el gerente y qué hace cada empleado. Aplica a cada empresa cliente del servicio, que ofrecemos junto a Moya & Company.": "This guide explains, step by step, how the DGP team sets up a company on the platform, what the manager sees and what each employee does. It applies to every client company of the service, which we offer together with Moya & Company.",
+  "Ver el checklist de arranque": "See the onboarding checklist",
+  "Checklist de arranque": "Onboarding checklist",
+  "7 · Puesta en marcha": "7 · Onboarding",
+  "Checklist para arrancar con cada empresa cliente": "Checklist to get each client company started",
+  "Reunión de diagnóstico con el gerente:": "Assessment meeting with the manager:",
+  "acordados con el gerente.": "agreed with the manager.",
+  "El gerente entra": "The manager logs in",
   "Crea la empresa, sus niveles y cargos a partir de la estructura organizacional de Moya & Company y del manual de cargos que le elaboramos": "Creates the company, its levels and roles based on the organizational structure of Moya & Company and the job description manual we prepare for it",
   "Escribe los SOPs y capacitaciones con métodos de ingeniería de procesos": "Writes the SOPs and trainings with process engineering methods",
   "Redacta el documento con la metodología de DGP: objetivo, alcance, pasos verificables, errores comunes y cómo saber que se hizo bien, a partir de lo levantado con el cliente (cómo lo hacen hoy, herramientas, horarios).": "Writes the document with DGP's methodology: objective, scope, verifiable steps, common mistakes and how to know it was done right, based on what was gathered with the client (how they do it today, tools, schedules).",

@@ -231,3 +231,30 @@ em.serif, .serif {
 .brand-name { white-space: nowrap; }
 .lp-nav-login { white-space: nowrap; }
 @media (max-width: 1440px) { .lp-nav .brand-x-name { display: none; } }
+
+/* ── Iconos SVG de línea (reemplazan a los emojis) ── */
+.lp-path-ic, .tpl-ic, .ai-tool-ic { color: var(--accent); }
+.lp-path--biz .lp-path-ic { color: #0f9f7a; }
+.lp-why-item > span { color: var(--accent); }
+.lp-biz-list span { color: #a5c4ff; }
+.ai-note-ic { color: var(--accent); display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: rgba(26, 86, 232, .1); font-size: 18px; }
+.ai-note--warn .ai-note-ic, .ai-note--alert .ai-note-ic { color: #b45309; background: rgba(180, 83, 9, .1); }
+.card-icon { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: rgba(26, 86, 232, .1); color: var(--accent); font-size: 22px; }
+.compare-cell .icon { display: inline-grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: rgba(26, 86, 232, .1); color: var(--accent); font-size: 24px; }
+.tool-emoji { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: rgba(26, 86, 232, .1); color: var(--accent); font-size: 19px; flex: none; }
+.ai-stat b .ic { color: #c7d2fe; }
+.org-cert-ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 13px; background: #fff7e0; color: #b7860b; font-size: 22px; }
+.org-result-ic { display: inline-grid; place-items: center; width: 84px; height: 84px; border-radius: 50%; background: #fff7e0; color: #b7860b; font-size: 40px; animation: icPop .5s cubic-bezier(.2, .9, .3, 1.3) both; }
+.org-result.is-fail .org-result-ic { background: #eef4ff; color: var(--accent); }
+.org-board-cert .ic { color: #b7860b; }
+.org-medal { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; font: 700 12px/1 var(--font); color: #fff; background: linear-gradient(135deg, #f5c84c, #c9930e); box-shadow: 0 2px 6px rgba(201, 147, 14, .35); }
+.org-medal--2 { background: linear-gradient(135deg, #d5dbe4, #8d98a8); box-shadow: 0 2px 6px rgba(141, 152, 168, .35); }
+.org-medal--3 { background: linear-gradient(135deg, #e3a76f, #a8652f); box-shadow: 0 2px 6px rgba(168, 101, 47, .35); }
+.oa-kind .ic, .oa-ai b .ic { color: var(--accent); }
+.book-list-num .ic { font-size: 14px; }
+@keyframes icPop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+/* Microanimación al pasar el cursor por tarjetas con icono */
+.lp-why-item > span, .lp-path-ic, .card-icon, .ai-tool-ic, .tpl-ic { transition: transform .35s cubic-bezier(.2, .9, .3, 1.3), background .3s; }
+.lp-why-item:hover > span, .lp-path:hover .lp-path-ic, .card:hover .card-icon, .ai-tool:hover .ai-tool-ic, .tpl-card:hover .tpl-ic { transform: translateY(-2px) scale(1.06); }
+@media (prefers-reduced-motion: reduce) { .org-result-ic { animation: none; } .lp-why-item:hover > span, .lp-path:hover .lp-path-ic, .card:hover .card-icon, .ai-tool:hover .ai-tool-ic, .tpl-card:hover .tpl-ic { transform: none; } }
+.ai-note--tip .ai-note-ic { color: #15803d; background: rgba(22, 163, 74, .12); }

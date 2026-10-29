@@ -1,5 +1,5 @@
 // =========================================================
-// DGP Empresas — acciones del servidor (solo equipo DGP con permiso 'empresas')
+// DGP Empresas — acciones del servidor (equipo DGP con permiso 'empresas' o gerente de una empresa que se configura sola)
 //   invite     → envía UNA invitación por correo a un empleado (no se reintenta si falla)
 //   sop_draft  → redacta con IA (Groq) el borrador de un SOP o capacitación en el formato de la plataforma
 // La contraseña SMTP y la API key de Groq se leen de private.secrets: nunca llegan al navegador.
@@ -102,9 +102,10 @@ Deno.serve(async (req) => {
     const supa = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: req.headers.get("Authorization") ?? "" } } });
     const { data: { user } } = await supa.auth.getUser();
     if (!user) return json({ error: "Inicia sesión" }, 401);
-    const { data: staff } = await supa.rpc("is_org_staff");
-    if (!staff) return json({ error: "Solo el equipo DGP" }, 403);
     const body = await req.json();
+    // Equipo DGP, o el gerente de una empresa que se configura sola (socio piloto) para su propia empresa
+    const { data: allowed } = await supa.rpc("can_manage_org", { o: body.org_id });
+    if (!allowed) return json({ error: "Sin permiso para esta empresa" }, 403);
 
     if (body.action === "invite") {
       const email = String(body.email || "").toLowerCase().trim();

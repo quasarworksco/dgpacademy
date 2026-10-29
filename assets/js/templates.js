@@ -39,7 +39,7 @@ async function renderTemplates() {
     '<div class="tpl-grid">' + shown.map(m => {
       const open = !!TPL.html[m.id];
       return '<button type="button" class="tpl-card' + (open ? '' : ' is-locked') + '" onclick="openTemplate(\'' + m.id + '\')" title="' + escapeHtml(tplL(m.d)) + '">' +
-        '<span class="tpl-ic">' + m.ic + '</span>' +
+        '<span class="tpl-ic">' + (emojiIcon(m.ic) || '') + '</span>' +
         '<span class="tpl-txt"><b>' + escapeHtml(tplL(m.t)) + '</b><small>' + escapeHtml(tplL(m.d)) + '</small></span>' +
         (open ? (m.free && !full ? '<span class="tpl-tag">' + escapeHtml(t('Gratis')) + '</span>' : '<span class="tpl-arrow">→</span>') : '<span class="tpl-lockic">' + lock + '</span>') + '</button>';
     }).join('') + '</div>' +

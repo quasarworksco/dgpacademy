@@ -144,7 +144,7 @@ function announceNewBadges(list) {
   try { localStorage.setItem(key, JSON.stringify(now)); } catch (e) {}
   if (!seen) return; // primera vez en este navegador: no se anuncian las antiguas
   const fresh = list.filter(b => b.ok && !seen.includes(b.id));
-  if (fresh.length) toast('🏅 ' + t('Nueva insignia') + ': ' + fresh.map(b => b.raw ? b.t : t(b.t)).join(', '));
+  if (fresh.length) toast(t('Nueva insignia') + ': ' + fresh.map(b => b.raw ? b.t : t(b.t)).join(', '));
 }
 
 // Cada lección abierta o completada cuenta como día de estudio

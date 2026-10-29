@@ -62,7 +62,8 @@ h3 { font: 700 18px/1.3 var(--font); color: var(--ink); margin: 0 0 6px; }
 .card ul { margin: 6px 0 0; padding-left: 20px; }
 .card li { margin-bottom: 4px; }
 .role-ic { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; font-size: 22px; margin-bottom: 12px; }
-.r1 { background: #e0ecff; } .r2 { background: #fef3c7; } .r3 { background: #dcfce7; }
+.r1 { background: #e0ecff; color: #1a56e8; } .r2 { background: #fef3c7; color: #b45309; } .r3 { background: #dcfce7; color: #15803d; }
+.h-ic { display: flex; align-items: center; gap: 8px; } .h-ic .ic { color: var(--accent); font-size: 20px; }
 /* Pasos */
 .steps { counter-reset: s; display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
 .steps > li { counter-increment: s; position: relative; background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 18px 20px 18px 70px; }
@@ -137,15 +138,15 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
 <section id="roles">
   <div class="wrap">
     <h2><small>1 · En un minuto</small>Quién hace qué</h2>
-    <p class="lead">Hay tres tipos de usuario. Todo el contenido (cargos, procedimientos, capacitaciones y exámenes) lo crea y mantiene el equipo de DGP; la empresa solo lo usa y mide los resultados.</p>
+    <p class="lead">Hay tres tipos de usuario. En cada empresa cliente, todo el contenido (cargos, procedimientos, capacitaciones y exámenes) lo crea y mantiene el equipo de DGP; el cliente solo entra a ver resultados. Moya &amp; Company, como socia del servicio, además puede configurar su propia empresa.</p>
     <div class="grid3">
-      <div class="card"><div class="role-ic r1">🛠️</div><h3>Equipo DGP</h3>
+      <div class="card"><div class="role-ic r1"><svg class="ic" aria-hidden="true"><use href="#ic-wrench"/></svg></div><h3>Equipo DGP</h3>
         <p>Administra todo desde <b>Panel admin → Empresas</b>.</p>
         <ul><li>Crea la empresa, sus niveles y cargos</li><li>Escribe los SOPs y capacitaciones (con ayuda de IA)</li><li>Agrega e invita a los empleados</li><li>Arma certificaciones, premios y asesorías</li><li>Revisa el cumplimiento</li></ul></div>
-      <div class="card"><div class="role-ic r2">👩‍💼</div><h3>Gerente (Verónica)</h3>
+      <div class="card"><div class="role-ic r2"><svg class="ic" aria-hidden="true"><use href="#ic-user-tie"/></svg></div><h3>Gerente (Verónica)</h3>
         <p>Entra a su campus → <b>Mi empresa</b>.</p>
         <ul><li>Ve el avance de todo su equipo</li><li>Aprueba los canjes de premios</li><li>Da puntos de reconocimiento</li><li>Exporta el cumplimiento a Excel</li><li>También tiene su propia capacitación</li></ul></div>
-      <div class="card"><div class="role-ic r3">🧑‍💻</div><h3>Empleado</h3>
+      <div class="card"><div class="role-ic r3"><svg class="ic" aria-hidden="true"><use href="#ic-laptop"/></svg></div><h3>Empleado</h3>
         <p>Entra a su campus → <b>Mi empresa</b>.</p>
         <ul><li>Lee su descripción de cargo</li><li>Lee y confirma sus SOPs y capacitaciones</li><li>Presenta exámenes y obtiene certificados</li><li>Gana puntos y canjea premios</li><li>Asiste a sus asesorías y marca sus tareas</li></ul></div>
     </div>
@@ -209,12 +210,13 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
     <h2><small>3 · Gerente</small>Lo que ve Verónica</h2>
     <p class="lead">Verónica ya tiene cuenta y ya es gerente de Moya &amp; Company. Al entrar a su campus aparece la sección <b>Mi empresa</b> (también en la barra superior del campus).</p>
     <div class="grid2">
-      <div class="card"><h3>📋 Capacitación, Certificaciones, Puntos y Asesorías</h3><p>Lo mismo que cualquier empleado: su cargo, sus documentos, sus exámenes, sus puntos y sus sesiones con DGP.</p></div>
-      <div class="card"><h3>👥 Mi equipo</h3><p>Tabla con el avance de cada persona: documentos, cargo, certificaciones, puntos y % de cumplimiento. Arriba: personas activas, cumplimiento promedio, quién tiene pendientes y quién no se ha registrado. Botón <b>Exportar a Excel</b>.</p></div>
-      <div class="card"><h3>🎁 Aprobar canjes</h3><p>En la pestaña <b>Puntos</b> aparece "Gerente: canjes por aprobar". Puede <b>Aprobar</b>, <b>Rechazar</b> y después <b>Marcar entregado</b>.</p></div>
-      <div class="card"><h3>⭐ Reconocer a alguien</h3><p>En la misma pestaña puede dar de 1 a 500 puntos a una persona de su equipo escribiendo el motivo (ej.: "Excelente atención al cliente").</p></div>
+      <div class="card"><h3 class="h-ic"><svg class="ic" aria-hidden="true"><use href="#ic-clipboard"/></svg> Capacitación, Certificaciones, Puntos y Asesorías</h3><p>Lo mismo que cualquier empleado: su cargo, sus documentos, sus exámenes, sus puntos y sus sesiones con DGP.</p></div>
+      <div class="card"><h3 class="h-ic"><svg class="ic" aria-hidden="true"><use href="#ic-users"/></svg> Mi equipo</h3><p>Tabla con el avance de cada persona: documentos, cargo, certificaciones, puntos y % de cumplimiento. Arriba: personas activas, cumplimiento promedio, quién tiene pendientes y quién no se ha registrado. Botón <b>Exportar a Excel</b>.</p></div>
+      <div class="card"><h3 class="h-ic"><svg class="ic" aria-hidden="true"><use href="#ic-gift"/></svg> Aprobar canjes</h3><p>En la pestaña <b>Puntos</b> aparece "Gerente: canjes por aprobar". Puede <b>Aprobar</b>, <b>Rechazar</b> y después <b>Marcar entregado</b>.</p></div>
+      <div class="card"><h3 class="h-ic"><svg class="ic" aria-hidden="true"><use href="#ic-star"/></svg> Reconocer a alguien</h3><p>En la misma pestaña puede dar de 1 a 500 puntos a una persona de su equipo escribiendo el motivo (ej.: "Excelente atención al cliente").</p></div>
     </div>
-    <p class="warn">El gerente <b>no edita</b> contenido: no crea cargos, documentos ni exámenes. Si necesita un cambio, se lo pide al equipo de DGP.</p>
+    <p class="tip"><b>Configurar (solo Moya &amp; Company):</b> como socia, Verónica tiene además la pestaña <b>Configurar</b> en Mi empresa, con el mismo editor que usa DGP: equipo, niveles, cargos, SOPs con IA, certificaciones, premios, asesorías y cumplimiento. No puede cambiar los cupos ni pausar la empresa, ni quitarse a sí misma el rol de gerente.</p>
+    <p class="warn">En las demás empresas cliente el gerente <b>no edita</b> contenido: solo ve resultados. Todo lo configura el equipo de DGP.</p>
   </div>
 </section>
 
@@ -295,6 +297,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
     <details><summary>¿El empleado puede ver las respuestas del examen?</summary><p>No. Las respuestas solo están en el servidor; el examen se califica allí. Además hay un máximo de 3 intentos por día.</p></details>
     <details><summary>¿Se envían correos automáticos o recordatorios?</summary><p>Por ahora solo la invitación, y únicamente cuando pulsas el botón. No hay reintentos ni recordatorios automáticos, para evitar correos rebotados.</p></details>
     <details><summary>¿Se puede usar en el celular?</summary><p>Sí. Todo funciona en el navegador del celular: leer, confirmar, presentar exámenes, ver el certificado, canjear y entrar a las videollamadas.</p></details>
+    <details><summary>¿Cómo dejo que un cliente configure su propia empresa?</summary><p>En Panel admin → Empresas → la empresa → Editar empresa, marca "El gerente configura su empresa". Está pensado solo para socios como Moya &amp; Company; para el resto de clientes déjalo apagado.</p></details>
     <details><summary>¿Quién más del equipo de DGP puede administrar empresas?</summary><p>El dueño de la cuenta puede dar el permiso "Empresas" a otra persona desde Panel admin → Estudiantes → botón "Hacer administrador" junto a su nombre, marcando solo "Empresas". Esa persona solo verá la pestaña Empresas.</p></details>
   </div>
 </section>
@@ -303,6 +306,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
   <div class="wrap"><span>DGP Academy · División educativa de DGP Global Group, en alianza con Moya &amp; Company.</span><a href="../">academy.dgpglobalgroup.com</a></div>
 </footer>
 
+<script src="../assets/js/icons.js"></script>
 <script src="en.js"></script>
 <script>
 // Idiomas: inglés principal, español segundo. El HTML está en español y se traduce con GUIDE_EN.

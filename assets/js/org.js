@@ -93,7 +93,7 @@ async function loadOrgPortal() {
   ]);
   Object.assign(ORG, { certs: certs.data || [], points: pts.data || null, board: board.data || [], rewards: rewards.data || [], redemptions: reds.data || [],
     sessions: sess.data || [], bonus: bonus.data || [], comp: comp.data || [] });
-  if (ORG.tab === 'team' && !mgr) ORG.tab = 'cap';
+  if ((ORG.tab === 'team' && !mgr) || (ORG.tab === 'conf' && !(mgr && org.self_manage))) ORG.tab = 'cap';
   sec.hidden = false; if (tab) tab.hidden = false;
   renderOrgPortal();
 }
@@ -125,21 +125,29 @@ function renderOrgPortal() {
   const certPend = ORG.certs.filter(c => !c.valid).length;
   const upcoming = ORG.sessions.filter(x => x.status === 'agendada' && (x.email === me.email || (!x.email && me.role === 'gerente')) && new Date(x.starts_at) > new Date(Date.now() - 2 * 36e5)).length;
   const pendRed = me.role === 'gerente' ? ORG.redemptions.filter(r => r.status === 'pendiente').length : 0;
-  const tabs = [['cap', 'Capacitación', items.length - done], ['cert', 'Certificaciones', certPend], ['pts', 'Puntos', pendRed], ['ases', 'Asesorías', upcoming]].concat(me.role === 'gerente' ? [['team', 'Mi equipo', 0]] : []);
+  const tabs = [['cap', 'Capacitación', items.length - done], ['cert', 'Certificaciones', certPend], ['pts', 'Puntos', pendRed], ['ases', 'Asesorías', upcoming]].concat(me.role === 'gerente' ? [['team', 'Mi equipo', 0]] : []).concat(me.role === 'gerente' && o.self_manage ? [['conf', 'Configurar', 0]] : []);
   const pts = ORG.points || {};
   const cap = '<div class="org-list">' +
       (ORG.position ? row('position', ORG.position, 'cargo', ORG.position.title, t('Descripción de tu cargo: funciones, responsabilidades e indicadores')) : '') +
       docsSorted.map(d => row('doc', d, d.kind, d.title, d.summary || d.area || '')).join('') +
       (!ORG.position && !mine.length ? '<div class="admin-empty">' + escapeHtml(t('El equipo de DGP está preparando tus capacitaciones. Aparecerán aquí muy pronto.')) + '</div>' : '') +
     '</div>';
-  const body = { cap: () => cap, cert: orgTabCerts, pts: orgTabPoints, ases: orgTabSessions, team: orgTabTeam }[ORG.tab] || (() => cap);
+  const conf = () => '<div class="org-config"><p class="org-config-note">' + escapeHtml(t('Aquí configuras tu empresa: equipo, niveles, cargos, procedimientos, certificaciones, premios y asesorías. Los cambios se ven al instante en el campus de cada persona.')) + '</p><div id="org-config-root"><div class="admin-empty">' + escapeHtml(t('Cargando…')) + '</div></div></div>';
+  const body = { cap: () => cap, cert: orgTabCerts, pts: orgTabPoints, ases: orgTabSessions, team: orgTabTeam, conf }[ORG.tab] || (() => cap);
   root.innerHTML =
     '<div class="org-hero"><span class="org-logo">' + (o.logo_url ? '<img src="' + escapeHtml(o.logo_url) + '" alt="">' : escapeHtml(o.name.slice(0, 2).toUpperCase())) + '</span>' +
       '<div class="org-hero-txt"><b>' + escapeHtml(o.name) + '</b><small>' + escapeHtml([level, ORG.position && ORG.position.title, me.role === 'gerente' ? t('Gerente') : ''].filter(Boolean).join(' · ') || t('Equipo')) + '</small></div>' +
       '<div class="org-hero-stat"><b>' + (pts.balance || 0) + '</b><small>' + escapeHtml(t('puntos')) + '</small></div>' +
       '<div class="org-hero-prog"><div class="org-pct"><span class="org-pct-bar"><i style="width:' + pct + '%" class="' + (pct === 100 ? 'is-done' : '') + '"></i></span><b>' + pct + '%</b></div><small>' + done + ' ' + escapeHtml(t('de')) + ' ' + items.length + ' ' + escapeHtml(t('confirmados')) + '</small></div></div>' +
-    '<div class="org-tabs" role="tablist">' + tabs.map(([k, label, n]) => '<button type="button" class="' + (ORG.tab === k ? 'is-on' : '') + '" onclick="ORG.tab=\'' + k + '\';renderOrgPortal()">' + escapeHtml(t(label)) + (n ? '<i>' + n + '</i>' : '') + '</button>').join('') + '</div>' +
+    '<div class="org-tabs" role="tablist">' + tabs.map(([k, label, n]) => '<button type="button" class="' + (ORG.tab === k ? 'is-on' : '') + '" onclick="orgSetTab(\'' + k + '\')">' + escapeHtml(t(label)) + (n ? '<i>' + n + '</i>' : '') + '</button>').join('') + '</div>' +
     '<div class="org-tab-body">' + body() + '</div>';
+  if (ORG.tab === 'conf' && typeof orgOpenConfig === 'function') orgOpenConfig('org-config-root');
+}
+
+// Al salir de Configurar se recargan los datos para ver los cambios en las demás pestañas
+function orgSetTab(k) {
+  const was = ORG.tab; ORG.tab = k;
+  if (was === 'conf' && k !== 'conf') loadOrgPortal(); else renderOrgPortal();
 }
 
 // ── Lector de cargo / documento ──
@@ -211,9 +219,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── Ranking (compartido con el panel admin) ──
 function orgBoardHtml(board) {
   if (!board || !board.length) return '<div class="admin-empty">' + escapeHtml(t('Todavía no hay puntos.')) + '</div>';
-  const medal = i => ['🥇', '🥈', '🥉'][i] || (i + 1);
+  const medal = i => i < 3 ? '<span class="org-medal org-medal--' + (i + 1) + '">' + (i + 1) + '</span>' : (i + 1);
   return '<ol class="org-board">' + board.map((r, i) => '<li class="' + (r.me ? 'is-me' : '') + '"><span class="org-board-pos">' + medal(i) + '</span><b>' + escapeHtml(r.name) + (r.me ? ' <small>(' + escapeHtml(t('tú')) + ')</small>' : '') + '</b>' +
-    (r.certs ? '<span class="org-board-cert">🏅 ' + r.certs + '</span>' : '') + '<span class="org-board-pts">' + r.points + ' pts</span></li>').join('') + '</ol>';
+    (r.certs ? '<span class="org-board-cert">' + icon('award') + ' ' + r.certs + '</span>' : '') + '<span class="org-board-pts">' + r.points + ' pts</span></li>').join('') + '</ol>';
 }
 
 // ── Pestaña: certificaciones ──
@@ -223,7 +231,7 @@ function orgTabCerts() {
     const docsOk = c.docs.every(d => d.ok), v = c.valid, last = c.award;
     const exp = v && v.expires_at ? new Date(v.expires_at) : null, soon = exp && exp - Date.now() < 30 * 864e5;
     const st = v ? (soon ? ['Vence pronto', 'is-update'] : ['Certificado', 'is-ok']) : (last && last.passed ? ['Vencida: recertifícate', 'is-update'] : docsOk ? ['Listo para el examen', 'is-pending'] : ['Lee los documentos', 'is-pending']);
-    return '<div class="org-cert"><div class="org-cert-top"><span class="org-cert-ic">🏅</span><div class="org-cert-txt"><b>' + escapeHtml(c.title) + '</b>' + (c.description ? '<small>' + escapeHtml(c.description) + '</small>' : '') + '</div>' +
+    return '<div class="org-cert"><div class="org-cert-top"><span class="org-cert-ic">' + icon('award') + '</span><div class="org-cert-txt"><b>' + escapeHtml(c.title) + '</b>' + (c.description ? '<small>' + escapeHtml(c.description) + '</small>' : '') + '</div>' +
         '<span class="org-state ' + st[1] + '">' + escapeHtml(t(st[0])) + '</span></div>' +
       (c.docs.length ? '<ul class="org-cert-docs">' + c.docs.map(d => '<li class="' + (d.ok ? 'is-ok' : '') + '"><button type="button" onclick="orgOpen(\'doc\', \'' + d.id + '\')">' + (d.ok ? '✓ ' : '○ ') + escapeHtml(d.title) + '</button></li>').join('') + '</ul>' : '') +
       '<div class="org-cert-foot"><small>' + c.questions + ' ' + escapeHtml(t('preguntas')) + ' · ' + escapeHtml(t('apruebas con')) + ' ' + c.pass_score + '% · +' + c.points + ' pts' + (c.valid_months ? ' · ' + escapeHtml(t('vigencia')) + ' ' + c.valid_months + ' ' + escapeHtml(t('meses')) : '') +
@@ -266,7 +274,7 @@ async function orgSubmitExam(id, n) {
   if (error) { err.textContent = t(rpcErrorText(error)); err.hidden = false; btn.disabled = false; return; }
   await loadOrgPortal();
   const c = ORG.certs.find(x => x.id === id);
-  orgModalBody('<div class="org-result ' + (data.passed ? 'is-ok' : 'is-fail') + '"><span class="org-result-ic">' + (data.passed ? '🏅' : '📚') + '</span>' +
+  orgModalBody('<div class="org-result ' + (data.passed ? 'is-ok' : 'is-fail') + '"><span class="org-result-ic">' + (data.passed ? icon('award') : icon('book')) + '</span>' +
     '<h3>' + escapeHtml(t(data.passed ? '¡Aprobaste!' : 'Esta vez no alcanzó')) + '</h3><p class="org-result-score">' + data.score + '%</p>' +
     '<p>' + escapeHtml(data.good + ' ' + t('de') + ' ' + data.total + ' ' + t('respuestas correctas') + '. ' + (data.passed ? t('Ganaste') + ' ' + c.points + ' ' + t('puntos y tu certificado ya está disponible.') : t('Repasa los documentos y vuelve a intentarlo; necesitas') + ' ' + c.pass_score + '%.')) + '</p>' +
     (data.passed ? '<button type="button" class="ui-btn ui-btn--primary" onclick="orgShowCert(\'' + id + '\')">' + escapeHtml(t('Ver mi certificado')) + '</button>' : '<button type="button" class="ui-btn ui-btn--ghost" onclick="orgClose()">' + escapeHtml(t('Volver')) + '</button>') + '</div>');

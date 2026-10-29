@@ -1,14 +1,18 @@
 // =========================================================
 // DGP Empresas — panel admin (permiso 'empresas')
 // El equipo DGP administra todo: empresas, empleados, niveles, cargos, SOPs y capacitaciones.
-// El gerente de cada empresa solo ve el cumplimiento desde su campus.
+// El gerente de cada empresa solo ve resultados desde su campus, salvo las empresas
+// marcadas como "se configura sola" (socio piloto): ahí su gerente usa este mismo editor
+// para su propia empresa, desde la pestaña Configurar del campus.
 // =========================================================
-const OA = { orgs: [], leads: [], counts: {}, cur: null, view: 'equipo', levels: [], positions: [], members: [], docs: [], comp: [], certs: [], awards: [], rewards: [], redemptions: [], sessions: [], points: [], board: [] };
+const OA = { rootId: 'oa-root', self: false, orgs: [], leads: [], counts: {}, cur: null, view: 'equipo', levels: [], positions: [], members: [], docs: [], comp: [], certs: [], awards: [], rewards: [], redemptions: [], sessions: [], points: [], board: [] };
+const oaRoot = () => document.getElementById(OA.rootId);
 const oaId = id => String(id || '').replace(/[^a-f0-9-]/g, '');
 const oaLines = s => String(s || '').split('\n').map(x => x.trim()).filter(Boolean);
 
 async function loadOrgsAdmin() {
-  const root = document.getElementById('oa-root');
+  OA.self = false; OA.rootId = 'oa-root';
+  const root = oaRoot();
   if (!root) return;
   const [orgs, leads, mem] = await Promise.all([
     sb.from('orgs').select('*').order('created_at', { ascending: false }),
@@ -28,7 +32,7 @@ async function loadOrgsAdmin() {
 
 // ── Lista de empresas y solicitudes ──
 function renderOrgList() {
-  const root = document.getElementById('oa-root');
+  const root = oaRoot();
   const active = OA.orgs.filter(o => o.status === 'activo');
   const employees = Object.values(OA.counts).reduce((a, n) => a + n, 0);
   const fresh = OA.leads.filter(l => l.status === 'nuevo');
@@ -43,7 +47,7 @@ function renderOrgList() {
     (OA.orgs.length ? '<div class="oa-orgs">' + OA.orgs.map(o =>
       '<button type="button" class="oa-org" onclick="loadOrgDetail(\'' + oaId(o.id) + '\')">' +
         '<span class="oa-org-logo">' + (o.logo_url ? '<img src="' + escapeHtml(o.logo_url) + '" alt="">' : escapeHtml((o.name || '?').slice(0, 2).toUpperCase())) + '</span>' +
-        '<span class="oa-org-txt"><b>' + escapeHtml(o.name) + '</b><small>' + escapeHtml([o.industry, (OA.counts[o.id] || 0) + ' / ' + o.seats + ' ' + t('empleados')].filter(Boolean).join(' · ')) + '</small></span>' +
+        '<span class="oa-org-txt"><b>' + escapeHtml(o.name) + (o.self_manage ? ' <span class="oa-chip">' + escapeHtml(t('Socio')) + '</span>' : '') + '</b><small>' + escapeHtml([o.industry, (OA.counts[o.id] || 0) + ' / ' + o.seats + ' ' + t('empleados')].filter(Boolean).join(' · ')) + '</small></span>' +
         '<span class="pay-status ' + (o.status === 'activo' ? 'is-paid' : 'is-pending') + '">' + escapeHtml(t(o.status === 'activo' ? 'Activa' : 'Pausada')) + '</span></button>').join('') + '</div>'
       : '<div class="admin-empty">' + escapeHtml(t('Aún no hay empresas. Crea la primera con el botón "Nueva empresa".')) + '</div>') +
     '<div class="oa-head"><h2>' + escapeHtml(t('Solicitudes de diagnóstico')) + '</h2><span class="adm-card-sub">' + escapeHtml(t('Llegan desde la página Para empresas')) + '</span></div>' +
@@ -100,6 +104,7 @@ function oaOrgForm(id, leadId) {
       oaField('Logo (enlace de la imagen, opcional)', oaInput('oa-o-logo', v('logo_url'), 'type="url" maxlength="400" placeholder="https://"')) +
       (id ? oaField('Estado', '<select class="form-input" id="oa-o-status"><option value="activo"' + (o.status === 'activo' ? ' selected' : '') + '>' + escapeHtml(t('Activa')) + '</option><option value="pausado"' + (o.status === 'pausado' ? ' selected' : '') + '>' + escapeHtml(t('Pausada (los empleados no la ven)')) + '</option></select>') : '') +
       oaField('Notas internas', oaArea('oa-o-notes', v('notes', 'need'), 3), true) +
+      '<label class="oa-check adm-field--wide"><input type="checkbox" id="oa-o-self"' + (o && o.self_manage ? ' checked' : '') + '><span><b>' + escapeHtml(t('El gerente configura su empresa')) + '</b><small>' + escapeHtml(t('Solo para socios como Moya & Company. Si está apagado, el equipo DGP configura todo y el gerente solo ve resultados.')) + '</small></span></label>' +
     '</div><p class="modal-error" id="oa-err" hidden></p><div class="adm-form-actions">' +
       (id ? '<button type="button" class="ui-btn ui-btn--ghost ui-btn--sm oa-danger" onclick="oaDeleteOrg(\'' + oaId(id) + '\')">' + escapeHtml(t('Eliminar empresa')) + '</button>' : '') +
       '<button class="ui-btn ui-btn--primary ui-btn--sm">' + escapeHtml(t('Guardar')) + '</button></div></form>');
@@ -108,7 +113,8 @@ function oaOrgForm(id, leadId) {
 async function oaSaveOrg(id, leadId) {
   const row = { name: oaVal('oa-o-name'), industry: oaVal('oa-o-industry') || null, seats: parseInt(oaVal('oa-o-seats'), 10) || 10,
     contact_name: oaVal('oa-o-cname') || null, contact_email: oaVal('oa-o-cemail').toLowerCase() || null, contact_phone: oaVal('oa-o-cphone') || null,
-    logo_url: /^https:\/\//.test(oaVal('oa-o-logo')) ? oaVal('oa-o-logo') : null, notes: oaVal('oa-o-notes') || null };
+    logo_url: /^https:\/\//.test(oaVal('oa-o-logo')) ? oaVal('oa-o-logo') : null, notes: oaVal('oa-o-notes') || null,
+    self_manage: !!(document.getElementById('oa-o-self') || {}).checked };
   if (id) row.status = oaVal('oa-o-status') || 'activo';
   const q = id ? sb.from('orgs').update(row).eq('id', id).select().single() : sb.from('orgs').insert(row).select().single();
   const { data, error } = await q;
@@ -130,7 +136,7 @@ async function oaDeleteOrg(id) {
 // ── Detalle de una empresa ──
 async function loadOrgDetail(id) {
   OA.cur = id;
-  const root = document.getElementById('oa-root');
+  const root = oaRoot();
   const [lv, ps, mb, dc, cp, ce, aw, rw, rd, ss, pt, lb] = await Promise.all([
     sb.from('org_levels').select('*').eq('org_id', id).order('rank'),
     sb.from('org_positions').select('*').eq('org_id', id).order('title'),
@@ -158,14 +164,14 @@ function oaPosName(id) { const p = OA.positions.find(x => x.id === id); return p
 function renderOrgDetail() {
   const o = OA.orgs.find(x => x.id === OA.cur);
   if (!o) { OA.cur = null; renderOrgList(); return; }
-  const root = document.getElementById('oa-root');
+  const root = oaRoot();
   const pendRed = OA.redemptions.filter(r => r.status === 'pendiente').length;
   const tabs = [['equipo', 'Equipo', OA.members.length], ['niveles', 'Niveles', OA.levels.length], ['cargos', 'Cargos', OA.positions.length], ['docs', 'SOPs y capacitaciones', OA.docs.length],
     ['certs', 'Certificaciones', OA.certs.length], ['puntos', 'Puntos y premios', pendRed || null], ['sesiones', 'Asesorías', OA.sessions.filter(x => x.status === 'agendada').length || null], ['cumplimiento', 'Cumplimiento']];
   root.innerHTML =
-    '<div class="oa-detail-head"><button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" onclick="OA.cur=null;renderOrgList()">← ' + escapeHtml(t('Empresas')) + '</button>' +
+    '<div class="oa-detail-head">' + (OA.self ? '' : '<button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" onclick="OA.cur=null;renderOrgList()">← ' + escapeHtml(t('Empresas')) + '</button>') +
       '<div class="oa-detail-title"><span class="oa-org-logo">' + (o.logo_url ? '<img src="' + escapeHtml(o.logo_url) + '" alt="">' : escapeHtml(o.name.slice(0, 2).toUpperCase())) + '</span><div><h2>' + escapeHtml(o.name) + '</h2><small>' + escapeHtml([o.industry, OA.members.filter(m => m.active).length + ' / ' + o.seats + ' ' + t('empleados'), o.contact_name, o.contact_email].filter(Boolean).join(' · ')) + '</small></div></div>' +
-      '<button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" onclick="oaOrgForm(\'' + oaId(o.id) + '\')">' + escapeHtml(t('Editar empresa')) + '</button></div>' +
+      (OA.self ? '' : '<button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" onclick="oaOrgForm(\'' + oaId(o.id) + '\')">' + escapeHtml(t('Editar empresa')) + '</button>') + '</div>' +
     '<div class="adm-seg adm-seg--wide">' + tabs.map(([k, label, n]) => '<button class="' + (OA.view === k ? 'is-active' : '') + '" onclick="OA.view=\'' + k + '\';renderOrgDetail()">' + escapeHtml(t(label)) + (n != null ? ' <small>' + n + '</small>' : '') + '</button>').join('') + '</div>' +
     '<div id="oa-body">' + ({ equipo: oaTeam, niveles: oaLevels, cargos: oaPositions, docs: oaDocs, certs: oaCerts, puntos: oaPoints, sesiones: oaSessions, cumplimiento: oaCompliance }[OA.view] || oaTeam)() + '</div>';
 }
@@ -331,7 +337,7 @@ function oaDocForm(id) {
       oaField('Área', oaInput('oa-d-area', d.area, 'maxlength="80"')) +
       oaField('Título', oaInput('oa-d-title', d.title, 'required maxlength="160"'), true) +
       oaField('Resumen (qué aprende o para qué sirve)', oaArea('oa-d-summary', d.summary, 2), true) +
-      '<div class="oa-ai adm-field--wide"><b>✦ ' + escapeHtml(t('Borrador con IA')) + '</b><span>' + escapeHtml(t('Escribe el título y, si quieres, notas del cliente (cómo lo hacen hoy, herramientas, horarios). La IA redacta el documento y tú lo revisas antes de guardar.')) + '</span>' +
+      '<div class="oa-ai adm-field--wide"><b>' + icon('spark') + ' ' + escapeHtml(t('Borrador con IA')) + '</b><span>' + escapeHtml(t('Escribe el título y, si quieres, notas del cliente (cómo lo hacen hoy, herramientas, horarios). La IA redacta el documento y tú lo revisas antes de guardar.')) + '</span>' +
         oaArea('oa-d-notes', '', 3, 'Notas del cliente (opcional)') + '<div class="oa-ai-row"><select class="form-input" id="oa-d-lang" aria-label="' + escapeHtml(t('Idioma del borrador')) + '"><option value="en"' + (LANG === 'en' ? ' selected' : '') + '>English</option><option value="es"' + (LANG === 'es' ? ' selected' : '') + '>Español</option></select>' +
         '<button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" id="oa-ai-btn" onclick="oaDraftDoc()">' + escapeHtml(t('Generar borrador')) + '</button></div></div>' +
       oaField('Contenido', oaArea('oa-d-body', d.body, 12, '# Título de sección\nTexto normal en párrafos.\n1. Paso numerado\n- Punto de lista\n> Nota importante'), true) +
@@ -412,7 +418,7 @@ function oaCerts() {
       '<button type="button" class="ui-btn ui-btn--primary ui-btn--sm" onclick="oaCertForm()">+ ' + escapeHtml(t('Nueva certificación')) + '</button></div>' +
     (OA.certs.length ? '<div class="oa-cards">' + OA.certs.map(c => {
       const passed = new Set(OA.awards.filter(a => a.cert_id === c.id && a.passed && (!a.expires_at || new Date(a.expires_at) > new Date())).map(a => a.email));
-      return '<button type="button" class="oa-card" onclick="oaCertForm(\'' + c.id + '\')"><span class="oa-kind oa-kind--cert">🏅 ' + escapeHtml(t('Certificación')) + '</span><b>' + escapeHtml(c.title) + '</b>' +
+      return '<button type="button" class="oa-card" onclick="oaCertForm(\'' + c.id + '\')"><span class="oa-kind oa-kind--cert">' + icon('award') + ' ' + escapeHtml(t('Certificación')) + '</span><b>' + escapeHtml(c.title) + '</b>' +
         '<small>' + escapeHtml(t('Para') + ': ' + oaAudience(c)) + '</small>' +
         '<span class="oa-meta">' + c.questions.length + ' ' + escapeHtml(t('preguntas')) + ' · ' + escapeHtml(t('aprueba con')) + ' ' + c.pass_score + '% · ' + passed.size + ' ' + escapeHtml(t('certificados vigentes')) + (c.valid_months ? ' · ' + escapeHtml(t('vence a los')) + ' ' + c.valid_months + ' ' + escapeHtml(t('meses')) : '') + (c.published ? '' : ' · ' + escapeHtml(t('Borrador'))) + '</span></button>';
     }).join('') + '</div>'
@@ -592,4 +598,12 @@ async function oaDeleteSession(id) {
   const { error } = await sb.from('org_sessions').delete().eq('id', id);
   if (error) { oaErr(rpcError(error)); return; }
   oaClose(); loadOrgDetail(OA.cur);
+}
+
+// ── Gerente que configura su propia empresa (desde el campus) ──
+function orgOpenConfig(rootId) {
+  if (!ORG.org || !ORG.org.self_manage) return;
+  if (!OA.self || OA.cur !== ORG.org.id) OA.view = 'equipo';
+  OA.self = true; OA.rootId = rootId; OA.orgs = [ORG.org]; OA.leads = [];
+  loadOrgDetail(ORG.org.id);
 }

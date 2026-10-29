@@ -10,9 +10,9 @@ function ensureAssistant() {
   el.id = 'asst';
   el.innerHTML =
     '<button type="button" class="asst-fab" id="asst-fab" onclick="toggleAssistant()" aria-label="' + escapeHtml(t('Asistente IA')) + '">' +
-      '<span class="asst-fab-ic">✦</span><span class="asst-fab-label">' + escapeHtml(t('Asistente IA')) + '</span></button>' +
+      '<span class="asst-fab-ic">' + icon('spark') + '</span><span class="asst-fab-label">' + escapeHtml(t('Asistente IA')) + '</span></button>' +
     '<section class="asst-panel" id="asst-panel" hidden role="dialog" aria-label="' + escapeHtml(t('Asistente IA')) + '">' +
-      '<header class="asst-head"><span class="asst-head-ic">✦</span><div><b>' + escapeHtml(t('Asistente IA de DGP')) + '</b><small id="asst-quota"></small></div>' +
+      '<header class="asst-head"><span class="asst-head-ic">' + icon('spark') + '</span><div><b>' + escapeHtml(t('Asistente IA de DGP')) + '</b><small id="asst-quota"></small></div>' +
         '<button type="button" class="icon-btn" onclick="toggleAssistant(false)" aria-label="' + escapeHtml(t('Cerrar')) + '"><svg><use href="#i-x"/></svg></button></header>' +
       '<div class="asst-log" id="asst-log"></div>' +
       '<div class="asst-ideas" id="asst-ideas"></div>' +

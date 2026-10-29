@@ -36,6 +36,7 @@
 <link rel="stylesheet" href="assets/css/reader.css">
 <link rel="stylesheet" href="assets/css/app.css">
 <link rel="stylesheet" href="assets/css/ai.css">
+<link rel="stylesheet" href="assets/css/org.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 </head>
 <body>
@@ -81,12 +82,13 @@
     <div class="lp-nav-inner">
       <button class="brand" onclick="document.getElementById('landing-screen').scrollTo({top:0,behavior:'smooth'})" aria-label="DGP Academy — inicio">
         <svg class="brand-mark"><use href="#dgp-mark"/></svg>
-        <span class="brand-name">DGP <span>Academy</span></span>
+        <span class="brand-name">DGP <span>Academy</span></span><span class="brand-x" title="En alianza con Moya &amp; Company"><i aria-hidden="true">×</i><img src="assets/img/moya-mark-sm.png" alt="Moya &amp; Company" width="30" height="22"><span class="brand-x-name">Moya &amp; Company</span></span>
       </button>
       <nav class="lp-nav-links" aria-label="Secciones">
         <a href="#lp-cursos" data-scroll="lp-cursos">Programas</a>
         <a href="#lp-membresia" data-scroll="lp-membresia">Membresía</a>
         <a href="#blog" onclick="openBlogPage();return false">Blog</a>
+        <a href="#lp-empresas" data-scroll="lp-empresas">Empresas</a>
         <a href="#lp-nosotros" data-scroll="lp-nosotros">Nosotros</a>
         <a href="#lp-acceso" data-scroll="lp-acceso">Precio</a>
         <a href="#lp-faq" data-scroll="lp-faq">Preguntas</a>
@@ -103,6 +105,7 @@
       <a href="#lp-cursos" data-scroll="lp-cursos">Programas</a>
       <a href="#lp-membresia" data-scroll="lp-membresia">Membresía</a>
       <a href="#blog" onclick="openBlogPage();return false">Blog</a>
+      <a href="#lp-empresas" data-scroll="lp-empresas">Para empresas</a>
       <a href="#lp-nosotros" data-scroll="lp-nosotros">Nosotros</a>
       <a href="#lp-acceso" data-scroll="lp-acceso">Precio</a>
       <a href="#lp-faq" data-scroll="lp-faq">Preguntas frecuentes</a>
@@ -472,6 +475,46 @@
   </section>
 
   <!-- SOBRE NOSOTROS -->
+  <section class="lp-section lp-biz" id="lp-empresas">
+    <div class="lp-wrap">
+      <div class="lp-biz-head reveal">
+        <span class="lp-biz-kicker">DGP Empresas · Consultoría y capacitación de empleados</span>
+        <h2>Pon orden en tu negocio y capacita a tu equipo</h2>
+        <p>Para empresas que hoy funcionan con Excel, de memoria o sin procesos escritos. Documentamos cómo se hace cada cosa, definimos los cargos y capacitamos a tu equipo por niveles en una plataforma donde ves el avance de cada persona.</p>
+        <div class="lp-biz-ctas"><a class="ui-btn ui-btn--primary ui-btn--lg" href="#lp-diagnostico" data-scroll="lp-diagnostico">Agenda un diagnóstico gratis</a><span class="lp-biz-ally">En alianza con <img src="assets/img/moya-mark-sm.png" alt="" width="30" height="22"> Moya &amp; Company</span></div>
+      </div>
+      <div class="lp-biz-grid">
+        <article class="lp-biz-card reveal"><span class="lp-biz-ic">📋</span><h3>Manual de descripción de cargos</h3><p>Propósito, funciones, responsabilidades, indicadores y competencias de cada puesto. Cada empleado lo lee y lo confirma.</p></article>
+        <article class="lp-biz-card reveal" data-d="1"><span class="lp-biz-ic">⚙️</span><h3>Procedimientos (SOPs)</h3><p>Escribimos paso a paso cómo se hace cada proceso para que el trabajo salga igual siempre, lo haga quien lo haga.</p></article>
+        <article class="lp-biz-card reveal" data-d="2"><span class="lp-biz-ic">🎯</span><h3>Capacitación por niveles</h3><p>Los líderes, el personal administrativo y el operativo ven solo el entrenamiento que les corresponde a su nivel y su cargo.</p></article>
+        <article class="lp-biz-card reveal"><span class="lp-biz-ic">📊</span><h3>Panel del gerente</h3><p>Ves en tiempo real quién completó su capacitación, quién tiene pendientes y quién debe releer un procedimiento actualizado.</p></article>
+        <article class="lp-biz-card reveal" data-d="1"><span class="lp-biz-ic">🎥</span><h3>Asesorías por videollamada</h3><p>Sesiones con nuestro equipo para el gerente y para cada colaborador: dudas, seguimiento y mejora continua.</p></article>
+        <article class="lp-biz-card reveal" data-d="2"><span class="lp-biz-ic">🏅</span><h3>Certificaciones y puntos <em>Pronto</em></h3><p>Rutas de certificación por cargo con vencimiento y un sistema de puntos para reconocer a tu mejor equipo.</p></article>
+      </div>
+      <ol class="lp-biz-steps reveal">
+        <li><b>Diagnóstico</b><span>Conocemos tu negocio y cómo trabaja hoy tu equipo.</span></li>
+        <li><b>Documentamos</b><span>Cargos, procesos y SOPs escritos por nuestro equipo.</span></li>
+        <li><b>Capacitamos</b><span>Cada nivel recibe su entrenamiento en la plataforma.</span></li>
+        <li><b>Medimos</b><span>Tú ves el cumplimiento y nosotros te acompañamos.</span></li>
+      </ol>
+      <div class="lp-biz-form-wrap" id="lp-diagnostico">
+        <div class="lp-biz-form-copy reveal"><h3>Diagnóstico gratis para tu empresa</h3><p>Cuéntanos de tu negocio y te contactamos para una llamada de 30 minutos. Sin costo y sin compromiso.</p>
+          <ul><li>Revisamos cómo se organiza hoy tu equipo</li><li>Detectamos qué procesos conviene documentar primero</li><li>Te proponemos un plan a la medida</li></ul></div>
+        <form class="lp-biz-form reveal" data-d="1" onsubmit="event.preventDefault();submitOrgLead()">
+          <label class="adm-field"><span>Nombre de la empresa</span><input class="form-input" id="lead-company" required maxlength="120"></label>
+          <label class="adm-field"><span>Tu nombre</span><input class="form-input" id="lead-name" required maxlength="120"></label>
+          <label class="adm-field"><span>Correo</span><input class="form-input" id="lead-email" type="email" required maxlength="160"></label>
+          <label class="adm-field"><span>Teléfono / WhatsApp</span><input class="form-input" id="lead-phone" type="tel" maxlength="40"></label>
+          <label class="adm-field adm-field--wide"><span>¿Cuántos empleados tienen?</span><select class="form-input" id="lead-employees"><option value="1-5">1 a 5</option><option value="6-15">6 a 15</option><option value="16-50">16 a 50</option><option value="51-200">51 a 200</option><option value="200+">Más de 200</option></select></label>
+          <label class="adm-field adm-field--wide"><span>¿Qué te gustaría ordenar o mejorar?</span><textarea class="form-input" id="lead-need" rows="3" maxlength="1500" placeholder="Ej.: no tenemos procesos escritos, cada empleado hace las cosas a su manera…"></textarea></label>
+          <p class="modal-error" id="lead-error" hidden></p>
+          <button class="ui-btn ui-btn--primary ui-btn--lg ui-btn--block" id="lead-btn">Quiero mi diagnóstico gratis</button>
+          <p class="lp-biz-ok" id="lead-ok" hidden>¡Gracias! Recibimos tu solicitud y te contactaremos muy pronto.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <section class="lp-section lp-about" id="lp-nosotros">
     <div class="lp-wrap">
       <div class="lp-about-top">
@@ -546,7 +589,7 @@
   <footer class="lp-footer">
     <div class="lp-wrap lp-footer-grid">
       <div class="lp-footer-brand">
-        <span class="brand brand--light"><svg class="brand-mark" style="--logo-ink:#fff"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span></span>
+        <span class="brand brand--light"><svg class="brand-mark" style="--logo-ink:#fff"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span><span class="brand-x" title="En alianza con Moya &amp; Company"><i aria-hidden="true">×</i><img src="assets/img/moya-mark-sm.png" alt="Moya &amp; Company" width="30" height="22"><span class="brand-x-name">Moya &amp; Company</span></span></span>
         <p>La plataforma educativa de DGP Global Group. Formación práctica en desarrollo web, inteligencia artificial y marketing digital.</p>
       </div>
       <div class="lp-footer-col"><h4>Programa</h4><a href="#lp-programa" data-scroll="lp-programa">Temario</a><a href="#lp-biblioteca" data-scroll="lp-biblioteca">Biblioteca</a><a href="#lp-certificado" data-scroll="lp-certificado">Certificado</a><a href="#lp-acceso" data-scroll="lp-acceso">Precio</a></div>
@@ -565,7 +608,7 @@
   <aside class="auth-left">
     <img class="auth-photo" src="assets/img/auth-estudiantes.webp" alt="" width="1400" height="933">
     <div class="auth-left-inner">
-      <button class="brand brand--light" onclick="showLanding()" aria-label="Volver al inicio"><svg class="brand-mark" style="--logo-ink:#fff"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span></button>
+      <button class="brand brand--light" onclick="showLanding()" aria-label="Volver al inicio"><svg class="brand-mark" style="--logo-ink:#fff"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span><span class="brand-x" title="En alianza con Moya &amp; Company"><i aria-hidden="true">×</i><img src="assets/img/moya-mark-sm.png" alt="Moya &amp; Company" width="30" height="22"><span class="brand-x-name">Moya &amp; Company</span></span></button>
       <div class="auth-left-bottom">
         <h1 class="auth-headline">Tus programas, tu progreso y tus certificados, <em class="serif">en un solo lugar</em>.</h1>
         <div class="auth-courses">
@@ -584,7 +627,7 @@
 
   <main class="auth-right">
     <div class="auth-top">
-      <button class="brand auth-mobile-brand" onclick="showLanding()"><svg class="brand-mark"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span></button>
+      <button class="brand auth-mobile-brand" onclick="showLanding()"><svg class="brand-mark"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span><span class="brand-x" title="En alianza con Moya &amp; Company"><i aria-hidden="true">×</i><img src="assets/img/moya-mark-sm.png" alt="Moya &amp; Company" width="30" height="22"><span class="brand-x-name">Moya &amp; Company</span></span></button>
       <span data-lang-slot></span>
       <button class="auth-back" onclick="showLanding()"><svg><use href="#i-back"/></svg>Volver al inicio</button>
     </div>
@@ -656,7 +699,7 @@
 
   <nav class="dash-nav">
     <div class="dash-nav-inner">
-      <span class="brand"><svg class="brand-mark"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span></span>
+      <span class="brand"><svg class="brand-mark"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span><span class="brand-x" title="En alianza con Moya &amp; Company"><i aria-hidden="true">×</i><img src="assets/img/moya-mark-sm.png" alt="Moya &amp; Company" width="30" height="22"><span class="brand-x-name">Moya &amp; Company</span></span></span>
       <div class="dash-nav-right">
         <button class="dash-home-btn" onclick="showLanding()" title="Ver el inicio de DGP Academy"><svg><use href="#i-home"/></svg><span>Inicio</span></button>
         <span data-lang-slot></span>
@@ -677,6 +720,7 @@
   <nav class="campus-tabs" id="campus-tabs" aria-label="Secciones del campus">
     <div class="campus-tabs-in">
       <button type="button" data-t="top"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg>Inicio</button>
+      <button type="button" data-t="dash-org" hidden><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg>Mi empresa</button>
       <button type="button" data-t="dash-programs"><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>Programas</button>
       <button type="button" data-t="dash-library"><svg viewBox="0 0 24 24"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg>Biblioteca</button>
       <button type="button" data-t="dash-templates"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Plantillas</button>
@@ -734,6 +778,11 @@
         <a class="ui-btn ui-btn--ghost" id="dash-activate-wa" href="#" target="_blank" rel="noopener" style="display:none"><svg><use href="#i-whatsapp"/></svg>Escribir por WhatsApp</a>
         <a class="ui-btn ui-btn--ghost" id="dash-activate-mail" href="mailto:info@dgpglobalgroup.com"><svg><use href="#i-mail"/></svg>Escribir por correo</a>
       </div>
+    </section>
+
+    <section class="dash-block" id="dash-org" hidden>
+      <div class="dash-block-head"><h2>Mi empresa</h2><span class="dash-block-sub">Tu cargo, procedimientos y capacitaciones asignadas</span></div>
+      <div id="org-root"><div class="admin-empty">Cargando…</div></div>
     </section>
 
     <section class="dash-block" id="dash-programs">
@@ -1086,7 +1135,7 @@
 
   <nav class="dash-nav">
     <div class="dash-nav-inner">
-      <span class="brand"><svg class="brand-mark"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span><span class="chip chip--accent admin-badge">Administración</span></span>
+      <span class="brand"><svg class="brand-mark"><use href="#dgp-mark"/></svg><span class="brand-name">DGP <span>Academy</span></span><span class="brand-x" title="En alianza con Moya &amp; Company"><i aria-hidden="true">×</i><img src="assets/img/moya-mark-sm.png" alt="Moya &amp; Company" width="30" height="22"><span class="brand-x-name">Moya &amp; Company</span></span><span class="chip chip--accent admin-badge">Administración</span></span>
       <div class="dash-nav-right"><span data-lang-slot></span><button class="ui-btn ui-btn--ghost ui-btn--sm" onclick="showDashboard()"><svg><use href="#i-back"/></svg>Volver al panel</button></div>
     </div>
   </nav>
@@ -1106,6 +1155,7 @@
       <button class="adm-tab" role="tab" data-tab="pagos" onclick="adminTab('pagos')">Pagos <span class="adm-tab-badge" id="adm-pending-badge" hidden>0</span></button>
       <button class="adm-tab" role="tab" data-tab="membresias" onclick="adminTab('membresias')">Membresías <span class="adm-tab-badge" id="adm-member-badge" hidden>0</span></button>
       <button class="adm-tab" role="tab" data-tab="conciliacion" onclick="adminTab('conciliacion')">Conciliación</button>
+      <button class="adm-tab" role="tab" data-tab="empresas" onclick="adminTab('empresas')">Empresas <span class="adm-tab-badge" id="adm-org-badge" hidden>0</span></button>
       <button class="adm-tab" role="tab" data-tab="config" onclick="adminTab('config')">Configuración</button>
     </div>
 
@@ -1260,6 +1310,11 @@
     </section>
 
     <!-- ── Configuración ─────────────────────── -->
+    <!-- ── Empresas (capacitación de empleados) ── -->
+    <section class="adm-pane" id="adm-empresas" role="tabpanel">
+      <div id="oa-root"><div class="admin-empty">Cargando…</div></div>
+    </section>
+
     <section class="adm-pane" id="adm-config" role="tabpanel">
       <div class="adm-config">
 
@@ -1865,6 +1920,8 @@
 <script src="assets/js/preview.js"></script>
 <script src="assets/js/badges.js"></script>
 <script src="assets/js/templates.js"></script>
+<script src="assets/js/org.js"></script>
+<script src="assets/js/org-admin.js"></script>
 <script src="assets/js/admin-members.js"></script>
 </body>
 </html>

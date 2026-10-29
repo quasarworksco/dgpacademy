@@ -12,8 +12,8 @@ let recWeek = null;
 
 // Permisos del equipo: el dueño ve todo; cada administrador solo las secciones que se le asignaron
 let MY_PERMS = { owner: false, admin: false, perms: [] };
-const TAB_PERM = { resumen: 'pagos', estudiantes: 'estudiantes', pagos: 'pagos', conciliacion: 'pagos', membresias: 'membresias', config: 'configuracion' };
-const PERM_LABELS = [['estudiantes', 'Estudiantes'], ['pagos', 'Pagos, resumen y conciliación'], ['membresias', 'Membresías y cortesías'], ['configuracion', 'Configuración del sitio']];
+const TAB_PERM = { resumen: 'pagos', estudiantes: 'estudiantes', pagos: 'pagos', conciliacion: 'pagos', membresias: 'membresias', empresas: 'empresas', config: 'configuracion' };
+const PERM_LABELS = [['estudiantes', 'Estudiantes'], ['pagos', 'Pagos, resumen y conciliación'], ['membresias', 'Membresías y cortesías'], ['empresas', 'Empresas: equipos, cargos y SOPs'], ['configuracion', 'Configuración del sitio']];
 async function loadMyPerms() {
   const { data, error } = await sb.rpc('my_perms');
   MY_PERMS = (!error && data) ? data : { owner: false, admin: false, perms: [] };
@@ -44,6 +44,7 @@ function adminLoad(tab) {
   else if (tab === 'pagos') loadOrders();
   else if (tab === 'conciliacion') loadWeekly();
   else if (tab === 'membresias') loadMembersAdmin();
+  else if (tab === 'empresas') loadOrgsAdmin();
   else if (tab === 'config') loadConfig();
 }
 

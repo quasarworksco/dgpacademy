@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,7 +52,7 @@
 <header class="lg-top">
   <div class="lg-top-in">
     <a class="lg-brand" href="./"><img src="assets/img/isotipo.svg" alt="">DGP <span>Academy</span></a>
-    <div class="lg-lang" role="group" aria-label="Idioma / Language"><button type="button" data-set="es">ES</button><button type="button" data-set="en">EN</button></div>
+    <div class="lg-lang" role="group" aria-label="Idioma / Language"><button type="button" data-set="en">EN</button><button type="button" data-set="es">ES</button></div>
   </div>
 </header>
 
@@ -373,7 +373,7 @@
   var params = new URLSearchParams(location.search);
   var lang = params.get('lang');
   try { lang = lang || localStorage.getItem('dgp-lang'); } catch (e) {}
-  if (lang !== 'en') lang = 'es';
+  if (lang !== 'es') lang = 'en';
   function setLang(l) {
     document.documentElement.lang = l;
     document.title = l === 'en' ? 'Policies and terms — DGP Academy' : 'Políticas y condiciones — DGP Academy';

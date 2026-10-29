@@ -10,7 +10,7 @@ let LANG = (function () {
   try { const s = localStorage.getItem(LANG_KEY); if (s === 'es' || s === 'en') return s; } catch (e) {}
   const q = new URLSearchParams(location.search).get('lang');
   if (q === 'es' || q === 'en') return q;
-  return /^es\b/i.test(navigator.language || 'es') ? 'es' : 'en';
+  return 'en';   // idioma principal: inglés; español es el segundo idioma
 })();
 
 const I18N_ATTRS = ['title', 'placeholder', 'aria-label', 'alt'];
@@ -107,12 +107,13 @@ const i18nObserver = new MutationObserver(muts => {
 });
 
 const META = {
-  es: { title: 'DGP Academy — Plataforma de Cursos', desc: 'Aprende desarrollo web, IA aplicada y marketing digital con los mismos profesionales de DGP Global Group. Cursos interactivos, acceso inmediato, sin suscripción.' },
-  en: { title: 'DGP Academy — Online Learning Platform', desc: 'Learn web development, applied AI and digital marketing from the DGP Global Group team. Interactive courses, instant access, no subscription.' }
+  es: { title: 'DGP Academy — Aprende y capacita a tu equipo con IA', desc: 'Cursos prácticos para emprendedores y capacitación de empleados para empresas, con IA como copiloto. Por DGP Global Group en alianza con Moya & Company.' },
+  en: { title: 'DGP Academy — Learn and train your team with AI', desc: 'Hands-on courses for entrepreneurs and employee training for companies, with AI as your copilot. By DGP Global Group in alliance with Moya & Company.' }
 };
 
 function applyLang() {
   document.documentElement.lang = LANG;
+  document.documentElement.classList.remove('i18n-wait');
   document.title = META[LANG].title;
   const d = document.querySelector('meta[name="description"]');
   if (d) d.setAttribute('content', META[LANG].desc);
@@ -136,8 +137,8 @@ function setLang(lang) {
 
 function langSwitchHTML(extra) {
   return '<div class="lang-switch' + (extra ? ' ' + extra : '') + '" role="group" aria-label="Idioma / Language">' +
-    '<button type="button" data-lang="es" onclick="setLang(\'es\')">ES</button>' +
-    '<button type="button" data-lang="en" onclick="setLang(\'en\')">EN</button></div>';
+    '<button type="button" data-lang="en" onclick="setLang(\'en\')">EN</button>' +
+    '<button type="button" data-lang="es" onclick="setLang(\'es\')">ES</button></div>';
 }
 
 function locale() { return LANG === 'en' ? 'en-US' : 'es'; }

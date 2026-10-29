@@ -1123,6 +1123,8 @@ window.I18N_EN = {
   "Incluye cuaderno de trabajo": "Includes a workbook",
   "Cuaderno de trabajo": "Workbook",
   "Ideas clave": "Key ideas",
+  "Al crear tu cuenta aceptas las": "By creating your account you accept the",
+  "y la": "and the",
   "En alianza con Moya & Company": "In alliance with Moya & Company",
   "Aprende, crece y capacita con": "Learn, grow and train your team with",
   "como copiloto.": "as your copilot.",

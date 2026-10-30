@@ -373,7 +373,7 @@
   var params = new URLSearchParams(location.search);
   var lang = params.get('lang');
   try { lang = lang || localStorage.getItem('dgp-lang'); } catch (e) {}
-  if (lang !== 'es') lang = 'en';
+  if (lang !== 'es' && lang !== 'en') lang = /^es\b/i.test(navigator.language || '') ? 'es' : 'en';
   function setLang(l) {
     document.documentElement.lang = l;
     document.title = l === 'en' ? 'Policies and terms — DGP Academy' : 'Políticas y condiciones — DGP Academy';

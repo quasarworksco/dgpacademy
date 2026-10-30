@@ -6,7 +6,7 @@
 <title>Guía DGP Empresas · Moya & Company</title>
 <meta name="description" content="Guía para usar la plataforma de capacitación de empleados de DGP Academy con Moya & Company.">
 <meta name="robots" content="noindex, nofollow">
-<script>(function(){var l;try{l=localStorage.getItem('dgp-lang')}catch(e){}var q=new URLSearchParams(location.search).get('lang');if(q==='es'||q==='en')l=q;if(l!=='es'){document.documentElement.classList.add('i18n-wait');setTimeout(function(){document.documentElement.classList.remove('i18n-wait')},2000)}})();</script>
+<script>(function(){var l;try{l=localStorage.getItem('dgp-lang')}catch(e){}var q=new URLSearchParams(location.search).get('lang');if(q==='es'||q==='en')l=q;if(!l)l=/^es\b/i.test(navigator.language||'')?'es':'en';if(l!=='es'){document.documentElement.classList.add('i18n-wait');setTimeout(function(){document.documentElement.classList.remove('i18n-wait')},2000)}})();</script>
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
 <style>
 @font-face { font-family: "Inter Tight"; src: url("../assets/fonts/inter-tight-latin.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
@@ -334,7 +334,8 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
   try { lang = localStorage.getItem('dgp-lang'); } catch (e) {}
   var q = new URLSearchParams(location.search).get('lang');
   if (q === 'es' || q === 'en') lang = q;
-  setLang(lang === 'es' ? 'es' : 'en');
+  if (lang !== 'es' && lang !== 'en') lang = /^es\b/i.test(navigator.language || '') ? 'es' : 'en';
+  setLang(lang);
   document.querySelectorAll('[data-set]').forEach(function (b) {
     b.addEventListener('click', function () { try { localStorage.setItem('dgp-lang', b.dataset.set); } catch (e) {} setLang(b.dataset.set); });
   });

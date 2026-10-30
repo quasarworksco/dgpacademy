@@ -38,7 +38,7 @@
 <link rel="stylesheet" href="assets/css/app.css">
 <link rel="stylesheet" href="assets/css/ai.css">
 <link rel="stylesheet" href="assets/css/org.css">
-<script>(function(){var l;try{l=localStorage.getItem('dgp-lang')}catch(e){}var q=new URLSearchParams(location.search).get('lang');if(q==='es'||q==='en')l=q;if(l!=='es'){document.documentElement.classList.add('i18n-wait');setTimeout(function(){document.documentElement.classList.remove('i18n-wait')},2500)}})();</script>
+<script>(function(){var l;try{l=localStorage.getItem('dgp-lang')}catch(e){}var q=new URLSearchParams(location.search).get('lang');if(q==='es'||q==='en')l=q;if(!l)l=/^es\b/i.test(navigator.language||'')?'es':'en';if(l!=='es'){document.documentElement.classList.add('i18n-wait');setTimeout(function(){document.documentElement.classList.remove('i18n-wait')},2500)}})();</script>
 <style>.i18n-wait body{visibility:hidden}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 </head>

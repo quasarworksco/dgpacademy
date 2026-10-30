@@ -10,7 +10,8 @@ let LANG = (function () {
   try { const s = localStorage.getItem(LANG_KEY); if (s === 'es' || s === 'en') return s; } catch (e) {}
   const q = new URLSearchParams(location.search).get('lang');
   if (q === 'es' || q === 'en') return q;
-  return 'en';   // idioma principal: inglés; español es el segundo idioma
+  // Sitio bilingüe: quien tiene el navegador en español la ve en español; el resto, en inglés
+  return /^es\b/i.test(navigator.language || '') ? 'es' : 'en';
 })();
 
 const I18N_ATTRS = ['title', 'placeholder', 'aria-label', 'alt'];

@@ -53,6 +53,9 @@ async function loadUserData() {
   const err = prof.error || acc.error || prog.error || read.error || certs.error;
   if (err) throw err;
   STATE.profile = prof.data || { email: STATE.user.email, full_name: '', phone: '', is_admin: false };
+  // Si la persona no eligió idioma en este navegador, se usa el de su perfil
+  let chosen = null; try { chosen = localStorage.getItem(LANG_KEY); } catch (e) {}
+  if (!chosen && (STATE.profile.lang === 'es' || STATE.profile.lang === 'en') && STATE.profile.lang !== LANG && typeof setLang === 'function') setLang(STATE.profile.lang);
   STATE.access = {};
   (acc.data || []).forEach(r => { STATE.access[r.product_id] = { active: r.active, paid: r.paid }; });
   STATE.progress = {};

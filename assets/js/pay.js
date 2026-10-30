@@ -251,7 +251,7 @@ function coAmounts() {
   document.getElementById('co-regular').textContent = promo ? fmtMoney(CO_BASE.usd) : (CO_BASE.regular ? fmtMoney(CO_BASE.regular) : '');
   const tag = document.getElementById('co-promo');
   tag.hidden = !promo;
-  if (promo) tag.innerHTML = '<b>' + escapeHtml(t('Promoción Venezuela')) + '</b><span>' + escapeHtml(t('Acceso completo a todo el contenido por')) + ' ' + fmtMoney(promo) + ' ' + escapeHtml(t('pagando con Pago Móvil o Binance Pay.')) + '</span>';
+  if (promo) tag.innerHTML = '<svg class="flag" aria-hidden="true"><use href="#flag-ve"/></svg><div><b>' + escapeHtml(t('Precio especial para Venezuela')) + '</b><span>' + escapeHtml(t('Acceso completo a todo el contenido con Pago Móvil o Binance Pay')) + '</span></div><strong>' + fmtMoney(promo) + '</strong>';
   document.getElementById('co-pm-amount').textContent = rate ? bs(usd * rate) : 'Bs —';
   document.getElementById('co-pm-rate').textContent = rate ? t('Tasa del día:') + ' ' + bs(rate) + ' ' + t('por dólar') + ' (' + fmtMoney(usd) + ' USD).' : '';
   document.getElementById('co-bn-amount').textContent = usd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' USDT';

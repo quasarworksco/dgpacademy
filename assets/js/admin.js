@@ -188,6 +188,8 @@ async function renderHealth() {
   const items = [
     [!!s.smtp_password, 'Correo de facturas', s.smtp_password ? 'Configurado' : 'Falta la contraseña de aplicación'],
     [pay.zelle && pay.zelle.enabled !== false && !!pay.zelle.email, 'Zelle', pay.zelle && pay.zelle.enabled !== false ? 'Activo' : 'Desactivado'],
+    [!!(pay.pago_movil && pay.pago_movil.enabled && Number(pay.pago_movil.rate) > 0), 'Pago Móvil (Venezuela)', pay.pago_movil && pay.pago_movil.enabled ? (Number(pay.pago_movil.rate) > 0 ? 'Activo' : 'Falta la tasa') : 'Desactivado'],
+    [!!(pay.binance && pay.binance.enabled && pay.binance.pay_id), 'Binance Pay (Venezuela)', pay.binance && pay.binance.enabled ? 'Activo' : 'Desactivado'],
     [!!(sq.enabled && s.square_access_token && sq.app_id && sq.location_id), 'Square', sq.enabled ? (s.square_access_token ? (sq.env === 'production' ? 'Producción' : 'Sandbox (pruebas)') : 'Faltan credenciales') : 'Desactivado'],
     [(es.count || 0) > 0 && es.count === en.count, 'Contenido ES / EN', (es.count || 0) + ' / ' + (en.count || 0) + ' ' + t('secciones')]
   ];
@@ -234,7 +236,7 @@ function renderOrders() {
     return '<article class="adm-order is-' + o.status + '">' +
       '<div class="adm-order-who"><div class="adm-order-name">' + escapeHtml(o.full_name || '—') + '</div><div class="adm-order-mail">' + escapeHtml(o.email) + '</div></div>' +
       '<div class="adm-order-what"><div>' + escapeHtml(LANG === 'en' ? (o.product_title_en || o.product_title) : o.product_title) + '</div>' +
-        '<div class="adm-order-meta">' + escapeHtml(t(METHOD_LABEL[o.method] || o.method)) + ' · ' + escapeHtml(fmtDate(o.created_at)) +
+        '<div class="adm-order-meta">' + escapeHtml(t(METHOD_LABEL[o.method] || o.method)) + (o.amount_local && o.local_currency === 'VES' ? ' · Bs ' + Number(o.amount_local).toLocaleString('es-VE', { minimumFractionDigits: 2 }) : '') + ' · ' + escapeHtml(fmtDate(o.created_at)) +
         (o.payer_name ? ' · ' + escapeHtml(t('Titular')) + ': ' + escapeHtml(o.payer_name) : '') + '</div></div>' +
       '<div class="adm-order-ref"><span>' + escapeHtml(t('Confirmación')) + '</span><code>' + escapeHtml(o.reference || '—') + '</code>' +
         (o.invoice_number ? '<span class="adm-order-inv">' + escapeHtml(o.invoice_number) + (o.invoice_sent_at ? ' · ' + escapeHtml(t('enviada')) : '') + '</span>' : '') + '</div>' +
@@ -342,13 +344,13 @@ async function loadWeekly() {
     const full = w.count && w.reconciled === w.count;
     return '<tr class="' + (w.count ? 'is-click' : 'is-empty') + (recWeek === w.week_start ? ' is-sel' : '') + '"' + (w.count ? ' onclick="openWeek(\'' + w.week_start + '\')"' : '') + '>' +
       '<td><b>' + escapeHtml(weekLabel(w)) + '</b>' + (i === 0 ? ' <span class="chip chip--accent">' + escapeHtml(t('Actual')) + '</span>' : '') + '</td>' +
-      '<td class="num">' + fmtMoney(w.zelle) + '</td><td class="num">' + fmtMoney(w.square) + '</td><td class="num">' + fmtMoney(w.manual) + '</td>' +
+      '<td class="num">' + fmtMoney(w.zelle) + '</td><td class="num">' + fmtMoney(w.square) + '</td><td class="num">' + fmtMoney(Number(w.pago_movil || 0) + Number(w.binance || 0)) + '</td><td class="num">' + fmtMoney(w.manual) + '</td>' +
       '<td class="num"><b>' + fmtMoney(w.total) + '</b></td><td class="num">' + w.count + '</td>' +
       '<td>' + (w.count ? '<span class="rec-pill ' + (full ? 'is-ok' : 'is-warn') + '">' + w.reconciled + ' / ' + w.count + '</span>' : '<span class="adm-muted">—</span>') + '</td></tr>';
-  }).join('') || '<tr><td colspan="7" class="adm-td-empty">' + escapeHtml(t('Sin datos')) + '</td></tr>';
+  }).join('') || '<tr><td colspan="8" class="adm-td-empty">' + escapeHtml(t('Sin datos')) + '</td></tr>';
   const sum = k => WEEKLY.reduce((a, w) => a + Number(w[k] || 0), 0);
   tb.insertAdjacentHTML('beforeend', '<tr class="is-total"><td>' + escapeHtml(t('Total del periodo')) + '</td><td class="num">' + fmtMoney(sum('zelle')) + '</td><td class="num">' + fmtMoney(sum('square')) +
-    '</td><td class="num">' + fmtMoney(sum('manual')) + '</td><td class="num"><b>' + fmtMoney(sum('total')) + '</b></td><td class="num">' + sum('count') + '</td><td>' + sum('reconciled') + ' / ' + sum('count') + '</td></tr>');
+    '</td><td class="num">' + fmtMoney(sum('pago_movil') + sum('binance')) + '</td><td class="num">' + fmtMoney(sum('manual')) + '</td><td class="num"><b>' + fmtMoney(sum('total')) + '</b></td><td class="num">' + sum('count') + '</td><td>' + sum('reconciled') + ' / ' + sum('count') + '</td></tr>');
   if (recWeek) openWeek(recWeek, true);
 }
 
@@ -451,6 +453,10 @@ async function loadConfig() {
   loadCuposPublic().then(v => setVal('cf-cupos-taken', v.taken + ' / ' + v.total));
   setChk('cf-zelle-on', z.enabled !== false); setVal('cf-zelle-email', z.email); setVal('cf-zelle-phone', z.phone); setVal('cf-zelle-holder', z.holder);
   setVal('cf-zelle-ins-es', z.instructions_es); setVal('cf-zelle-ins-en', z.instructions_en);
+  const pm = pay.pago_movil || {}, bn = pay.binance || {};
+  setChk('cf-pm-on', !!pm.enabled); setVal('cf-pm-rate', pm.rate); setVal('cf-pm-bank', pm.bank); setVal('cf-pm-phone', pm.phone); setVal('cf-pm-doc', pm.id_doc); setVal('cf-pm-holder', pm.holder);
+  setChk('cf-bn-on', !!bn.enabled); setVal('cf-bn-id', bn.pay_id); setVal('cf-bn-holder', bn.holder);
+  const vp = pay.ve_promo || {}; setChk('cf-vp-on', !!vp.enabled); setVal('cf-vp-price', vp.price);
   setChk('cf-sq-on', sq.enabled); setVal('cf-sq-env', sq.env || 'sandbox'); setVal('cf-sq-app', sq.app_id); setVal('cf-sq-loc', sq.location_id); setVal('cf-sq-token', '');
   setVal('cf-mail-from', em.from_email); setVal('cf-mail-name', em.from_name); setChk('cf-mail-notify', em.notify_admin !== false); setVal('cf-smtp-pass', '');
   setVal('cf-bill-company', bi.company); setVal('cf-bill-tax', bi.tax_id); setVal('cf-bill-address', bi.address); setVal('cf-bill-foot-es', bi.footer_es); setVal('cf-bill-foot-en', bi.footer_en);
@@ -507,6 +513,38 @@ async function saveZelle() {
     await saveSetting('payments', pay);
     flash('cf-zelle-msg', 'Guardado');
   } catch (e) { flash('cf-zelle-msg', rpcError(e), true); }
+}
+
+async function savePagoMovil() {
+  try {
+    const rate = Number(val('cf-pm-rate'));
+    if (chk('cf-pm-on') && (!(rate > 0) || !val('cf-pm-phone') || !val('cf-pm-doc'))) throw new Error(t('Para activarlo escribe la tasa, el teléfono y la cédula o RIF'));
+    const pay = Object.assign({ currency: 'USD' }, CFG.payments);
+    pay.pago_movil = { enabled: chk('cf-pm-on'), rate: rate > 0 ? rate : '', bank: val('cf-pm-bank'), phone: val('cf-pm-phone'), id_doc: val('cf-pm-doc'), holder: val('cf-pm-holder') };
+    await saveSetting('payments', pay);
+    flash('cf-pm-msg', 'Guardado');
+  } catch (e) { flash('cf-pm-msg', rpcError(e), true); }
+}
+
+async function saveVePromo() {
+  try {
+    const price = Number(val('cf-vp-price'));
+    if (chk('cf-vp-on') && !(price > 0)) throw new Error(t('Escribe el precio de la promoción'));
+    const pay = Object.assign({ currency: 'USD' }, CFG.payments);
+    pay.ve_promo = { enabled: chk('cf-vp-on'), price: price > 0 ? price : '' };
+    await saveSetting('payments', pay);
+    flash('cf-vp-msg', 'Guardado');
+  } catch (e) { flash('cf-vp-msg', rpcError(e), true); }
+}
+
+async function saveBinance() {
+  try {
+    if (chk('cf-bn-on') && !val('cf-bn-id')) throw new Error(t('Para activarlo escribe tu Pay ID'));
+    const pay = Object.assign({ currency: 'USD' }, CFG.payments);
+    pay.binance = { enabled: chk('cf-bn-on'), pay_id: val('cf-bn-id'), holder: val('cf-bn-holder') };
+    await saveSetting('payments', pay);
+    flash('cf-bn-msg', 'Guardado');
+  } catch (e) { flash('cf-bn-msg', rpcError(e), true); }
 }
 
 async function saveSquare() {

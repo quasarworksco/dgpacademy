@@ -45,6 +45,16 @@ function renderLandingPrice() {
   const num = v => Number(v).toLocaleString('en-US', { maximumFractionDigits: 2 });
   document.querySelectorAll('[data-price-num]').forEach(el => { const pr = SITE_CFG.products[el.dataset.priceNum]; if (pr && pr.price_usd != null) el.textContent = num(pr.price_usd); });
   document.querySelectorAll('[data-price-regular-num]').forEach(el => { const pr = SITE_CFG.products[el.dataset.priceRegularNum]; if (pr && pr.regular_price_usd) el.textContent = num(pr.regular_price_usd); });
+  // Promoción Venezuela (pase completo a precio especial con Pago Móvil o Binance Pay)
+  const vp = vePromo(), box = document.getElementById('lp-ve-promo');
+  if (box) { box.hidden = !vp; if (vp) document.getElementById('lp-ve-promo-num').textContent = num(vp); }
+}
+
+// Precio promocional del pase para Venezuela, o null si no hay promoción activa
+function vePromo() {
+  const pay = SITE_CFG.payments || {}, vp = pay.ve_promo || {}, pm = pay.pago_movil || {}, bn = pay.binance || {};
+  const methodOn = (pm.enabled && Number(pm.rate) > 0 && pm.phone) || (bn.enabled && bn.pay_id);
+  return vp.enabled && Number(vp.price) > 0 && methodOn ? Number(vp.price) : null;
 }
 
 // Comprar desde la portada: sin sesión, se guarda la intención y se abre el pago al entrar
@@ -92,7 +102,7 @@ const ORDER_STATUS = {
   rejected: ['No verificado', 'is-rejected'],
   refunded: ['Reembolsado', 'is-rejected']
 };
-const METHOD_LABEL = { zelle: 'Zelle', square: 'Tarjeta', manual: 'Pago registrado' };
+const METHOD_LABEL = { zelle: 'Zelle', square: 'Tarjeta', manual: 'Pago registrado', pago_movil: 'Pago Móvil', binance: 'Binance Pay' };
 
 function renderMyPayments() {
   const sec = document.getElementById('dash-payments');
@@ -111,7 +121,7 @@ function renderMyPayments() {
   }).join('');
 }
 
-// Aviso dentro del panel de activación cuando hay un pago de Zelle en revisión
+// Aviso dentro del panel de activación cuando hay un pago manual (Zelle, Pago Móvil, Binance) en revisión
 function renderPendingNotice() {
   const box = document.getElementById('dash-pending-pay');
   const btn = document.getElementById('dash-activate-pay');
@@ -121,7 +131,7 @@ function renderPendingNotice() {
   if (pending) {
     box.hidden = false;
     box.className = 'dash-pending-pay';
-    box.innerHTML = '<svg><use href="#i-clock"/></svg><span>' + escapeHtml(t('Recibimos tu pago por Zelle y lo estamos verificando. Te avisaremos por correo.')) + '</span>';
+    box.innerHTML = '<svg><use href="#i-clock"/></svg><span>' + escapeHtml(t('Recibimos tu pago por') + ' ' + t(METHOD_LABEL[pending.method] || pending.method) + ' ' + t('y lo estamos verificando. Te avisaremos por correo.')) + '</span>';
   } else if (rejected) {
     box.hidden = false;
     box.className = 'dash-pending-pay is-error';
@@ -188,14 +198,28 @@ function openCheckout(product) {
   document.getElementById('co-payer').value = pending ? '' : (STATE.profile && STATE.profile.full_name) || '';
 
   const zelleOn = z.enabled !== false, squareOn = !!(sq.enabled && sq.app_id && sq.location_id);
-  document.querySelector('.co-method[data-m="zelle"]').hidden = !zelleOn;
   document.getElementById('co-square-off').hidden = squareOn;
   document.getElementById('co-square-on').hidden = !squareOn;
+
+  // Venezuela: Pago Móvil (en bolívares a la tasa configurada) y Binance Pay (USDT)
+  const pm = pay.pago_movil || {}, bn = pay.binance || {};
+  const rate = Number(pm.rate) || 0;
+  CO_ON = { zelle: zelleOn, square: true, pago_movil: !!(pm.enabled && rate > 0 && pm.phone), binance: !!(bn.enabled && bn.pay_id) };
+  CO_BASE = { usd: Number(pr.price_usd) || 0, regular: pr.regular_price_usd, plan: !!plan };
+  document.getElementById('co-pm-bank').textContent = pm.bank || '—';
+  document.getElementById('co-pm-phone').textContent = pm.phone || '—';
+  document.getElementById('co-pm-doc').textContent = pm.id_doc || '—';
+  document.getElementById('co-pm-holder').textContent = pm.holder || 'DGP Global Group';
+  document.getElementById('co-bn-id').textContent = bn.pay_id || '—';
+  document.getElementById('co-bn-holder').textContent = bn.holder || 'DGP Global Group';
+  ['pm', 'bn'].forEach(k => { document.getElementById('co-' + k + '-ref').value = ''; document.getElementById('co-' + k + '-payer').value = (STATE.profile && STATE.profile.full_name) || ''; });
+  const veOn = CO_ON.pago_movil || CO_ON.binance;
+  document.getElementById('co-country').hidden = !veOn;
 
   document.getElementById('co-body').hidden = false;
   document.getElementById('co-done').hidden = true;
   coError('');
-  coMethod(zelleOn ? 'zelle' : 'square');
+  coCountry(pending && (pending.method === 'pago_movil' || pending.method === 'binance') ? 'VE' : (veOn ? coGuessCountry() : 'US'));
   document.getElementById('checkout-overlay').style.display = 'flex';
 }
 
@@ -209,10 +233,44 @@ function coError(msg) {
   el.hidden = !msg;
 }
 
+// País del pago: cada país muestra sus propios métodos
+let CO_ON = {}, CO_COUNTRY = 'US';
+function coGuessCountry() {
+  let tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+  try { const saved = localStorage.getItem('dgp-pay-country'); if (saved === 'US' || saved === 'VE') return saved; } catch (e) {}
+  return tz === 'America/Caracas' || /-VE$/i.test(navigator.language || '') ? 'VE' : 'US';
+}
+let CO_BASE = { usd: 0 };
+// Montos según el país: en Venezuela el pase completo puede tener precio promocional
+function coAmounts() {
+  const pm = (SITE_CFG.payments || {}).pago_movil || {}, rate = Number(pm.rate) || 0;
+  const promo = CO_COUNTRY === 'VE' && !CO_BASE.plan && coProduct === 'pase' ? vePromo() : null;
+  const usd = promo || CO_BASE.usd;
+  const bs = n => 'Bs ' + n.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  document.getElementById('co-price').textContent = CO_BASE.plan ? fmtMoney(usd) + t('/mes') : fmtMoney(usd);
+  document.getElementById('co-regular').textContent = promo ? fmtMoney(CO_BASE.usd) : (CO_BASE.regular ? fmtMoney(CO_BASE.regular) : '');
+  const tag = document.getElementById('co-promo');
+  tag.hidden = !promo;
+  if (promo) tag.innerHTML = '<b>' + escapeHtml(t('Promoción Venezuela')) + '</b><span>' + escapeHtml(t('Acceso completo a todo el contenido por')) + ' ' + fmtMoney(promo) + ' ' + escapeHtml(t('pagando con Pago Móvil o Binance Pay.')) + '</span>';
+  document.getElementById('co-pm-amount').textContent = rate ? bs(usd * rate) : 'Bs —';
+  document.getElementById('co-pm-rate').textContent = rate ? t('Tasa del día:') + ' ' + bs(rate) + ' ' + t('por dólar') + ' (' + fmtMoney(usd) + ' USD).' : '';
+  document.getElementById('co-bn-amount').textContent = usd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' USDT';
+}
+
+function coCountry(c) {
+  CO_COUNTRY = c;
+  coAmounts();
+  try { localStorage.setItem('dgp-pay-country', c); } catch (e) {}
+  document.querySelectorAll('.co-cty').forEach(b => b.classList.toggle('is-active', b.dataset.c === c));
+  const list = [...document.querySelectorAll('.co-method')];
+  list.forEach(b => { b.hidden = b.dataset.c !== c || !CO_ON[b.dataset.m]; });
+  const first = list.find(b => !b.hidden);
+  coMethod(first ? first.dataset.m : (c === 'US' ? 'square' : 'pago_movil'));
+}
+
 function coMethod(m) {
   document.querySelectorAll('.co-method').forEach(b => b.classList.toggle('is-active', b.dataset.m === m));
-  document.getElementById('co-zelle').classList.toggle('is-active', m === 'zelle');
-  document.getElementById('co-square').classList.toggle('is-active', m === 'square');
+  ['zelle', 'square', 'pago_movil', 'binance'].forEach(k => document.getElementById('co-' + k).classList.toggle('is-active', m === k));
   coError('');
   if (m === 'square' && !document.getElementById('co-square-on').hidden) initSquareCard();
 }
@@ -235,6 +293,29 @@ function coDone(title, text) {
 function friendlyPayError(e) {
   const m = (e && (e.message || e.error)) || String(e);
   return m.replace(/^.*?:\s*(?=[A-ZÁÉÍÓÚ¿])/, '');
+}
+
+// Pago Móvil y Binance Pay: igual que Zelle, se registra y lo verificamos a mano
+async function submitManual(method) {
+  const k = method === 'binance' ? 'bn' : 'pm';
+  const btn = document.getElementById('co-' + k + '-btn');
+  const ref = document.getElementById('co-' + k + '-ref').value.trim();
+  const payer = document.getElementById('co-' + k + '-payer').value.trim();
+  if (ref.length < 3) { coError('Escribe el número de confirmación del pago'); return; }
+  btn.disabled = true; coError('');
+  try {
+    const { data, error } = coPlan
+      ? await sb.rpc('create_subscription_order', { plan: coPlan, reference: ref, payer: payer, method })
+      : await sb.rpc('create_order', { p: coProduct, method, reference: ref, payer: payer });
+    if (error) throw error;
+    sb.functions.invoke('payments', { body: { action: 'order_placed', order_id: data.id } }).catch(() => {});
+    await paymentsOnUser();
+    coDone('¡Pago registrado!', 'Lo verificaremos en menos de 24 horas y activaremos tu acceso. Te avisaremos por correo.');
+  } catch (e) {
+    coError(friendlyPayError(e));
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 async function submitZelle() {

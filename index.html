@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DGP Academy — Learn and train your team with AI</title>
-<meta name="description" content="Hands-on courses for entrepreneurs and employee training for companies, with AI as your copilot. By DGP Global Group in alliance with Moya &amp; Company.">
+<title>DGP Academy — Aprende y capacita a tu equipo con IA · Learn and train your team with AI</title>
+<meta name="description" content="Cursos prácticos para emprendedores y capacitación de empleados para empresas. Hands-on courses for entrepreneurs and employee training for companies. Lección 1 gratis · Lesson 1 free.">
 <meta name="author" content="DGP Global Group">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://academy.dgpglobalgroup.com">
@@ -12,21 +12,21 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://academy.dgpglobalgroup.com">
 <meta property="og:site_name" content="DGP Academy">
-<meta property="og:locale" content="en_US">
-<meta property="og:locale:alternate" content="es_LA">
-<meta property="og:title" content="DGP Academy — Learn and train your team with AI">
-<meta property="og:description" content="Hands-on courses for entrepreneurs and employee training for companies, with AI as your copilot. Lesson 1 of every program is free.">
-<meta property="og:image" content="https://academy.dgpglobalgroup.com/og-image.jpg">
+<meta property="og:locale" content="es_LA">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:title" content="DGP Academy — Aprende y capacita a tu equipo con IA · Learn and train your team with AI">
+<meta property="og:description" content="Cursos prácticos para emprendedores y capacitación de empleados para empresas. Hands-on courses for entrepreneurs and employee training for companies. Lección 1 gratis · Lesson 1 free.">
+<meta property="og:image" content="https://academy.dgpglobalgroup.com/og-image.jpg?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="DGP Academy — Learn and train your team with AI">
+<meta property="og:image:alt" content="DGP Academy — Aprende y capacita a tu equipo con IA · Learn and train your team with AI">
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@dgpglobalgroup">
 <meta name="twitter:creator" content="@dgpglobalgroup">
-<meta name="twitter:title" content="DGP Academy — Learn and train your team with AI">
-<meta name="twitter:description" content="Hands-on courses for entrepreneurs and employee training for companies, with AI as your copilot. Lesson 1 of every program is free.">
-<meta name="twitter:image" content="https://academy.dgpglobalgroup.com/og-image.jpg">
+<meta name="twitter:title" content="DGP Academy — Aprende y capacita a tu equipo con IA · Learn and train your team with AI">
+<meta name="twitter:description" content="Cursos prácticos para emprendedores y capacitación de empleados para empresas. Hands-on courses for entrepreneurs and employee training for companies. Lección 1 gratis · Lesson 1 free.">
+<meta name="twitter:image" content="https://academy.dgpglobalgroup.com/og-image.jpg?v=2">
 <meta name="theme-color" content="#0a1430">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/img/favicon-32.png" type="image/png" sizes="32x32">
@@ -278,6 +278,7 @@
             <div class="lp-cupos-bar"><span id="lp-cupos-bar" style="width:100%"></span></div>
           </div>
           <button class="ui-btn ui-btn--primary ui-btn--block" onclick="buyProduct('pase')">Quiero el pase completo <svg><use href="#i-arrow"/></svg></button>
+          <p class="lp-ve-promo" id="lp-ve-promo" hidden><i class="co-flag co-flag--ve" aria-hidden="true"></i><span><b>Promoción Venezuela:</b> todo por $<span id="lp-ve-promo-num">45</span> pagando con Pago Móvil o Binance Pay.</span></p>
         </article>
         <article class="lp-pcard reveal" data-d="2">
           <div class="lp-pcard-label">Un libro</div>
@@ -1105,7 +1106,7 @@
         </div>
         <div class="adm-table-wrap">
           <table class="adm-table" id="rec-table">
-            <thead><tr><th>Semana</th><th class="num">Zelle</th><th class="num">Square</th><th class="num">Manual</th><th class="num">Total</th><th class="num">Pagos</th><th>Conciliados</th></tr></thead>
+            <thead><tr><th>Semana</th><th class="num">Zelle</th><th class="num">Square</th><th class="num">Venezuela</th><th class="num">Manual</th><th class="num">Total</th><th class="num">Pagos</th><th>Conciliados</th></tr></thead>
             <tbody><tr><td colspan="7" class="adm-td-empty">Cargando…</td></tr></tbody>
           </table>
         </div>
@@ -1158,6 +1159,41 @@
             <label class="adm-field adm-field--wide"><span>Instrucciones (inglés)</span><textarea class="form-input" id="cf-zelle-ins-en" rows="2"></textarea></label>
           </div>
           <div class="adm-form-actions"><span class="admin-ok" id="cf-zelle-msg"></span><button class="ui-btn ui-btn--primary ui-btn--sm">Guardar Zelle</button></div>
+        </form>
+
+        <form class="adm-card" onsubmit="event.preventDefault();savePagoMovil()">
+          <div class="adm-card-head"><h2><span class="adm-brand adm-brand--pm">Bs</span>Pago Móvil · Venezuela</h2>
+            <label class="adm-switch"><input type="checkbox" id="cf-pm-on"><span></span>Activo</label></div>
+          <p class="adm-hint">El estudiante ve el monto en bolívares calculado con la tasa que escribas aquí. Actualízala cuando cambie (por ejemplo, la tasa oficial del día).</p>
+          <div class="adm-form-grid">
+            <label class="adm-field"><span>Tasa (Bs por 1 USD)</span><input class="form-input" id="cf-pm-rate" type="number" min="0" step="0.01" placeholder="Ej.: 36.50"></label>
+            <label class="adm-field"><span>Banco</span><input class="form-input" id="cf-pm-bank" placeholder="Ej.: 0102 · Banco de Venezuela"></label>
+            <label class="adm-field"><span>Teléfono del Pago Móvil</span><input class="form-input" id="cf-pm-phone" type="tel" placeholder="Ej.: 0414-1234567"></label>
+            <label class="adm-field"><span>Cédula o RIF</span><input class="form-input" id="cf-pm-doc" placeholder="Ej.: V-12345678"></label>
+            <label class="adm-field adm-field--wide"><span>Nombre del titular</span><input class="form-input" id="cf-pm-holder"></label>
+          </div>
+          <div class="adm-form-actions"><span class="admin-ok" id="cf-pm-msg"></span><button class="ui-btn ui-btn--primary ui-btn--sm">Guardar Pago Móvil</button></div>
+        </form>
+
+        <form class="adm-card" onsubmit="event.preventDefault();saveBinance()">
+          <div class="adm-card-head"><h2><span class="adm-brand adm-brand--bn">B</span>Binance Pay · Venezuela</h2>
+            <label class="adm-switch"><input type="checkbox" id="cf-bn-on"><span></span>Activo</label></div>
+          <p class="adm-hint">El estudiante envía el monto en USDT a tu Pay ID y escribe el ID de la orden para que lo verifiques.</p>
+          <div class="adm-form-grid">
+            <label class="adm-field"><span>Pay ID de Binance</span><input class="form-input" id="cf-bn-id" placeholder="Ej.: 123456789"></label>
+            <label class="adm-field"><span>Nombre o usuario en Binance</span><input class="form-input" id="cf-bn-holder"></label>
+          </div>
+          <div class="adm-form-actions"><span class="admin-ok" id="cf-bn-msg"></span><button class="ui-btn ui-btn--primary ui-btn--sm">Guardar Binance Pay</button></div>
+        </form>
+
+        <form class="adm-card" onsubmit="event.preventDefault();saveVePromo()">
+          <div class="adm-card-head"><h2><i class="co-flag co-flag--ve" aria-hidden="true"></i>Promoción Venezuela</h2>
+            <label class="adm-switch"><input type="checkbox" id="cf-vp-on"><span></span>Activa</label></div>
+          <p class="adm-hint">Precio especial del pase completo (todo el contenido) cuando se paga desde Venezuela con Pago Móvil o Binance Pay. Se muestra en la portada y en la ventana de pago.</p>
+          <div class="adm-form-grid">
+            <label class="adm-field"><span>Precio del pase completo (USD)</span><input class="form-input" id="cf-vp-price" type="number" min="1" step="1" placeholder="45"></label>
+          </div>
+          <div class="adm-form-actions"><span class="admin-ok" id="cf-vp-msg"></span><button class="ui-btn ui-btn--primary ui-btn--sm">Guardar promoción</button></div>
         </form>
 
         <form class="adm-card" onsubmit="event.preventDefault();saveSquare()">
@@ -1385,9 +1421,55 @@
 
     <div class="co-upsell" id="co-upsell" hidden></div>
     <div class="co-body" id="co-body">
+      <div class="co-country" role="group" aria-label="País desde donde pagas" id="co-country">
+        <span>¿Desde dónde pagas?</span>
+        <button type="button" class="co-cty is-active" data-c="US" onclick="coCountry('US')"><i class="co-flag co-flag--us" aria-hidden="true"></i>Estados Unidos</button>
+        <button type="button" class="co-cty" data-c="VE" onclick="coCountry('VE')"><i class="co-flag co-flag--ve" aria-hidden="true"></i>Venezuela</button>
+      </div>
+      <div class="co-promo" id="co-promo" hidden></div>
       <div class="co-methods" role="tablist" id="co-methods">
-        <button class="co-method is-active" data-m="zelle" onclick="coMethod('zelle')"><span class="adm-brand adm-brand--zelle">Z</span>Zelle</button>
-        <button class="co-method" data-m="square" onclick="coMethod('square')"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>Tarjeta</button>
+        <button class="co-method is-active" data-m="zelle" data-c="US" onclick="coMethod('zelle')"><span class="adm-brand adm-brand--zelle">Z</span>Zelle</button>
+        <button class="co-method" data-m="square" data-c="US" onclick="coMethod('square')"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>Tarjeta</button>
+        <button class="co-method" data-m="pago_movil" data-c="VE" onclick="coMethod('pago_movil')" hidden><span class="adm-brand adm-brand--pm">Bs</span>Pago Móvil</button>
+        <button class="co-method" data-m="binance" data-c="VE" onclick="coMethod('binance')" hidden><span class="adm-brand adm-brand--bn">B</span>Binance Pay</button>
+      </div>
+
+      <div class="co-pane" id="co-pago_movil">
+        <ol class="co-steps">
+          <li><b>Envía <span id="co-pm-amount">Bs —</span> por Pago Móvil a:</b>
+            <div class="co-kv"><span>Banco</span><code id="co-pm-bank">—</code></div>
+            <div class="co-copy-row"><code id="co-pm-phone">—</code><button type="button" class="co-copy" onclick="copyText('co-pm-phone')">Copiar</button></div>
+            <div class="co-copy-row"><code id="co-pm-doc">—</code><button type="button" class="co-copy" onclick="copyText('co-pm-doc')">Copiar</button></div>
+            <div class="co-holder">A nombre de <b id="co-pm-holder">—</b></div>
+            <p class="co-ins" id="co-pm-rate"></p>
+          </li>
+          <li><b>Cuéntanos qué enviaste</b>
+            <form class="co-form" onsubmit="event.preventDefault();submitManual('pago_movil')">
+              <input class="form-input" id="co-pm-payer" placeholder="Nombre del titular que envió el pago" autocomplete="name" required>
+              <input class="form-input mono" id="co-pm-ref" placeholder="Número de referencia del Pago Móvil" required minlength="3">
+              <button class="ui-btn ui-btn--primary ui-btn--block" id="co-pm-btn">Ya envié el pago</button>
+            </form>
+          </li>
+        </ol>
+        <p class="co-foot">Verificamos los pagos a mano, normalmente en menos de 24 horas. Te avisamos por correo.</p>
+      </div>
+
+      <div class="co-pane" id="co-binance">
+        <ol class="co-steps">
+          <li><b>Envía <span id="co-bn-amount">— USDT</span> por Binance Pay al Pay ID:</b>
+            <div class="co-copy-row"><code id="co-bn-id">—</code><button type="button" class="co-copy" onclick="copyText('co-bn-id')">Copiar</button></div>
+            <div class="co-holder">A nombre de <b id="co-bn-holder">—</b></div>
+            <p class="co-ins">En Binance: Pagar → Enviar → Pay ID. Envía el monto exacto en USDT.</p>
+          </li>
+          <li><b>Cuéntanos qué enviaste</b>
+            <form class="co-form" onsubmit="event.preventDefault();submitManual('binance')">
+              <input class="form-input" id="co-bn-payer" placeholder="Tu nombre o usuario de Binance" required>
+              <input class="form-input mono" id="co-bn-ref" placeholder="ID de la orden de Binance Pay" required minlength="3">
+              <button class="ui-btn ui-btn--primary ui-btn--block" id="co-bn-btn">Ya envié el pago</button>
+            </form>
+          </li>
+        </ol>
+        <p class="co-foot">Verificamos los pagos a mano, normalmente en menos de 24 horas. Te avisamos por correo.</p>
       </div>
 
       <div class="co-pane is-active" id="co-zelle">

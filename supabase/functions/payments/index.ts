@@ -1,10 +1,10 @@
 // =========================================================
 // DGP Academy — pagos, facturas y correos (Supabase Edge Function)
 // Acciones:
-//   order_placed  → el estudiante registró un pago por Zelle: avisa al admin y al estudiante
+//   order_placed  → el estudiante registró un pago manual (Zelle, Pago Móvil o Binance Pay): avisa al admin y al estudiante
 //   send_invoice  → (admin) envía la factura de un pedido verificado
 //   square_pay    → cobra con tarjeta (Square), activa el acceso y envía la factura
-//   weekly_report → (admin) envía por correo el resumen semanal de ingresos (Zelle / Square / manual)
+//   weekly_report → (admin) envía por correo el resumen semanal de ingresos (Zelle / Square / Venezuela / manual)
 //   order_rejected→ (admin) avisa al estudiante que su pago no se pudo verificar
 //   test_email    → (admin) correo de prueba para revisar la configuración SMTP
 //   square_setup_plans → (admin) crea los planes de membresía en el catálogo de Square
@@ -72,15 +72,15 @@ const T = {
     invoice: "Factura", receipt: "Comprobante de pago", date: "Fecha", billed: "Facturado a", item: "Concepto",
     method: "Método", ref: "Referencia", total: "Total pagado", paid: "PAGADO", access: "Tu acceso ya está activo.",
     go: "Entrar a mi panel", hi: "Hola", thanks: "Gracias por tu compra en DGP Academy.",
-    received: "Recibimos tu pago", receivedBody: "Registramos tu pago por Zelle y lo estamos verificando. Te avisaremos por correo en cuanto activemos tu acceso (normalmente en menos de 24 horas).",
-    amount: "Monto", methods: { zelle: "Zelle", square: "Tarjeta (Square)", manual: "Pago registrado" } as Record<string, string>,
+    received: "Recibimos tu pago", receivedBody: "Registramos tu pago y lo estamos verificando. Te avisaremos por correo en cuanto activemos tu acceso (normalmente en menos de 24 horas).",
+    amount: "Monto", methods: { zelle: "Zelle", square: "Tarjeta (Square)", manual: "Pago registrado", pago_movil: "Pago Móvil", binance: "Binance Pay" } as Record<string, string>,
   },
   en: {
     invoice: "Invoice", receipt: "Payment receipt", date: "Date", billed: "Billed to", item: "Item",
     method: "Method", ref: "Reference", total: "Total paid", paid: "PAID", access: "Your access is now active.",
     go: "Go to my dashboard", hi: "Hi", thanks: "Thank you for your purchase at DGP Academy.",
-    received: "We received your payment", receivedBody: "We recorded your Zelle payment and are verifying it. We’ll email you as soon as your access is activated (usually within 24 hours).",
-    amount: "Amount", methods: { zelle: "Zelle", square: "Card (Square)", manual: "Recorded payment" } as Record<string, string>,
+    received: "We received your payment", receivedBody: "We recorded your payment and are verifying it. We’ll email you as soon as your access is activated (usually within 24 hours).",
+    amount: "Amount", methods: { zelle: "Zelle", square: "Card (Square)", manual: "Recorded payment", pago_movil: "Pago Móvil", binance: "Binance Pay" } as Record<string, string>,
   },
 };
 
@@ -315,16 +315,16 @@ Deno.serve(async (req) => {
         const jobs: Promise<unknown>[] = [];
         if (cfg.notify_admin !== false) {
           jobs.push(sendMail(cfg.from_email, `Nuevo pago por verificar — ${o.full_name || o.email} ($${Number(o.amount).toFixed(2)})`, shell(`
-            <p style="font-size:16px;font-weight:700;margin:0 0 12px">Nuevo pago por Zelle para verificar</p>
+            <p style="font-size:16px;font-weight:700;margin:0 0 12px">Nuevo pago por ${esc(T.es.methods[o.method] || o.method)} para verificar</p>
             <p style="margin:0;font-size:14px;line-height:1.7">Estudiante: <strong>${esc(o.full_name)}</strong> (${esc(o.email)})<br>
-            Producto: ${esc(o.title)}<br>Monto: $${Number(o.amount).toFixed(2)} ${esc(o.currency)}<br>
+            Producto: ${esc(o.title)}<br>Monto: $${Number(o.amount).toFixed(2)} ${esc(o.currency)}${o.amount_local ? ` (${esc(o.local_currency === "VES" ? "Bs" : o.local_currency)} ${Number(o.amount_local).toFixed(2)})` : ""}<br>
             Titular que envió: ${esc(o.payer_name || "—")}<br>Confirmación: <strong>${esc(o.reference)}</strong></p>
             <p style="margin:20px 0 0"><a href="${SITE}" style="display:inline-block;background:#0a1430;color:#fff;text-decoration:none;font-weight:700;padding:11px 20px;border-radius:999px">Verificar en el panel admin</a></p>`)));
         }
         jobs.push(sendMail(o.email, `${t.received} — DGP Academy`, shell(`
           <p style="font-size:16px;font-weight:700;margin:0 0 10px">${t.received}</p>
           <p style="margin:0 0 14px;font-size:14px;color:#3d4a63;line-height:1.6">${t.receivedBody}</p>
-          <p style="margin:0;font-size:14px">${esc(o.lang === "en" ? (o.title_en || o.title) : o.title)} · ${t.amount}: <strong>$${Number(o.amount).toFixed(2)} ${esc(o.currency)}</strong></p>`)));
+          <p style="margin:0;font-size:14px">${esc(o.lang === "en" ? (o.title_en || o.title) : o.title)} · ${t.method}: ${esc(t.methods[o.method] || o.method)} · ${t.amount}: <strong>${o.amount_local && o.local_currency === "VES" ? `Bs ${Number(o.amount_local).toFixed(2)}` : `$${Number(o.amount).toFixed(2)} ${esc(o.currency)}`}</strong></p>`)));
         const results = await Promise.allSettled(jobs);
         return json({ ok: true, sent: results.filter((r) => r.status === "fulfilled").length });
       }
@@ -398,6 +398,7 @@ Deno.serve(async (req) => {
               coalesce(sum(o.amount) filter (where o.method = 'zelle'), 0) zelle,
               coalesce(sum(o.amount) filter (where o.method = 'square'), 0) square,
               coalesce(sum(o.amount) filter (where o.method = 'manual'), 0) manual,
+              coalesce(sum(o.amount) filter (where o.method in ('pago_movil', 'binance')), 0) ve,
               coalesce(sum(o.amount), 0) total, count(o.id) n,
               count(o.id) filter (where o.reconciled_at is null) pending_rec
             from generate_series(date_trunc('week', now() at time zone 'America/New_York') - make_interval(weeks => ${weeks}::int - 1),
@@ -413,10 +414,10 @@ Deno.serve(async (req) => {
         const cfg = await setting("email");
         await sendMail(body.to || cfg.from_email, `Resumen de ingresos — últimas ${weeks} semanas (${m(sum)})`, shell(`
           <p style="font-size:16px;font-weight:700;margin:0 0 6px">Resumen de ingresos verificados</p>
-          <p style="margin:0 0 16px;font-size:13px;color:#5d6982">Semanas de lunes a domingo (hora de Florida). Compara cada fila con tus movimientos de Zelle y Square.</p>
+          <p style="margin:0 0 16px;font-size:13px;color:#5d6982">Semanas de lunes a domingo (hora de Florida). Compara cada fila con tus movimientos de Zelle, Square, Pago Móvil y Binance.</p>
           <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
-            <tr style="background:#f6f8fc"><th align="left" style="${td}">Semana</th><th align="right" style="${td}">Zelle</th><th align="right" style="${td}">Square</th><th align="right" style="${td}">Manual</th><th align="right" style="${td}">Total</th><th align="right" style="${td}">Pagos</th><th align="right" style="${td}">Sin conciliar</th></tr>
-            ${rows.map((r) => `<tr><td style="${td}">${esc(r.week_start)}</td><td align="right" style="${td}">${m(r.zelle)}</td><td align="right" style="${td}">${m(r.square)}</td><td align="right" style="${td}">${m(r.manual)}</td><td align="right" style="${td};font-weight:700">${m(r.total)}</td><td align="right" style="${td}">${r.n}</td><td align="right" style="${td};color:${Number(r.pending_rec) ? "#b45309" : "#15803d"}">${r.pending_rec}</td></tr>`).join("")}
+            <tr style="background:#f6f8fc"><th align="left" style="${td}">Semana</th><th align="right" style="${td}">Zelle</th><th align="right" style="${td}">Square</th><th align="right" style="${td}">Venezuela</th><th align="right" style="${td}">Manual</th><th align="right" style="${td}">Total</th><th align="right" style="${td}">Pagos</th><th align="right" style="${td}">Sin conciliar</th></tr>
+            ${rows.map((r) => `<tr><td style="${td}">${esc(r.week_start)}</td><td align="right" style="${td}">${m(r.zelle)}</td><td align="right" style="${td}">${m(r.square)}</td><td align="right" style="${td}">${m(r.ve)}</td><td align="right" style="${td}">${m(r.manual)}</td><td align="right" style="${td};font-weight:700">${m(r.total)}</td><td align="right" style="${td}">${r.n}</td><td align="right" style="${td};color:${Number(r.pending_rec) ? "#b45309" : "#15803d"}">${r.pending_rec}</td></tr>`).join("")}
           </table>
           <p style="margin:18px 0 0;font-size:14px">Total del periodo: <strong>${m(sum)}</strong></p>
           <p style="margin:20px 0 0"><a href="${SITE}" style="display:inline-block;background:#0a1430;color:#fff;text-decoration:none;font-weight:700;padding:11px 20px;border-radius:999px">Abrir conciliación</a></p>`));
@@ -430,8 +431,8 @@ Deno.serve(async (req) => {
         await sendMail(o.email, en ? "We couldn’t verify your payment — DGP Academy" : "No pudimos verificar tu pago — DGP Academy", shell(`
           <p style="font-size:16px;font-weight:700;margin:0 0 10px">${en ? "We couldn’t verify your payment" : "No pudimos verificar tu pago"}</p>
           <p style="margin:0 0 12px;font-size:14px;color:#3d4a63;line-height:1.6">${en
-            ? `We couldn’t find a Zelle payment matching confirmation <strong>${esc(o.reference)}</strong>.`
-            : `No encontramos un pago de Zelle con la confirmación <strong>${esc(o.reference)}</strong>.`}</p>
+            ? `We couldn’t find a ${esc(T.en.methods[o.method] || o.method)} payment matching confirmation <strong>${esc(o.reference)}</strong>.`
+            : `No encontramos un pago de ${esc(T.es.methods[o.method] || o.method)} con la confirmación <strong>${esc(o.reference)}</strong>.`}</p>
           ${o.rejected_reason ? `<p style="margin:0 0 12px;font-size:14px;color:#3d4a63">${esc(o.rejected_reason)}</p>` : ""}
           <p style="margin:0;font-size:14px;color:#3d4a63">${en ? "Reply to this email and we’ll help you sort it out." : "Responde a este correo y te ayudamos a resolverlo."}</p>`));
         return json({ ok: true });

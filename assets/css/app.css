@@ -1634,3 +1634,12 @@ body.blog-open { overflow: hidden; }
 @media (max-width: 600px) { .lp-why-item > span { width: 32px; height: 32px; border-radius: 10px; font-size: 16px; } }
 @media (min-width: 601px) { .float-ai { top: -34px; } }
 @media (max-width: 600px) { .float-ai { top: -18px; } }
+
+/* Precios para personas vs. plan para empresas */
+.lp-biz-note { display: inline-flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 14px auto 0; padding: 9px 16px; border-radius: 999px; background: #eef4ff; border: 1px solid #d6e4ff; color: var(--ink-2, #13224a); font-size: 14px; }
+.lp-biz-note .ic { color: var(--accent); font-size: 17px; }
+.lp-biz-note a { display: inline-flex; align-items: center; gap: 4px; font-weight: 650; color: var(--accent); text-decoration: none; }
+.lp-biz-note a svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
+.lp-biz-price { margin: 0 0 16px; padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: #c7d2fe; font-size: 14px; line-height: 1.55; }
+.lp-biz-price b { color: #fff; }
+@media (max-width: 600px) { .lp-biz-note { border-radius: 16px; text-align: center; } }

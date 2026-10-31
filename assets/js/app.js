@@ -546,7 +546,7 @@ function renderAdminUsers(users) {
     return '<div class="admin-user-card">' +
       '<div class="admin-user-avatar">' + escapeHtml(initial) + '</div>' +
       '<div class="admin-user-info">' +
-        '<div class="admin-user-name">' + escapeHtml(u.full_name || '—') + (u.is_owner ? ' <span class="chip chip--accent">' + escapeHtml(t('Dueño')) + '</span>' : u.is_admin ? ' <span class="chip chip--accent">Admin</span>' : '') + (u.courtesy ? ' <span class="chip chip--gold">Cortesía</span>' : '') + (u.suspended ? ' <span class="chip chip--danger">Suspendida</span>' : '') + (u.member_plan ? ' <span class="chip chip--light">' + escapeHtml(((SITE_CFG.plans || {})[u.member_plan] || {}).name || u.member_plan) + '</span>' : '') + '</div>' +
+        '<div class="admin-user-name">' + escapeHtml(u.full_name || '—') + (u.is_owner ? ' <span class="chip chip--accent">' + escapeHtml(t('Dueño')) + '</span>' : u.is_admin ? ' <span class="chip chip--accent">Admin</span>' : '') + (u.courtesy ? ' <span class="chip chip--gold">' + escapeHtml(t('Cortesía')) + '</span>' : '') + (u.suspended ? ' <span class="chip chip--danger">' + escapeHtml(t('Suspendida')) + '</span>' : '') + (u.member_plan ? ' <span class="chip chip--light">' + escapeHtml(planName(u.member_plan)) + '</span>' : '') + '</div>' +
         '<div class="admin-user-email">' + escapeHtml(u.email || '—') + '</div>' +
         '<div class="admin-user-phone">' + escapeHtml(u.phone || 'Sin teléfono') + ' · Registro: ' + escapeHtml(fmtDate(u.created_at)) + ' · Última visita: ' + escapeHtml(fmtDate(u.last_seen_at)) + '</div>' +
         '<div class="admin-user-prog"><div class="admin-user-prog-label"><span>Web Dev</span><span>' + prog + ' / 16' + (done ? ' · completado' : '') + '</span></div>' +
@@ -1238,3 +1238,6 @@ function onLangChange() {
   const b2 = document.getElementById('book-screen-2');
   if (b2 && b2.style.display === 'block') loadContent('semilla', '#book-screen-2').then(() => goToChapter2(currentChapter2)).catch(() => {});
 }
+
+// Nombre del plan de membresía en el idioma actual
+function planName(id) { const p = (SITE_CFG.plans || {})[id] || {}; return (LANG === 'en' ? (p.name_en || p.name) : (p.name || p.name_en)) || id; }

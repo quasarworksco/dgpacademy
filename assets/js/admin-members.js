@@ -29,7 +29,7 @@ async function loadMembersAdmin() {
   set('mk-mrr', fmtMoney(active.filter(s => !s.cancel_at_period_end).reduce((a, s) => a + Number(s.price_usd), 0)));
   set('mk-mrr-foot', active.filter(s => s.method === 'square' && !s.cancel_at_period_end).length + ' ' + t('con cobro automático'));
   set('mk-active', active.length);
-  set('mk-by-plan', MK.plans.map(p => p.name + ' ' + active.filter(s => s.plan_id === p.id).length).join(' · '));
+  set('mk-by-plan', MK.plans.map(p => (LANG === 'en' ? (p.name_en || p.name) : p.name) + ' ' + active.filter(s => s.plan_id === p.id).length).join(' · '));
   const fPend = MK.flyers.filter(f => f.status !== 'delivered'), mPend = MK.meetings.filter(m => m.status === 'requested');
   set('mk-flyers', fPend.length);
   set('mk-flyers-foot', MK.flyers.filter(f => f.status === 'revision').length + ' ' + t('con cambios pedidos'));
@@ -283,7 +283,7 @@ function mkPlans() {
   return '<form class="adm-card" onsubmit="event.preventDefault();savePlans()">' +
       '<div class="adm-card-head"><h2>' + escapeHtml(t('Precios e incluidos')) + '</h2><span class="adm-card-sub">' + escapeHtml(t('Si cambias un precio, vuelve a crear los planes en Square.')) + '</span></div>' +
       '<div class="adm-table-wrap"><table class="adm-table"><thead><tr><th>' + escapeHtml(t('Plan')) + '</th><th>' + escapeHtml(t('Precio/mes')) + '</th><th>' + escapeHtml(t('Flyers')) + '</th><th>' + escapeHtml(t('Asesorías')) + '</th><th>' + escapeHtml(t('Coach IA')) + '</th><th>' + escapeHtml(t('Activo')) + '</th><th>Square</th></tr></thead><tbody>' +
-      MK.plans.map(p => '<tr><td><b>' + escapeHtml(p.name) + '</b></td>' +
+      MK.plans.map(p => '<tr><td><b>' + escapeHtml(LANG === 'en' ? (p.name_en || p.name) : p.name) + '</b></td>' +
         '<td><input class="form-input form-input--sm" type="number" min="1" step="0.01" id="pl-price-' + p.id + '" value="' + p.price_usd + '"></td>' +
         '<td><input class="form-input form-input--sm" type="number" min="0" id="pl-fl-' + p.id + '" value="' + p.flyers + '"></td>' +
         '<td><input class="form-input form-input--sm" type="number" min="0" id="pl-mt-' + p.id + '" value="' + p.meetings + '"></td>' +
@@ -342,7 +342,7 @@ function mkCourtesy() {
   // Por defecto, acceso total: programas, libros y la membresía más completa
   const plans = MK.plans.slice().sort((a, b) => Number(b.price_usd) - Number(a.price_usd));
   const opts = plans.map((p, i) => '<option value="' + p.id + '"' + (i === 0 ? ' selected' : '') + '>' +
-      escapeHtml(i === 0 ? t('Acceso total (todo + membresía') + ' ' + p.name + ')' : t('Todo + membresía') + ' ' + p.name) + '</option>').join('') +
+      escapeHtml(i === 0 ? t('Acceso total (todo + membresía') + ' ' + (LANG === 'en' ? (p.name_en || p.name) : p.name) + ')' : t('Todo + membresía') + ' ' + (LANG === 'en' ? (p.name_en || p.name) : p.name)) + '</option>').join('') +
     '<option value="">' + escapeHtml(t('Sin membresía (solo programas y libros)')) + '</option>';
   const known = email => allAdminUsers.find(u => (u.email || '').toLowerCase() === email);
   return '<form class="adm-card" onsubmit="event.preventDefault();addCourtesy()">' +
